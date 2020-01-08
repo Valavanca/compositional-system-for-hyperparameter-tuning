@@ -1,27 +1,16 @@
 ---
-title: "Manuscript Title"
+title: "Compositional Multi-objective Parameter tuning"
 keywords:
-  - markdown
-  - publishing
-  - manubot
+  - multi-objective
+  - surrogate optimization
+  - software design
 lang: en-US
 authors:
   -
-    github: johndoe
-    name: John Doe
-    initials: JD
+    github: Valavanca
+    name: Oleksandr Husak
+    initials: OH
     orcid: XXXX-XXXX-XXXX-XXXX
-    twitter: johndoe
-    email: john.doe@something.com
+    email: oleksandr.husak@mailbox.tu-dresden.de
     affiliations:
-      - Department of Something, University of Whatever
-    funders: Grant XXXXXXXX
-  -
-    github: janeroe
-    name: Jane Roe
-    initials: JR
-    orcid: XXXX-XXXX-XXXX-XXXX
-    email: jane.roe@whatever.edu
-    affiliations:
-      - Department of Something, University of Whatever
-      - Department of Whatever, University of Something
+      - Research Student Assistant in TUD
