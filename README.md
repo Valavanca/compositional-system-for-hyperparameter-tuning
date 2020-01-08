@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/Valavanca/compositional-system-for-hyperparameter-tuning.svg?branch=master)](https://travis-ci.com/Valavanca/compositional-system-for-hyperparameter-tuning)
+
 # Compositional Multi-objective parameter tuning
 
 ## 1. Introduction
