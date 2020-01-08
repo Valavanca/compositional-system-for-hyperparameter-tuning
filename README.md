@@ -43,3 +43,9 @@
     Show that compositional works and reach good results in multi-objective
 
 
+
+
+___
+
+
+- Developed system and technology for reusing surrogate modeling for parameter tuning in software Product-line/Search-based engineer.

@@ -1,0 +1,181 @@
+\documentclass[ms,english]{stthesis}
+\usepackage{lipsum}
+
+\title{Compositional multi-objective parameter tuning}
+\author{Oleksandr Husak}
+\date{\today}
+\birthday{16.04.1994}
+\birthplace{Ukraine}
+\supervisor{Dr.-Ing. Birgit Demuth}
+
+
+\begin{document}
+    \maketitle % This sets the title page
+  
+    \tableofcontents
+  
+    \chapter{Introduction. Black-box Optimization}
+        [DLR, Optimisation-based multi-objective design and assessment] 
+        Multi-objective optimisation is a proven, well-known parameter tuning technique in engineering design. It is especially suited 
+        to solve complex, multidisciplinary design problems with emphasis on control system design.
+        MOPS is currently applied to various design and evaluation problems at DLR and in industry. The main fields 
+        of application are industrial robotics, flight control, power-optimised aircraft systems, and vehicle dynamics. Development and maturation of MOPS is an ongoing process.
+        In MOPS a multi-objective/multi-model/multi-case design problem is usually mapped to a weighted min-max optimisation problem, which is then solved by using one of several 
+        available powerful optimisers, implementing local and global search strategies. Besides very efficient gradient-based solvers (well-suited primarily for smooth problems, 
+        especially identification problems), more robust gradient-free direct-search based solvers are available to address problems with non-smooth or noisy criteria. To overcome the 
+        problem of local minima to some extent, global solvers based on stochastic, evolutionary or branching strategies can be alternatively used.
+
+        The weighted-sum function approach is a method used to simplify a multiobjective problem, lumping the objectives into 
+        one function by using weighted sum factors, as shown in Eq. [14.3]. The combined function f is used to evaluate and define the optimal solution.
+
+        Real engineering design problems are generally characterized by the presence of many
+        often conflicting and incommensurable objectives. This raises the issue about how
+        different objectives should be combined to yield a final solution. There is also the
+        question on how to search for an optimal solution to the design problem. 
+
+        When we talk about several objectives, the notion of optimum changes because in multiobjective problems, the aim is to find good compromises rather than a single solution as in global optimization.
+
+        [Johan Andersson, A Survey of Multiobjective Optimization in Engineering Design] 
+        Optimization methods could be divided into derivative and non-derivative methods,Figure 2. This survey focuses on non-derivative methods, as they are more suitable for
+        general engineering design problems. One reason is that non-derivative methods do not
+        require any derivatives of the objective function in order to calculate the optimum.
+        Therefore, they are also known as black box methods. Another advantages of these
+        methods are that they are more likely to find a global optima, and not be stuck on local
+        optima as gradient methods might do
+
+        \section{Motivation}
+        Why is the Weighting Method Ineffective?[Hirotaka Nakayama]
+        Namely, it can not provide a solution among sunken parts of Pareto surface due to “duality gap” for nonconvex cases. 
+        Even for convex cases, for example, in linear cases, even if we want to get a point in the middle of line segment between two vertices, we merely get a vertex of Pareto surface, as
+        long as the well known simplex method is used. This implies that depending on the structure of problem, the linearly weighted sum can not necessarily provide a solution as DM desires.
+
+      
+        \section{Objectives}
+        \lipsum
+  	
+        \section{Overview}
+            \begin{enumerate}
+                \item RQ: How reduce experiments count and reach near-optimal multi objective solution?
+                \item RQ: Reusable compositional system for optimization. Define steps in workflow. How extend models to new use case and not to rewrite everything from scratch.
+                \item RQ: No free lunch theorem: hypothesis portfolio. Select from a plethora of models that can be suitable for fitted data set. Usefully for single and multi objective in parameter tuning.
+                \item RQ: Solve hypothesis and range solution
+            \end{enumerate}
+
+            Since multi-objective optimization problems give rise to a set of Pareto-optimal solutions, evolutionary optimization algorithms are ideal for handling multi-objective optimization problems [1].
+    
+    \chapter{Foundation}
+        \section{Parameter tuning}
+        \section{Multi-objective optimization}
+        \section{Surrogate optimization}
+            Surrogate used to expedite search for global optimum. Global accuracy of surrogate
+            not a priority
+        \section{Use cases}
+
+    \chapter{Compositional architecture}
+        \section{Interfaces and Contracts}           
+        \section{Reusable software}
+
+% --- IMPLEMENTATION 
+    \chapter{Implementation}
+        Managing Complex Execution Strategies
+        \section{Portfolio with hypothesis}
+        \section{Validate hypothesis and solve them}
+        \section{Compute best next point (range of points)}
+
+            \subsection{Metrics}
+                Keep making algorithmic progress toward the Pareto front in the objective function space;
+                \paragraph{Overview}
+                \paragraph{How evaluated a Pareto front?}
+                    - Hypervolume
+                    - Hyper-area Ratio (HR)
+                    The Hyper-area Ratio (HR) [24] employs the hypervolume of a solution set A
+                    divided by the hypervolume value of a Reference Front B. Higher values are
+                    preferred to lower ones.
+
+                    - Pareto Dominance Indicator (ER) [11] considers the solutions intersection between two given sets A and B, which can be 
+                    provided by different algorithms or used to compare a solution set S with a Pareto Front P.
+
+                    - Crowding Distance
+
+            \begin{itemize}
+                \item Solution from best hypothesis
+                \item Bagging solution
+                \item Voting solution                
+            \end{itemize}
+
+
+% --- EVALUATION 
+    \chapter{Evaluation. Experimental Results}
+
+            Will be used two types of problems: Synthetic and Real physical
+
+            Idea: Generate problem from data set and try to optimize it with parameter tunning from the beginning. Need models with accuracy ~96 amd multiply objectives. 
+
+            \section{Test suite: ZDT}
+            This widespread test suite was conceived for two-objective problems and takes its name from its authors Zitzler, Deb and Thiele.
+            Ref[“Comparison of multiobjective evolutionary algorithms: Empirical results.”, 2000]
+
+            \section{Test suite: DTLZ}
+            This widespread test suite was conceived for multiobjective problems with scalable fitness dimensions and takes its name from its authors Deb, Thiele, Laumanns and Zitzler.
+            Ref["Scalable Test Problems for Evolutionary Multiobjective Optimization", 2005]
+
+            \section{Test suite: WFG}
+            This test suite was conceived to exceed the functionalities of previously implemented test suites.
+            In particular, non-separable problems, deceptive problems, truly degenerative problems and mixed shape Pareto front problems are thoroughly covered, 
+            as well as scalable problems in both the number of objectives and variables. Also, problems with dependencies between position and distance related parameters are covered.
+                \begin{enumerate}
+
+                    \item A few unimodal test problems should be present in the test suite. 
+                    Various Pareto optimal geometries and bias conditions should define these problems, 
+                    in order to test how the convergence velocity is influenced by these aspects.
+
+                    \item The following three Pareto optimal geometries should be present in the test suite: 
+                    degenerate Pareto optimal fronts, disconnected Pareto optimal fronts and disconnected Pareto optimal sets.
+
+                    \item Many problems should be multimodal, and a few deceptive problems should also be covered.
+                    \item The majority of test problems should be non-separable.
+                    \item Both non-separable and multimodal problems should also be addressed.
+                \end{enumerate}
+            Ref[ “A Review of Multi-Objective Test Problems and a Scalable Test Problem Toolkit”, 2006]
+
+            \section{Problem Suite: CEC 2009}
+            Competition on “Performance Assessment of Constrained / Bound Constrained Multi-Objective Optimization Algorithms”. All problems are continuous, multi objective problems.
+
+            \section{Physical. Real world problem}
+
+                Computational models describing the behavior of complex physical systems are often used in 
+                the engineering design field to identify better or optimal solutions with respect to previously 
+                defined performance criteria. Multi-objective optimization problems arise and the set of optimal compromise 
+                solutions (Pareto front) has to be identified by an effective and complete search procedure in order to let the 
+                decision maker, the designer, to carry out the best choice.
+
+                \subsection{Materials Selection in Mechanical Design}
+                \subsection{Test generation}
+                \subsection{Gold or oil search. Geodesy}
+                \subsection{Space crafts}
+                Problem 1: obtain a set of geometric design parameters to get minimum heat pipe mass and the maximum thermal conductance.
+                Thus, a set of geometric design parameters lead to minimum pressure total cost and maximum pressure vessel volume. 
+                The alternative solutions are very difficult to be adopted to practical engineering decision directly. 
+                Ref[Multi-Objective Optimization Problems in Engineering Design Using Genetic Algorithm Case Solution]
+
+
+
+
+    \chapter{Related work}
+
+
+    \chapter{Conclusion}
+        \lipsum[1]
+
+    % must be invoked for correct page numbering in the appendix and all lists
+    \backmatter
+    
+    \appendix
+    \chapter{Appendix}
+    \section{Additional Information}
+    \lipsum[1]
+    
+    \section{More Important Information}
+    \lipsum[1]
+  
+\end{document}
