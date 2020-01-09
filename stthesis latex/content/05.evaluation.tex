@@ -1,0 +1,56 @@
+\chapter{Evaluation. Experimental Results}
+
+Will be used two types of problems: Synthetic and Real physical
+
+Idea: Generate problem from data set and try to optimize it with parameter tunning from the beginning. 
+Need models with accuracy ~96 amd multiply objectives. 
+
+\section{Test suite: ZDT}
+This widespread test suite was conceived for two-objective problems and takes its name from its authors Zitzler, Deb and Thiele.
+Ref[“Comparison of multiobjective evolutionary algorithms: Empirical results.”, 2000]
+
+\section{Test suite: DTLZ}
+This widespread test suite was conceived for multiobjective problems with scalable fitness dimensions and takes its name from its authors Deb, Thiele, Laumanns and Zitzler.
+Ref["Scalable Test Problems for Evolutionary Multiobjective Optimization", 2005]
+
+\section{Test suite: WFG}
+This test suite was conceived to exceed the functionalities of previously implemented test suites.
+In particular, non-separable problems, deceptive problems, truly degenerative problems and mixed shape Pareto front problems are thoroughly covered, 
+as well as scalable problems in both the number of objectives and variables. Also, problems with dependencies between position and distance related parameters are covered.
+    \begin{enumerate}
+
+        \item A few unimodal test problems should be present in the test suite. 
+        Various Pareto optimal geometries and bias conditions should define these problems, 
+        in order to test how the convergence velocity is influenced by these aspects.
+
+        \item The following three Pareto optimal geometries should be present in the test suite: 
+        degenerate Pareto optimal fronts, disconnected Pareto optimal fronts and disconnected Pareto optimal sets.
+
+        \item Many problems should be multimodal, and a few deceptive problems should also be covered.
+        \item The majority of test problems should be non-separable.
+        \item Both non-separable and multimodal problems should also be addressed.
+    \end{enumerate}
+Ref[ “A Review of Multi-Objective Test Problems and a Scalable Test Problem Toolkit”, 2006]
+
+\section{Problem Suite: CEC 2009}
+Competition on “Performance Assessment of Constrained / Bound Constrained Multi-Objective Optimization Algorithms”. All problems are continuous, multi objective problems.
+
+\section{Physical. Real world problem}
+
+    Computational models describing the behavior of complex physical systems are often used in 
+    the engineering design field to identify better or optimal solutions with respect to previously 
+    defined performance criteria. Multi-objective optimization problems arise and the set of optimal compromise 
+    solutions (Pareto front) has to be identified by an effective and complete search procedure in order to let the 
+    decision maker, the designer, to carry out the best choice.
+
+    \subsection{Materials Selection in mechanical design}
+    \subsection{Test generation}
+    \subsection{Gold or oil search. Geodesy}
+    \subsection{Space crafts}
+    Problem 1: obtain a set of geometric design parameters to get minimum heat pipe mass and the maximum thermal conductance.
+    Thus, a set of geometric design parameters lead to minimum pressure total cost and maximum pressure vessel volume. 
+    The alternative solutions are very difficult to be adopted to practical engineering decision directly. 
+    Ref[Multi-Objective Optimization Problems in Engineering Design Using Genetic Algorithm Case Solution]
+    Problem 2: Solar sailing mission design
+
+

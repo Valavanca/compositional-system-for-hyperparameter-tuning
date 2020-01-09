@@ -1,0 +1,52 @@
+\chapter{Introduction. Challenges and Problems.}
+
+[DLR, Optimisation-based multi-objective design and assessment] 
+Multi-objective optimisation is a proven, well-known parameter tuning technique in engineering design. It is especially suited 
+to solve complex, multidisciplinary design problems with emphasis on control system design.
+MOPS is currently applied to various design and evaluation problems at DLR and in industry. The main fields 
+of application are industrial robotics, flight control, power-optimized aircraft systems, and vehicle dynamics. Development and maturation of MOPS is an ongoing process.
+In MOPS a multi-objective/multi-model/multi-case design problem is usually mapped to a weighted min-max optimisation problem, which is then solved by using one of several 
+available powerful optimizers, implementing local and global search strategies. Besides very efficient gradient-based solvers (well-suited primarily for smooth problems, 
+especially identification problems), more robust gradient-free direct-search based solvers are available to address problems with non-smooth or noisy criteria. To overcome the 
+problem of local minima to some extent, global solvers based on stochastic, evolutionary or branching strategies can be alternatively used.
+
+The weighted-sum function approach is a method used to simplify a multiobjective problem, lumping the objectives into 
+one function by using weighted sum factors, as shown in Eq. [14.3]. The combined function f is used to evaluate and define the optimal solution.
+
+Real engineering design problems are generally characterized by the presence of many
+often conflicting and incommensurable objectives. This raises the issue about how
+different objectives should be combined to yield a final solution. There is also the
+question on how to search for an optimal solution to the design problem. 
+
+When we talk about several objectives, the notion of optimum changes because in multiobjective problems, the aim is to find good compromises rather than a single solution as in global optimization.
+Since multi-objective optimization problems give rise to a set of Pareto-optimal solutions, evolutionary 
+optimization algorithms are ideal for handling multi-objective optimization problems [1].
+
+[Johan Andersson, A Survey of Multiobjective Optimization in Engineering Design] 
+Optimization methods could be divided into derivative and non-derivative methods,Figure 2. This survey focuses on non-derivative methods, as they are more suitable for
+general engineering design problems. One reason is that non-derivative methods do not
+require any derivatives of the objective function in order to calculate the optimum.
+Therefore, they are also known as black box methods. Another advantages of these
+methods are that they are more likely to find a global optima, and not be stuck on local
+optima as gradient methods might do
+
+\section{Motivation}
+Why is the Weighting Method Ineffective?[Hirotaka Nakayama]
+Namely, it can not provide a solution among sunken parts of Pareto surface due to “duality gap” for not convex cases. 
+Even for convex cases, for example, in linear cases, even if we want to get a point in the middle of line segment between two vertices, we merely get a vertex of Pareto surface, as
+long as the well known simplex method is used. This implies that depending on the structure of problem, the linearly weighted sum can not necessarily provide a solution as DM desires.
+
+\section{Objectives}
+
+
+\section{Research Questions}
+\begin{enumerate}
+    \item RQ: How reduce experiments count and reach near-optimal multi objective solution?
+    \item RQ: Reusable compositional system for optimization. Define steps in workflow. How extend models to new use case and not to rewrite everything from scratch.
+    \item RQ: No free lunch theorem: hypothesis portfolio. Select from a plethora of models that can be suitable for fitted data set. Usefully for single and multi objective in parameter tuning.
+    \item RQ: Solve hypothesis and range multi-objective solution
+\end{enumerate}
+
+% \section{Solution}
+
+% \section{Organization of the Thesis}

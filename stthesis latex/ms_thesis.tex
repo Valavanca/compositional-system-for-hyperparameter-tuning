@@ -1,0 +1,41 @@
+\documentclass[ms,english]{stthesis}
+\usepackage{lipsum}
+\usepackage{todonotes}
+
+
+\title{Compositional multi-objective parameter tuning}
+\author{Oleksandr Husak}
+\date{\today}
+\birthday{16.04.1994}
+\birthplace{Ukraine}
+\supervisor{MSc. Dmytro Pukhkaiev \newline Dr.-Ing. Sebastian Götz}
+
+
+\begin{document}
+    \maketitle % This sets the title page
+  
+    \tableofcontents
+  
+    \input{content/01.intro.tex}
+    \input{content/02.background.tex}
+    \input{content/03.concept.tex}
+    \input{content/04.implementation.tex}
+    \input{content/05.evaluation.tex}
+    \input{content/06.related_work.tex}
+    \input{content/07.conclusion.tex}
+
+    \bibliographystyle{alpha}
+    \bibliography{content/bibliography.bib}
+    % must be invoked for correct page numbering in the appendix and all lists
+    \backmatter
+    
+    \appendix
+    
+    \chapter{Appendix}
+    \section{Additional Information}
+    \lipsum[1]
+    
+    \section{More Important Information}
+    \lipsum[1]
+  
+\end{document}
