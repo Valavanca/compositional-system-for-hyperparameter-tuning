@@ -1,22 +1,251 @@
 [
-{
-  "id": "url:https://github.com/manubot/rootstock",
-  "type": "webpage",
-  "URL": "https://github.com/manubot/rootstock",
-  "title": "manubot/rootstock GitHub repository",
-  "container-title": "GitHub",
-  "issued": {
-    "date-parts": [
-      [
-        2019
+  {
+    "author": [
+      {
+        "family": "Feurer",
+        "given": "Matthias"
+      },
+      {
+        "family": "Klein",
+        "given": "Aaron"
+      },
+      {
+        "family": "Eggensperger",
+        "given": "Katharina"
+      },
+      {
+        "family": "Springenberg",
+        "given": "Jost"
+      },
+      {
+        "family": "Blum",
+        "given": "Manuel"
+      },
+      {
+        "family": "Hutter",
+        "given": "Frank"
+      }
+    ],
+    "container-title": "Advances in neural information processing systems",
+    "id": "raw:autosklearn:feurer2015efficient",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
       ]
-    ]
+    },
+    "page": "2962-2970",
+    "title": "Efficient and robust automated machine learning",
+    "type": "paper-conference"
   },
-  "author": [
-    {
-      "given": "Daniel",
-      "family": "Himmelstein"
-    }
-  ]
-}
+  {
+    "URL": "http://arxiv.org/abs/1903.02915",
+    "author": [
+      {
+        "family": "Benitez-Hidalgo",
+        "given": "Antonio"
+      },
+      {
+        "family": "Nebro",
+        "given": "Antonio J."
+      },
+      {
+        "family": "Garcia-Nieto",
+        "given": "Jose"
+      },
+      {
+        "family": "Oregi",
+        "given": "Izaskun"
+      },
+      {
+        "family": "Ser",
+        "given": "Javier Del"
+      }
+    ],
+    "id": "raw:benitezhidalgo2019jmetalpy",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "title": "JMetalPy: A python framework for multi-objective optimization with metaheuristics",
+    "title-short": "JMetalPy",
+    "type": "no-type"
+  },
+  {
+    "DOI": "10.1145/2908812.2908918",
+    "ISBN": "978-1-4503-4206-3",
+    "URL": "http://doi.acm.org/10.1145/2908812.2908918",
+    "author": [
+      {
+        "family": "Olson",
+        "given": "Randal S."
+      },
+      {
+        "family": "Bartley",
+        "given": "Nathan"
+      },
+      {
+        "family": "Urbanowicz",
+        "given": "Ryan J."
+      },
+      {
+        "family": "Moore",
+        "given": "Jason H."
+      }
+    ],
+    "collection-title": "GECCO ’16",
+    "container-title": "Proceedings of the genetic and evolutionary computation conference 2016",
+    "id": "raw:OlsonGECCO2016",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "page": "485-492",
+    "publisher": "ACM",
+    "publisher-place": "New York, NY, USA",
+    "title": "Evaluation of a tree-based pipeline optimization tool for automating data science",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.5281/zenodo.3582877",
+    "URL": "https://doi.org/10.5281/zenodo.3582877",
+    "author": [
+      {
+        "family": "Biscani",
+        "given": "Francesco"
+      },
+      {
+        "family": "Izzo",
+        "given": "Dario"
+      },
+      {
+        "family": "Jakob",
+        "given": "Wenzel"
+      },
+      {
+        "family": "GiacomoAcciarini"
+      },
+      {
+        "family": "Märtens",
+        "given": "Marcus"
+      },
+      {
+        "family": "C",
+        "given": "Micky"
+      },
+      {
+        "family": "Mereta",
+        "given": "Alessio"
+      },
+      {
+        "family": "Kaldemeyer",
+        "given": "Cord"
+      },
+      {
+        "family": "Lyskov",
+        "given": "Sergey"
+      },
+      {
+        "family": "Acciarini",
+        "given": "Giacomo"
+      },
+      {
+        "family": "Corlay",
+        "given": "Sylvain"
+      },
+      {
+        "family": "acxz"
+      },
+      {
+        "family": "Pritchard",
+        "given": "Benjamin"
+      },
+      {
+        "family": "Manani",
+        "given": "Kishan"
+      },
+      {
+        "family": "Mabille",
+        "given": "Johan"
+      },
+      {
+        "family": "Huebl",
+        "given": "Axel"
+      },
+      {
+        "family": "López-Ibáñez",
+        "given": "Manuel"
+      },
+      {
+        "family": "jakirkham"
+      },
+      {
+        "family": "Lee",
+        "given": "Jeongseok"
+      },
+      {
+        "family": "hulucc"
+      },
+      {
+        "family": "polygon"
+      },
+      {
+        "family": "Zajc",
+        "given": "Luka Čehovin"
+      },
+      {
+        "family": "Adler",
+        "given": "Jonas"
+      },
+      {
+        "family": "Travers",
+        "given": "John"
+      },
+      {
+        "family": "Jordan",
+        "given": "Jakob"
+      },
+      {
+        "family": "Smirnov",
+        "given": "Ivan"
+      },
+      {
+        "family": "Nguyen",
+        "given": "Huu"
+      },
+      {
+        "family": "Lema",
+        "given": "Felipe"
+      },
+      {
+        "family": "O’Leary",
+        "given": "Erik"
+      },
+      {
+        "family": "Mambrini",
+        "given": "Andrea"
+      }
+    ],
+    "id": "raw:francesco_biscani_2019_3582877",
+    "issued": {
+      "date-parts": [
+        [
+          2019,
+          12
+        ]
+      ]
+    },
+    "publisher": "Zenodo",
+    "title": "Esa/pagmo2: Pagmo 2.12.0",
+    "title-short": "Esa/pagmo2",
+    "type": "book",
+    "version": "v2.12.0"
+  }
 ]
