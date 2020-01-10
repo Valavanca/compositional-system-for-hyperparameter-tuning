@@ -5,21 +5,46 @@
     - Single-obj optimization
     
     \section{Multi-objective optimization}
-    “The process of optimizing systematically and simultaneously a collection of objective functions [...]” [88, p. 369]Thus,
-    A central issue of MOO is the relationship between the objective functions. These are usually modeled as preferences of the decision maker.
+    "Multi-objective optimization deals with such conflicting objectives. It provides a
+    mathematical framework to arrive at optimal design state which accommodates the various criteria demanded by
+    the application. The process of optimizing systematically and simultaneously a collection of objective functions
+    are called multi-objective optimization (MOO)\cite{odugod2013}".
+    Thus, a central issue of MOO is the relationship between the objective functions. These are usually modeled as preferences of the decision maker.
+
+    \begin{itemize}
+        \item Quality and Effort tradeoff for multi-objective
+        \item Human in the loop: Composition technic as tools for domain expert
+    \end{itemize}
+
+        \paragraph{Conclusion}
+        For optimization expensive black-box:
+        \begin{itemize}
+            \item Scalable algorithms that convert multi-objective to single objective problem produce solution that not accurate enough(Scalarizing). Also this approach suitable for a limited type of problem.
+            \item Genetic algorithms. This approach is costly to perform and not appropriate for expensive problems.
+        \end{itemize}
+        Optimization gap in obtaining high quality, multi/single-obj solutions in expensive to evaluate experiments.
+        Experiments as a black box, derivative-free. Reference to surrogate optimization.
 
     \section{Surrogate optimization}
     Surrogate used to expedite search for global optimum. Global accuracy of surrogate
     not a priority
 
-    \paragraph{Use cases}
-    Example for each type of optimization.
+        \paragraph{Use cases}
+        Example for each type of optimization. Justification solution.
+        Conclusion: Design gap in optimization/parameter tuning. 
+        Need to indicate optimization workflow for expensive process/experiments. 
+        The argument(s) why we need new architecture. Reference to composition architecture.
 
     \section{Compositional architecture}
         \paragraph{Interfaces and Contracts}
 
         \paragraph{Reusable software}
         Problem that each optimization framework/library use inner interfaces. 
+        It is necessary to define a standard that implements best practices for extension libraries \cite{buitinck2013api}.
 
     \section{Scope of work}
-        *make some nice diagram
+        [*]make some nice diagram
+
+        Describe and implement workflow for multi-objective parameter tuning of derivative free, black-box system. Parameter estimation is costly.
+        The proposed solutions are also suitable for single-criteria optimization.
+

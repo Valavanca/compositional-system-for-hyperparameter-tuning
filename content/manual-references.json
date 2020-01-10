@@ -247,5 +247,104 @@
     "title-short": "Esa/pagmo2",
     "type": "book",
     "version": "v2.12.0"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1309.0238",
+    "author": [
+      {
+        "family": "Buitinck",
+        "given": "Lars"
+      },
+      {
+        "family": "Louppe",
+        "given": "Gilles"
+      },
+      {
+        "family": "Blondel",
+        "given": "Mathieu"
+      },
+      {
+        "family": "Pedregosa",
+        "given": "Fabian"
+      },
+      {
+        "family": "Mueller",
+        "given": "Andreas"
+      },
+      {
+        "family": "Grisel",
+        "given": "Olivier"
+      },
+      {
+        "family": "Niculae",
+        "given": "Vlad"
+      },
+      {
+        "family": "Prettenhofer",
+        "given": "Peter"
+      },
+      {
+        "family": "Gramfort",
+        "given": "Alexandre"
+      },
+      {
+        "family": "Grobler",
+        "given": "Jaques"
+      },
+      {
+        "family": "Layton",
+        "given": "Robert"
+      },
+      {
+        "family": "Vanderplas",
+        "given": "Jake"
+      },
+      {
+        "family": "Joly",
+        "given": "Arnaud"
+      },
+      {
+        "family": "Holt",
+        "given": "Brian"
+      },
+      {
+        "family": "Varoquaux",
+        "given": "Gaël"
+      }
+    ],
+    "id": "raw:buitinck2013api",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "title": "API design for machine learning software: Experiences from the scikit-learn project",
+    "title-short": "API design for machine learning software",
+    "type": "no-type"
+  },
+  {
+    "DOI": "10.9790/3021-031020114",
+    "author": [
+      {
+        "family": "Odu",
+        "given": "Godwin"
+      }
+    ],
+    "container-title": "IOSR Journal of Engineering",
+    "id": "raw:odugod2013",
+    "issued": {
+      "date-parts": [
+        [
+          2013,
+          10
+        ]
+      ]
+    },
+    "page": "01-14",
+    "title": "Review of multi-criteria optimization methods – theory and applications",
+    "type": "article-journal",
+    "volume": "3"
   }
 ]
