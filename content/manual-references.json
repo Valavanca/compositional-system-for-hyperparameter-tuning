@@ -346,5 +346,77 @@
     "title": "Review of multi-criteria optimization methods – theory and applications",
     "type": "article-journal",
     "volume": "3"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1801.02381",
+    "author": [
+      {
+        "dropping-particle": "van der",
+        "family": "Kouwe",
+        "given": "Erik"
+      },
+      {
+        "family": "Andriesse",
+        "given": "Dennis"
+      },
+      {
+        "family": "Bos",
+        "given": "Herbert"
+      },
+      {
+        "family": "Giuffrida",
+        "given": "Cristiano"
+      },
+      {
+        "family": "Heiser",
+        "given": "Gernot"
+      }
+    ],
+    "id": "raw:kouwe2018benchmarking",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "title": "Benchmarking crimes: An emerging threat in systems security",
+    "title-short": "Benchmarking crimes",
+    "type": "no-type"
+  },
+  {
+    "author": [
+      {
+        "family": "Tian",
+        "given": "Ye"
+      },
+      {
+        "family": "Cheng",
+        "given": "Ran"
+      },
+      {
+        "family": "Zhang",
+        "given": "Xingyi"
+      },
+      {
+        "family": "Jin",
+        "given": "Yaochu"
+      }
+    ],
+    "container-title": "IEEE Computational Intelligence Magazine",
+    "id": "raw:PlatEMO",
+    "issue": "4",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "page": "73-87",
+    "title": "raw:PlatEMO: A MATLAB platform for evolutionary multi-objective optimization",
+    "title-short": "raw:PlatEMO",
+    "type": "article-journal",
+    "volume": "12"
   }
 ]

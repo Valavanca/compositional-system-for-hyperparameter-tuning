@@ -2,25 +2,44 @@
 Managing Complex Execution Strategies
 
 \section{Portfolio with hypothesis}
+A set of models is defined that can form a partial or complete hypothesis to describe the problem.
+Also during the increase of the experiments may change the model that best describes the existing problem
+As a result, there is variability for each problem and configuration step at the same time. 
+A set of hypotheses can solve this problem but it takes longer time for cross validation.
+
 \section{Validate hypothesis}
 \section{Acquisition in points for evaluation}
 
     \subsection{Metrics}
-        Keep making algorithmic progress toward the Pareto front in the objective function space
-        \paragraph{How evaluated a Pareto front?}
-            - Hypervolume
-            - Hyper-area Ratio (HR)
-            The Hyper-area Ratio (HR) [24] employs the hypervolume of a solution set A
-            divided by the hypervolume value of a Reference Front B. Higher values are
-            preferred to lower ones.
-
-            - Pareto Dominance Indicator (ER) [11] considers the solutions intersection between two given sets A and B, which can be 
-            provided by different algorithms or used to compare a solution set S with a Pareto Front P.
-
-            - Crowding Distance
-
+    Keep making algorithmic progress toward the Pareto front in the objective function space.
+    \paragraph{How evaluated a Pareto front?}
     \begin{itemize}
-        \item Solution from best hypothesis
+        \item Hypervolume (HV). 
+        This metric represents the volume of the objective space
+        that is covered by the individuals of a non-dominated
+        solutions set (solutions that belong to a Pareto front). The
+        volume is delimited by two points: one point that is called
+        the anti-optimal point (A) that is defined as the worst
+        solution inside the objective space, and a second optimal
+        point (pseudo-optimal) that is calculated by the proposed
+        solution method. 
+        \item Hyper-area Ratio (HR).
+        The Hyper-area Ratio (HR) [24] employs the hypervolume of a solution set A
+        divided by the hypervolume value of a Reference Front B. Higher values are
+        preferred to lower ones.
+        \item Pareto Dominance Indicator (ER). 
+        Considers the solutions intersection between two given sets A and B, which can be 
+        provided by different algorithms or used to compare a solution set S with a Pareto Front P.
+        \item Crowding Distance
+        
+    \end{itemize}
+
+    Variants in evaluation of sets of solutions for each hypothesis.
+    Each hypothesis have quality metrics. Solution(s) from each hypothesis have also own metrics.
+
+    There are main approaches how produce single solution: 
+    \begin{itemize}
+        \item Solution from best hypothesis. Sorting
         \item Bagging solution
         \item Voting solution                
     \end{itemize}
