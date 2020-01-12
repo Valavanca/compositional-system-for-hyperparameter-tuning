@@ -418,5 +418,35 @@
     "title-short": "raw:PlatEMO",
     "type": "article-journal",
     "volume": "12"
+  },
+  {
+    "ISBN": "978-0-470-06068-1",
+    "author": [
+      {
+        "family": "Forrester",
+        "given": "Alexander I. J."
+      },
+      {
+        "family": "Sobester",
+        "given": "Andras"
+      },
+      {
+        "family": "Keane",
+        "given": "Andy J."
+      }
+    ],
+    "id": "raw:EngSurMod",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    },
+    "keyword": "dblp",
+    "page": "I-XVIII, 1-210",
+    "publisher": "Wiley",
+    "title": "Engineering design via surrogate modelling - a practical guide.",
+    "type": "book"
   }
 ]

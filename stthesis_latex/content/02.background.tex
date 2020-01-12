@@ -2,34 +2,72 @@
     Describe general objectives and there constraints
 
     \section{Parameter tuning}
-    - Single-obj optimization
+    \paragraph{Single-obj optimization}
+    Define an objective function: 
+    \begin{itemize}
+        \item Accuracy
+        \item Runtime
+        \item Latency
+        \item Energy
+    \end{itemize}
+
+    Optimization procedures:
+    \begin{itemize}
+        \item Grid search
+        \item Random search
+        \item Heuristics
+    \end{itemize}
+    Bayesian methods differ from random or grid search in that they use past evaluation results to choose the next values to evaluate.
+    Limit expensive evaluations of the objective function by choosing the next input values based on those that have done well in the past.
+
+    Optimization cost:
+    \begin{itemize}
+        \item Evaluation may be very expensive
+        \item Sampling budget
+        \item Possibly noisy
+        \item Feasibility constraints
+        \item Multi-objective
+    \end{itemize}
+    Ideally, we want a method that can explore the search space while also limiting evaluations of poor hyperparameter choices.
+
     
     \section{Multi-objective optimization}
-    "Multi-objective optimization deals with such conflicting objectives. It provides a
-    mathematical framework to arrive at optimal design state which accommodates the various criteria demanded by
-    the application. The process of optimizing systematically and simultaneously a collection of objective functions
-    are called multi-objective optimization (MOO)\cite{odugod2013}".
-    Thus, a central issue of MOO is the relationship between the objective functions. These are usually modeled as preferences of the decision maker.
+        "Multi-objective optimization deals with such conflicting objectives. It provides a
+        mathematical framework to arrive at optimal design state which accommodates the various criteria demanded by
+        the application. The process of optimizing systematically and simultaneously a collection of objective functions
+        are called multi-objective optimization (MOO)\cite{odugod2013}".
+        Thus, a central issue of MOO is the relationship between the objective functions. These are usually modeled as preferences of the decision maker.
 
-    Practical optimization problems usually involve simultaneous optimization of multiple conflicting objectives with many constraints(?).
+        Search or design space(Input space) -> Objective space(Output space).
+        [TODO] Make plot 
+        Practical optimization problems usually involve simultaneous optimization of multiple conflicting objectives with many constraints(?).
 
-    \begin{itemize}
-        \item Quality and Effort tradeoff for multi-objective
-        \item Human in the loop: Composition technic as tools for domain expert
-    \end{itemize}
 
-    \paragraph{Conclusion}
-    For optimization expensive black-box:
-    \begin{itemize}
-        \item Scalable algorithms that convert multi-objective to single objective problem produce solution that not accurate enough(Scalarizing). Also this approach suitable for a limited type of problem.
-        \item Genetic algorithms. This approach is costly to perform and not appropriate for expensive problems.
-    \end{itemize}
-    Optimization gap in obtaining high quality, multi/single-obj solutions in expensive to evaluate experiments.
-    Experiments as a black box, derivative-free. Reference to surrogate optimization.
+        Why is the Weighting Method Ineffective?[Hirotaka Nakayama]
+        Namely, it can not provide a solution among sunken parts of Pareto surface due to “duality gap” for not convex cases. 
+        Even for convex cases, for example, in linear cases, even if we want to get a point in the middle of line segment between two vertices, we merely get a vertex of Pareto surface, as
+        long as the well known simplex method is used. This implies that depending on the structure of problem, the linearly weighted sum can not necessarily provide a solution as DM desires.
+
+
+        \begin{itemize}
+            \item Quality and Effort tradeoff for multi-objective
+            \item Human in the loop: Composition technic as tools for domain expert
+        \end{itemize}
+
+        \paragraph{Conclusion}
+        For optimization expensive black-box:
+        \begin{itemize}
+            \item Scalable algorithms that convert multi-objective to single objective problem produce solution that not accurate enough(Scalarizing). Also this approach suitable for a limited type of problem.
+            \item Genetic algorithms. This approach is costly to perform and not appropriate for expensive problems.
+        \end{itemize}
+        Optimization gap in obtaining high quality, multi/single-obj solutions in expensive to evaluate experiments.
+        Experiments as a black box, derivative-free. Reference to surrogate optimization.
 
     \section{Surrogate optimization}
-    Surrogate used to expedite search for global optimum. Global accuracy of surrogate
-    not a priority
+        Surrogate used to expedite search for global optimum. Global accuracy of surrogate
+        not a priority. Surrogate model is cheaper to evaluate than the objective.
+
+        \cite{EngSurMod}
 
         \paragraph{Use cases}
         Example for each type of optimization. Justification solution.
@@ -44,9 +82,31 @@
         Problem that each optimization framework/library use inner interfaces. 
         It is necessary to define a standard that implements best practices for extension libraries \cite{buitinck2013api}.
 
+        We introduce new Model-based line for parameter tuning. 
+
     \section{Scope of work}
-        [*]make some nice diagram
+        \todo{make some nice tree-diagram}
 
         Describe and implement workflow for multi-objective parameter tuning of derivative free, black-box system. Parameter estimation is costly.
-        The proposed solutions are also suitable for single-criteria optimization.
+        The proposed solutions are also suitable for single-criteria optimization. Problem Setting.
+
+        Goal:
+        \begin{enumerate}
+            \item Globally optimize an objective function(s) that is expensive to evaluate. Single/Multi-objective parameter tuning
+            \item Scalability in optimization objective. Simultaneously. Gradient-free evaluation.
+            \item Components reuse. Extensibility with other frameworks.
+        \end{enumerate}
+
+        Problem:
+        \begin{enumerate}
+            \item A large number of the target black-box evaluations.
+            \item Interfaces not unify.
+            \item Code duplication.
+        \end{enumerate}
+
+        Solution:
+        \begin{enumerate}
+            \item Compositional architecture.
+            \item Surrogate optimization.
+        \end{enumerate}
 

@@ -10,7 +10,7 @@ ___
 ### - Manubot directories:
 
 + [`content`](content) contains the manuscript source, which includes markdown files as well as inputs for citations and references.
-  See [`manuscript usage.md`](manuscript usage.md) for more information.
+  See [`manuscript_usage.md`](manuscript_usage.md) for more information.
 + [`output`](output) contains the outputs (generated files) from Manubot including the resulting manuscripts.
   You should not edit these files manually, because they will get overwritten.
 + [`webpage`](webpage) is a directory meant to be rendered as a static webpage for viewing the HTML manuscript.
