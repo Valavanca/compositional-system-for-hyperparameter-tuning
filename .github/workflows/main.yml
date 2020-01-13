@@ -16,4 +16,5 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: ms_thesis.pdf
-          path: stthesis_latex/ms_thesis.pdf
+          path: ms_thesis.pdf
+        if: always()
