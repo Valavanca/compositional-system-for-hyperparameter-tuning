@@ -405,6 +405,7 @@ class PredictTutor(BaseEstimator):
             return all_y_models
 
         # Concat groups & add missing models
+        self._temp_grp = grp
         concat_y_groups = pd.concat(grp, axis=1, keys=y_names).fillna(
             method='backfill').fillna(method='ffill')
 
