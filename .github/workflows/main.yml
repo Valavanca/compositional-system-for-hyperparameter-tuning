@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Git repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2.0.0
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@master
         with:
@@ -16,5 +16,5 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: ms_thesis.pdf
-          path: ms_thesis.pdf
+          path: stthesis_latex/ms_thesis.pdf
         if: always()
