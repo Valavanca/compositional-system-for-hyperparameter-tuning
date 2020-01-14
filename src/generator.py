@@ -23,7 +23,7 @@ class SamplesGenerator():
         return self._X, self._y
 
     def return_X_y(self):
-        return self._X, self._y
+        return self._X.reset_index(drop=True), self._y.reset_index(drop=True)
 
     def update(self, X, y):
         if len(X) != len(y):

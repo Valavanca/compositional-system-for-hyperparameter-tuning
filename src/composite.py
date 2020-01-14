@@ -397,7 +397,7 @@ class PredictTutor(BaseEstimator):
             group_df_selection = group_df.drop_duplicates(subset='id')
             group_df_selection.sort_values(
                 by=["test_" + s for s in self._score], ascending=False, inplace=True)
-            grp.append(group_df_selection)
+            grp.append(group_df_selection.reset_index(drop=True))
             y_names.append("meta_{}".format(name))
 
         # If not enough models for combination
@@ -501,7 +501,7 @@ class PredictTutor(BaseEstimator):
         not dominated points from this test set"""
         if X is None and y is None:
             print("Inner score on a validation set")
-            X, y = self._test
+            X, y = self._test or self.__init_dataset
 
         if self.cv_distill is not None:
             self.cv_distill['val_score'] = self.cv_distill['estimator'].apply(
