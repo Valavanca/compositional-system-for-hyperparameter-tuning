@@ -10,12 +10,23 @@ A set of hypotheses can solve this problem but it takes longer time for cross va
 \section{Validate hypothesis}
     \epigraph{``All models are wrong but some are useful``}{\textit{– George Box}}
 
+    \subsection{Sampling strategy}
+    Oversampling and undersampling in data analysis. Alleviate imbalance in the dataset. 
+    Imbalance in dataset is not always a problem, more so for optimization tasks. 
+
+    The main gain for models not to provide best accuracy on all search space but provide possible optimum regions.
+    Accuracy in prediction optimal regions or points from there will direct the search in the right direction.
+
+    Predictor variables can legitimately over- or under-sample. 
+    In this case, provided a carefully check that the model assumptions seem valid.
+
 \section{Acquisition in points for evaluation}
 
     \subsection{Metrics}
-
     Keep making algorithmic progress toward the Pareto front in the objective function space.
     Coefficient of determination (R2) is the wrong indicator of success.
+
+   
 
     \paragraph{How evaluated a Pareto front?}
     \begin{itemize}
@@ -35,7 +46,7 @@ A set of hypotheses can solve this problem but it takes longer time for cross va
         \item Pareto Dominance Indicator (ER). 
         Considers the solutions intersection between two given sets A and B, which can be 
         provided by different algorithms or used to compare a solution set S with a Pareto Front P.
-        \item Crowding Distance
+        \item Crowding Distance. *pygmo2
         
     \end{itemize}
 
