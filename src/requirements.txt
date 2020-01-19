@@ -1,0 +1,5 @@
+scikit-learn[alldeps]
+sobol_seq
+scipy
+pandas
+pygmo
