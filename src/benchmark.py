@@ -3,8 +3,8 @@ import time
 import random
 import string
 
-import pandas as pd
 import pygmo as pg
+import pandas as pd
 
 from sklearn.model_selection import ParameterGrid
 
@@ -112,15 +112,73 @@ def experiment(problem_name: str,
 
 
 if __name__ == "__main__":
-    param_grid = {'problem_name': ['wfg', 'dtlz'], 'prob_id': [4, 1], 'prob_dim': [
-    4, 15], 'obj': [2], 'pop_size': [24], 'gen': [10], 'algo_name': ['moead', 'nsga2', 'nspso']}
+    print(" Start benchamrk ")
 
-    res = []
-    for p in ParameterGrid(param_grid):
-        res.append(experiment(**p))
+    # --- Benchmark config 
 
-    name = ''.join(random.choices(
-        string.ascii_lowercase + string.digits, k=10))
+    test_suites_big = [
+        {
+            'problem_name': ['wfg'],
+            'prob_id': [1, 2, 3, 4, 5, 6],
+            'prob_dim': [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+            'obj': [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+            'pop_size': [20, 40, 80, 160, 400, 800, 1000],
+            'gen': [20, 40, 80, 160, 400, 800, 1000],
+            'algo_name': ['moead', 'nsga2', 'maco', 'nspso']
+        },
+        {
+            'problem_name': ['zdt'],
+            'prob_id': [1, 2, 3, 4, 5, 6, 7],
+            'prob_dim': [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+            'obj': [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+            'pop_size': [20, 40, 80, 160, 400, 800, 1000],
+            'gen': [20, 40, 80, 160, 400, 800, 1000],
+            'algo_name': ['moead', 'nsga2', 'maco', 'nspso']
+        },
+    ]
 
-    res_table = pd.DataFrame(res)
-    res_table.to_csv(r'/src/benchmark_results/name.csv', index=False)
+    test_suites_small = [
+        {
+            'problem_name': ['zdt'],
+            'prob_id': [2, 3],
+            'prob_dim': [2, 3],
+            'obj': [2, 3],
+            'pop_size': [20, 40],
+            'gen': [20, 40],
+            'algo_name': ['moead', 'nsga2', 'maco', 'nspso']
+        },
+        {
+            'problem_name': ['wfg'],
+            'prob_id': [2, 3, 4],
+            'prob_dim': [2, 3, 6, 10],
+            'obj': [2, 3],
+            'pop_size': [20, 40],
+            'gen': [20, 40],
+            'algo_name': ['moead', 'nsga2', 'maco', 'nspso']
+        }
+    ]
+
+    #  config end
+    #  --- 
+
+    i_total = 0
+
+    for param_grid in test_suites_big:
+        i = 0
+        res = []
+        for p in ParameterGrid(param_grid):
+            i = i+1
+            print("\n Evaluation.: {} \n i: {}".format(p, i))
+            res.append(experiment(**p))
+
+        i_total = i_total + i
+        prefix = ''.join(random.choices(
+            string.ascii_lowercase + string.digits, k=10))
+
+        path = './benchmark_results/{}_{}.csv'.format(
+            param_grid['problem_name'][0], prefix)
+
+        print(" Total evaluations: {}".format(i_total))
+        print(" Write results. Path:{}".format(path))
+        res_table = pd.DataFrame(res)
+        res_table.to_csv(path, mode='a+', index=False)
