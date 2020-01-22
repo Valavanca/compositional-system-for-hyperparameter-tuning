@@ -19,11 +19,10 @@ class SamplesGenerator():
         self._y = self._X.apply(self._problem.fitness,
                                 axis=1, result_type='expand')
         self._y.columns = ['f{}'.format(i+1) for i in range(self._nobj)]
-
         return self._X, self._y
 
     def return_X_y(self):
-        return self._X.reset_index(drop=True), self._y.reset_index(drop=True)
+        return self._X, self._y
 
     def update(self, X, y):
         if len(X) != len(y):
@@ -48,6 +47,10 @@ class SamplesGenerator():
 
             self._X = dataset[self._X.columns]
             self._y = dataset[self._y.columns]
+
+            self._X.reset_index(drop=True, inplace=True)
+            self._y.reset_index(drop=True, inplace=True)
+
             print("In dataset add {} new results".format(
                 len(self._X.index)-len(old_df.index)))
         else:
