@@ -345,7 +345,7 @@ class PredictTutor(BaseEstimator):
         cv_dataset = self._train or self.__init_dataset  # dataset for cross-validation
 
         # The result of cross-validation cannot be guaranteed for a smaller data set
-        if len(X) < 5:
+        if len(X) < 8:
             return False
 
         self._check_models_candidate()
