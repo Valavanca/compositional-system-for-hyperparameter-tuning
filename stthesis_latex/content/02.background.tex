@@ -42,12 +42,27 @@
         [TODO] Make plot 
         Practical optimization problems usually involve simultaneous optimization of multiple conflicting objectives with many constraints(?).
 
-
+        \paragraph{Scalarizing}
         Why is the Weighting Method Ineffective?[Hirotaka Nakayama]
         Namely, it can not provide a solution among sunken parts of Pareto surface due to “duality gap” for not convex cases. 
         Even for convex cases, for example, in linear cases, even if we want to get a point in the middle of line segment between two vertices, we merely get a vertex of Pareto surface, as
         long as the well known simplex method is used. This implies that depending on the structure of problem, the linearly weighted sum can not necessarily provide a solution as DM desires.
 
+        \paragraph{Evolutionary Algorithms}
+        Multi-objective Evolutionary Algorithms (MOEAs) are common tools to solve optimization problems, 
+        because of their applicability to complex fitness landscapes and solid performance on problems with large design spaces. 
+        While other methods also exist, in this thesis we will focus on approaches using Evolutionary Algorithms for the Multy-objective optimizations.
+
+        However, MOEAs still need many evaluations of the "black box" system to solve a typical real-world problem. 
+        This is further complicated by the fact that many such problems are very expensive. Consolidated, this makes MOEAs unfeasible for costly and Multy-objective problem.
+         A good solution is the integration of the surrogate model which extrapolate and approximate the fitness landscape from samples. MOEA use this surrogate model 
+         as a target for optimization. Assumed that solution from surrogate close to a real solution.
+        
+        We want to understand if the performance of MOEAs approach can be improved by using compositional surrogates. 
+        The key idea of compositional surrogates is the splitting objective space to multiple surrogates that extrapolate it independently. 
+        Combination of multiple hypotheses should give them the potential to approximate more complicated problems. 
+
+        The various surrogates are analysed on problems of differing complexity, from simple unimodal problems to problems with difficult multimodal. 
 
         \begin{itemize}
             \item Quality and Effort tradeoff for multi-objective
