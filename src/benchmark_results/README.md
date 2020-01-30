@@ -13,7 +13,7 @@ An evaluation will use well-established test suites for multi-objective optimiza
 
 ___
 
-## Solving Approaches
+## Approaches for solving the problem:
 
 ### 1. Random search
 
@@ -30,14 +30,35 @@ Cases:
 Population size is static.
 
 Cases:
-- Algorithm (NSGA2, MOEAD, MACO, NSPSO)
+- Algorithm (`NSGA2`, `MOEAD`, `MACO`, `NSPSO`)
 - Evaluation budget
 
 ### 3. Multi-output Surrogate with Multi-objective Evolutionary Algorithms (MOEA)
 
-> [Problem] -> [Surrogate] -> [MOEA]
+> [Problem] -> [Samples] -> [Surrogate] -> [MOEA]
+
+By default: `NSGA2` as MOEA solver
 
 Cases:
-- Size of a sample set
 - Surrogate model
-- Algorithm (NSGA2, MOEAD, MACO, NSPSO)
+- Evaluation budget
+
+### 4. Compositional Surrogate with Multi-objective Evolutionary Algorithms (MOEA)
+
+> [Problem] -> [Samples] -> [Surrogate_1/Surrogate_2/..] -> [MOEA]
+
+By default: `NSGA2` as MOEA solver
+
+Cases:
+- Surrogate models
+- Evaluation budget
+
+### 5. Portfolio of Surrogates with Multi-objective Evolutionary Algorithms (MOEA)
+
+> [Problem] -> [Samples] -> [[Surrogate_1/Surrogate_2/..]+[Surrogate]+..] -> [MOEA]
+
+By default: `NSGA2` as MOEA solver
+
+Cases:
+- Surrogate portfolio
+- Evaluation budget
