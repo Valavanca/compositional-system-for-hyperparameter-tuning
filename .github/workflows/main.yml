@@ -40,7 +40,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v1
         with:
-          target_branch: gh-pages
-          build_dir: public
+          target_branch: output
+          build_dir: .
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
