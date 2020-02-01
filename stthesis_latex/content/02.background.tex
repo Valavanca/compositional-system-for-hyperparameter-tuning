@@ -1,34 +1,34 @@
 \chapter{Foundation}
     Describe general objectives and there constraints
 
+    % ----------------------------------- Parameter tuning
     \section{Parameter tuning}
-    \paragraph{Single-obj optimization}
-    Define an objective function: 
-    \begin{itemize}
-        \item Accuracy
-        \item Runtime
-        \item Latency
-        \item Energy
-    \end{itemize}
+        Define an objective function: 
+        \begin{itemize}
+            \item Accuracy
+            \item Runtime
+            \item Latency
+            \item Energy
+        \end{itemize}
 
-    Optimization procedures:
-    \begin{itemize}
-        \item Grid search
-        \item Random search
-        \item Heuristics
-    \end{itemize}
-    Bayesian methods differ from random or grid search in that they use past evaluation results to choose the next values to evaluate.
-    Limit expensive evaluations of the objective function by choosing the next input values based on those that have done well in the past.
+        Optimization procedures:
+        \begin{itemize}
+            \item Grid search
+            \item Random search
+            \item Heuristics
+        \end{itemize}
+        Bayesian methods differ from random or grid search in that they use past evaluation results to choose the next values to evaluate.
+        Limit expensive evaluations of the objective function by choosing the next input values based on those that have done well in the past.
 
-    Optimization cost:
-    \begin{itemize}
-        \item Evaluation may be very expensive
-        \item Sampling budget
-        \item Possibly noisy
-        \item Feasibility constraints
-        \item Multi-objective
-    \end{itemize}
-    Ideally, we want a method that can explore the search space while also limiting evaluations of poor hyperparameter choices.
+        Optimization cost:
+        \begin{itemize}
+            \item Evaluation may be very expensive
+            \item Sampling budget
+            \item Possibly noisy
+            \item Feasibility constraints
+            \item Multi-objective
+        \end{itemize}
+        Ideally, we want a method that can explore the search space while also limiting evaluations of poor hyperparameter choices.
 
     
     \section{Multi-objective optimization}
@@ -39,35 +39,138 @@
         Thus, a central issue of MOO is the relationship between the objective functions. These are usually modeled as preferences of the decision maker.
 
         Search or design space(Input space) -> Objective space(Output space).
-        [TODO] Make plot 
         Practical optimization problems usually involve simultaneous optimization of multiple conflicting objectives with many constraints(?).
 
-        \paragraph{Scalarizing}
-        Why is the Weighting Method Ineffective?[Hirotaka Nakayama]
-        Namely, it can not provide a solution among sunken parts of Pareto surface due to “duality gap” for not convex cases. 
-        Even for convex cases, for example, in linear cases, even if we want to get a point in the middle of line segment between two vertices, we merely get a vertex of Pareto surface, as
-        long as the well known simplex method is used. This implies that depending on the structure of problem, the linearly weighted sum can not necessarily provide a solution as DM desires.
+        Knowledge of the Pareto front enables the decision maker to visualize the consequences of his/her choices in terms of performance 
+        for a criterion at the expense of one or other criteria, and to make appropriate decisions. Formally, a feasible vector x is said to (Pareto)-dominate another feasible vector x? if
+        x is at least as good as x? for all the objectives, and strictly better than x? for at least one objective. The decision vectors in the feasible set 
+        that are not dominated by any other feasible vector are called Pareto optimal. The set of non-dominated points in the 
+        feasible is the set of Pareto solutions, whose images (by the objective functions) constitute the Pareto front.\cite{Audet2018PerformanceII}
 
-        \paragraph{Evolutionary Algorithms}
-        Multi-objective Evolutionary Algorithms (MOEAs) are common tools to solve optimization problems, 
-        because of their applicability to complex fitness landscapes and solid performance on problems with large design spaces. 
-        While other methods also exist, in this thesis we will focus on approaches using Evolutionary Algorithms for the Multy-objective optimizations.
 
-        However, MOEAs still need many evaluations of the "black box" system to solve a typical real-world problem. 
-        This is further complicated by the fact that many such problems are very expensive. Consolidated, this makes MOEAs unfeasible for costly and Multy-objective problem.
-         A good solution is the integration of the surrogate model which extrapolate and approximate the fitness landscape from samples. MOEA use this surrogate model 
-         as a target for optimization. Assumed that solution from surrogate close to a real solution.
+        \subsection{Scalarizing. Weighted sum methods}
+            Intuitively, Multi-Objective Optimization (MOO) could be
+            facilitated by forming an alternative problem with a single,
+            composite objective function using weighted sum. Single
+            objective optimization techniques are then applied to this
+            composite function to obtain a single optimal solution.
+            However, the weighted sum methods have difficulties in
+            selecting proper weight factors especially when there is no
+            articulated a priori preference among objectives. Indeed, a
+            posteriori preference articulation is usually preferred, because it
+            allows a greater degree of separation between the optimization
+            methodology and the decision-making process which also
+            enables the algorithmic development process to be conducted
+            independently of the application (Giagkiozos et al, 2015).
+            Furthermore, instead of a single optimum produced by the
+            weighted sum approach, MOO can yield a set of solutions
+            exhibiting explicitly the tradeoff between different objectives. \cite{DBLP:journals/corr/abs-1812-07958}
+
+
+            Why is the Weighting Method Ineffective?[Hirotaka Nakayama]
+            Namely, it can not provide a solution among sunken parts of Pareto surface due to “duality gap” for not convex cases. 
+            Even for convex cases, for example, in linear cases, even if we want to get a point in the middle of line segment between two vertices, we merely get a vertex of Pareto surface, as
+            long as the well known simplex method is used. This implies that depending on the structure of problem, the linearly weighted sum can not necessarily provide a solution as DM desires.
+
+
+        \subsection{Multy-Objective Evolutionary Algorithms}
+            Multi-objective Evolutionary Algorithms (MOEAs) are common tools to solve optimization problems, 
+            because of their applicability to complex fitness landscapes and solid performance on problems with large design spaces. 
+            While other methods also exist, in this thesis we will focus on approaches using Evolutionary Algorithms for the Multy-objective optimizations.
+
+            However, MOEAs still need many evaluations of the "black box" system to solve a typical real-world problem. 
+            This is further complicated by the fact that many such problems are very expensive. Consolidated, this makes MOEAs unfeasible for costly and Multy-objective problem.
+            A good solution is the integration of the surrogate model which extrapolate and approximate the fitness landscape from samples. MOEA use this surrogate model 
+            as a target for optimization. Assumed that solution from surrogate close to a real solution.
+            
+            We want to understand if the performance of MOEAs approach can be improved by using compositional surrogates. 
+            The key idea of compositional surrogates is the splitting objective space to multiple surrogates that extrapolate it independently. 
+            Combination of multiple hypotheses should give them the potential to approximate more complicated problems. 
+
+            The various surrogates are analysed on problems of differing complexity, from simple unimodal problems to problems with difficult multimodal. 
+
+            \begin{itemize}
+                \item Quality and Effort tradeoff for multi-objective
+                \item Human in the loop: Composition technic as tools for domain expert
+            \end{itemize}
+
+
+        \subsection{Metrics for multy-objective solution}
+            In single-objective minimization, the quality of a given solution is trivial to quantify:
+            the smaller the objective function value, the better. However, evaluating the quality of an approximation of a Pareto set is non trivial.
+            The question is important for the comparison of algorithms or prediction next configuration. According
+
+            According to \cite{ZitzlerDT00}, a Pareto front approximation should satisfy the following:
+            \begin{itemize}
+                \item The distance between the Pareto front and its approximation should be minimized.
+                \item A good (according to some metric) distribution of the points of the approximated front is desirable.
+                \item The extent of the approximated front should be maximized, i.e., for each objective, a wide range of values should be covered by the non-dominated points.
+            \end{itemize}
+
+            The goal of metric is to answer this questions.  
+
+            Metrics for performance indicators partitioned into four groups according to their properties \cite{Audet2018PerformanceII}: 
+            \begin{itemize}
+                \item cardinality
+                \item convergence
+                \item distribution
+                \item spread
+            \end{itemize}
         
-        We want to understand if the performance of MOEAs approach can be improved by using compositional surrogates. 
-        The key idea of compositional surrogates is the splitting objective space to multiple surrogates that extrapolate it independently. 
-        Combination of multiple hypotheses should give them the potential to approximate more complicated problems. 
+            Keep making algorithmic progress toward the Pareto front in the objective function space.
+            Straightforward applying of the coefficient of determination (R2) is the wrong indicator of success. 
+        
+            Evaluations of different sets of Pareto optimal points is multi-objective task.
+            Objectives for improving pareto optimal solutions:
+            - Keep hypervolume low. Reference point is 0 for all objectives
+            - Maximize sparsity of points. Average distance. Crowding Distance
+            - Percentage of non-dominant decisions in the total population
+        
+            Distribution and spread indicators According to \cite{CustodioMVV11}, “the spread metrics try to measure the extents of the spread achieved in a computed Pareto front approximation”. They are not really useful to evaluate the convergence of an algorithm, or at comparing algorithms. They only make sense when the Pareto set is composed of several solutions.
+        
+            For multi-objective optimization (MOO), an algorithm
+            should provide a set of solutions that realize the optimal trade-offs between the considered optimization objectives, 
+            i.e., Pareto set. Therefore, the performance comparison of MOO algorithms is based on their Pareto sets.
+            In this study, two popular metrics Spacing metric(SM) and Hypervolume (HV) are used to quantify the performance of the algorithms. \cite{DBLP:journals/corr/abs-1812-07958}
+           
 
-        The various surrogates are analysed on problems of differing complexity, from simple unimodal problems to problems with difficult multimodal. 
-
-        \begin{itemize}
-            \item Quality and Effort tradeoff for multi-objective
-            \item Human in the loop: Composition technic as tools for domain expert
-        \end{itemize}
+            \paragraph{Pareto front evaluation}
+            \begin{itemize}
+                \item Hypervolume (HV)\cite{Zitzler2000ComparisonOM}. 
+                This metric represents the volume of the objective space
+                that is covered by the individuals of a non-dominated
+                solutions set (solutions that belong to a Pareto front). The
+                volume is delimited by two points: one point that is called
+                the anti-optimal point (A) that is defined as the worst
+                solution inside the objective space, and a second optimal
+                point (pseudo-optimal) that is calculated by the proposed
+                solution method. 
+                \item Hyper-area Ratio (HR).
+                The Hyper-area Ratio (HR) [24] employs the hypervolume of a solution set A
+                divided by the hypervolume value of a Reference Front B. Higher values are
+                preferred to lower ones.
+                \item Pareto Dominance Indicator (ER). 
+                Considers the solutions intersection between two given sets A and B, which can be 
+                provided by different algorithms or used to compare a solution set S with a Pareto Front P.
+                \item Crowding Distance. *pygmo2. The crowding distance value of a solution provides an estimate of the density of solutions set.
+                \item Spacing \cite{Schott1995FaultTD}. Base on this metrics we can say what distribution of Pareto points. Less space metrics means better coverage of population target objectives.
+                
+            \end{itemize}
+        
+            Variants in evaluation of sets of solutions for each hypothesis.
+            Each hypothesis have quality metrics. Solution(s) from each hypothesis have also own metrics.
+        
+            There are main approaches how produce single solution: 
+            \begin{itemize}
+                \item Solution from best hypothesis. Sorting
+                \item Bagging solution
+                \item Voting solution                
+            \end{itemize}
+        
+            \paragraph{Designing a Sampling Plan}
+             - The most straightforward way of sampling a design space in a uniform fashion is by \cite{EngSurMod}
+             means of a rectangular grid of points. This is the full factorial sampling technique referred
+             - Latin Squares
 
         \paragraph{Conclusion}
         For optimization expensive black-box:
@@ -81,6 +184,14 @@
     \section{Surrogate optimization}
         Surrogate used to expedite search for global optimum. Global accuracy of surrogate
         not a priority. Surrogate model is cheaper to evaluate than the objective.
+
+        Bayesian optimization (BO) methods often rely on the assumption that the objective function 
+        is well-behaved, but in practice the objective functions are seldom well- behaved even if 
+        noise-free observations can be collected. We propose to address the issue by focusing on 
+        the well- behaved structure informative for search while ignoring detrimental structure 
+        that is challenging to model data efficiently. [arXiv:1906.11152v2]
+
+        robust surrogate models
 
         \cite{EngSurMod}
 

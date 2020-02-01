@@ -10,6 +10,10 @@ A set of hypotheses can solve this problem but it takes longer time for cross va
 \section{Validate hypothesis}
     \epigraph{``All models are wrong but some are useful``}{\textit{– George Box}}
 
+    The main task of learning algorithms is to be able to generalize to unseen data. Surrogate model as learning model should generalize examples to valid hypothesis. 
+    Since we cannot immediately check the surrogate performance on new, incoming data, it is necessary to sacrifice a small portion of the examples to check the quality of the model on it.
+    n case if surrogate model have enoughs score (pass metrics threshold) we consider it valid and could be processed as subject for inference(prediction).
+
     \subsection{Sampling strategy}
     Oversampling and undersampling in data analysis. Alleviate imbalance in the dataset. 
     Imbalance in dataset is not always a problem, more so for optimization tasks. 
@@ -20,47 +24,3 @@ A set of hypotheses can solve this problem but it takes longer time for cross va
     Predictor variables can legitimately over- or under-sample. 
     In this case, provided a carefully check that the model assumptions seem valid.
 
-\section{Acquisition in points for evaluation}
-
-    \subsection{Metrics}
-    Keep making algorithmic progress toward the Pareto front in the objective function space.
-    Coefficient of determination (R2) is the wrong indicator of success.
-
-   
-
-    \paragraph{How evaluated a Pareto front?}
-    \begin{itemize}
-        \item Hypervolume (HV). 
-        This metric represents the volume of the objective space
-        that is covered by the individuals of a non-dominated
-        solutions set (solutions that belong to a Pareto front). The
-        volume is delimited by two points: one point that is called
-        the anti-optimal point (A) that is defined as the worst
-        solution inside the objective space, and a second optimal
-        point (pseudo-optimal) that is calculated by the proposed
-        solution method. 
-        \item Hyper-area Ratio (HR).
-        The Hyper-area Ratio (HR) [24] employs the hypervolume of a solution set A
-        divided by the hypervolume value of a Reference Front B. Higher values are
-        preferred to lower ones.
-        \item Pareto Dominance Indicator (ER). 
-        Considers the solutions intersection between two given sets A and B, which can be 
-        provided by different algorithms or used to compare a solution set S with a Pareto Front P.
-        \item Crowding Distance. *pygmo2
-        
-    \end{itemize}
-
-    Variants in evaluation of sets of solutions for each hypothesis.
-    Each hypothesis have quality metrics. Solution(s) from each hypothesis have also own metrics.
-
-    There are main approaches how produce single solution: 
-    \begin{itemize}
-        \item Solution from best hypothesis. Sorting
-        \item Bagging solution
-        \item Voting solution                
-    \end{itemize}
-
-    \paragraph{Designing a Sampling Plan}
-     - The most straightforward way of sampling a design space in a uniform fashion is by \cite{EngSurMod}
-     means of a rectangular grid of points. This is the full factorial sampling technique referred
-     - Latin Squares
