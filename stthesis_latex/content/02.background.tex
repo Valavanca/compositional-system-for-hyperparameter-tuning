@@ -30,6 +30,9 @@
         \end{itemize}
         Ideally, we want a method that can explore the search space while also limiting evaluations of poor hyperparameter choices.
 
+        In parameter tuning approaches, a single criterion may not be sufficient to correctly characterize the behavior of the 
+        configuration space under consideration and multiple criteria have to be considered.
+
     
     \section{Multi-objective optimization}
         "Multi-objective optimization deals with such conflicting objectives. It provides a
@@ -144,7 +147,11 @@
                 the anti-optimal point (A) that is defined as the worst
                 solution inside the objective space, and a second optimal
                 point (pseudo-optimal) that is calculated by the proposed
-                solution method. 
+                solution method.  
+                Determining the hypervolume indicator is a computationally expensive task. 
+                Even in case of a reasonably small dimension and low number of points (e.g. 100 points in 10 dimensions), 
+                there are currently no known algorithms that can yield the results fast enough for use in most multiple-objective optimizers.
+
                 \item Hyper-area Ratio (HR).
                 The Hyper-area Ratio (HR) [24] employs the hypervolume of a solution set A
                 divided by the hypervolume value of a Reference Front B. Higher values are
@@ -159,6 +166,11 @@
         
             Variants in evaluation of sets of solutions for each hypothesis.
             Each hypothesis have quality metrics. Solution(s) from each hypothesis have also own metrics.
+
+            The goal of optimizing an multy-objective problem is to obtain an approximation set A to the PF, including the following two subgoals:
+                (1) All solutions in A are as close as possible to the PF,
+                (2) All solutions in A are as diverse as possible in the objective space
+                (3) Evaluate as few configurations as possible
         
             There are main approaches how produce single solution: 
             \begin{itemize}
@@ -193,7 +205,7 @@
 
         robust surrogate models
 
-        \cite{EngSurMod}
+        \cite{EngSurMod}        
 
         \paragraph{Use cases}
         Example for each type of optimization. Justification solution.
@@ -201,8 +213,21 @@
         Need to indicate optimization workflow for expensive process/experiments. 
         The argument(s) why we need new architecture. Reference to composition architecture.
 
+        Surrogate based optimization has proven effective in many aspects of engineering and in applications where data is "expensive", or difficult, to evaluate.
+
     \section{Compositional architecture}
+        \paragraph{Compositional surrogates}
+        Can the same single-objective models be equally applied to various types of problems in multi-/single-objective optimization?
+
+        When there is no correlation between the outputs, a very simple way to solve this kind of problem is to build n independent models, i.e. one for each output, 
+        and then to use those models to independently predict each one of the n outputs. 
+
+        Nevertheless, it is likely that the output values related to the same input are themselves correlated, 
+        but an often naive way to build multiple models to capable of predicting simultaneously all n outputs is often given good results. 
+
+
         \paragraph{Interfaces and Contracts}
+
 
         \paragraph{Reusable software}
         Problem that each optimization framework/library use inner interfaces. 
