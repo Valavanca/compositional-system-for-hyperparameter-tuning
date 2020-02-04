@@ -1,5 +1,21 @@
 \chapter{Introduction. Challenges and Problems.}
 
+Optimization problems are present in our everyday life and come in a variety of forms, e.g. 
+the task to optimize certain properties of a system by correctly choosing the system parameters. 
+Many of these optimization problems require the simultaneous optimization of multiple, often conflicting, 
+criteria (or objectives). These problems are called multiobjective optimization problems. 
+The solution to such problems is not a single point, but a family of points, 
+known as the Pareto-optimal set. This set of solutions gives the decision maker an insight 
+into the characteristics of the problem before a single solution is chosen \cite{MlakarPTF15}.
+
+
+In order to obtain the results of such an optimization problem more quickly, we can use surrogate
+models in the optimization process to approximate the objective functions of the problem. To evaluate a 
+solution, instead of using a time-consuming exact evaluation, a solution can be approximated with the 
+surrogate model. Since one solution approximation is (much) faster, the whole optimization process can 
+be accelerated. However, note that the time needed to create and update the surrogate models during the 
+optimization process has to be considered and included in the whole duration of the optimization process \cite{MlakarPTF15}.
+
 [DLR, Optimisation-based multi-objective design and assessment] 
 Multi-objective optimisation is a proven, well-known parameter tuning technique in engineering design. It is especially suited 
 to solve complex, multidisciplinary design problems with emphasis on control system design.
@@ -30,11 +46,30 @@ Therefore, they are also known as black box methods. Another advantages of these
 methods are that they are more likely to find a global optima, and not be stuck on local
 optima as gradient methods.
 
-\section{Motivation}
-The goal of this research is to develop a formulation for
-general-purpose multi-objective optimization framework. \cite{DBLP:journals/corr/abs-1812-07958}
+For such slow computational problems, it would be useful to reason about a problem using a very small number
+ of most informative examples. This paper introduces GALE, an optimizer that identifies and evaluates just those most informative examples.
+ We will argue that optimization based on compositional surrogates is the preferred choice for functional optimization when the evaluation cost is very large.
 
-Motivation Examples
+
+    \section{Motivation}
+        The goal of this research is to develop a formulation for
+        general-purpose multi-objective optimization framework. \cite{DBLP:journals/corr/abs-1812-07958}
+
+        In traditional manual software engineering, engineers laboriously convert (by hand) non-executable paper models into executable code. 
+        That traditional process has been the focus of much research. This paper is about a new kind of SE which relies, at least in part, 
+        on executable models. In this approach, engineers codify the current understanding of of the domain into a model, and then study those models.
+
+        Motivation Examples
+
+        Tree search (in particular for SAT): pre-processing, branching
+        heuristics, clause learning  deletion, restarts, data structures, ...
+        Local search: neighbourhoods, perturbations, tabu length, annealing...
+        Genetic algorithms: population size, mating scheme, crossover
+        operators, mutation rate, local improvement stages, hybridizations, ...
+        Machine Learning: pre-processing, regularization (type strength),
+        minibatch size, learning rate schedules, optimizer its parameters, ...
+        Deep learning (in addition): layers (layer types), units/layer,
+        dropout constants, weight initialization and decay, pre-training, ...
 
 \section{Objectives}
     Black-box multi-objective problems given a finite number of function evaluations
@@ -46,6 +81,13 @@ Motivation Examples
     \item RQ: No free lunch theorem: hypothesis portfolio. Select from a plethora of models that can be suitable for fitted data set. Usefully for single and multi objective in parameter tuning.
     \item RQ: Solve hypothesis and range multi-objective solution
 \end{enumerate}
+
+- Convergence speed. Does proposed approach terminate faster than other multi-goal optimization tools?
+- Quality. Does proposed approach return similar or better solutions than other optimization tools?
+
+
+In numerous case studies, GALE finds comparable solutions to standard methods (NSGA-II, SPEA2) using far fewer evaluations (e.g. 20 evaluations, not 1,000). 
+GALE is recommended when a model is expensive to evaluate, or when some audience needs to browse and understand how an MOEA has made its conclusions.
 
 % \section{Solution}
 

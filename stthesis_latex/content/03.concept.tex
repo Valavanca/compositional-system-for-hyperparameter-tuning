@@ -1,12 +1,34 @@
 \chapter{Concept}
-The main objective of this part is to provide a thorough treatment of multy-objective parameter tuning with evolutionary algorithm(s)
+
+    As discussed in Section 3, current MOEAs use increasingly complex opera- tors. Re-implementing these algorithms for each usage scenario becomes 
+    timeconsuming and error-prone. Mainly two groups are affected by this problem:
+    – Application engineers who need to choose, implement, and apply state-of- the-art algorithms without in-depth programming knowledge and expertise in the optimization domain.
+    – Developers of optimization methods who want to evaluate algorithms on different test problems and compare a variety of competing methods.
 
 
-Key description how to improve solutions for problems in research questions.
+    A different approach, called PISA (A Platform and programming language independent Interface for Search Algorithms), was presented in [3]. 
+    The underlying concept is discussed in the following section.
 
-Multi-objective optimizations are frequently encountered in
-engineering practices. The solution techniques and parametric
-selections however are usually problem-specific. \cite{DBLP:journals/corr/abs-1812-07958}
+    The basic idea is to divide the implementation of an optimization method into an algorithm-specific part and an application-specific part as shown in Fig. 15. 
+    The former contains the selection procedure, while the latter encapsulates the representation of solutions, the generation of new solutions, 
+    and the calculation of objective function values.
+
+    Nevertheless it is easy to add the interface functionality to an existing algorithm or application since the whole communication only consists of a few text file operations.
+    As a negative consequence, the data transfer introduces an additional overhead into the optimization.
+
+    There is a clear need for a method to provide and distribute ready-to-use implementations of optimization methods and ready-to-use benchmark and real- world problems. 
+    These modules should be freely combinable. Since the above- mentioned issues are not constrained to evolutionary optimization a 
+    candidate solution should be applicable to a broader range of search algorithms.
+
+
+    The main objective of this part is to provide a thorough treatment of multy-objective parameter tuning with evolutionary algorithm(s)
+
+
+    Key description how to improve solutions for problems in research questions.
+
+    Multi-objective optimizations are frequently encountered in
+    engineering practices. The solution techniques and parametric
+    selections however are usually problem-specific. \cite{DBLP:journals/corr/abs-1812-07958}
 
     \section{Reduce effort for multi-obj prediction/solution}
         \paragraph{Surrogate model. Hypothesis as a middleware}
@@ -42,13 +64,26 @@ selections however are usually problem-specific. \cite{DBLP:journals/corr/abs-18
             \item A number of NFL theorems were derived that demonstrate the danger of comparing algorithms by their performance on a small sample of problems.
         \end{enumerate}
 
+        GALE uses MOEA decomposition but avoids certain open issues with E-domination and MOEA/D. 
+        GALE does the subproblems is determined via a recursive median split not need some outside oracle to specify E. 
+        Rather, the size of on dimensions synthesized using a PCA-approximation
+
 
     \section{Conclusions}
+
+        Also, to the best of our knowledge, has not been previously reported in the SBSE literature. GALE’s cost reduction of MOEA to O2 log2N evaluations
         
         \begin{enumerate}
             \item Surrogate portfolio. Search a better hypothesis for a specific problem at a particular stage of parameter tuning
             \item Large set of evaluation problems for comprehensive and fair comparison
             \item Interfaces for reusability and scalability. 
         \end{enumerate}
-    
 
+
+        Optimization problems involving multiple objectives are common. In this context, evolutionary computation represents a valuable tool, in particular 
+        – if we would like to be flexible with respect to the problem formulation, 
+        – if we are interested in approximating the Pareto set, and 
+        – if the problem complexity prevents exacts methods from being applicable.
+
+        Flexibility is important if the underlying model is not fixed and may change
+        or needs further refinement. The advantage of evolutionary algorithms is that they have minimum requirements regarding the problem formulation; objectives can be easily added, removed, or modified. Moreover, due the fact that they operate on a set of solution candidates, evolutionary algorithms are well-suited to generate Pareto set approximations. This is reflected by the rapidly increasing interest in the field of evolutionary multiobjective optimization. Finally, it has been demonstrated in various applications that evolutionary algorithms are able to tackle highly complex problems and therefore they can be seen as an approach complementary to traditional methods such as integer linear programming.
