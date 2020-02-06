@@ -1,6 +1,38 @@
 \chapter{Implementation. Development}
 
+separation of concerns
+
 Managing Complex Execution Strategies
+
+% --------------------------------------------------------------------------------------------
+% ---------------------------------------------------       Dependencies      ----------------
+% --------------------------------------------------------------------------------------------
+\section{Dependencies}
+    Adapted to provide base implementation for stages in parameter tuning with multi-objective
+
+    \paragraph{Pagmo2} 
+        A Python platform \cite{francesco_biscani_2019} to perform parallel computations of optimisation tasks (global and local) via the asynchronous generalized island model.
+        All test suites and basic multi-objective solvers:
+
+        Realization of main MOEA:
+        \begin{itemize}
+            \item NSGA2. Non-dominated Sorting Genetic Algorithm
+            \item MOEA/D. Multi Objective Evolutionary Algorithms by Decomposition (the DE variant)
+            \item MACO. Multi-objective Ant Colony Optimizer.
+            \item NSPSO. 
+        \end{itemize}
+
+        Tests suits:
+        \begin{itemize}
+            \item ZDT \cite{ZitzlerDT00} is 6 different two-objective scalable problems all beginning from a combination of functions allowing, to measure the distance of any point to the Pareto front while creating problems.
+            \item WFG \cite{WFGref} was conceived to exceed the functionalities of previously implemented test suites. In particular, non-separable problems, deceptive problems, truly degenerative problems and mixed shape Pareto front problems are thorougly covered, as well as scalable problems in both the number of objectives and variables. Also, problems with dependencies between position and distance related parameters are covered. In their paper the authors identify the need for nonseparable multimodal problems to test multi-objective optimization algorithms. Given this, they propose a set of 9 different scalable multi-objective unconstrained problems.
+            \item DTLZ \cite{DebTLZ05}. All problems in this test suite are box-constrained continuous n-dimensional multi-objective problems, scalable in fitness dimension.
+        \end{itemize}
+
+
+% --------------------------------------------------------------------------------------------
+% ---------------------------------------------------        Portfolio       ----------------
+% --------------------------------------------------------------------------------------------    
 
 \section{Portfolio with hypothesis}
 A set of models is defined that can form a partial or complete hypothesis to describe the problem.
@@ -8,6 +40,10 @@ Also during the increase of the experiments may change the model that best descr
 As a result, there is variability for each problem and configuration step at the same time. 
 A set of hypotheses can solve this problem but it takes longer time for cross validation.
 
+
+% --------------------------------------------------------------------------------------------
+% ---------------------------------------------------        Validation       ----------------
+% -------------------------------------------------------------------------------------------- 
 \section{Validate hypothesis}
     \epigraph{``All models are wrong but some are useful``}{\textit{– George Box}}
 
@@ -25,3 +61,5 @@ A set of hypotheses can solve this problem but it takes longer time for cross va
     Predictor variables can legitimately over- or under-sample. 
     In this case, provided a carefully check that the model assumptions seem valid.
 
+
+    for other set of parameters, and make a choice from more diverse pool of models.

@@ -1,35 +1,35 @@
 \chapter{Related work}
     Many existing approaches can be categorized as multi-objective optimization. That is why
-    introduce comparison criteria for a clear and concise demarcation of the approach presented in this thesis, 
+    introduce comparison criteria for a clear and concise demarcation of the approach presented in this thesis:
 
     Comparison Criteria for Related Work. 
     \begin{itemize}
-        \item Hypothesis. What kind of hypothesis could be extrapolate on data.
-        \item Scalability. Add new algorithms. Variants on each optimization workflow step.
-        \item Adaptation. NFL
-        \item Parameter tuning. Experiments from 0 to n. The Sobol sequence.                
+        \item Variability. Exchange surrogate, solver and sampling algorithms as components. Variants on each optimization workflow step.
+        \item Scalability. Extend single-objective problem on the fly to multi-objective.
+        \item Adaptation. Surrogate portfolio.
+        \item From 0 to hero. Sampling plan depends on surrogate validity. The Sobol sequence (and Latin hypercube).                
     \end{itemize}
     Important Features: Categorical variables, prior knowledge, multi-objective, feasibility constraints.
 
-    \section{AUTO-SKLEARN} \cite{autosklearn:feurer2015efficient}
+
+    % ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    % -------------------------------------------------------------------------------------------------------------------------------       Related work      ----------------
+    % ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    \section{Dependencies}
+
+    \paragraph{AUTO-SKLEARN} \cite{autosklearn:feurer2015efficient}
     - CASH (Combined Algorithm Selection and Hyperparameter optimization) problem
 
-    \section{TPOT} \cite{OlsonGECCO2016}
+    \paragraph{TPOT} \cite{OlsonGECCO2016}
     Already implemented TPOT automodel as hypothesis candidate
 
-    \section{jMetalpy} \cite{benitezhidalgo2019jmetalpy}
+    \paragraph{jMetalpy} \cite{benitezhidalgo2019jmetalpy}
     Partially implemented some solvers.
 
-    \section{Hyperopt}
+    \paragraph{Hyperopt}
 
-    \section{Pagmo2} \cite{francesco_biscani_2019_3582877}
-    Dependency.
-    All test suites and basic multi-objective solvers:
-    \begin{itemize}
-        \item NSGA2. Non-dominated Sorting Genetic Algorithm
-        \item MOEA/D. Multi Objective Evolutionary Algorithms by Decomposition (the DE variant)
-        \item MACO. Multi-objective Ant Colony Optimizer.
-    \end{itemize}
+    
 
-    \section{PlatEMO} \cite{PlatEMO}
+    \paragraph{PlatEMO} \cite{PlatEMO}
     PlatEMO: A MATLAB Platform for Evolutionary Multi-Objective Optimization

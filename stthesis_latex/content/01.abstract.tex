@@ -1,93 +1,37 @@
 \chapter{Introduction. Challenges and Problems.}
 
-Optimization problems are present in our everyday life and come in a variety of forms, e.g. 
-the task to optimize certain properties of a system by correctly choosing the system parameters. 
-Many of these optimization problems require the simultaneous optimization of multiple, often conflicting, 
-criteria (or objectives). These problems are called multiobjective optimization problems. 
-The solution to such problems is not a single point, but a family of points, 
-known as the Pareto-optimal set. This set of solutions gives the decision maker an insight 
-into the characteristics of the problem before a single solution is chosen \cite{MlakarPTF15}.
+Multi-objective optimisation is an established parameter tuning technique. It is especially suited to solve complex, multidisciplinary design problems with an accent on system design.
 
+When we talk about several objectives, the intention is to find good compromises rather than a single solution as in global optimization.
+Since the solution for multi-objective optimization problems gives the appearance to a set of Pareto-optimal points, evolutionary optimization algorithms are ideal for handling multi-objective optimization problems.
 
-In order to obtain the results of such an optimization problem more quickly, we can use surrogate
-models in the optimization process to approximate the objective functions of the problem. To evaluate a 
-solution, instead of using a time-consuming exact evaluation, a solution can be approximated with the 
-surrogate model. Since one solution approximation is (much) faster, the whole optimization process can 
-be accelerated. However, note that the time needed to create and update the surrogate models during the 
-optimization process has to be considered and included in the whole duration of the optimization process \cite{MlakarPTF15}.
+General optimization methods could be classified into derivative and non-derivative methods. In this thesis focuses on non-derivative methods, as they are more suitable for parameter tuning. Therefore, they are also known as black-box methods and do not require any derivatives of the objective function to calculate the optimum.  Other benefits of these methods are that they are more likely to find a global optimum. 
 
-[DLR, Optimisation-based multi-objective design and assessment] 
-Multi-objective optimisation is a proven, well-known parameter tuning technique in engineering design. It is especially suited 
-to solve complex, multidisciplinary design problems with emphasis on control system design.
-MOPS is currently applied to various design and evaluation problems at DLR and in industry. The main fields 
-of application are industrial robotics, flight control, power-optimized aircraft systems, and vehicle dynamics. Development and maturation of MOPS is an ongoing process.
-In MOPS a multi-objective/multi-model/multi-case design problem is usually mapped to a weighted min-max optimisation problem, which is then solved by using one of several 
-available powerful optimizers, implementing local and global search strategies. Besides very efficient gradient-based solvers (well-suited primarily for smooth problems, 
-especially identification problems), more robust gradient-free direct-search based solvers are available to address problems with non-smooth or noisy criteria. To overcome the 
-problem of local minima to some extent, global solvers based on stochastic, evolutionary or branching strategies can be alternatively used.
+\section{Motivation}
+    The purpose of this study is to introduce new surrogate-design-criteria for multi-objective hyperparameter optimization software.
 
-The weighted-sum function approach is a method used to simplify a multiobjective problem, lumping the objectives into 
-one function by using weighted sum factors. The combined function f is used to evaluate and define the optimal solution.
-
-Real engineering design problems are generally characterized by the presence of many
-often conflicting and incommensurable objectives. This raises the issue about how
-different objectives should be combined to yield a final solution. There is also the
-question on how to search for an optimal solution to the design problem. 
-
-When we talk about several objectives, the notion of optimum changes because in multiobjective problems, the aim is to find good compromises rather than a single solution as in global optimization.
-Since multi-objective optimization problems give rise to a set of Pareto-optimal solutions, evolutionary 
-optimization algorithms are ideal for handling multi-objective optimization problems.
-
-[Johan Andersson, A Survey of Multiobjective Optimization in Engineering Design] 
-Optimization methods could be divided into derivative and non-derivative methods. This survey focuses on non-derivative methods, as they are more suitable for
-general engineering design problems. One reason is that non-derivative methods do not
-require any derivatives of the objective function in order to calculate the optimum.
-Therefore, they are also known as black box methods. Another advantages of these
-methods are that they are more likely to find a global optima, and not be stuck on local
-optima as gradient methods.
-
-For such slow computational problems, it would be useful to reason about a problem using a very small number
- of most informative examples. This paper introduces GALE, an optimizer that identifies and evaluates just those most informative examples.
- We will argue that optimization based on compositional surrogates is the preferred choice for functional optimization when the evaluation cost is very large.
-
-
-    \section{Motivation}
-        The goal of this research is to develop a formulation for
-        general-purpose multi-objective optimization framework. \cite{DBLP:journals/corr/abs-1812-07958}
-
-        In traditional manual software engineering, engineers laboriously convert (by hand) non-executable paper models into executable code. 
-        That traditional process has been the focus of much research. This paper is about a new kind of SE which relies, at least in part, 
-        on executable models. In this approach, engineers codify the current understanding of of the domain into a model, and then study those models.
-
-        Motivation Examples
-
-        Tree search (in particular for SAT): pre-processing, branching
-        heuristics, clause learning  deletion, restarts, data structures, ...
-        Local search: neighbourhoods, perturbations, tabu length, annealing...
-        Genetic algorithms: population size, mating scheme, crossover
-        operators, mutation rate, local improvement stages, hybridizations, ...
-        Machine Learning: pre-processing, regularization (type strength),
-        minibatch size, learning rate schedules, optimizer its parameters, ...
-        Deep learning (in addition): layers (layer types), units/layer,
-        dropout constants, weight initialization and decay, pre-training, ...
+    Motivation Examples in tuning algorithms:
+    \begin{itemize}
+        \item Local search: neighbourhoods, perturbations, tabu length, annealing
+        \item Tree search: pre-processing, data structures, branching heuristics, clause learning deletion
+        \item Genetic algorithms: population size, mating scheme, crossover, mutation rate, local improvement stages, hybridizations
+        \item Machine Learning: pre-processing, learning rate schedules
+        \item Deep learning (in addition): layers, dropout constants, pre-training, activations functions, units/layer, weight initialization  
+    \end{itemize}
 
 \section{Objectives}
     Black-box multi-objective problems given a finite number of function evaluations
 
 \section{Research Questions}
 \begin{enumerate}
-    \item RQ: How reduce experiments count and reach near-optimal multi objective solution?
-    \item RQ: Reusable compositional system for optimization. Define steps in workflow. How extend models to new use case and not to rewrite everything from scratch.
-    \item RQ: No free lunch theorem: hypothesis portfolio. Select from a plethora of models that can be suitable for fitted data set. Usefully for single and multi objective in parameter tuning.
-    \item RQ: Solve hypothesis and range multi-objective solution
+    \item RQ(Cost): Does surrogate-based optimization cheaper in evaluations than other multi-goal optimization tools?
+    \item RQ(Convergence speed): Does with surrogate-based optimization solutions converge faster to Pareto-front than with other multi-goal optimization tools?
+    \item RQ(Quality): Does surrogate-based optimization return similar or better solutions than other optimization tools?
+    \item RQ(Extensions and reusability): Reusable compositional system for optimization. Is it possible to extend light-weight single-objective experiments to heavy-weight multi/many-objective?
 \end{enumerate}
 
-- Convergence speed. Does proposed approach terminate faster than other multi-goal optimization tools?
-- Quality. Does proposed approach return similar or better solutions than other optimization tools?
-
-
-In numerous case studies, GALE finds comparable solutions to standard methods (NSGA-II, SPEA2) using far fewer evaluations (e.g. 20 evaluations, not 1,000). 
-GALE is recommended when a model is expensive to evaluate, or when some audience needs to browse and understand how an MOEA has made its conclusions.
+In numerous test problems, compositional-surrogate finds comparable solutions to standard MOEA (NSGA-II, MOEAD, MACO, NSPSO) doing considerably fewer evaluations (300 vs 5000). 
+Surrogate-based optimization is recommended when a model is expensive to evaluate.
 
 % \section{Solution}
 

@@ -2,8 +2,8 @@
     Describe general objectives and there constraints
 
 
-    This section explains all the technical terms in the last paragraph. To start with, we say that optimizers seek “candidate”(s) x such that it is 
-    unlikely that there exists “better” candidate(s) y. Each candidate ci is a set of decisions mizers 
+    This section explains all the technical terms in the last paragraph. To start with, we say that optimizers seek candidate(s) x such that it is 
+    unlikely that there exists better candidate(s) y. Each candidate ci is a set of decisions mizers 
     in this article assume the existence of some fitness and their associated objective scores; 
     The optimizers in this article assume the existence of some fitness function f that converts decisions to output objectives; i.e.
     Note that this paper uses the term “model” as a synonym for the fitness function f. 
@@ -27,7 +27,7 @@
         Categorical: finite domain, unordered, e.g., {apple, tomato, pepper}
 
         - Parameter space has structure. Sometimes, some combinations of parameter settings are forbidden
-        - Configurations often yield qualitatively different behaviour
+        - Configurations often yield qualitatively different behavior
 
         Define an objective function: 
         \begin{itemize}
@@ -64,12 +64,17 @@
         The problem here is that even the Pareto frontier can be too large to understand. Harman cautions that many frontiers are very crowded; i.e. 
         contain thousands (or more) candidate solutions [7].
 
-        When choosing an optimiser, it is useful to consider what information an optimizer can access about the function f. For example, gradient descent optimizers [16] 
+        When choosing an optimizer, it is useful to consider what information an optimizer can access about the function f. For example, gradient descent optimizers [16] 
         need to access the contours around every decision. This limits the kinds of functions they can process to those with continuous differential functions (i.e. 
         functions of real-valued variables whose derivative exists at each point in its domain).
 
     
     \section{Multi-objective optimization}
+
+        Parameter tuning is present in our daily life and comes in a variety of states. The goal is the rich best possible objective by correctly choosing the system parameters. 
+        Common of optimization problems requires the simultaneous optimization of multiple, usually contradictory, objectives. These type of problems are termed as multiobjective optimization problems. The solution to such problems is a family of points, that placing on a Pareto front. 
+
+
         "Multi-objective optimization deals with such conflicting objectives. It provides a
         mathematical framework to arrive at optimal design state which accommodates the various criteria demanded by
         the application. The process of optimizing systematically and simultaneously a collection of objective functions
@@ -87,6 +92,8 @@
 
 
         \subsection{Scalarizing. Weighted sum methods}
+            Real problems are generally characterized by the presence of many often conflicting and contradictory objectives. How different objectives should be combined to yield a final solution? There is also the question of how to search for an optimal solution to the design problem. 
+            The weighted-sum function approach is a method used to simplify a multiobjective problem, concatenate the objectives into one criterion by using weighted sum factors. The merged objective f is used to evaluate and define the optimal solution.
 
             One approach which is built on the traditional techniques for generating trade-off surfaces is to aggregate the objectives into a single parameterized objective function.
 
@@ -265,6 +272,8 @@
         Experiments as a black box, derivative-free. Reference to surrogate optimization.
 
     \section{Surrogate optimization}
+
+        To dealing with expensive optimization problem more quickly, we can use surrogate models in the optimization process to approximate the objective functions of the problem. Approximation of solution is faster than the whole optimization process can be accelerated. Nevertheless, the extra time needed to build and update the surrogate models during the optimization process.
 
         In the literature the term surrogate model (sometimes also meta-model) based optimization is 
         used where, during the optimization processes, some solutions are not evaluated with the original 

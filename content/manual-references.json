@@ -40,7 +40,6 @@
     "type": "paper-conference"
   },
   {
-    "URL": "http://arxiv.org/abs/1903.02915",
     "author": [
       {
         "family": "Benitez-Hidalgo",
@@ -233,7 +232,7 @@
         "given": "Andrea"
       }
     ],
-    "id": "raw:francesco_biscani_2019_3582877",
+    "id": "raw:francesco_biscani_2019",
     "issued": {
       "date-parts": [
         [
@@ -249,7 +248,6 @@
     "version": "v2.12.0"
   },
   {
-    "URL": "http://arxiv.org/abs/1309.0238",
     "author": [
       {
         "family": "Buitinck",
@@ -348,7 +346,6 @@
     "volume": "3"
   },
   {
-    "URL": "http://arxiv.org/abs/1801.02381",
     "author": [
       {
         "dropping-particle": "van der",
@@ -448,5 +445,350 @@
     "publisher": "Wiley",
     "title": "Engineering design via surrogate modelling - a practical guide.",
     "type": "book"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1812.07958",
+    "author": [
+      {
+        "family": "Cao",
+        "given": "Pei"
+      },
+      {
+        "family": "Tang",
+        "given": "Jiong"
+      }
+    ],
+    "container-title": "CoRR",
+    "id": "DBLP:journals/corr/abs-1812-07958",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "title": "A reinforcement learning hyper-heuristic in multi-objective single point search with application to structural fault identification",
+    "type": "article-journal",
+    "volume": "abs/1812.07958"
+  },
+  {
+    "DOI": "10.1137/10079731X",
+    "URL": "https://doi.org/10.1137/10079731X",
+    "author": [
+      {
+        "family": "Custódio",
+        "given": "A. L."
+      },
+      {
+        "family": "Madeira",
+        "given": "J. F. Aguilar"
+      },
+      {
+        "family": "Vaz",
+        "given": "A. Ismael F."
+      },
+      {
+        "family": "Vicente",
+        "given": "Luís Nunes"
+      }
+    ],
+    "container-title": "SIAM Journal on Optimization",
+    "id": "raw:CustodioMVV11",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "page": "1109-1140",
+    "title": "Direct multisearch for multiobjective optimization",
+    "type": "article-journal",
+    "volume": "21"
+  },
+  {
+    "author": [
+      {
+        "family": "Audet",
+        "given": "Charles"
+      },
+      {
+        "family": "Digabel",
+        "given": "Sébastien Le"
+      },
+      {
+        "family": "Cartier",
+        "given": "Dominique"
+      },
+      {
+        "family": "Bigeon",
+        "given": "Jean"
+      },
+      {
+        "family": "Salomon",
+        "given": "Ludovic"
+      }
+    ],
+    "id": "raw:Audet2018PerformanceII",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "title": "Performance indicators in multiobjective optimization",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.1162/106365600568202",
+    "URL": "https://doi.org/10.1162/106365600568202",
+    "author": [
+      {
+        "family": "Zitzler",
+        "given": "Eckart"
+      },
+      {
+        "family": "Deb",
+        "given": "Kalyanmoy"
+      },
+      {
+        "family": "Thiele",
+        "given": "Lothar"
+      }
+    ],
+    "container-title": "Evolutionary Computation",
+    "id": "raw:ZitzlerDT00",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "page": "173-195",
+    "title": "Comparison of multiobjective evolutionary algorithms: Empirical results",
+    "title-short": "Comparison of multiobjective evolutionary algorithms",
+    "type": "article-journal",
+    "volume": "8"
+  },
+  {
+    "author": [
+      {
+        "family": "Schott",
+        "given": "Jason R."
+      }
+    ],
+    "id": "raw:Schott1995FaultTD",
+    "issued": {
+      "date-parts": [
+        [
+          1995
+        ]
+      ]
+    },
+    "title": "Fault tolerant design using single and multicriteria genetic algorithm optimization.",
+    "type": "paper-conference"
+  },
+  {
+    "author": [
+      {
+        "family": "Zitzler",
+        "given": "Eckart"
+      },
+      {
+        "family": "Deb",
+        "given": "Kalyanmoy"
+      },
+      {
+        "family": "Thiele",
+        "given": "Lothar"
+      }
+    ],
+    "container-title": "Evolutionary Computation",
+    "id": "raw:Zitzler2000ComparisonOM",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "page": "173-195",
+    "title": "Comparison of multiobjective evolutionary algorithms: Empirical results",
+    "title-short": "Comparison of multiobjective evolutionary algorithms",
+    "type": "article-journal",
+    "volume": "8"
+  },
+  {
+    "DOI": "10.1109/TSE.2015.2432024",
+    "URL": "https://doi.org/10.1109/TSE.2015.2432024",
+    "author": [
+      {
+        "family": "Krall",
+        "given": "Joseph"
+      },
+      {
+        "family": "Menzies",
+        "given": "Tim"
+      },
+      {
+        "family": "Davies",
+        "given": "Misty"
+      }
+    ],
+    "container-title": "IEEE Trans. Software Eng.",
+    "id": "raw:KrallMD15",
+    "issue": "10",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "page": "1001-1018",
+    "title": "GALE: geometric active learning for search-based software engineering",
+    "type": "article-journal",
+    "volume": "41"
+  },
+  {
+    "DOI": "10.1016/j.ejor.2014.04.011",
+    "URL": "https://doi.org/10.1016/j.ejor.2014.04.011",
+    "author": [
+      {
+        "family": "Mlakar",
+        "given": "Miha"
+      },
+      {
+        "family": "Petelin",
+        "given": "Dejan"
+      },
+      {
+        "family": "Tusar",
+        "given": "Tea"
+      },
+      {
+        "family": "Filipic",
+        "given": "Bogdan"
+      }
+    ],
+    "container-title": "European Journal of Operational Research",
+    "id": "raw:MlakarPTF15",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "page": "347-361",
+    "title": "GP-DEMO: differential evolution for multiobjective optimization based on gaussian process models",
+    "type": "article-journal",
+    "volume": "243"
+  },
+  {
+    "DOI": "10.1007/s11047-018-9685-y",
+    "URL": "https://doi.org/10.1007/s11047-018-9685-y",
+    "author": [
+      {
+        "family": "Emmerich",
+        "given": "Michael T. M."
+      },
+      {
+        "family": "Deutz",
+        "given": "André H."
+      }
+    ],
+    "container-title": "Natural Computing",
+    "id": "raw:EmmerichD18",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "page": "585-609",
+    "title": "A tutorial on multiobjective optimization: Fundamentals and evolutionary methods",
+    "title-short": "A tutorial on multiobjective optimization",
+    "type": "article-journal",
+    "volume": "17"
+  },
+  {
+    "DOI": "10.1007/1-84628-137-7\\_6",
+    "URL": "https://doi.org/10.1007/1-84628-137-7\\_6",
+    "author": [
+      {
+        "family": "Deb",
+        "given": "Kalyanmoy"
+      },
+      {
+        "family": "Thiele",
+        "given": "Lothar"
+      },
+      {
+        "family": "Laumanns",
+        "given": "Marco"
+      },
+      {
+        "family": "Zitzler",
+        "given": "Eckart"
+      }
+    ],
+    "container-title": "Evolutionary multiobjective optimization",
+    "id": "raw:DebTLZ05",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    },
+    "page": "105-145",
+    "title": "Scalable test problems for evolutionary multiobjective optimization",
+    "type": "chapter"
+  },
+  {
+    "DOI": "10.1109/TEVC.2005.861417",
+    "ISSN": "1941-0026",
+    "author": [
+      {
+        "family": "Huband",
+        "given": "S."
+      },
+      {
+        "family": "Hingston",
+        "given": "P."
+      },
+      {
+        "family": "Barone",
+        "given": "L."
+      },
+      {
+        "family": "While",
+        "given": "L."
+      }
+    ],
+    "container-title": "IEEE Transactions on Evolutionary Computation",
+    "id": "raw:WFGref",
+    "issue": "5",
+    "issued": {
+      "date-parts": [
+        [
+          2006,
+          10
+        ]
+      ]
+    },
+    "keyword": "evolutionary computation;multiobjective test problems;scalable test problem toolkit;multiobjective evolutionary algorithm;test problem criteria;Evolutionary computation;Design optimization;Australia;Algorithm design and analysis;System testing;Turbines;Combustion;Product design;Petroleum;Pipelines;Evolutionary algorithms (EAs);multiobjective evolutionary algorithms;multiobjective optimization;multiobjective test problems",
+    "page": "477-506",
+    "title": "A review of multiobjective test problems and a scalable test problem toolkit",
+    "type": "article-journal",
+    "volume": "10"
   }
 ]
