@@ -450,16 +450,12 @@
     "URL": "http://arxiv.org/abs/1812.07958",
     "author": [
       {
-        "family": "Cao",
-        "given": "Pei"
-      },
-      {
-        "family": "Tang",
-        "given": "Jiong"
+        "family": "Pei Cao",
+        "given": "Jiong Tang"
       }
     ],
     "container-title": "CoRR",
-    "id": "DBLP:journals/corr/abs-1812-07958",
+    "id": "raw:abs181207958",
     "issued": {
       "date-parts": [
         [
@@ -790,5 +786,25 @@
     "title": "A review of multiobjective test problems and a scalable test problem toolkit",
     "type": "article-journal",
     "volume": "10"
+  },
+  {
+    "URL": "http://drops.dagstuhl.de/opus/volltexte/2005/234",
+    "author": [
+      {
+        "family": "Nakayama",
+        "given": "Hirotaka"
+      }
+    ],
+    "container-title": "Practical approaches to multi-objective optimization, 7.-12. november 2004",
+    "id": "raw:Nakayama05",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    },
+    "title": "Multi-objective optimization and its engineering applications",
+    "type": "paper-conference"
   }
 ]
