@@ -31,7 +31,7 @@
 
     Multi-objective optimizations are frequently encountered in
     engineering practices. The solution techniques and parametric
-    selections however are usually problem-specific. \cite{DBLP:journals/corr/abs-1812-07958}
+    selections however are usually problem-specific. \cite{abs181207958}
 
     \section{Reduce effort for multi-obj prediction/solution}
         \paragraph{Surrogate model. Hypothesis as a middleware}
@@ -70,6 +70,12 @@
         GALE uses MOEA decomposition but avoids certain open issues with E-domination and MOEA/D. 
         GALE does the subproblems is determined via a recursive median split not need some outside oracle to specify E. 
         Rather, the size of on dimensions synthesized using a PCA-approximation
+
+        % -------------------------------------------------------        Components       ---------------------
+        \paragraph{Reusable software}
+        Problem that each optimization framework/library use inner interfaces. 
+        It is necessary to define a standard that implements best practices for extension libraries \cite{buitinck2013api}.
+        We introduce new Model-based line for parameter tuning. 
 
 
     \section{Conclusions}

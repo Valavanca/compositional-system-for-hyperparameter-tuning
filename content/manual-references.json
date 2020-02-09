@@ -1,5 +1,60 @@
 [
   {
+    "URL": "http://arxiv.org/abs/1812.07958",
+    "author": [
+      {
+        "family": "Pei Cao",
+        "given": "Jiong Tang"
+      }
+    ],
+    "container-title": "CoRR",
+    "id": "raw:abs181207958",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "title": "A reinforcement learning hyper-heuristic in multi-objective single point search with application to structural fault identification",
+    "type": "article-journal",
+    "volume": "abs/1812.07958"
+  },
+  {
+    "author": [
+      {
+        "family": "Audet",
+        "given": "Charles"
+      },
+      {
+        "family": "Digabel",
+        "given": "Sébastien Le"
+      },
+      {
+        "family": "Cartier",
+        "given": "Dominique"
+      },
+      {
+        "family": "Bigeon",
+        "given": "Jean"
+      },
+      {
+        "family": "Salomon",
+        "given": "Ludovic"
+      }
+    ],
+    "id": "raw:Audet2018PerformanceII",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "title": "Performance indicators in multiobjective optimization",
+    "type": "paper-conference"
+  },
+  {
     "author": [
       {
         "family": "Feurer",
@@ -40,6 +95,7 @@
     "type": "paper-conference"
   },
   {
+    "URL": "http://arxiv.org/abs/1903.02915",
     "author": [
       {
         "family": "Benitez-Hidalgo",
@@ -75,42 +131,342 @@
     "type": "no-type"
   },
   {
-    "DOI": "10.1145/2908812.2908918",
-    "ISBN": "978-1-4503-4206-3",
-    "URL": "http://doi.acm.org/10.1145/2908812.2908918",
+    "URL": "http://arxiv.org/abs/1906.11152",
     "author": [
       {
-        "family": "Olson",
-        "given": "Randal S."
+        "family": "Bodin",
+        "given": "Erik"
       },
       {
-        "family": "Bartley",
-        "given": "Nathan"
+        "family": "Kaiser",
+        "given": "Markus"
       },
       {
-        "family": "Urbanowicz",
-        "given": "Ryan J."
+        "family": "Kazlauskaite",
+        "given": "Ieva"
       },
       {
-        "family": "Moore",
-        "given": "Jason H."
+        "family": "Dai",
+        "given": "Zhenwen"
+      },
+      {
+        "family": "Campbell",
+        "given": "Neill D. F."
+      },
+      {
+        "family": "Ek",
+        "given": "Carl Henrik"
       }
     ],
-    "collection-title": "GECCO ’16",
-    "container-title": "Proceedings of the genetic and evolutionary computation conference 2016",
-    "id": "raw:OlsonGECCO2016",
+    "id": "raw:bodin2019modulating",
     "issued": {
       "date-parts": [
         [
-          2016
+          2019
         ]
       ]
     },
-    "page": "485-492",
-    "publisher": "ACM",
-    "publisher-place": "New York, NY, USA",
-    "title": "Evaluation of a tree-based pipeline optimization tool for automating data science",
-    "type": "paper-conference"
+    "title": "Modulating surrogates for bayesian optimization",
+    "type": "no-type"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1309.0238",
+    "author": [
+      {
+        "family": "Buitinck",
+        "given": "Lars"
+      },
+      {
+        "family": "Louppe",
+        "given": "Gilles"
+      },
+      {
+        "family": "Blondel",
+        "given": "Mathieu"
+      },
+      {
+        "family": "Pedregosa",
+        "given": "Fabian"
+      },
+      {
+        "family": "Mueller",
+        "given": "Andreas"
+      },
+      {
+        "family": "Grisel",
+        "given": "Olivier"
+      },
+      {
+        "family": "Niculae",
+        "given": "Vlad"
+      },
+      {
+        "family": "Prettenhofer",
+        "given": "Peter"
+      },
+      {
+        "family": "Gramfort",
+        "given": "Alexandre"
+      },
+      {
+        "family": "Grobler",
+        "given": "Jaques"
+      },
+      {
+        "family": "Layton",
+        "given": "Robert"
+      },
+      {
+        "family": "Vanderplas",
+        "given": "Jake"
+      },
+      {
+        "family": "Joly",
+        "given": "Arnaud"
+      },
+      {
+        "family": "Holt",
+        "given": "Brian"
+      },
+      {
+        "family": "Varoquaux",
+        "given": "Gaël"
+      }
+    ],
+    "id": "raw:buitinck2013api",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "title": "API design for machine learning software: Experiences from the scikit-learn project",
+    "title-short": "API design for machine learning software",
+    "type": "no-type"
+  },
+  {
+    "DOI": "10.1109/TSMCC.2004.841905",
+    "URL": "https://doi.org/10.1109/TSMCC.2004.841905",
+    "author": [
+      {
+        "family": "Chafekar",
+        "given": "Deepti"
+      },
+      {
+        "family": "Shi",
+        "given": "Liang"
+      },
+      {
+        "family": "Rasheed",
+        "given": "Khaled"
+      },
+      {
+        "family": "Xuan",
+        "given": "Jiang"
+      }
+    ],
+    "container-title": "IEEE Trans. Systems, Man, and Cybernetics, Part C",
+    "id": "raw:ChafekarSRX05",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    },
+    "page": "261-265",
+    "title": "Multiobjective GA optimization using reduced models",
+    "type": "article-journal",
+    "volume": "35"
+  },
+  {
+    "DOI": "10.1137/10079731X",
+    "URL": "https://doi.org/10.1137/10079731X",
+    "author": [
+      {
+        "family": "Custódio",
+        "given": "A. L."
+      },
+      {
+        "family": "Madeira",
+        "given": "J. F. Aguilar"
+      },
+      {
+        "family": "Vaz",
+        "given": "A. Ismael F."
+      },
+      {
+        "family": "Vicente",
+        "given": "Luı́s Nunes"
+      }
+    ],
+    "container-title": "SIAM Journal on Optimization",
+    "id": "raw:CustodioMVV11",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "page": "1109-1140",
+    "title": "Direct multisearch for multiobjective optimization",
+    "type": "article-journal",
+    "volume": "21"
+  },
+  {
+    "DOI": "10.1007/978-3-540-49774-5\\_13",
+    "URL": "https://doi.org/10.1007/978-3-540-49774-5\\_13",
+    "author": [
+      {
+        "family": "Deb",
+        "given": "Kalyanmoy"
+      },
+      {
+        "family": "Nain",
+        "given": "Pawan K. S."
+      }
+    ],
+    "container-title": "Evolutionary computation in dynamic and uncertain environments",
+    "id": "raw:DebN07",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    },
+    "page": "297-322",
+    "title": "An evolutionary multi-objective adaptive meta-modeling procedure using artificial neural networks",
+    "type": "chapter"
+  },
+  {
+    "DOI": "10.1007/1-84628-137-7\\_6",
+    "URL": "https://doi.org/10.1007/1-84628-137-7\\_6",
+    "author": [
+      {
+        "family": "Deb",
+        "given": "Kalyanmoy"
+      },
+      {
+        "family": "Thiele",
+        "given": "Lothar"
+      },
+      {
+        "family": "Laumanns",
+        "given": "Marco"
+      },
+      {
+        "family": "Zitzler",
+        "given": "Eckart"
+      }
+    ],
+    "container-title": "Evolutionary multiobjective optimization",
+    "id": "raw:DebTLZ05",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    },
+    "page": "105-145",
+    "title": "Scalable test problems for evolutionary multiobjective optimization",
+    "type": "chapter"
+  },
+  {
+    "DOI": "10.1007/s11047-018-9685-y",
+    "URL": "https://doi.org/10.1007/s11047-018-9685-y",
+    "author": [
+      {
+        "family": "Emmerich",
+        "given": "Michael T. M."
+      },
+      {
+        "family": "Deutz",
+        "given": "André H."
+      }
+    ],
+    "container-title": "Natural Computing",
+    "id": "raw:EmmerichD18",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "page": "585-609",
+    "title": "A tutorial on multiobjective optimization: Fundamentals and evolutionary methods",
+    "title-short": "A tutorial on multiobjective optimization",
+    "type": "article-journal",
+    "volume": "17"
+  },
+  {
+    "DOI": "10.1109/TEVC.2005.859463",
+    "URL": "https://doi.org/10.1109/TEVC.2005.859463",
+    "author": [
+      {
+        "family": "Emmerich",
+        "given": "Michael T. M."
+      },
+      {
+        "family": "Giannakoglou",
+        "given": "Kyriakos C."
+      },
+      {
+        "family": "Naujoks",
+        "given": "Boris"
+      }
+    ],
+    "container-title": "IEEE Trans. Evolutionary Computation",
+    "id": "raw:EmmerichGN06",
+    "issue": "4",
+    "issued": {
+      "date-parts": [
+        [
+          2006
+        ]
+      ]
+    },
+    "page": "421-439",
+    "title": "Single- and multiobjective evolutionary optimization assisted by gaussian random field metamodels",
+    "type": "article-journal",
+    "volume": "10"
+  },
+  {
+    "ISBN": "978-0-470-06068-1",
+    "author": [
+      {
+        "family": "Forrester",
+        "given": "Alexander I. J."
+      },
+      {
+        "family": "Sobester",
+        "given": "Andras"
+      },
+      {
+        "family": "Keane",
+        "given": "Andy J."
+      }
+    ],
+    "id": "raw:EngSurMod",
+    "issued": {
+      "date-parts": [
+        [
+          2008
+        ]
+      ]
+    },
+    "keyword": "dblp",
+    "page": "I-XVIII, 1-210",
+    "publisher": "Wiley",
+    "title": "Engineering design via surrogate modelling - a practical guide.",
+    "type": "book"
   },
   {
     "DOI": "10.5281/zenodo.3582877",
@@ -248,104 +604,63 @@
     "version": "v2.12.0"
   },
   {
+    "DOI": "10.1007/BF01743506",
+    "ISSN": "1615-1488",
+    "URL": "https://doi.org/10.1007/BF01743506",
+    "abstract": "A genetic algorithm is applied for the optimal design of skeletal building structures accounting for discrete sizing, geometrical and topological variables. An approximate designfitness evaluation technique is investigated with the aim to improve the numerical efficiency of the genetic search. Two design examples are presented to illustrate the principles involved.",
     "author": [
       {
-        "family": "Buitinck",
-        "given": "Lars"
+        "family": "Grierson",
+        "given": "D. E."
       },
       {
-        "family": "Louppe",
-        "given": "Gilles"
-      },
-      {
-        "family": "Blondel",
-        "given": "Mathieu"
-      },
-      {
-        "family": "Pedregosa",
-        "given": "Fabian"
-      },
-      {
-        "family": "Mueller",
-        "given": "Andreas"
-      },
-      {
-        "family": "Grisel",
-        "given": "Olivier"
-      },
-      {
-        "family": "Niculae",
-        "given": "Vlad"
-      },
-      {
-        "family": "Prettenhofer",
-        "given": "Peter"
-      },
-      {
-        "family": "Gramfort",
-        "given": "Alexandre"
-      },
-      {
-        "family": "Grobler",
-        "given": "Jaques"
-      },
-      {
-        "family": "Layton",
-        "given": "Robert"
-      },
-      {
-        "family": "Vanderplas",
-        "given": "Jake"
-      },
-      {
-        "family": "Joly",
-        "given": "Arnaud"
-      },
-      {
-        "family": "Holt",
-        "given": "Brian"
-      },
-      {
-        "family": "Varoquaux",
-        "given": "Gaël"
+        "family": "Pak",
+        "given": "W. H."
       }
     ],
-    "id": "raw:buitinck2013api",
+    "container-title": "Structural optimization",
+    "id": "raw:Grierson1993",
+    "issue": "3",
     "issued": {
       "date-parts": [
         [
-          2013
+          1993,
+          9,
+          1
         ]
       ]
     },
-    "title": "API design for machine learning software: Experiences from the scikit-learn project",
-    "title-short": "API design for machine learning software",
-    "type": "no-type"
-  },
-  {
-    "DOI": "10.9790/3021-031020114",
-    "author": [
-      {
-        "family": "Odu",
-        "given": "Godwin"
-      }
-    ],
-    "container-title": "IOSR Journal of Engineering",
-    "id": "raw:odugod2013",
-    "issued": {
-      "date-parts": [
-        [
-          2013,
-          10
-        ]
-      ]
-    },
-    "page": "01-14",
-    "title": "Review of multi-criteria optimization methods – theory and applications",
+    "page": "151-159",
+    "title": "Optimal sizing, geometrical and topological design using a genetic algorithm",
     "type": "article-journal",
-    "volume": "3"
+    "volume": "6"
   },
   {
+    "DOI": "10.1007/s00500-003-0328-5",
+    "URL": "https://doi.org/10.1007/s00500-003-0328-5",
+    "author": [
+      {
+        "family": "Jin",
+        "given": "Yaochu"
+      }
+    ],
+    "container-title": "Soft Comput.",
+    "id": "raw:Jin05",
+    "issue": "1",
+    "issued": {
+      "date-parts": [
+        [
+          2005
+        ]
+      ]
+    },
+    "page": "3-12",
+    "title": "A comprehensive survey of fitness approximation in evolutionary computation",
+    "type": "article-journal",
+    "volume": "9"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1801.02381",
     "author": [
       {
         "dropping-particle": "van der",
@@ -382,243 +697,6 @@
     "type": "no-type"
   },
   {
-    "author": [
-      {
-        "family": "Tian",
-        "given": "Ye"
-      },
-      {
-        "family": "Cheng",
-        "given": "Ran"
-      },
-      {
-        "family": "Zhang",
-        "given": "Xingyi"
-      },
-      {
-        "family": "Jin",
-        "given": "Yaochu"
-      }
-    ],
-    "container-title": "IEEE Computational Intelligence Magazine",
-    "id": "raw:PlatEMO",
-    "issue": "4",
-    "issued": {
-      "date-parts": [
-        [
-          2017
-        ]
-      ]
-    },
-    "page": "73-87",
-    "title": "raw:PlatEMO: A MATLAB platform for evolutionary multi-objective optimization",
-    "title-short": "raw:PlatEMO",
-    "type": "article-journal",
-    "volume": "12"
-  },
-  {
-    "ISBN": "978-0-470-06068-1",
-    "author": [
-      {
-        "family": "Forrester",
-        "given": "Alexander I. J."
-      },
-      {
-        "family": "Sobester",
-        "given": "Andras"
-      },
-      {
-        "family": "Keane",
-        "given": "Andy J."
-      }
-    ],
-    "id": "raw:EngSurMod",
-    "issued": {
-      "date-parts": [
-        [
-          2008
-        ]
-      ]
-    },
-    "keyword": "dblp",
-    "page": "I-XVIII, 1-210",
-    "publisher": "Wiley",
-    "title": "Engineering design via surrogate modelling - a practical guide.",
-    "type": "book"
-  },
-  {
-    "URL": "http://arxiv.org/abs/1812.07958",
-    "author": [
-      {
-        "family": "Pei Cao",
-        "given": "Jiong Tang"
-      }
-    ],
-    "container-title": "CoRR",
-    "id": "raw:abs181207958",
-    "issued": {
-      "date-parts": [
-        [
-          2018
-        ]
-      ]
-    },
-    "title": "A reinforcement learning hyper-heuristic in multi-objective single point search with application to structural fault identification",
-    "type": "article-journal",
-    "volume": "abs/1812.07958"
-  },
-  {
-    "DOI": "10.1137/10079731X",
-    "URL": "https://doi.org/10.1137/10079731X",
-    "author": [
-      {
-        "family": "Custódio",
-        "given": "A. L."
-      },
-      {
-        "family": "Madeira",
-        "given": "J. F. Aguilar"
-      },
-      {
-        "family": "Vaz",
-        "given": "A. Ismael F."
-      },
-      {
-        "family": "Vicente",
-        "given": "Luís Nunes"
-      }
-    ],
-    "container-title": "SIAM Journal on Optimization",
-    "id": "raw:CustodioMVV11",
-    "issue": "3",
-    "issued": {
-      "date-parts": [
-        [
-          2011
-        ]
-      ]
-    },
-    "page": "1109-1140",
-    "title": "Direct multisearch for multiobjective optimization",
-    "type": "article-journal",
-    "volume": "21"
-  },
-  {
-    "author": [
-      {
-        "family": "Audet",
-        "given": "Charles"
-      },
-      {
-        "family": "Digabel",
-        "given": "Sébastien Le"
-      },
-      {
-        "family": "Cartier",
-        "given": "Dominique"
-      },
-      {
-        "family": "Bigeon",
-        "given": "Jean"
-      },
-      {
-        "family": "Salomon",
-        "given": "Ludovic"
-      }
-    ],
-    "id": "raw:Audet2018PerformanceII",
-    "issued": {
-      "date-parts": [
-        [
-          2018
-        ]
-      ]
-    },
-    "title": "Performance indicators in multiobjective optimization",
-    "type": "paper-conference"
-  },
-  {
-    "DOI": "10.1162/106365600568202",
-    "URL": "https://doi.org/10.1162/106365600568202",
-    "author": [
-      {
-        "family": "Zitzler",
-        "given": "Eckart"
-      },
-      {
-        "family": "Deb",
-        "given": "Kalyanmoy"
-      },
-      {
-        "family": "Thiele",
-        "given": "Lothar"
-      }
-    ],
-    "container-title": "Evolutionary Computation",
-    "id": "raw:ZitzlerDT00",
-    "issue": "2",
-    "issued": {
-      "date-parts": [
-        [
-          2000
-        ]
-      ]
-    },
-    "page": "173-195",
-    "title": "Comparison of multiobjective evolutionary algorithms: Empirical results",
-    "title-short": "Comparison of multiobjective evolutionary algorithms",
-    "type": "article-journal",
-    "volume": "8"
-  },
-  {
-    "author": [
-      {
-        "family": "Schott",
-        "given": "Jason R."
-      }
-    ],
-    "id": "raw:Schott1995FaultTD",
-    "issued": {
-      "date-parts": [
-        [
-          1995
-        ]
-      ]
-    },
-    "title": "Fault tolerant design using single and multicriteria genetic algorithm optimization.",
-    "type": "paper-conference"
-  },
-  {
-    "author": [
-      {
-        "family": "Zitzler",
-        "given": "Eckart"
-      },
-      {
-        "family": "Deb",
-        "given": "Kalyanmoy"
-      },
-      {
-        "family": "Thiele",
-        "given": "Lothar"
-      }
-    ],
-    "container-title": "Evolutionary Computation",
-    "id": "raw:Zitzler2000ComparisonOM",
-    "issued": {
-      "date-parts": [
-        [
-          2000
-        ]
-      ]
-    },
-    "page": "173-195",
-    "title": "Comparison of multiobjective evolutionary algorithms: Empirical results",
-    "title-short": "Comparison of multiobjective evolutionary algorithms",
-    "type": "article-journal",
-    "volume": "8"
-  },
-  {
     "DOI": "10.1109/TSE.2015.2432024",
     "URL": "https://doi.org/10.1109/TSE.2015.2432024",
     "author": [
@@ -649,6 +727,54 @@
     "title": "GALE: geometric active learning for search-based software engineering",
     "type": "article-journal",
     "volume": "41"
+  },
+  {
+    "DOI": "10.1007/s00158-008-0251-6",
+    "ISSN": "1615-1488",
+    "URL": "https://doi.org/10.1007/s00158-008-0251-6",
+    "abstract": "Applications of multi-objective genetic algorithms (MOGAs) in engineering optimization problems often require numerous function calls. One way to reduce the number of function calls is to use an approximation in lieu of function calls. An approximation involves two steps: design of experiments (DOE) and metamodeling. This paper presents a new approach where both DOE and metamodeling are integrated with a MOGA. In particular, the DOE method reduces the number of generations in a MOGA, while the metamodeling reduces the number of function calls in each generation. In the present approach, the DOE locates a subset of design points that is estimated to better sample the design space, while the metamodeling assists in estimating the fitness of design points. Several numerical and engineering examples are used to demonstrate the applicability of this new approach. The results from these examples show that the proposed improved approach requires significantly fewer function calls and obtains similar solutions compared to a conventional MOGA and a recently developed metamodeling-assisted MOGA.",
+    "author": [
+      {
+        "family": "Li",
+        "given": "G."
+      },
+      {
+        "family": "Li",
+        "given": "M."
+      },
+      {
+        "family": "Azarm",
+        "given": "S."
+      },
+      {
+        "family": "Al Hashimi",
+        "given": "S."
+      },
+      {
+        "family": "Al Ameri",
+        "given": "T."
+      },
+      {
+        "family": "Al Qasas",
+        "given": "N."
+      }
+    ],
+    "container-title": "Structural and Multidisciplinary Optimization",
+    "id": "raw:Li2009",
+    "issue": "5",
+    "issued": {
+      "date-parts": [
+        [
+          2009,
+          2,
+          1
+        ]
+      ]
+    },
+    "page": "447-461",
+    "title": "Improving multi-objective genetic algorithms with adaptive design of experiments and online metamodeling",
+    "type": "article-journal",
+    "volume": "37"
   },
   {
     "DOI": "10.1016/j.ejor.2014.04.011",
@@ -687,57 +813,15 @@
     "volume": "243"
   },
   {
-    "DOI": "10.1007/s11047-018-9685-y",
-    "URL": "https://doi.org/10.1007/s11047-018-9685-y",
+    "URL": "http://drops.dagstuhl.de/opus/volltexte/2005/234",
     "author": [
       {
-        "family": "Emmerich",
-        "given": "Michael T. M."
-      },
-      {
-        "family": "Deutz",
-        "given": "André H."
+        "family": "Nakayama",
+        "given": "Hirotaka"
       }
     ],
-    "container-title": "Natural Computing",
-    "id": "raw:EmmerichD18",
-    "issue": "3",
-    "issued": {
-      "date-parts": [
-        [
-          2018
-        ]
-      ]
-    },
-    "page": "585-609",
-    "title": "A tutorial on multiobjective optimization: Fundamentals and evolutionary methods",
-    "title-short": "A tutorial on multiobjective optimization",
-    "type": "article-journal",
-    "volume": "17"
-  },
-  {
-    "DOI": "10.1007/1-84628-137-7\\_6",
-    "URL": "https://doi.org/10.1007/1-84628-137-7\\_6",
-    "author": [
-      {
-        "family": "Deb",
-        "given": "Kalyanmoy"
-      },
-      {
-        "family": "Thiele",
-        "given": "Lothar"
-      },
-      {
-        "family": "Laumanns",
-        "given": "Marco"
-      },
-      {
-        "family": "Zitzler",
-        "given": "Eckart"
-      }
-    ],
-    "container-title": "Evolutionary multiobjective optimization",
-    "id": "raw:DebTLZ05",
+    "container-title": "Practical approaches to multi-objective optimization, 7.-12. November 2004",
+    "id": "raw:Nakayama05",
     "issued": {
       "date-parts": [
         [
@@ -745,9 +829,305 @@
         ]
       ]
     },
-    "page": "105-145",
-    "title": "Scalable test problems for evolutionary multiobjective optimization",
+    "title": "Multi-objective optimization and its engineering applications",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.9790/3021-031020114",
+    "author": [
+      {
+        "family": "Odu",
+        "given": "Godwin"
+      }
+    ],
+    "container-title": "IOSR Journal of Engineering",
+    "id": "raw:odugod2013",
+    "issued": {
+      "date-parts": [
+        [
+          2013,
+          10
+        ]
+      ]
+    },
+    "page": "01-14",
+    "title": "Review of multi-criteria optimization methods – theory and applications",
+    "type": "article-journal",
+    "volume": "3"
+  },
+  {
+    "DOI": "10.1145/2908812.2908918",
+    "ISBN": "978-1-4503-4206-3",
+    "URL": "http://doi.acm.org/10.1145/2908812.2908918",
+    "author": [
+      {
+        "family": "Olson",
+        "given": "Randal S."
+      },
+      {
+        "family": "Bartley",
+        "given": "Nathan"
+      },
+      {
+        "family": "Urbanowicz",
+        "given": "Ryan J."
+      },
+      {
+        "family": "Moore",
+        "given": "Jason H."
+      }
+    ],
+    "collection-title": "GECCO ’16",
+    "container-title": "Proceedings of the genetic and evolutionary computation conference 2016",
+    "id": "raw:OlsonGECCO2016",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "page": "485-492",
+    "publisher": "ACM",
+    "publisher-place": "New York, NY, USA",
+    "title": "Evaluation of a tree-based pipeline optimization tool for automating data science",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.1109/CEC.2012.6256450",
+    "URL": "https://doi.org/10.1109/CEC.2012.6256450",
+    "author": [
+      {
+        "family": "Pilát",
+        "given": "Martin"
+      },
+      {
+        "family": "Neruda",
+        "given": "Roman"
+      }
+    ],
+    "container-title": "Proceedings of the IEEE congress on evolutionary computation, CEC 2012, brisbane, australia, june 10-15, 2012",
+    "id": "raw:PilatN12",
+    "issued": {
+      "date-parts": [
+        [
+          2012
+        ]
+      ]
+    },
+    "page": "1-7",
+    "title": "An evolutionary strategy for surrogate-based multiobjective optimization",
+    "type": "paper-conference"
+  },
+  {
+    "author": [
+      {
+        "family": "Tian",
+        "given": "Ye"
+      },
+      {
+        "family": "Cheng",
+        "given": "Ran"
+      },
+      {
+        "family": "Zhang",
+        "given": "Xingyi"
+      },
+      {
+        "family": "Jin",
+        "given": "Yaochu"
+      }
+    ],
+    "container-title": "IEEE Computational Intelligence Magazine",
+    "id": "raw:PlatEMO",
+    "issue": "4",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "page": "73-87",
+    "title": "raw:PlatEMO: A MATLAB platform for evolutionary multi-objective optimization",
+    "title-short": "raw:PlatEMO",
+    "type": "article-journal",
+    "volume": "12"
+  },
+  {
+    "DOI": "10.1007/978-3-540-28650-9_4",
+    "ISBN": "978-3-540-28650-9",
+    "URL": "https://doi.org/10.1007/978-3-540-28650-9_4",
+    "abstract": "We give a basic introduction to Gaussian Process regression models. We focus on understanding the role of the stochastic process and how it is used to define a distribution over functions. We present the simple equations for incorporating training data and examine how to learn the hyperparameters using the marginal likelihood. We explain the practical advantages of Gaussian Process and end with conclusions and a look at the current trends in GP work.",
+    "author": [
+      {
+        "family": "Rasmussen",
+        "given": "Carl Edward"
+      }
+    ],
+    "container-title": "Advanced lectures on machine learning: ML summer schools 2003, canberra, australia, february 2 - 14, 2003, tübingen, germany, august 4 - 16, 2003, revised lectures",
+    "editor": [
+      {
+        "family": "Bousquet",
+        "given": "Olivier"
+      },
+      {
+        "dropping-particle": "von",
+        "family": "Luxburg",
+        "given": "Ulrike"
+      },
+      {
+        "family": "Rätsch",
+        "given": "Gunnar"
+      }
+    ],
+    "id": "raw:Rasmussen2004",
+    "issued": {
+      "date-parts": [
+        [
+          2004
+        ]
+      ]
+    },
+    "page": "63-71",
+    "publisher": "Springer Berlin Heidelberg",
+    "publisher-place": "Berlin, Heidelberg",
+    "title": "Gaussian processes in machine learning",
     "type": "chapter"
+  },
+  {
+    "URL": "http://portal.acm.org/citation.cfm?id=1953029",
+    "author": [
+      {
+        "family": "Rasmussen",
+        "given": "Carl Edward"
+      },
+      {
+        "family": "Nickisch",
+        "given": "Hannes"
+      }
+    ],
+    "container-title": "J. Mach. Learn. Res.",
+    "id": "raw:RasmussenN10",
+    "issued": {
+      "date-parts": [
+        [
+          2010
+        ]
+      ]
+    },
+    "page": "3011-3015",
+    "title": "Gaussian processes for machine learning (GPML) toolbox",
+    "type": "article-journal",
+    "volume": "11"
+  },
+  {
+    "ISBN": "026218253X",
+    "URL": "http://www.worldcat.org/oclc/61285753",
+    "author": [
+      {
+        "family": "Rasmussen",
+        "given": "Carl Edward"
+      },
+      {
+        "family": "Williams",
+        "given": "Christopher K. I."
+      }
+    ],
+    "collection-title": "Adaptive computation and machine learning",
+    "id": "raw:RasmussenW06",
+    "issued": {
+      "date-parts": [
+        [
+          2006
+        ]
+      ]
+    },
+    "publisher": "MIT Press",
+    "title": "Gaussian processes for machine learning",
+    "type": "book"
+  },
+  {
+    "ISBN": "0471581003",
+    "author": [
+      {
+        "family": "Myers",
+        "given": "Raymond H."
+      },
+      {
+        "family": "Montgomery",
+        "given": "Douglas C."
+      }
+    ],
+    "edition": "1st",
+    "id": "raw:ResponseSurface",
+    "issued": {
+      "date-parts": [
+        [
+          1995
+        ]
+      ]
+    },
+    "publisher": "John Wiley; Sons, Inc.",
+    "publisher-place": "USA",
+    "title": "Response surface methodology: Process and product in optimization using designed experiments",
+    "title-short": "Response surface methodology",
+    "type": "book"
+  },
+  {
+    "author": [
+      {
+        "family": "Schott",
+        "given": "Jason R."
+      }
+    ],
+    "id": "raw:Schott1995FaultTD",
+    "issued": {
+      "date-parts": [
+        [
+          1995
+        ]
+      ]
+    },
+    "title": "Fault tolerant design using single and multicriteria genetic algorithm optimization.",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.1016/j.ress.2006.04.014",
+    "URL": "https://doi.org/10.1016/j.ress.2006.04.014",
+    "author": [
+      {
+        "family": "Taboada",
+        "given": "Heidi A."
+      },
+      {
+        "family": "Baheranwala",
+        "given": "Fatema"
+      },
+      {
+        "family": "Coit",
+        "given": "David W."
+      },
+      {
+        "family": "Wattanapongsakorn",
+        "given": "Naruemon"
+      }
+    ],
+    "container-title": "Rel. Eng. and Sys. Safety",
+    "id": "raw:TaboadaBCW07",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    },
+    "page": "314-322",
+    "title": "Practical solutions for multi-objective optimization: An application to system reliability design problems",
+    "title-short": "Practical solutions for multi-objective optimization",
+    "type": "article-journal",
+    "volume": "92"
   },
   {
     "DOI": "10.1109/TEVC.2005.861417",
@@ -788,23 +1168,119 @@
     "volume": "10"
   },
   {
-    "URL": "http://drops.dagstuhl.de/opus/volltexte/2005/234",
+    "DOI": "10.1080/00401706.2000.10485731",
+    "URL": "https://doi.org/10.1080/00401706.2000.10485731",
     "author": [
       {
-        "family": "Nakayama",
-        "given": "Hirotaka"
+        "family": "Woodard",
+        "given": "Roger"
       }
     ],
-    "container-title": "Practical approaches to multi-objective optimization, 7.-12. november 2004",
-    "id": "raw:Nakayama05",
+    "container-title": "Technometrics",
+    "id": "raw:Woodard00",
+    "issue": "4",
     "issued": {
       "date-parts": [
         [
-          2005
+          2000
         ]
       ]
     },
-    "title": "Multi-objective optimization and its engineering applications",
-    "type": "paper-conference"
+    "page": "436-437",
+    "title": "Interpolation of spatial data: Some theory for kriging",
+    "title-short": "Interpolation of spatial data",
+    "type": "article-journal",
+    "volume": "42"
+  },
+  {
+    "DOI": "10.1109/TEVC.2007.892759",
+    "URL": "https://doi.org/10.1109/TEVC.2007.892759",
+    "author": [
+      {
+        "family": "Zhang",
+        "given": "Qingfu"
+      },
+      {
+        "family": "Li",
+        "given": "Hui"
+      }
+    ],
+    "container-title": "IEEE Trans. Evolutionary Computation",
+    "id": "raw:ZhangL07",
+    "issue": "6",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    },
+    "page": "712-731",
+    "title": "MOEA/D: A multiobjective evolutionary algorithm based on decomposition",
+    "type": "article-journal",
+    "volume": "11"
+  },
+  {
+    "author": [
+      {
+        "family": "Zitzler",
+        "given": "Eckart"
+      },
+      {
+        "family": "Deb",
+        "given": "Kalyanmoy"
+      },
+      {
+        "family": "Thiele",
+        "given": "Lothar"
+      }
+    ],
+    "container-title": "Evolutionary Computation",
+    "id": "raw:Zitzler2000ComparisonOM",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "page": "173-195",
+    "title": "Comparison of multiobjective evolutionary algorithms: Empirical results",
+    "title-short": "Comparison of multiobjective evolutionary algorithms",
+    "type": "article-journal",
+    "volume": "8"
+  },
+  {
+    "DOI": "10.1162/106365600568202",
+    "URL": "https://doi.org/10.1162/106365600568202",
+    "author": [
+      {
+        "family": "Zitzler",
+        "given": "Eckart"
+      },
+      {
+        "family": "Deb",
+        "given": "Kalyanmoy"
+      },
+      {
+        "family": "Thiele",
+        "given": "Lothar"
+      }
+    ],
+    "container-title": "Evolutionary Computation",
+    "id": "raw:ZitzlerDT00",
+    "issue": "2",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "page": "173-195",
+    "title": "Comparison of multiobjective evolutionary algorithms: Empirical results",
+    "title-short": "Comparison of multiobjective evolutionary algorithms",
+    "type": "article-journal",
+    "volume": "8"
   }
 ]
