@@ -54,11 +54,11 @@ header-includes: '<!--
 
   <link rel="alternate" type="application/pdf" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
 
-  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/" />
+  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/6769be8c1d02ac842a86327ff44c89ab398e2401/" />
 
-  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/" />
+  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/6769be8c1d02ac842a86327ff44c89ab398e2401/" />
 
-  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/manuscript.pdf" />
+  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/6769be8c1d02ac842a86327ff44c89ab398e2401/manuscript.pdf" />
 
   <meta property="og:type" content="article" />
 
@@ -87,9 +87,9 @@ title: Compositional Multi-objective Parameter tuning
 
 <small><em>
 This manuscript
-([permalink](https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/))
+([permalink](https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/6769be8c1d02ac842a86327ff44c89ab398e2401/))
 was automatically generated
-from [Valavanca/compositional-system-for-hyperparameter-tuning@cf136a8](https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/cf136a8f8878f66bda23f4262d8ed6672a92b7e1)
+from [Valavanca/compositional-system-for-hyperparameter-tuning@6769be8](https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/6769be8c1d02ac842a86327ff44c89ab398e2401)
 on February 9, 2020.
 </em></small>
 
