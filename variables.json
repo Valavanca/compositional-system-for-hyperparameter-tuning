@@ -1,0 +1,64 @@
+{
+  "pandoc": {
+    "title": "Compositional Multi-objective Parameter tuning",
+    "keywords": [
+      "multi-objective",
+      "surrogate optimization",
+      "software design",
+      "sequential parameter optimization"
+    ],
+    "lang": "en-US",
+    "date-meta": "2020-02-09",
+    "author-meta": [
+      "Oleksandr Husak"
+    ],
+    "header-includes": "<!--\nManubot generated metadata rendered from header-includes-template.html.\nSuggest improvements at https://github.com/manubot/manubot/blob/master/manubot/process/header-includes-template.html\n-->\n<meta name=\"dc.format\" content=\"text/html\" />\n<meta name=\"dc.title\" content=\"Compositional Multi-objective Parameter tuning\" />\n<meta name=\"citation_title\" content=\"Compositional Multi-objective Parameter tuning\" />\n<meta property=\"og:title\" content=\"Compositional Multi-objective Parameter tuning\" />\n<meta property=\"twitter:title\" content=\"Compositional Multi-objective Parameter tuning\" />\n<meta name=\"dc.date\" content=\"2020-02-09\" />\n<meta name=\"citation_publication_date\" content=\"2020-02-09\" />\n<meta name=\"dc.language\" content=\"en-US\" />\n<meta name=\"citation_language\" content=\"en-US\" />\n<meta name=\"dc.relation.ispartof\" content=\"Manubot\" />\n<meta name=\"dc.publisher\" content=\"Manubot\" />\n<meta name=\"citation_journal_title\" content=\"Manubot\" />\n<meta name=\"citation_technical_report_institution\" content=\"Manubot\" />\n<meta name=\"citation_author\" content=\"Oleksandr Husak\" />\n<meta name=\"citation_author_institution\" content=\"Research Student Assistant in TUD\" />\n<meta name=\"citation_author_orcid\" content=\"XXXX-XXXX-XXXX-XXXX\" />\n<link rel=\"canonical\" href=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta property=\"og:url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta property=\"twitter:url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta name=\"citation_fulltext_html_url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta name=\"citation_pdf_url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf\" />\n<link rel=\"alternate\" type=\"application/pdf\" href=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf\" />\n<link rel=\"alternate\" type=\"text/html\" href=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/\" />\n<meta name=\"manubot_html_url_versioned\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/\" />\n<meta name=\"manubot_pdf_url_versioned\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/manuscript.pdf\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"twitter:card\" content=\"summary_large_image\" />\n<link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"https://manubot.org/favicon-192x192.png\" />\n<link rel=\"mask-icon\" href=\"https://manubot.org/safari-pinned-tab.svg\" color=\"#ad1457\" />\n<meta name=\"theme-color\" content=\"#ad1457\" />\n<!-- end Manubot generated metadata -->"
+  },
+  "manubot": {
+    "date": "February 9, 2020",
+    "authors": [
+      {
+        "github": "Valavanca",
+        "name": "Oleksandr Husak",
+        "initials": "OH",
+        "orcid": "XXXX-XXXX-XXXX-XXXX",
+        "email": "oleksandr.husak@mailbox.tu-dresden.de",
+        "affiliations": [
+          "Research Student Assistant in TUD"
+        ],
+        "affiliation_numbers": [
+          1
+        ]
+      }
+    ],
+    "affiliations": [
+      {
+        "affiliation": "Research Student Assistant in TUD",
+        "affiliation_number": 1
+      }
+    ],
+    "ci_source": {
+      "provider": "travis",
+      "repo_slug": "Valavanca/compositional-system-for-hyperparameter-tuning",
+      "repo_owner": "Valavanca",
+      "repo_name": "compositional-system-for-hyperparameter-tuning",
+      "commit": "cf136a8f8878f66bda23f4262d8ed6672a92b7e1",
+      "triggering_commit": "cf136a8f8878f66bda23f4262d8ed6672a92b7e1",
+      "build_url": "https://travis-ci.com/Valavanca/compositional-system-for-hyperparameter-tuning/builds/148093613",
+      "job_url": "https://travis-ci.com/Valavanca/compositional-system-for-hyperparameter-tuning/jobs/285228029"
+    },
+    "html_url": "https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/",
+    "pdf_url": "https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf",
+    "html_url_versioned": "https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/",
+    "pdf_url_versioned": "https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/manuscript.pdf",
+    "manubot_version": "0.3.0",
+    "rootstock_commit": null,
+    "manuscript_stats": {
+      "reference_counts": {
+        "raw": 36,
+        "total": 36
+      },
+      "word_count": 6297
+    }
+  }
+}

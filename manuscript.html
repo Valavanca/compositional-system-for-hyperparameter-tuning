@@ -1,0 +1,4893 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Oleksandr Husak" />
+  <meta name="dcterms.date" content="2020-02-09" />
+  <meta name="keywords" content="multi-objective, surrogate optimization, software design, sequential parameter optimization" />
+  <title>Compositional Multi-objective Parameter tuning</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <!--
+  Manubot generated metadata rendered from header-includes-template.html.
+  Suggest improvements at https://github.com/manubot/manubot/blob/master/manubot/process/header-includes-template.html
+  -->
+  <meta name="dc.format" content="text/html" />
+  <meta name="dc.title" content="Compositional Multi-objective Parameter tuning" />
+  <meta name="citation_title" content="Compositional Multi-objective Parameter tuning" />
+  <meta property="og:title" content="Compositional Multi-objective Parameter tuning" />
+  <meta property="twitter:title" content="Compositional Multi-objective Parameter tuning" />
+  <meta name="dc.date" content="2020-02-09" />
+  <meta name="citation_publication_date" content="2020-02-09" />
+  <meta name="dc.language" content="en-US" />
+  <meta name="citation_language" content="en-US" />
+  <meta name="dc.relation.ispartof" content="Manubot" />
+  <meta name="dc.publisher" content="Manubot" />
+  <meta name="citation_journal_title" content="Manubot" />
+  <meta name="citation_technical_report_institution" content="Manubot" />
+  <meta name="citation_author" content="Oleksandr Husak" />
+  <meta name="citation_author_institution" content="Research Student Assistant in TUD" />
+  <meta name="citation_author_orcid" content="XXXX-XXXX-XXXX-XXXX" />
+  <link rel="canonical" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/" />
+  <meta property="og:url" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/" />
+  <meta property="twitter:url" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/" />
+  <meta name="citation_fulltext_html_url" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/" />
+  <meta name="citation_pdf_url" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
+  <link rel="alternate" type="application/pdf" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
+  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/" />
+  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/" />
+  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/manuscript.pdf" />
+  <meta property="og:type" content="article" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/png" sizes="192x192" href="https://manubot.org/favicon-192x192.png" />
+  <link rel="mask-icon" href="https://manubot.org/safari-pinned-tab.svg" color="#ad1457" />
+  <meta name="theme-color" content="#ad1457" />
+  <!-- end Manubot generated metadata -->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Compositional Multi-objective Parameter tuning</h1>
+</header>
+<p><small><em>
+This manuscript
+(<a href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cf136a8f8878f66bda23f4262d8ed6672a92b7e1/">permalink</a>)
+was automatically generated
+from <a href="https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/cf136a8f8878f66bda23f4262d8ed6672a92b7e1">Valavanca/compositional-system-for-hyperparameter-tuning@cf136a8</a>
+on February 9, 2020.
+</em></small></p>
+<h2 id="authors">Authors</h2>
+<ul>
+<li><strong>Oleksandr Husak</strong><br>
+<img src="images/orcid.svg" class="inline_icon" alt="ORCID icon" />
+<a href="https://orcid.org/XXXX-XXXX-XXXX-XXXX">XXXX-XXXX-XXXX-XXXX</a>
+· <img src="images/github.svg" class="inline_icon" alt="GitHub icon" />
+<a href="https://github.com/Valavanca">Valavanca</a><br>
+<small>
+Research Student Assistant in TUD
+</small></li>
+</ul>
+<h1 id="introduction.-challenges-and-problems.">Introduction. Challenges and Problems.</h1>
+<p>Multi-objective optimisation is an established parameter tuning
+technique. It is especially suited to solve complex, multidisciplinary
+design problems with an accent on system design.</p>
+<p>When we talk about several objectives, the intention is to find good
+compromises rather than a single solution as in global optimization.
+Since the solution for multi-objective optimization problems gives the
+appearance to a set of Pareto-optimal points, evolutionary optimization
+algorithms are ideal for handling multi-objective optimization problems.</p>
+<p>General optimization methods could be classified into derivative and
+non-derivative methods. In this thesis focuses on non-derivative
+methods, as they are more suitable for parameter tuning. Therefore, they
+are also known as black-box methods and do not require any derivatives
+of the objective function to calculate the optimum. Other benefits of
+these methods are that they are more likely to find a global optimum.</p>
+<h2 id="motivation">Motivation</h2>
+<p>The purpose of this study is to introduce new surrogate-design-criteria
+for multi-objective hyperparameter optimization software.</p>
+<p>Motivation Examples in tuning algorithms:</p>
+<ul>
+<li><p>Local search: neighbourhoods, perturbations, tabu length, annealing</p></li>
+<li><p>Tree search: pre-processing, data structures, branching heuristics,
+clause learning deletion</p></li>
+<li><p>Genetic algorithms: population size, mating scheme, crossover,
+mutation rate, local improvement stages, hybridizations</p></li>
+<li><p>Machine Learning: pre-processing, learning rate schedules</p></li>
+<li><p>Deep learning (in addition): layers, dropout constants,
+pre-training, activations functions, units/layer, weight
+initialization</p></li>
+</ul>
+<h2 id="objectives">Objectives</h2>
+<p>Black-box multi-objective problems given a finite number of function
+evaluations</p>
+<h2 id="research-questions">Research Questions</h2>
+<ol type="1">
+<li><p>RQ(Cost): Does surrogate-based optimization cheaper in evaluations
+than other multi-goal optimization tools?</p></li>
+<li><p>RQ(Convergence speed): Does with surrogate-based optimization
+solutions converge faster to Pareto-front than with other multi-goal
+optimization tools?</p></li>
+<li><p>RQ(Quality): Does surrogate-based optimization return similar or
+better solutions than other optimization tools?</p></li>
+<li><p>RQ(Extensions and reusability): Reusable compositional system for
+optimization. Is it possible to extend light-weight single-objective
+experiments to heavy-weight multi/many-objective?</p></li>
+</ol>
+<p>In numerous test problems, compositional-surrogate finds comparable
+solutions to standard MOEA (NSGA-II, MOEAD, MACO, NSPSO) doing
+considerably fewer evaluations (300 vs 5000). Surrogate-based
+optimization is recommended when a model is expensive to evaluate.</p>
+<h1 id="foundation">Foundation</h1>
+<p>In common old-fashioned software design, engineers carefully convert
+overall models into domain-specific tools. In this approach, designers
+codify the current understanding of the problem into the parameters.</p>
+<h2 id="parameter-tuning">Parameter tuning</h2>
+<p>Given recent advances in computing hardware, software analysts either
+validate engineer models or find optimal configuration by using
+parameter tuning tools to explore thousands to millions of inputs for
+their systems.</p>
+<p>In this article assume that parameter tuning is a subset problem of
+general, global optimizations. It’s also mean that we consider some
+fitness function ‘f’ that converts the parameter vector to output
+objectives. Note that the term "real evaluation" or "black-box
+evaluation" as a synonym for the fitness function ‘f’. The goal of
+parameter tuning as an optimization task lay on fast iterative search
+with improvements in each objective dimension. The term "fast" means
+that the convergence to global optimum is achieved with the least real
+evaluations and shorter time frame.</p>
+<p>We consider fitness function ‘f’ as black-box with parameter and
+objective space. Parameter space has structure and could consist from
+continues and categorical dimensions. Sometimes, some combinations of
+parameter settings are forbidden. Each pony from parameter space lead to
+some point in objective space. Configurations often yield qualitatively
+different behavior. Objective space also could be described as usual
+objectives as accuracy, runtime, latency, performance, error rate,
+energy, et.s. On each objective should gain the best possible value and
+rich system tradeoff.</p>
+<p>Optimization technics:</p>
+<ul>
+<li><p>Grid search vs Random search</p></li>
+<li><p>Heuristics and Metaheuristic. (Simulated annealing, Evolutionary
+algorithm..) These methods aim at generating approximately optimal
+solutions in a single run. Also could operate with sets of solutions
+being outcomes of multiple objectives.</p></li>
+<li><p>Sequential design (Bayesian optimization, Evolutionary algorithm..)
+Bayesian methods differ from random or grid search in that they use
+past evaluation results to extrapolate and choose the next values to
+evaluate. Limit expensive evaluations of the objective function by
+choosing the next input values based on those that have done well in
+the past.</p></li>
+</ul>
+<p>Optimization cost of black-box:</p>
+<ul>
+<li><p>Evaluation may be very expensive</p></li>
+<li><p>Sampling budget is unknown</p></li>
+<li><p>Possibly noisy objectives</p></li>
+<li><p>Feasibility constraints</p></li>
+<li><p>Multi-objectivity</p></li>
+</ul>
+<p>Ideally, we want a method that can explore the search space while also
+limiting evaluations of hyperparameter choices. The single criterion in
+parameter tuning may not be sufficient to correctly characterize the
+behaviour of the configuration space that is why multiple criteria have
+to be considered. One way to clarify the task of understanding the space
+of possible solutions is to focus on the non-dominated frontier or
+Pareto-front, the subset of solutions that are not worse than any other
+but better on at least one goal. The difficulty here is that even the
+Pareto frontier can be too large to understand.</p>
+<h2 id="multi-objective-optimization">Multi-objective optimization</h2>
+<p>Parameter tuning is present in our daily life and comes in a variety of
+states. The goal is the rich best possible objective by correctly
+choosing the system parameters. Common of optimization problems requires
+the simultaneous optimization of multiple, usually contradictory,
+objectives. These type of problems are termed as multiobjective
+optimization problems. The solution to such problems is a family of
+points, that placing on a Pareto front. Knowledge of the Pareto front
+allows visualizing appropriate decisions in terms of performance for
+each objective.</p>
+<p>"Multi-objective optimization(MOO) deals with such conflicting
+objectives. It provides a mathematical framework to arrive at optimal
+design state which accommodates the various criteria demanded by the
+application. The process of optimizing systematically and simultaneously
+a collection of objective functions are called multi-objective
+optimization (MOO) <span class="citation" data-cites="NTeA6uPp">[<a href="#ref-NTeA6uPp" role="doc-biblioref">1</a>]</span>".</p>
+<p>For a multi-objective problem, we consider "solution" as points from
+parameter space that lead to non-dominated results in objective space.
+This set of points approximate real Pareto-front. Improving "solution"
+means that sets of points coincide better with real Pareto-front. How to
+search for an optimal solution to the multi-objective optimization
+problem?</p>
+<h3 id="scalarizing.-weighted-sum-methods">Scalarizing. Weighted sum methods</h3>
+<p>Scalarizing approach is built on the traditional techniques to creating
+an alternative problem with a single, composite objective function.
+Single objective optimization techniques are then applied to this
+composite function to obtain a single optimal solution. The weighted-sum
+methods it’s a well known type of scalarizing technic is applied to
+simplify a multiobjective problem. Concatenate the objectives into one
+criterion by using magic weighted sum factors. The merged objective is
+used to evaluate and define the optimal solution. Weighted sum methods
+have difficulties in selecting proper weight especially when there is no
+connected a priori knowledge among objectives. Furthermore, Uniform
+distribution points in parameters space don’t generate uniform
+distribution points on objective space. This means that we can’t
+approximate Pareto-front completely even with multiple optimization
+rounds. Some scalarizing technics try to improve exploration of
+parameter space by assigning more "intelligence" aggregation to the
+objectives. Such solutions may be fragile. They change dramatically if
+we modify algorithm parameters.</p>
+<p>Moreover, the weighting method can not provide a solution among
+underparts of the Pareto surface due to “duality gap” for not convex
+cases. Even for convex cases, for example, in linear cases, even if we
+want to get a point in the middle of a line segment between two points,
+we hardly get a peak of Pareto surface, as long as the well-known
+simplex method is used. This implies that depending on the structure of
+the problem, the linearly weighted sum can not necessarily provide a
+solution as DM desires. <span class="citation" data-cites="15iylVSF0">[<a href="#ref-15iylVSF0" role="doc-biblioref">2</a>]</span></p>
+<h3 id="multi-objective-evolutionary-algorithms">Multi-Objective Evolutionary Algorithms</h3>
+<p>Generating the Pareto set can be computationally expensive and is often
+infeasible because the complexity of the underlying volume limits exact
+techniques from being applicable. For this reason, a number of
+stochastic search strategies such as evolutionary algorithms, tabu
+search, simulated annealing, and ant colony optimization have been
+developed: they usually do not guarantee to identify optimal trade-offs
+but try to find a good approximation, i.e., a set of solutions whose
+objective vectors are (hopefully) not too far away from the optimal
+objective vectors <span class="citation" data-cites="1HUtCWxMH">[<a href="#ref-1HUtCWxMH" role="doc-biblioref">3</a>]</span>.</p>
+<p>The evolutionary algorithm (EA) form a class of heuristic search methods
+that simulate the process of natural evolution. Using simplifications,
+this EA is subsequently determined by the two basic principles:
+selection and variation. While selection imitates the competition for
+reproduction and resources among living beings, the other principle,
+variation, imitates the natural ability to create “new” living beings
+through recombination and mutation. Evolutionary algorithm possesses
+several characteristics that are desirable for problems including
+multiple conflicting objectives, and large and complicated search
+spaces. However, EA still need many evaluations of the "black box"
+system to solve a common multi-objective problem. This is further
+complicated by the fact that many such problems are very expensive.
+Consolidated, this makes EAs unfeasible for costly and Multy-objective
+problem. A good solution is the integration of the surrogate model which
+extrapolate and approximate the fitness landscape from samples.
+Multi-objective Evolutionary Algorithms (MOEAs) use this surrogate model
+as a target for optimization. Assumed that solution from surrogate
+nearby to a global optimum. The goal of this thesis is to understand if
+the performance of MOEAs approach can be improved by using compositional
+surrogates. The key idea of compositional surrogates is the splitting
+objective space to multiple surrogates that extrapolate it
+independently.Combination of multiple hypotheses should give them the
+potential to approximate more complicated problems. This approach avoids
+the idea of a single surrogate model, preferring instead to use the
+composition hypothesis to split out the terrain of objective space.</p>
+<p>The multiple surrogates are analysed on objectives with various
+complexity, beside the simple and complicated unimodal structure.
+Generating a cloud of candidates is computationally expensive.</p>
+<p>Evolutionary optimizers explore populations of candidate solutions in
+each generation, some mutator can make changes to the current
+population. A select operator then picks the best mutants which are then
+combined in some way to become generation i+1. This century, there has
+been much new work on multi-objective evolutionary algorithms with two
+or three objectives (as well as many-objective optimization, with many
+more objectives). Multi-objective Evolutionary Algorithms (MOEAs) are
+popular tools to solve optimization problems, because of their
+applicability to complex fitness landscapes and solid performance on
+problems with large design spaces. While other methods also exist, in
+this thesis we will focus on improving approaches with Evolutionary
+Algorithms for the Multy-objective optimizations. This search-based
+software engineering is a rapidly expanding area of research and a full
+survey of that work is beyond the scope of this thesis.</p>
+<h3 id="metrics-for-multi-objective-solution">Metrics for multi-objective solution</h3>
+<p>In single-objective minimization, the quality of a given solution is
+trivial to quantify: the smaller the objective function value, the
+better. However, evaluating the quality of an approximation of a Pareto
+set is non trivial. The question is important for the comparison of
+algorithms or prediction next configuration.</p>
+<p>According to <span class="citation" data-cites="cgOPGY3M">[<a href="#ref-cgOPGY3M" role="doc-biblioref">4</a>]</span>, a Pareto front approximation should satisfy
+the following:</p>
+<ul>
+<li><p>The distance between the Pareto front and its approximation should
+be minimized.</p></li>
+<li><p>A heigh distribution of the non-dominated points is desirable.</p></li>
+<li><p>The range of the approximated front should be maximized, i.e., for
+each objective, a wide range of values should be covered by the
+non-dominated points.</p></li>
+</ul>
+<p>Metrics for performance indicators partitioned into four groups
+according to their properties <span class="citation" data-cites="vbJ1WiNp">[<a href="#ref-vbJ1WiNp" role="doc-biblioref">5</a>]</span>:</p>
+<ul>
+<li><p>cardinality</p></li>
+<li><p>convergence</p></li>
+<li><p>distribution</p></li>
+<li><p>spread</p></li>
+</ul>
+<p>Base on the right metrics general multi-objective algorithm keep making
+progress toward the Pareto front in the objective function space. The
+goal of optimizing a multi-objective problem is to obtain an
+approximation solution set to the reference Pareto front, including the
+following subgoals:</p>
+<ul>
+<li><p>All solution set are as close as possible to the Pareto front</p></li>
+<li><p>All solution set are as diverse as possible in the objective space</p></li>
+<li><p>Evaluate as few solution as possible</p></li>
+</ul>
+<p>Straightforward applying of the simple coefficient of determination (R2)
+is the wrong indicator of success. Evaluations of different sets of
+Pareto optimal points is multi-objective task. The necessary objectives
+follow for improving solutions:</p>
+<ul>
+<li><p>Keep hypervolume low. Reference point is 0 for all objectives.</p></li>
+<li><p>Maximize sparsity of points. Average distance. Crowding Distance.
+Spacing metrics.</p></li>
+<li><p>Maximize non-dominant decisions in the total population</p></li>
+</ul>
+<p>Also distribution and spread indicators is consider in this work.
+According to <span class="citation" data-cites="DCdONjBz">[<a href="#ref-DCdONjBz" role="doc-biblioref">6</a>]</span>, “the spread metrics try to measure the
+extents of the spread achieved in a computed Pareto front
+approximation”. They are not useful to evaluate the convergence of an
+algorithm, or at comparing algorithms. They only make sense when the
+Pareto set is composed of several solutions.</p>
+<p>For multi-objective optimization (MOO), an algorithm should provide a
+set of solutions that realize the optimal trade-offs between the
+considered optimization objectives, i.e., Pareto set. Therefore, the
+performance comparison of MOO algorithms is based on their Pareto sets.
+In this study, three popular metrics are used to quantify the
+performance of the algorithms.</p>
+<ul>
+<li><p>Hypervolume (HV)<span class="citation" data-cites="17FLBEzc1">[<a href="#ref-17FLBEzc1" role="doc-biblioref">7</a>]</span>. This metric represents
+the volume of the objective space that is covered by the individuals
+of a non-dominated solutions set (solutions that belong to a Pareto
+front). The volume is delimited by two points: one point that is
+called the anti-optimal point (A) that is defined as the worst
+solution inside the objective space, and a second optimal point
+(pseudo-optimal) that is calculated by the proposed solution method.
+Determining the hypervolume indicator is a computationally expensive
+task. Even in case of a reasonably small dimension and low number of
+points (e.g. 100 points in 10 dimensions), there are currently no
+known algorithms that can yield the results fast enough for use in
+most multiple-objective optimizers</p></li>
+<li><p>Non-dominated Ratio (NDR). This metric employs the non-dominated
+count of a solution set divided by the total size of solution set.
+Higher values are preferred to lower ones.</p></li>
+<li><p>Spacing <span class="citation" data-cites="1AKoZUHA4">[<a href="#ref-1AKoZUHA4" role="doc-biblioref">8</a>]</span>. Describe the distribution of Pareto
+points. Fewer space metrics means better coverage of objectives
+values range.</p></li>
+</ul>
+<h5 id="conclusion">Conclusion</h5>
+<p>For optimization expensive black-box:</p>
+<ul>
+<li><p>Scalable algorithms that convert multi-objective to single objective
+problem produce solution that not accurate enough(Scalarizing). Also
+this approach suitable for a limited type of problem.</p></li>
+<li><p>Genetic algorithms. This approach is costly to perform and not
+appropriate for expensive problems.</p></li>
+</ul>
+<p>Optimization gap in obtaining high quality, multi/single-obj solutions
+in expensive to evaluate experiments. Experiments as a black box,
+derivative-free. Reference to surrogate optimization.</p>
+<h2 id="surrogate-optimization">Surrogate optimization</h2>
+<p><span class="citation" data-cites="yGyc3usi">[<a href="#ref-yGyc3usi" role="doc-biblioref">9</a>]</span></p>
+<p>To dealing with expensive optimization problem more quickly, we can use
+surrogate models in the optimization process to approximate the
+objective functions of the problem. Approximation of solution is faster
+than the whole optimization process can be accelerated. Nevertheless,
+the extra time needed to build and update the surrogate models during
+the optimization process. In the case of pre-selecting the promising
+individuals, the surrogate model is used to find the likely or drop the
+low-quality individuals even before they are exactly evaluated, thus
+reducing the number of exact evaluations.</p>
+<p>In the literature, the term surrogate or model-based optimization is
+used where, during the optimization processes, some solutions are not
+evaluated with the original objective function, but are approximated
+using a model of this function. Different approximation methods are used
+to build surrogate models. For single and multiobjective optimization
+similar methods are used. These techniques typically return only one
+approximated value, which is why in multiobjective problems several
+models have to be used, so that each model approximates one objective.
+Some of the most commonly used methods are the Response Surface Method
+<span class="citation" data-cites="WHqOntch">[<a href="#ref-WHqOntch" role="doc-biblioref">10</a>]</span>, Radial Basis Function <span class="citation" data-cites="1FOgcJYL9">[<a href="#ref-1FOgcJYL9" role="doc-biblioref">11</a>]</span>, Neural
+Network, Kriging <span class="citation" data-cites="1Y1nHvc2">[<a href="#ref-1Y1nHvc2" role="doc-biblioref">12</a>]</span> and Gaussian Process Modeling
+<span class="citation" data-cites="1FXlw7TX2 4nfjnHfv">[<a href="#ref-1FXlw7TX2" role="doc-biblioref">13</a>,<a href="#ref-4nfjnHfv" role="doc-biblioref">14</a>]</span>.</p>
+<p>General classification <span class="citation" data-cites="mu8IFeYo">[<a href="#ref-mu8IFeYo" role="doc-biblioref">15</a>]</span>: Within surrogate-model-based
+optimization algorithms, a mechanism is needed to find a balance between
+the exact and approximate evaluations. In evolutionary algorithms, this
+mechanism is called evolution control <span class="citation" data-cites="112CjFl6F">[<a href="#ref-112CjFl6F" role="doc-biblioref">16</a>]</span> and can be either fixed
+or adaptive. In fixed evolution control the number of exact function
+evaluations that will be performed during the optimization is known in
+advance. Fixed evolution control can be further divided into
+generation-based control, where in some generations all solutions are
+approximated and in the others, they are exactly evaluated <span class="citation" data-cites="4bMRxtHA">[<a href="#ref-4bMRxtHA" role="doc-biblioref">17</a>]</span>,
+and individual based control, where in every generation some (usually
+the best) solutions are exactly evaluated and others approximated
+<span class="citation" data-cites="1AF8tzsvd">[<a href="#ref-1AF8tzsvd" role="doc-biblioref">18</a>]</span>. In adaptive evolution control, the number of exactly
+evaluated solutions is not known in advance but depends on the accuracy
+of the model for the given problem. Adaptive evolution control can be
+used in one of two ways: as a part of a memetic search or to pre-select
+the promising individuals which are then exactly evaluated <span class="citation" data-cites="MlTHme7o">[<a href="#ref-MlTHme7o" role="doc-biblioref">19</a>]</span>.</p>
+<p>Surrogate used to expedite search for global optimum. Global accuracy of
+surrogate not a priority. Surrogate model is cheaper to evaluate than
+the objective.</p>
+<p>Bayesian optimization (BO) methods often rely on the assumption that the
+objective function is well-behaved, but in practice, the objective
+functions are seldom well-behaved even if noise-free observations can be
+collected. In <span class="citation" data-cites="wTIHyFe9">[<a href="#ref-wTIHyFe9" role="doc-biblioref">20</a>]</span> propose robust surrogate models to
+address the issue by focusing on the well- behaved structure informative
+for search while ignoring detrimental structure that is challenging to
+model data efficiently.</p>
+<h5 id="surrogate-model-based-moea">Surrogate-model-based MOEA</h5>
+<p>In <span class="citation" data-cites="15iqjq0XF">[<a href="#ref-15iqjq0XF" role="doc-biblioref">21</a>]</span> proposed approaches that apply kind of surrogate
+assistant to evaluations and ranging new population. It allows detecting
+the most informative examples in population and evaluates them.
+Identifies and evaluates just those most informative examples at the end
+done fewer evaluations of the real system. Another way to explore
+solutions is to apply some heuristic to decompose the total space into
+many smaller problems, and then use a simpler optimizer for each region.</p>
+<p>Surrogates are also used to rank and filter out offspring according to
+Pareto-related indicators like the hypervolume <span class="citation" data-cites="iL724s1s">[<a href="#ref-iL724s1s" role="doc-biblioref">22</a>]</span>, or a
+weighted sum of the objectives <span class="citation" data-cites="890MGfiJ">[<a href="#ref-890MGfiJ" role="doc-biblioref">23</a>]</span>. The problem with the
+methods that use hypervolume as a way of finding promising solutions is
+the calculation time needed to calculate the hypervolume, especially on
+many objectives. Another possibility is described in <span class="citation" data-cites="16Jfe9RjR">[<a href="#ref-16Jfe9RjR" role="doc-biblioref">24</a>]</span>, where
+the authors present an algorithm that calculates only non-dominated
+solutions or solutions that can, because of variance, become
+non-dominated.</p>
+<p>GP-DEMO <span class="citation" data-cites="mu8IFeYo">[<a href="#ref-mu8IFeYo" role="doc-biblioref">15</a>]</span> The algorithm is based on the newly defined
+relations for comparing solutions under uncertainty. These relations
+minimize the possibility of wrongly performed comparisons of solutions
+due to inaccurate surrogate model approximations. Using this confidence
+interval, we define new dominance relations that take into account this
+uncertainty and propose a new concept for comparing solutions under
+uncertainty that requires exact evaluations only in cases where more
+certainty is needed.</p>
+<h5 id="surrogate-with-moea">Surrogate with MOEA</h5>
+<p>Kind of extending the search stage of MOEA with surrogate to simulate
+evaluation of population. It transform the problem of searching a new
+better population to improving general hypothesis of how and where
+Pareto set presented.</p>
+<p>In surrogate-model-based multiobjective optimization, approximated
+values are often mistakenly used in the solution comparison. As a
+consequence, exactly evaluated good solutions can be discarded from the
+population because they appear to be dominated by the inaccurate and
+over-optimistic approximations. This can slow the optimization process
+or even prevent the algorithm from finding the best solutions
+<span class="citation" data-cites="mu8IFeYo">[<a href="#ref-mu8IFeYo" role="doc-biblioref">15</a>]</span>.</p>
+<h5 id="discussion">Discussion</h5>
+<p>Example of each type of optimization. Justification solution.
+Conclusion: Design gap in optimization/parameter tuning. Need to
+indicate optimization workflow for expensive process/experiments. The
+argument(s) why we need a new architecture. Reference to composition
+architecture.</p>
+<p>Surrogate based optimization has proven effective in many aspects of
+engineering and in applications where data is "expensive", or
+difficult, to evaluate.</p>
+<h2 id="compositional-architecture">Compositional architecture</h2>
+<p>We could describe compositional-based surrogate optimization as compound
+grey-box system whit a lot of open research areas where surrogate should
+improve, managing portfolio, compare of predictions Pareto fronts. As a
+developer, you can be focused on a specific problem and don’t know how
+to implement other components. This is one of the main advantages of the
+described approach.</p>
+<h5 id="compositional-surrogates">Compositional surrogates</h5>
+<p>Can the same single-objective models be equally applied to various types
+of problems in multi-/single-objective optimization? When there is no
+correlation between the objectives, a very simple way to solve this kind
+of problem is to build independent models, i.e. one for each objective,
+and then to use those models to simultaneously extrapolate possible
+solutions with MOEA. Nevertheless, the output values correlated, but an
+often naive way to build multiple models that able to extrapolate
+complex objective space is often given good results.</p>
+<p>Later research generalized this approach. MOEA/D (multiobjective
+evolutionary algorithm based on decomposition <span class="citation" data-cites="Dk9KXQBq">[<a href="#ref-Dk9KXQBq" role="doc-biblioref">25</a>]</span>) is a generic
+framework that decomposes a multi-objective optimization problem into
+many smaller single problems, then applies a second optimizer to each
+smaller subproblem, simultaneously.</p>
+<p>With multiple models, their flaws can combine, as well as the time
+required to build the models. In memetic algorithms, especially if the
+surrogate model is not very accurate, a local optimum can be found
+instead of the global optimum. But in terms of parameter tuning, this
+point should be better than a predefined sampling plan. Evaluation of
+this prediction improve surrogate model quality in the near-optimal area
+and improve prediction in the next round. For example, OEGADO
+<span class="citation" data-cites="1C0JI6fEI">[<a href="#ref-1C0JI6fEI" role="doc-biblioref">26</a>]</span> creates a surrogate model for each of the objectives.
+The best solutions in every objective get also approximated on other
+objectives, which helps with finding trade-off individuals. The best
+individuals are then exactly evaluated and used to update the models.</p>
+<h2 id="scope-of-work">Scope of work</h2>
+<p>Describe and implement workflow for multi-objective parameter tuning of
+the derivative-free, black-box system. Parameter estimation is costly.
+The proposed solutions are also suitable for single-criteria
+optimization. Problem Setting.</p>
+<p>Goal:</p>
+<ol type="1">
+<li><p>Globally optimize an objective function(s) that is expensive to
+evaluate. Single/Multi-objective parameter tuning</p></li>
+<li><p>Simultaneously optimization scalable objectives</p></li>
+<li><p>Components reuse. Extensibility with other frameworks</p></li>
+</ol>
+<p>Problem:</p>
+<ol type="1">
+<li><p>A large number of the target black-box evaluations</p></li>
+<li><p>Interfaces not unify</p></li>
+<li><p>Code duplication</p></li>
+</ol>
+<p>Solution:</p>
+<ol type="1">
+<li><p>Component-Based Architecture</p></li>
+<li><p>Compositional-based surrogate optimization with MOEA</p></li>
+</ol>
+<h1 id="concept">Concept</h1>
+<p>For slow computational problems, it would be useful to modulate a
+problem using a quite small number of most informative examples. This
+general topic introduces compositional surrogate, as a proxy model that
+approximate objectives surfaces and support MOEA to evaluates near a
+multi-objective solution and predict better multi-objective samples on
+each iteration. Model-based or optimization with a surrogate is the
+preferred choice for functional optimization when the evaluation cost is
+very large.</p>
+<p>As discussed in Section 3, current MOEAs use increasingly complex opera-
+tors. Re-implementing these algorithms for each usage scenario becomes
+timeconsuming and error-prone. Mainly two groups are affected by this
+problem: – Application engineers who need to choose, implement, and
+apply state-of- the-art algorithms without in-depth programming
+knowledge and expertise in the optimization domain. – Developers of
+optimization methods who want to evaluate algorithms on different test
+problems and compare a variety of competing methods.</p>
+<p>A different approach, called PISA (A Platform and programming language
+independent Interface for Search Algorithms), was presented in [3].
+The underlying concept is discussed in the following section.</p>
+<p>The basic idea is to divide the implementation of an optimization method
+into an algorithm-specific part and an application-specific part as
+shown in Fig. 15. The former contains the selection procedure, while the
+latter encapsulates the representation of solutions, the generation of
+new solutions, and the calculation of objective function values.</p>
+<p>Nevertheless it is easy to add the interface functionality to an
+existing algorithm or application since the whole communication only
+consists of a few text file operations. As a negative consequence, the
+data transfer introduces an additional overhead into the optimization.</p>
+<p>There is a clear need for a method to provide and distribute
+ready-to-use implementations of optimization methods and ready-to-use
+benchmark and real- world problems. These modules should be freely
+combinable. Since the above- mentioned issues are not constrained to
+evolutionary optimization a candidate solution should be applicable to a
+broader range of search algorithms.</p>
+<p>The main objective of this part is to provide a thorough treatment of
+multy-objective parameter tuning with evolutionary algorithm(s)</p>
+<p>Key description how to improve solutions for problems in research
+questions.</p>
+<p>Multi-objective optimizations are frequently encountered in engineering
+practices. The solution techniques and parametric selections however are
+usually problem-specific. <span class="citation" data-cites="BvoEknRH">[<a href="#ref-BvoEknRH" role="doc-biblioref">27</a>]</span></p>
+<h2 id="reduce-effort-for-multi-obj-predictionsolution">Reduce effort for multi-obj prediction/solution</h2>
+<h5 id="surrogate-model.-hypothesis-as-a-middleware">Surrogate model. Hypothesis as a middleware</h5>
+<p>Key idea is to use hypothesis model as middleware for genetic
+multi-objective algorithms. This hypothesis could be compositional and
+delineate target objectives.</p>
+<h2 id="reusability-in-parameter-tuning">Reusability in parameter tuning</h2>
+<p>Parameter tuning can be splitted down into steps that are common for the
+many/single-objective optimizations. Each step in optimization workflow
+has variability via implemented interfaces. Single-objective hypotheses
+can be combined for multi-objective optimization with compositional
+design.</p>
+<p>API of metric-learn is compatible with scikit-learn, the leading library
+for machine learning in Python. This allows to use all the scikit-learn
+routines (for pipelining, model selection, etc) with metric learning
+algorithms through a unified interface.</p>
+<p>[!TODO] Real, integer, ordinal and categorical variables.</p>
+<h2 id="surrogate-portfolio">Surrogate portfolio</h2>
+<p>A Surrogate(s) is a simplified version of the examples. The
+simplifications are meant to discard the superfluous details that are
+unlikely to generalize to new instances. However, to decide what data to
+discard and what data to keep, you must make hypothesis. For example, a
+linear model makes the hypothesis that the data is fundamentally linear
+and that the distance between the instances and the straight line is
+just noise, which can safely be ignored.</p>
+<p>If there is no hypothesis about the data, then there is no reason to
+prefer one surrogate over any other. This is called the No Free Lunch
+(NFL) theorem. For some datasets the best model is a linear model, while
+for other datasets it is a neural network. There is no model that is a
+priori guaranteed to work better (hence the name of the theorem). The
+only way to know for sure which model is best is to evaluate them all.
+Since this is not possible, in practice you make some reasonable
+assumptions about the data and you evaluate only a few reasonable
+models. For example, for simple tasks you may evaluate linear models
+with various levels of regularization, and for a complex problem you may
+evaluate various neural networks.</p>
+<p>"No Free Lunch" (NFL) theorems demonstrate that if an algorithm
+performs well on a certain class of problems then it necessarily pays
+for that with degraded performance on the set of all remaining problems
+Additionally, the name emphasizes the parallel with similar results in
+supervised learning.</p>
+<ol type="1">
+<li><p>You have to try multiple types of surrogate(models) to find the best
+one for your data.</p></li>
+<li><p>A number of NFL theorems were derived that demonstrate the danger of
+comparing algorithms by their performance on a small sample of
+problems.</p></li>
+</ol>
+<p>GALE uses MOEA decomposition but avoids certain open issues with
+E-domination and MOEA/D. GALE does the subproblems is determined via a
+recursive median split not need some outside oracle to specify E.
+Rather, the size of on dimensions synthesized using a PCA-approximation</p>
+<h5 id="reusable-software">Reusable software</h5>
+<p>Problem that each optimization framework/library use inner interfaces.
+It is necessary to define a standard that implements best practices for
+extension libraries <span class="citation" data-cites="2iBa9w3z">[<a href="#ref-2iBa9w3z" role="doc-biblioref">28</a>]</span>. We introduce new Model-based
+line for parameter tuning.</p>
+<h2 id="conclusions">Conclusions</h2>
+<p>Also, to the best of our knowledge, has not been previously reported in
+the SBSE literature. GALE’s cost reduction of MOEA to O2 log2N
+evaluations</p>
+<ol type="1">
+<li><p>Surrogate portfolio. Search a better hypothesis for a specific
+problem at a particular stage of parameter tuning</p></li>
+<li><p>Large set of evaluation problems for comprehensive and fair
+comparison</p></li>
+<li><p>Interfaces for reusability and scalability.</p></li>
+</ol>
+<p>Optimization problems involving multiple objectives are common. In this
+context, evolutionary computation represents a valuable tool, in
+particular – if we would like to be flexible with respect to the
+problem formulation, – if we are interested in approximating the Pareto
+set, and – if the problem complexity prevents exacts methods from being
+applicable.</p>
+<p>Flexibility is important if the underlying model is not fixed and may
+change or needs further refinement. The advantage of evolutionary
+algorithms is that they have minimum requirements regarding the problem
+formulation; objectives can be easily added, removed, or modified.
+Moreover, due the fact that they operate on a set of solution
+candidates, evolutionary algorithms are well-suited to generate Pareto
+set approximations. This is reflected by the rapidly increasing interest
+in the field of evolutionary multiobjective optimization. Finally, it
+has been demonstrated in various applications that evolutionary
+algorithms are able to tackle highly complex problems and therefore they
+can be seen as an approach complementary to traditional methods such as
+integer linear programming.</p>
+<h1 id="implementation.-development">Implementation. Development</h1>
+<p>Without automated tools, it can take days for experts to review just a
+few dozen examples. In that same time, an automatic tool can explore
+thousands to millions to billions more solutions. People find it an
+overwhelming task just to certify the correctness of conclusions
+generated from so many results.</p>
+<p>Separation of concerns</p>
+<p>Managing complex execution Strategies</p>
+<p>Variants in the evaluation of sets of solutions for each hypothesis.
+Each hypothesis has quality metrics. Solution(s) from each hypothesis
+have also own metrics.</p>
+<p>There are main approaches how produce single solution:</p>
+<ul>
+<li><p>Solution from best hypothesis. Sorting</p></li>
+<li><p>Bagging solution</p></li>
+<li><p>Voting solution</p></li>
+</ul>
+<h5 id="designing-a-sampling-plan">Designing a Sampling Plan</h5>
+<p>- The most straightforward way of sampling a design space in a uniform
+fashion is by <span class="citation" data-cites="yGyc3usi">[<a href="#ref-yGyc3usi" role="doc-biblioref">9</a>]</span> means of a rectangular grid of points. This
+is the full factorial sampling technique referred - Latin Squares</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>Adapted to provide base implementation for stages in parameter tuning
+with multi-objective</p>
+<h5 id="pagmo2">Pagmo2</h5>
+<p>A Python platform <span class="citation" data-cites="14vOEgTO2">[<a href="#ref-14vOEgTO2" role="doc-biblioref">29</a>]</span> to perform parallel
+computations of optimisation tasks (global and local) via the
+asynchronous generalized island model. All test suites and basic
+multi-objective solvers:</p>
+<p>Realization of main MOEA:</p>
+<ul>
+<li><p>NSGA2. Non-dominated Sorting Genetic Algorithm</p></li>
+<li><p>MOEA/D. Multi Objective Evolutionary Algorithms by Decomposition
+(the DE variant)</p></li>
+<li><p>MACO. Multi-objective Ant Colony Optimizer.</p></li>
+<li><p>NSPSO.</p></li>
+</ul>
+<p>Tests suits:</p>
+<ul>
+<li><p>ZDT <span class="citation" data-cites="cgOPGY3M">[<a href="#ref-cgOPGY3M" role="doc-biblioref">4</a>]</span> is 6 different two-objective scalable problems
+all beginning from a combination of functions allowing, to measure
+the distance of any point to the Pareto front while creating
+problems.</p></li>
+<li><p>WFG <span class="citation" data-cites="1HFetF7vb">[<a href="#ref-1HFetF7vb" role="doc-biblioref">30</a>]</span> was conceived to exceed the functionalities of
+previously implemented test suites. In particular, non-separable
+problems, deceptive problems, truly degenerative problems and mixed
+shape Pareto front problems are thorougly covered, as well as
+scalable problems in both the number of objectives and variables.
+Also, problems with dependencies between position and distance
+related parameters are covered. In their paper the authors identify
+the need for nonseparable multimodal problems to test
+multi-objective optimization algorithms. Given this, they propose a
+set of 9 different scalable multi-objective unconstrained problems.</p></li>
+<li><p>DTLZ <span class="citation" data-cites="yHWkop2U">[<a href="#ref-yHWkop2U" role="doc-biblioref">31</a>]</span>. All problems in this test suite are
+box-constrained continuous n-dimensional multi-objective problems,
+scalable in fitness dimension.</p></li>
+</ul>
+<h2 id="portfolio-with-hypothesis">Portfolio with hypothesis</h2>
+<p>A set of models is defined that can form a partial or complete
+hypothesis to describe the problem. Also during the increase of the
+experiments may change the model that best describes the existing
+problem As a result, there is variability for each problem and
+configuration step at the same time. A set of hypotheses can solve this
+problem but it takes longer time for cross validation.</p>
+<h2 id="validate-hypothesis">Validate hypothesis</h2>
+<div class="epigraph">
+<p>“All models are wrong but some are useful”</p>
+<p><em>– George Box</em></p>
+</div>
+<p>The main task of learning algorithms is to be able to generalize to
+unseen data. Surrogate model as learning model should generalize
+examples to valid hypothesis. Since we cannot immediately check the
+surrogate performance on new, incoming data, it is necessary to
+sacrifice a small portion of the examples to check the quality of the
+model on it. n case if surrogate model have enoughs score (pass metrics
+threshold) we consider it valid and could be processed as subject for
+inference(prediction).</p>
+<h3 id="sampling-strategy">Sampling strategy</h3>
+<p>Oversampling and undersampling in data analysis. Alleviate imbalance in
+the dataset. Imbalance in dataset is not always a problem, more so for
+optimization tasks.</p>
+<p>The main gain for models not to provide best accuracy on all search
+space but provide possible optimum regions. Accuracy in prediction
+optimal regions or points from there will direct the search in the right
+direction.</p>
+<p>Predictor variables can legitimately over- or under-sample. In this
+case, provided a carefully check that the model assumptions seem valid.</p>
+<p>for other set of parameters, and make a choice from more diverse pool of
+models.</p>
+<h1 id="evaluation.-experimental-results">Evaluation. Experimental Results</h1>
+<p>This chapter presents the evaluation of the proposed method on test
+problems with diverse objective landscape and with a various number of
+search variables.</p>
+<p>Roughly speaking, an MOEA is called globally convergent if the sequence
+of Pareto front approximations A(t) it produces converges to the true
+Pareto front Y while the number of generations t goes to infinity. It is
+intuitively clear that this property can only be fulfilled with
+unlimited memory resources, as the cardinality of the Pareto front can
+be arbitrary large in general [Convergence properties of some
+multi-objective evolutionary algorithms.].</p>
+<p><span class="citation" data-cites="Vb3fs8xv">[<a href="#ref-Vb3fs8xv" role="doc-biblioref">32</a>]</span></p>
+<p>Will be used two types of problems: Synthetic and Real physical</p>
+<p>Idea: Generate problem from data set and try to optimize it with
+parameter tunning from the beginning. Need models with accuracy  96 amd
+multiply objectives.</p>
+<h2 id="test-suite-zdt">Test suite: ZDT</h2>
+<p>This widespread test suite was conceived for two-objective problems and
+takes its name from its authors Zitzler, Deb and Thiele.
+Ref[“Comparison of multiobjective evolutionary algorithms: Empirical
+results.”, 2000]</p>
+<h2 id="test-suite-dtlz">Test suite: DTLZ</h2>
+<p>This widespread test suite was conceived for multiobjective problems
+with scalable fitness dimensions and takes its name from its authors
+Deb, Thiele, Laumanns and Zitzler. Ref["Scalable Test Problems for
+Evolutionary Multiobjective Optimization", 2005]</p>
+<h2 id="test-suite-wfg">Test suite: WFG</h2>
+<p>This test suite was conceived to exceed the functionalities of
+previously implemented test suites. In particular, non-separable
+problems, deceptive problems, truly degenerative problems and mixed
+shape Pareto front problems are thoroughly covered, as well as scalable
+problems in both the number of objectives and variables. Also, problems
+with dependencies between position and distance related parameters are
+covered.</p>
+<ol type="1">
+<li><p>A few unimodal test problems should be present in the test suite.
+Various Pareto optimal geometries and bias conditions should define
+these problems, in order to test how the convergence velocity is
+influenced by these aspects.</p></li>
+<li><p>The following three Pareto optimal geometries should be present in
+the test suite: degenerate Pareto optimal fronts, disconnected
+Pareto optimal fronts and disconnected Pareto optimal sets.</p></li>
+<li><p>Many problems should be multimodal, and a few deceptive problems
+should also be covered.</p></li>
+<li><p>The majority of test problems should be non-separable.</p></li>
+<li><p>Both non-separable and multimodal problems should also be addressed.</p></li>
+</ol>
+<p>Ref[ “A Review of Multi-Objective Test Problems and a Scalable Test
+Problem Toolkit”, 2006]</p>
+<h2 id="problem-suite-cec-2009">Problem suite: CEC 2009</h2>
+<p>Competition on “Performance Assessment of Constrained / Bound
+Constrained Multi-Objective Optimization Algorithms”. All problems are
+continuous, multi objective problems.</p>
+<h2 id="physical.-real-world-problem">Physical. Real world problem</h2>
+<p>Computational models describing the behavior of complex physical systems
+are often used in the engineering design field to identify better or
+optimal solutions with respect to previously defined performance
+criteria. Multi-objective optimization problems arise and the set of
+optimal compromise solutions (Pareto front) has to be identified by an
+effective and complete search procedure in order to let the decision
+maker, the designer, to carry out the best choice.</p>
+<h3 id="materials-selection-in-mechanical-design">Materials Selection in mechanical design</h3>
+<h3 id="test-generation">Test generation</h3>
+<h3 id="gold-or-oil-search.-geodesy">Gold or oil search. Geodesy</h3>
+<h3 id="space-crafts">Space crafts</h3>
+<p>Problem 1: obtain a set of geometric design parameters to get minimum
+heat pipe mass and the maximum thermal conductance. Thus, a set of
+geometric design parameters lead to minimum pressure total cost and
+maximum pressure vessel volume. The alternative solutions are very
+difficult to be adopted to practical engineering decision directly.
+Ref[Multi-Objective Optimization Problems in Engineering Design Using
+Genetic Algorithm Case Solution] Problem 2: Solar sailing mission
+design</p>
+<h2 id="conclusion-1">Conclusion</h2>
+<p>The quality of the results obtained with X was similar to the results
+obtained with Y, but with significantly fewer exactly evaluated
+solutions during the optimization process.</p>
+<h1 id="related-work">Related work</h1>
+<p>Many existing approaches can be categorized as multi-objective
+optimization. That is why introduce comparison criteria for a clear and
+concise demarcation of the approach presented in this thesis:</p>
+<p>Comparison Criteria for Related Work.</p>
+<ul>
+<li><p>Variability. Exchange surrogate, solver and sampling algorithms as
+components. Variants on each optimization workflow step.</p></li>
+<li><p>Scalability. Extend single-objective problem on the fly to
+multi-objective.</p></li>
+<li><p>Adaptation. Surrogate portfolio.</p></li>
+<li><p>From 0 to hero. Sampling plan depends on surrogate validity. The
+Sobol sequence (and Latin hypercube).</p></li>
+</ul>
+<p>Important Features: Categorical variables, prior knowledge,
+multi-objective, feasibility constraints.</p>
+<h2 id="dependencies-1">Dependencies</h2>
+<h5 id="auto-sklearn">AUTO-SKLEARN</h5>
+<p><span class="citation" data-cites="wqiAUHlQ">[<a href="#ref-wqiAUHlQ" role="doc-biblioref">33</a>]</span> - CASH (Combined Algorithm Selection
+and Hyperparameter optimization) problem</p>
+<h5 id="tpot">TPOT</h5>
+<p><span class="citation" data-cites="1GyLc6Kgv">[<a href="#ref-1GyLc6Kgv" role="doc-biblioref">34</a>]</span> Already implemented TPOT automodel as hypothesis
+candidate</p>
+<h5 id="jmetalpy">jMetalpy</h5>
+<p><span class="citation" data-cites="om6wdVM3">[<a href="#ref-om6wdVM3" role="doc-biblioref">35</a>]</span> Partially implemented some solvers.</p>
+<h5 id="hyperopt">Hyperopt</h5>
+<h5 id="rawplatemo">raw:PlatEMO</h5>
+<p><span class="citation" data-cites="d1YE9XcQ">[<a href="#ref-d1YE9XcQ" role="doc-biblioref">36</a>]</span> raw:PlatEMO: A MATLAB Platform for Evolutionary Multi-Objective
+Optimization</p>
+<h1 id="conclusion-and-future-work">Conclusion and Future Work</h1>
+<h2 id="general-conclusion">General Conclusion</h2>
+<h3 id="brise">BRISE</h3>
+<p>Modelbase line in parameter tuning for software Product Line for
+Parameter Tuning</p>
+<h2 id="future-work">Future Work</h2>
+<h3 id="prior-knowledge.-transfer-learning">Prior knowledge. Transfer learning</h3>
+<p>What is already implemented and how it could be improved.</p>
+<ul>
+<li><p>Model portfolio selection and combination.</p></li>
+<li><p>Prior distribution of parameters. Bayesian kernels.</p></li>
+<li><p>Human in the loop. Reducing the search space.</p></li>
+</ul>
+<h2 class="page_break_before" id="references" class="page_break_before">References</h2>
+<!-- Explicitly insert bibliography here -->
+<div id="refs" class="references hanging-indent" role="doc-bibliography">
+<div id="ref-NTeA6uPp">
+<p>1. <strong>Review of multi-criteria optimization methods – theory and applications</strong><br />
+Godwin Odu<br />
+<em>IOSR Journal of Engineering</em> (2013-10)<br />
+DOI: <a href="https://doi.org/10.9790/3021-031020114">10.9790/3021-031020114</a></p>
+</div>
+<div id="ref-15iylVSF0">
+<p>2. <strong>Multi-objective optimization and its engineering applications</strong><br />
+Hirotaka Nakayama<br />
+<em>Practical approaches to multi-objective optimization, 7.-12. November 2004</em> (2005) <a href="http://drops.dagstuhl.de/opus/volltexte/2005/234">http://drops.dagstuhl.de/opus/volltexte/2005/234</a></p>
+</div>
+<div id="ref-1HUtCWxMH">
+<p>3. <strong>A tutorial on multiobjective optimization: Fundamentals and evolutionary methods</strong><br />
+Michael T. M. Emmerich, André H. Deutz<br />
+<em>Natural Computing</em> (2018) <a href="https://doi.org/10.1007/s11047-018-9685-y">https://doi.org/10.1007/s11047-018-9685-y</a><br />
+DOI: <a href="https://doi.org/10.1007/s11047-018-9685-y">10.1007/s11047-018-9685-y</a></p>
+</div>
+<div id="ref-cgOPGY3M">
+<p>4. <strong>Comparison of multiobjective evolutionary algorithms: Empirical results</strong><br />
+Eckart Zitzler, Kalyanmoy Deb, Lothar Thiele<br />
+<em>Evolutionary Computation</em> (2000) <a href="https://doi.org/10.1162/106365600568202">https://doi.org/10.1162/106365600568202</a><br />
+DOI: <a href="https://doi.org/10.1162/106365600568202">10.1162/106365600568202</a></p>
+</div>
+<div id="ref-vbJ1WiNp">
+<p>5. <strong>Performance indicators in multiobjective optimization</strong><br />
+Charles Audet, Sébastien Le Digabel, Dominique Cartier, Jean Bigeon, Ludovic Salomon<br />
+(2018)</p>
+</div>
+<div id="ref-DCdONjBz">
+<p>6. <strong>Direct multisearch for multiobjective optimization</strong><br />
+A. L. Custódio, J. F. Aguilar Madeira, A. Ismael F. Vaz, Luı́s Nunes Vicente<br />
+<em>SIAM Journal on Optimization</em> (2011) <a href="https://doi.org/10.1137/10079731X">https://doi.org/10.1137/10079731X</a><br />
+DOI: <a href="https://doi.org/10.1137/10079731X">10.1137/10079731x</a></p>
+</div>
+<div id="ref-17FLBEzc1">
+<p>7. <strong>Comparison of multiobjective evolutionary algorithms: Empirical results</strong><br />
+Eckart Zitzler, Kalyanmoy Deb, Lothar Thiele<br />
+<em>Evolutionary Computation</em> (2000)</p>
+</div>
+<div id="ref-1AKoZUHA4">
+<p>8. <strong>Fault tolerant design using single and multicriteria genetic algorithm optimization.</strong><br />
+Jason R. Schott<br />
+(1995)</p>
+</div>
+<div id="ref-yGyc3usi">
+<p>9. <strong>Engineering design via surrogate modelling - a practical guide.</strong><br />
+Alexander I. J. Forrester, Andras Sobester, Andy J. Keane<br />
+<em>Wiley</em> (2008)<br />
+ISBN: <a href="https://worldcat.org/isbn/978-0-470-06068-1">978-0-470-06068-1</a></p>
+</div>
+<div id="ref-WHqOntch">
+<p>10. <strong>Response surface methodology: Process and product in optimization using designed experiments</strong><br />
+Raymond H. Myers, Douglas C. Montgomery<br />
+<em>John Wiley; Sons, Inc.</em> (1995)<br />
+ISBN: <a href="https://worldcat.org/isbn/0471581003">0471581003</a></p>
+</div>
+<div id="ref-1FOgcJYL9">
+<p>11. <strong>Gaussian processes in machine learning</strong><br />
+Carl Edward Rasmussen<br />
+<em>Advanced lectures on machine learning: ML summer schools 2003, canberra, australia, february 2 - 14, 2003, tübingen, germany, august 4 - 16, 2003, revised lectures</em> (2004) <a href="https://doi.org/10.1007/978-3-540-28650-9_4">https://doi.org/10.1007/978-3-540-28650-9_4</a><br />
+DOI: <a href="https://doi.org/10.1007/978-3-540-28650-9_4">10.1007/978-3-540-28650-9_4</a> · ISBN: <a href="https://worldcat.org/isbn/978-3-540-28650-9">978-3-540-28650-9</a></p>
+</div>
+<div id="ref-1Y1nHvc2">
+<p>12. <strong>Interpolation of spatial data: Some theory for kriging</strong><br />
+Roger Woodard<br />
+<em>Technometrics</em> (2000) <a href="https://doi.org/10.1080/00401706.2000.10485731">https://doi.org/10.1080/00401706.2000.10485731</a><br />
+DOI: <a href="https://doi.org/10.1080/00401706.2000.10485731">10.1080/00401706.2000.10485731</a></p>
+</div>
+<div id="ref-1FXlw7TX2">
+<p>13. <strong>Gaussian processes for machine learning (GPML) toolbox</strong><br />
+Carl Edward Rasmussen, Hannes Nickisch<br />
+<em>J. Mach. Learn. Res.</em> (2010) <a href="http://portal.acm.org/citation.cfm?id=1953029">http://portal.acm.org/citation.cfm?id=1953029</a></p>
+</div>
+<div id="ref-4nfjnHfv">
+<p>14. <strong>Gaussian processes for machine learning</strong><br />
+Carl Edward Rasmussen, Christopher K. I. Williams<br />
+<em>MIT Press</em> (2006) <a href="http://www.worldcat.org/oclc/61285753">http://www.worldcat.org/oclc/61285753</a><br />
+ISBN: <a href="https://worldcat.org/isbn/026218253X">026218253X</a></p>
+</div>
+<div id="ref-mu8IFeYo">
+<p>15. <strong>GP-DEMO: differential evolution for multiobjective optimization based on gaussian process models</strong><br />
+Miha Mlakar, Dejan Petelin, Tea Tusar, Bogdan Filipic<br />
+<em>European Journal of Operational Research</em> (2015) <a href="https://doi.org/10.1016/j.ejor.2014.04.011">https://doi.org/10.1016/j.ejor.2014.04.011</a><br />
+DOI: <a href="https://doi.org/10.1016/j.ejor.2014.04.011">10.1016/j.ejor.2014.04.011</a></p>
+</div>
+<div id="ref-112CjFl6F">
+<p>16. <strong>A comprehensive survey of fitness approximation in evolutionary computation</strong><br />
+Yaochu Jin<br />
+<em>Soft Comput.</em> (2005) <a href="https://doi.org/10.1007/s00500-003-0328-5">https://doi.org/10.1007/s00500-003-0328-5</a><br />
+DOI: <a href="https://doi.org/10.1007/s00500-003-0328-5">10.1007/s00500-003-0328-5</a></p>
+</div>
+<div id="ref-4bMRxtHA">
+<p>17. <strong>An evolutionary multi-objective adaptive meta-modeling procedure using artificial neural networks</strong><br />
+Kalyanmoy Deb, Pawan K. S. Nain<br />
+<em>Evolutionary computation in dynamic and uncertain environments</em> (2007) <a href="https://doi.org/10.1007/978-3-540-49774-5\_13">https://doi.org/10.1007/978-3-540-49774-5\_13</a><br />
+DOI: <a href="https://doi.org/10.1007/978-3-540-49774-5\_13">10.1007/978-3-540-49774-5\_13</a></p>
+</div>
+<div id="ref-1AF8tzsvd">
+<p>18. <strong>Optimal sizing, geometrical and topological design using a genetic algorithm</strong><br />
+D. E. Grierson, W. H. Pak<br />
+<em>Structural optimization</em> (1993-09-01) <a href="https://doi.org/10.1007/BF01743506">https://doi.org/10.1007/BF01743506</a><br />
+DOI: <a href="https://doi.org/10.1007/BF01743506">10.1007/bf01743506</a></p>
+</div>
+<div id="ref-MlTHme7o">
+<p>19. <strong>An evolutionary strategy for surrogate-based multiobjective optimization</strong><br />
+Martin Pilát, Roman Neruda<br />
+<em>Proceedings of the IEEE congress on evolutionary computation, CEC 2012, brisbane, australia, june 10-15, 2012</em> (2012) <a href="https://doi.org/10.1109/CEC.2012.6256450">https://doi.org/10.1109/CEC.2012.6256450</a><br />
+DOI: <a href="https://doi.org/10.1109/CEC.2012.6256450">10.1109/cec.2012.6256450</a></p>
+</div>
+<div id="ref-wTIHyFe9">
+<p>20. <strong>Modulating surrogates for bayesian optimization</strong><br />
+Erik Bodin, Markus Kaiser, Ieva Kazlauskaite, Zhenwen Dai, Neill D. F. Campbell, Carl Henrik Ek<br />
+(2019) <a href="http://arxiv.org/abs/1906.11152">http://arxiv.org/abs/1906.11152</a></p>
+</div>
+<div id="ref-15iqjq0XF">
+<p>21. <strong>GALE: geometric active learning for search-based software engineering</strong><br />
+Joseph Krall, Tim Menzies, Misty Davies<br />
+<em>IEEE Trans. Software Eng.</em> (2015) <a href="https://doi.org/10.1109/TSE.2015.2432024">https://doi.org/10.1109/TSE.2015.2432024</a><br />
+DOI: <a href="https://doi.org/10.1109/TSE.2015.2432024">10.1109/tse.2015.2432024</a></p>
+</div>
+<div id="ref-iL724s1s">
+<p>22. <strong>Single- and multiobjective evolutionary optimization assisted by gaussian random field metamodels</strong><br />
+Michael T. M. Emmerich, Kyriakos C. Giannakoglou, Boris Naujoks<br />
+<em>IEEE Trans. Evolutionary Computation</em> (2006) <a href="https://doi.org/10.1109/TEVC.2005.859463">https://doi.org/10.1109/TEVC.2005.859463</a><br />
+DOI: <a href="https://doi.org/10.1109/TEVC.2005.859463">10.1109/tevc.2005.859463</a></p>
+</div>
+<div id="ref-890MGfiJ">
+<p>23. <strong>Practical solutions for multi-objective optimization: An application to system reliability design problems</strong><br />
+Heidi A. Taboada, Fatema Baheranwala, David W. Coit, Naruemon Wattanapongsakorn<br />
+<em>Rel. Eng. and Sys. Safety</em> (2007) <a href="https://doi.org/10.1016/j.ress.2006.04.014">https://doi.org/10.1016/j.ress.2006.04.014</a><br />
+DOI: <a href="https://doi.org/10.1016/j.ress.2006.04.014">10.1016/j.ress.2006.04.014</a></p>
+</div>
+<div id="ref-16Jfe9RjR">
+<p>24. <strong>Improving multi-objective genetic algorithms with adaptive design of experiments and online metamodeling</strong><br />
+G. Li, M. Li, S. Azarm, S. Al Hashimi, T. Al Ameri, N. Al Qasas<br />
+<em>Structural and Multidisciplinary Optimization</em> (2009-02-01) <a href="https://doi.org/10.1007/s00158-008-0251-6">https://doi.org/10.1007/s00158-008-0251-6</a><br />
+DOI: <a href="https://doi.org/10.1007/s00158-008-0251-6">10.1007/s00158-008-0251-6</a></p>
+</div>
+<div id="ref-Dk9KXQBq">
+<p>25. <strong>MOEA/D: A multiobjective evolutionary algorithm based on decomposition</strong><br />
+Qingfu Zhang, Hui Li<br />
+<em>IEEE Trans. Evolutionary Computation</em> (2007) <a href="https://doi.org/10.1109/TEVC.2007.892759">https://doi.org/10.1109/TEVC.2007.892759</a><br />
+DOI: <a href="https://doi.org/10.1109/TEVC.2007.892759">10.1109/tevc.2007.892759</a></p>
+</div>
+<div id="ref-1C0JI6fEI">
+<p>26. <strong>Multiobjective GA optimization using reduced models</strong><br />
+Deepti Chafekar, Liang Shi, Khaled Rasheed, Jiang Xuan<br />
+<em>IEEE Trans. Systems, Man, and Cybernetics, Part C</em> (2005) <a href="https://doi.org/10.1109/TSMCC.2004.841905">https://doi.org/10.1109/TSMCC.2004.841905</a><br />
+DOI: <a href="https://doi.org/10.1109/TSMCC.2004.841905">10.1109/tsmcc.2004.841905</a></p>
+</div>
+<div id="ref-BvoEknRH">
+<p>27. <strong>A reinforcement learning hyper-heuristic in multi-objective single point search with application to structural fault identification</strong><br />
+Jiong Tang Pei Cao<br />
+<em>CoRR</em> (2018) <a href="http://arxiv.org/abs/1812.07958">http://arxiv.org/abs/1812.07958</a></p>
+</div>
+<div id="ref-2iBa9w3z">
+<p>28. <strong>API design for machine learning software: Experiences from the scikit-learn project</strong><br />
+Lars Buitinck, Gilles Louppe, Mathieu Blondel, Fabian Pedregosa, Andreas Mueller, Olivier Grisel, Vlad Niculae, Peter Prettenhofer, Alexandre Gramfort, Jaques Grobler, … Gaël Varoquaux<br />
+(2013) <a href="http://arxiv.org/abs/1309.0238">http://arxiv.org/abs/1309.0238</a></p>
+</div>
+<div id="ref-14vOEgTO2">
+<p>29. <strong>Esa/pagmo2: Pagmo 2.12.0</strong><br />
+Francesco Biscani, Dario Izzo, Wenzel Jakob, GiacomoAcciarini, Marcus Märtens, Micky C, Alessio Mereta, Cord Kaldemeyer, Sergey Lyskov, Giacomo Acciarini, … Andrea Mambrini<br />
+<em>Zenodo</em> (2019-12) <a href="https://doi.org/10.5281/zenodo.3582877">https://doi.org/10.5281/zenodo.3582877</a><br />
+DOI: <a href="https://doi.org/10.5281/zenodo.3582877">10.5281/zenodo.3582877</a></p>
+</div>
+<div id="ref-1HFetF7vb">
+<p>30. <strong>A review of multiobjective test problems and a scalable test problem toolkit</strong><br />
+S. Huband, P. Hingston, L. Barone, L. While<br />
+<em>IEEE Transactions on Evolutionary Computation</em> (2006-10)<br />
+DOI: <a href="https://doi.org/10.1109/TEVC.2005.861417">10.1109/tevc.2005.861417</a></p>
+</div>
+<div id="ref-yHWkop2U">
+<p>31. <strong>Scalable test problems for evolutionary multiobjective optimization</strong><br />
+Kalyanmoy Deb, Lothar Thiele, Marco Laumanns, Eckart Zitzler<br />
+<em>Evolutionary multiobjective optimization</em> (2005) <a href="https://doi.org/10.1007/1-84628-137-7\_6">https://doi.org/10.1007/1-84628-137-7\_6</a><br />
+DOI: <a href="https://doi.org/10.1007/1-84628-137-7\_6">10.1007/1-84628-137-7\_6</a></p>
+</div>
+<div id="ref-Vb3fs8xv">
+<p>32. <strong>Benchmarking crimes: An emerging threat in systems security</strong><br />
+Erik van der Kouwe, Dennis Andriesse, Herbert Bos, Cristiano Giuffrida, Gernot Heiser<br />
+(2018) <a href="http://arxiv.org/abs/1801.02381">http://arxiv.org/abs/1801.02381</a></p>
+</div>
+<div id="ref-wqiAUHlQ">
+<p>33. <strong>Efficient and robust automated machine learning</strong><br />
+Matthias Feurer, Aaron Klein, Katharina Eggensperger, Jost Springenberg, Manuel Blum, Frank Hutter<br />
+<em>Advances in neural information processing systems</em> (2015)</p>
+</div>
+<div id="ref-1GyLc6Kgv">
+<p>34. <strong>Evaluation of a tree-based pipeline optimization tool for automating data science</strong><br />
+Randal S. Olson, Nathan Bartley, Ryan J. Urbanowicz, Jason H. Moore<br />
+<em>Proceedings of the genetic and evolutionary computation conference 2016</em> (2016) <a href="http://doi.acm.org/10.1145/2908812.2908918">http://doi.acm.org/10.1145/2908812.2908918</a><br />
+DOI: <a href="https://doi.org/10.1145/2908812.2908918">10.1145/2908812.2908918</a> · ISBN: <a href="https://worldcat.org/isbn/978-1-4503-4206-3">978-1-4503-4206-3</a></p>
+</div>
+<div id="ref-om6wdVM3">
+<p>35. <strong>JMetalPy: A python framework for multi-objective optimization with metaheuristics</strong><br />
+Antonio Benitez-Hidalgo, Antonio J. Nebro, Jose Garcia-Nieto, Izaskun Oregi, Javier Del Ser<br />
+(2019) <a href="http://arxiv.org/abs/1903.02915">http://arxiv.org/abs/1903.02915</a></p>
+</div>
+<div id="ref-d1YE9XcQ">
+<p>36. <strong>raw:PlatEMO: A MATLAB platform for evolutionary multi-objective optimization</strong><br />
+Ye Tian, Ran Cheng, Xingyi Zhang, Yaochu Jin<br />
+<em>IEEE Computational Intelligence Magazine</em> (2017)</p>
+</div>
+</div>
+<!-- default theme -->
+
+<style>
+    /* import google fonts */
+    @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700");
+    @import url("https://fonts.googleapis.com/css?family=Source+Code+Pro");
+
+    /* -------------------------------------------------- */
+    /* global */
+    /* -------------------------------------------------- */
+
+    /* all elements */
+    * {
+        /* force sans-serif font unless specified otherwise */
+        font-family: "Open Sans", "Helvetica", sans-serif;
+
+        /* prevent text inflation on some mobile browsers */
+        -webkit-text-size-adjust: none !important;
+        -moz-text-size-adjust: none !important;
+        -o-text-size-adjust: none !important;
+        text-size-adjust: none !important;
+    }
+
+    @media only screen {
+        /* "page" element */
+        body {
+            position: relative;
+            box-sizing: border-box;
+            font-size: 12pt;
+            line-height: 1.5;
+            max-width: 8.5in;
+            margin: 20px auto;
+            padding: 40px;
+            border-radius: 5px;
+            border: solid 1px #bdbdbd;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            background: #ffffff;
+        }
+    }
+
+    /* when on screen < 8.5in wide */
+    @media only screen and (max-width: 8.5in) {
+        /* "page" element */
+        body {
+            padding: 20px;
+            margin: 0;
+            border-radius: 0;
+            border: none;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05) inset;
+            background: none;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* headings */
+    /* -------------------------------------------------- */
+
+    /* all headings */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin: 20px 0;
+        padding: 0;
+        font-weight: bold;
+    }
+
+    /* biggest heading */
+    h1 {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    /* second biggest heading */
+    h2 {
+        margin-top: 30px;
+        padding-bottom: 5px;
+        border-bottom: solid 1px #bdbdbd;
+    }
+
+    /* -------------------------------------------------- */
+    /* manuscript header */
+    /* -------------------------------------------------- */
+
+    /* manuscript title */
+    header > h1 {
+        margin: 0;
+    }
+
+    /* manuscript title caption text (ie "automatically generated on") */
+    header + p {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    /* -------------------------------------------------- */
+    /* text elements */
+    /* -------------------------------------------------- */
+
+    /* links */
+    a {
+        color: #2196f3;
+        overflow-wrap: break-word;
+    }
+
+    /* normal links (not empty, not button link, not syntax highlighting link) */
+    a:not(:empty):not(.button):not(.sourceLine) {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+
+    /* superscripts and subscripts */
+    sub,
+    sup {
+        /* prevent from affecting line height */
+        line-height: 0;
+    }
+
+    /* unordered and ordered lists*/
+    ul,
+    ol {
+        padding-left: 20px;
+    }
+
+    /* class for styling text semibold */
+    .semibold {
+        font-weight: 600;
+    }
+
+    /* class for styling elements horizontally left aligned */
+    .left {
+        display: block;
+        text-align: left;
+        margin-left: auto;
+        margin-right: 0;
+        justify-content: left;
+    }
+
+    /* class for styling elements horizontally centered */
+    .center {
+        display: block;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: center;
+    }
+
+    /* class for styling elements horizontally right aligned */
+    .right {
+        display: block;
+        text-align: right;
+        margin-left: 0;
+        margin-right: auto;
+        justify-content: right;
+    }
+
+    /* -------------------------------------------------- */
+    /* section elements */
+    /* -------------------------------------------------- */
+
+    /* horizontal divider line */
+    hr {
+        border: none;
+        height: 1px;
+        background: #bdbdbd;
+    }
+
+    /* paragraphs, horizontal dividers, figures, tables, code */
+    p,
+    hr,
+    figure,
+    table,
+    pre {
+        /* treat all as "paragraphs", with consistent vertical margins */
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* -------------------------------------------------- */
+    /* figures */
+    /* -------------------------------------------------- */
+
+    /* figure */
+    figure {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* figure caption */
+    figcaption {
+        padding: 0;
+        padding-top: 10px;
+    }
+
+    /* figure image element */
+    figure img {
+        max-width: 100%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* figure auto-number */
+    img + figcaption > span:first-of-type {
+        font-weight: bold;
+        margin-right: 5px;
+    }
+
+    /* -------------------------------------------------- */
+    /* tables */
+    /* -------------------------------------------------- */
+
+    /* table */
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* table cells */
+    th,
+    td {
+        border: solid 1px #bdbdbd;
+        padding: 10px;
+        /* squash table if too wide for page by forcing line breaks */
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    /* header row and even rows */
+    th,
+    tr:nth-child(2n) {
+        background-color: #fafafa;
+    }
+
+    /* odd rows */
+    tr:nth-child(2n + 1) {
+        background-color: #ffffff;
+    }
+
+    /* table caption */
+    caption {
+        text-align: left;
+        padding: 0;
+        padding-bottom: 10px;
+    }
+
+    /* table auto-number */
+    table > caption > span:first-of-type,
+    div.table_wrapper > table > caption > span:first-of-type {
+        font-weight: bold;
+        margin-right: 5px;
+    }
+
+    /* -------------------------------------------------- */
+    /* code */
+    /* -------------------------------------------------- */
+
+    /* multi-line code block */
+    pre {
+        padding: 10px;
+        background-color: #eeeeee;
+        color: #000000;
+        border-radius: 5px;
+        break-inside: avoid;
+        text-align: left;
+    }
+
+    /* inline code, ie code within normal text */
+    :not(pre) > code {
+        padding: 0 4px;
+        background-color: #eeeeee;
+        color: #000000;
+        border-radius: 5px;
+    }
+
+    /* code text */
+    /* apply all children, to reach syntax highlighting sub-elements */
+    code,
+    code * {
+        /* force monospace font */
+        font-family: "Source Code Pro", "Courier New", monospace;
+    }
+
+    /* -------------------------------------------------- */
+    /* quotes */
+    /* -------------------------------------------------- */
+
+    /* quoted text */
+    blockquote {
+        margin: 0;
+        padding: 0;
+        border-left: 4px solid #bdbdbd;
+        padding-left: 16px;
+        break-inside: avoid;
+    }
+
+    /* -------------------------------------------------- */
+    /* banners */
+    /* -------------------------------------------------- */
+
+    /* info banners */
+    .banner {
+        box-sizing: border-box;
+        display: block;
+        position: relative;
+        width: 100%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* paragraph in banner */
+    .banner > p {
+        margin: 0;
+    }
+
+    /* -------------------------------------------------- */
+    /* highlight colors */
+    /* -------------------------------------------------- */
+
+    .white {
+        background: #ffffff;
+    }
+    .lightgrey {
+        background: #eeeeee;
+    }
+    .grey {
+        background: #757575;
+    }
+    .darkgrey {
+        background: #424242;
+    }
+    .black {
+        background: #000000;
+    }
+    .lightred {
+        background: #ffcdd2;
+    }
+    .lightyellow {
+        background: #ffecb3;
+    }
+    .lightgreen {
+        background: #dcedc8;
+    }
+    .lightblue {
+        background: #e3f2fd;
+    }
+    .lightpurple {
+        background: #f3e5f5;
+    }
+    .red {
+        background: #f44336;
+    }
+    .orange {
+        background: #ff9800;
+    }
+    .yellow {
+        background: #ffeb3b;
+    }
+    .green {
+        background: #4caf50;
+    }
+    .blue {
+        background: #2196f3;
+    }
+    .purple {
+        background: #9c27b0;
+    }
+    .white,
+    .lightgrey,
+    .lightred,
+    .lightyellow,
+    .lightgreen,
+    .lightblue,
+    .lightpurple,
+    .orange,
+    .yellow,
+    .white a,
+    .lightgrey a,
+    .lightred a,
+    .lightyellow a,
+    .lightgreen a,
+    .lightblue a,
+    .lightpurple a,
+    .orange a,
+    .yellow a {
+        color: #000000;
+    }
+    .grey,
+    .darkgrey,
+    .black,
+    .red,
+    .green,
+    .blue,
+    .purple,
+    .grey a,
+    .darkgrey a,
+    .black a,
+    .red a,
+    .green a,
+    .blue a,
+    .purple a {
+        color: #ffffff;
+    }
+
+    /* -------------------------------------------------- */
+    /* buttons */
+    /* -------------------------------------------------- */
+
+    /* class for styling links like buttons */
+    .button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px;
+        padding: 10px 20px;
+        font-size: 0.75em;
+        font-weight: 600;
+        text-transform: uppercase;
+        text-decoration: none;
+        letter-spacing: 1px;
+        background: none;
+        color: #2196f3;
+        border: solid 1px #bdbdbd;
+        border-radius: 5px;
+    }
+
+    /* buttons when hovered */
+    .button:hover:not([disabled]),
+    .icon_button:hover:not([disabled]) {
+        cursor: pointer;
+        background: #f5f5f5;
+    }
+
+    /* buttons when disabled */
+    .button[disabled],
+    .icon_button[disabled] {
+        opacity: 0.35;
+        pointer-events: none;
+    }
+
+    /* class for styling buttons containg only single icon */
+    .icon_button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        margin: 0;
+        padding: 0;
+        background: none;
+        border-radius: 5px;
+        border: none;
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+    }
+
+    /* icon button inner svg image */
+    .icon_button > svg {
+        height: 16px;
+    }
+
+    /* -------------------------------------------------- */
+    /* icons */
+    /* -------------------------------------------------- */
+
+    /* class for styling icons inline with text */
+    .inline_icon {
+        height: 1em;
+        position: relative;
+        top: 0.125em;
+    }
+
+    /* -------------------------------------------------- */
+    /* print control */
+    /* -------------------------------------------------- */
+
+    @media print {
+        @page {
+            /* suggested printing margin */
+            margin: 0.5in;
+        }
+
+        /* document and "page" elements */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* "page" element */
+        body {
+            font-size: 11pt !important;
+            line-height: 1.35;
+        }
+
+        /* all headings */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 15px 0;
+        }
+
+        /* heading 1 */
+        h1 {
+            font-size: 1.75em;
+        }
+
+        /* heading 2 */
+        h2 {
+            font-size: 1.25em;
+            margin-top: 0;
+        }
+
+        /* heading 3 */
+        h3 {
+            font-size: 1.10em;
+        }
+
+        /* figures and tables */
+        figure, table {
+            font-size: 0.85em;
+        }
+
+        /* table cells */
+        th,
+        td {
+            padding: 5px;
+        }
+
+        /* shrink font awesome icons */
+        i.fas,
+        i.fab,
+        i.far,
+        i.fal {
+            transform: scale(0.85);
+        }
+
+        /* decrease banner margins */
+        .banner {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 15px;
+        }
+
+        /* class for centering an element vertically on its own page */
+        .page_center {
+            margin: auto;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            vertical-align: middle;
+            break-before: page;
+            break-after: page;
+        }
+
+        /* always insert a page break before the element */
+        .page_break_before {
+            break-before: page;
+        }
+
+        /* always insert a page break after the element */
+        .page_break_after {
+            break-after: page;
+        }
+
+        /* avoid page break before the element */
+        .page_break_before_avoid {
+            break-before: avoid;
+        }
+
+        /* avoid page break after the element */
+        .page_break_after_avoid {
+            break-after: avoid;
+        }
+
+        /* avoid page break inside the element */
+        .page_break_inside_avoid {
+            break-inside: avoid;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* override pandoc css quirks */
+    /* -------------------------------------------------- */
+
+    .sourceCode {
+        /* prevent unsightly overflow in wide code blocks */
+        overflow: auto !important;
+    }
+
+    div.sourceCode {
+        /* prevent background fill on top-most code block  container */
+        background: none !important;
+    }
+
+    .sourceCode * {
+        /* force consistent line spacing */
+        line-height: 1.5 !important;
+    }
+
+    div.sourceCode {
+        /* style code block margins same as <pre> element */
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* -------------------------------------------------- */
+    /* tablenos */
+    /* -------------------------------------------------- */
+
+    /* tablenos wrapper */
+    .tablenos {
+        /* show scrollbar on tables if necessary to prevent overflow */
+        width: 100%;
+        margin: 20px 0;
+    }
+
+    .tablenos > table {
+        /* move margins from table to table_wrapper to allow margin collapsing */
+        margin: 0;
+    }
+
+    @media only screen {
+        /* tablenos wrapper */
+        .tablenos {
+            /* show scrollbar on tables if necessary to prevent overflow */
+            overflow-x: auto !important;
+        }
+
+        .tablenos th,
+        .tablenos td {
+            overflow-wrap: unset !important;
+            word-break: unset !important;
+        }
+
+        /* table in wrapper */
+        .tablenos table,
+        .tablenos table * {
+            /* don't break table words */
+            overflow-wrap: normal !important;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* mathjax */
+    /* -------------------------------------------------- */
+
+    /* mathjax containers */
+    .math.display > span:not(.MathJax_Preview) {
+        /* turn inline element (no dimensions) into block (allows fixed width and thus scrolling) */
+        display: flex !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        justify-content: center;
+        align-items: center;
+        margin: 0 !important;
+    }
+
+    /* right click menu */
+    .MathJax_Menu {
+        border-radius: 5px !important;
+        border: solid 1px #bdbdbd !important;
+        box-shadow: none !important;
+    }
+
+    /* equation auto-number */
+    span[id^="eq:"] > span.math.display + span {
+        font-weight: 600;
+    }
+
+    /* equation */
+    span[id^="eq:"] > span.math.display > span {
+        /* nudge to make room for equation auto-number and anchor */
+        margin-right: 60px !important;
+    }
+
+    /* -------------------------------------------------- */
+    /* anchors plugin */
+    /* -------------------------------------------------- */
+
+    @media only screen {
+        /* anchor button */
+        .anchor {
+            opacity: 0;
+            margin-left: 5px;
+        }
+
+        /* anchor buttons within <h2>'s */
+        h2 .anchor {
+            margin-left: 10px;
+        }
+
+        /* anchor buttons when hovered/focused and anything containing an anchor button when hovered */
+        *:hover > .anchor,
+        .anchor:hover,
+        .anchor:focus {
+            opacity: 1;
+        }
+
+        /* anchor button when hovered */
+        .anchor:hover {
+            cursor: pointer;
+        }
+    }
+
+    /* always show anchor button on devices with no mouse/hover ability */
+    @media (hover: none) {
+        .anchor {
+            opacity: 1;
+        }
+    }
+
+    /* always hide anchor button on print */
+    @media only print {
+        .anchor {
+            display: none;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* accordion plugin */
+    /* -------------------------------------------------- */
+
+    @media only screen {
+        /* accordion arrow button */
+        .accordion_arrow {
+            margin-right: 10px;
+        }
+
+        /* arrow icon when <h2> data-collapsed attribute true */
+        h2[data-collapsed="true"] > .accordion_arrow > svg {
+            transform: rotate(-90deg);
+        }
+
+        /* all elements (except <h2>'s) when data-collapsed attribute true */
+        *:not(h2)[data-collapsed="true"] {
+            display: none;
+        }
+
+        /* accordion arrow button when hovered and <h2>'s when hovered */
+        .accordion_arrow:hover,
+        h2[data-collapsed="true"]:hover,
+        h2[data-collapsed="false"]:hover {
+            cursor: pointer;
+        }
+    }
+
+    /* always hide accordion arrow button on print */
+    @media only print {
+        .accordion_arrow {
+            display: none;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* tooltips plugin */
+    /* -------------------------------------------------- */
+
+    @media only screen {
+        /* tooltip container */
+        #tooltip {
+            position: absolute;
+            width: 50%;
+            min-width: 240px;
+            max-width: 75%;
+            z-index: 1;
+        }
+
+        /* tooltip content */
+        #tooltip_content {
+            margin-bottom: 5px;
+            padding: 20px;
+            border-radius: 5px;
+            border: solid 1px #bdbdbd;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            background: #ffffff;
+            overflow-wrap: break-word;
+        }
+
+        /* tooltip copy of paragraphs and figures */
+        #tooltip_content > p,
+        #tooltip_content > figure {
+            margin: 0;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        /* tooltip copy of <img> */
+        #tooltip_content > figure > img {
+            max-height: 260px;
+        }
+
+        /* navigation bar */
+        #tooltip_nav_bar {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* navigation bar previous/next buton */
+        #tooltip_nav_bar > .icon_button {
+            position: relative;
+            top: 3px;
+        }
+
+        /* navigation bar previous button */
+        #tooltip_nav_bar > .icon_button:first-of-type {
+            margin-right: 5px;
+        }
+
+        /* navigation bar next button */
+        #tooltip_nav_bar > .icon_button:last-of-type {
+            margin-left: 5px;
+        }
+    }
+
+    /* always hide tooltip on print */
+    @media only print {
+        #tooltip {
+            display: none;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* jump to first plugin */
+    /* -------------------------------------------------- */
+
+    @media only screen {
+        /* jump button */
+        .jump_arrow {
+            position: relative;
+            top: 0.125em;
+            margin-right: 5px;
+        }
+    }
+
+    /* always hide jump button on print */
+    @media only print {
+        .jump_arrow {
+            display: none;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* link highlight plugin */
+    /* -------------------------------------------------- */
+
+    @media only screen {
+        /* anything with data-highlighted attribute true */
+        [data-highlighted="true"] {
+            background: #ffeb3b;
+        }
+
+        /* anything with data-selected attribute true */
+        [data-selected="true"] {
+            background: #ff8a65 !important;
+        }
+
+        /* animation definition for glow */
+        @keyframes highlight_glow {
+            0% {
+                background: none;
+            }
+            10% {
+                background: #bbdefb;
+            }
+            100% {
+                background: none;
+            }
+        }
+
+        /* anything with data-glow attribute true */
+        [data-glow="true"] {
+            animation: highlight_glow 2s;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* table of contents plugin */
+    /* -------------------------------------------------- */
+
+    @media only screen {
+        /* toc panel */
+        #toc_panel {
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #ffffff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+            z-index: 2;
+        }
+
+        /* toc panel when closed */
+        #toc_panel[data-open="false"] {
+            min-width: 60px;
+            width: 60px;
+            height: 60px;
+            border-right: solid 1px #bdbdbd;
+            border-bottom: solid 1px #bdbdbd;
+        }
+
+        /* toc panel when open */
+        #toc_panel[data-open="true"] {
+            min-width: 260px;
+            max-width: 480px;
+            /* keep panel edge consistent distance away from "page" edge */
+            width: calc(((100vw - 8.5in) / 2) - 30px - 40px);
+            bottom: 0;
+            border-right: solid 1px #bdbdbd;
+        }
+
+        /* toc panel header */
+        #toc_header {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            height: 60px;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* toc panel header when hovered */
+        #toc_header:hover {
+            cursor: pointer;
+        }
+
+        /* toc panel header when panel open */
+        #toc_panel[data-open="true"] > #toc_header {
+            border-bottom: solid 1px #bdbdbd;
+        }
+
+        /* toc open/close header button */
+        #toc_button {
+            margin-right: 20px;
+        }
+
+        /* hide toc list and header text when closed */
+        #toc_panel[data-open="false"] > #toc_header > *:not(#toc_button),
+        #toc_panel[data-open="false"] > #toc_list {
+            display: none;
+        }
+
+        /* toc list of entries */
+        #toc_list {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 20px;
+            position: absolute;
+            top: calc(60px + 1px);
+            bottom: 0;
+            overflow: auto;
+        }
+
+        /* toc entry, link to section in document */
+        .toc_link {
+            display: block;
+            padding: 5px;
+            position: relative;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* toc entry when hovered or when "viewed" */
+        .toc_link:hover,
+        .toc_link[data-viewing="true"] {
+            background: #f5f5f5;
+        }
+
+        /* toc entry, level 1 indentation */
+        .toc_link[data-level="1"] {
+            margin-left: 0;
+        }
+
+        /* toc entry, level 2 indentation */
+        .toc_link[data-level="2"] {
+            margin-left: 20px;
+        }
+
+        /* toc entry, level 3 indentation */
+        .toc_link[data-level="3"] {
+            margin-left: 40px;
+        }
+
+        /* toc entry, level 4 indentation */
+        .toc_link[data-level="4"] {
+            margin-left: 60px;
+        }
+
+        /* toc entry bullets */
+        #toc_panel[data-bullets="true"] .toc_link[data-level]:before {
+            position: absolute;
+            left: -15px;
+            top: -1px;
+            font-size: 1.5em;
+        }
+
+        /* toc entry, level 2 bullet */
+        #toc_panel[data-bullets="true"] .toc_link[data-level="2"]:before {
+            content: "\2022";
+        }
+
+        /* toc entry, level 3 bullet */
+        #toc_panel[data-bullets="true"] .toc_link[data-level="3"]:before {
+            content: "\25AB";
+        }
+
+        /* toc entry, level 4 bullet */
+        #toc_panel[data-bullets="true"] .toc_link[data-level="4"]:before {
+            content: "-";
+        }
+    }
+
+    /* when on screen < 8.5in wide */
+    @media only screen and (max-width: 8.5in) {
+        /* push <body> ("page") element down to make room for toc icon */
+        .toc_body_nudge {
+            padding-top: 60px;
+        }
+
+        /* toc icon when panel closed and not hovered */
+        #toc_panel[data-open="false"]:not(:hover) {
+            background: rgba(255, 255, 255, 0.75);
+        }
+    }
+
+    /* always hide toc panel on print */
+    @media only print {
+        #toc_panel {
+            display: none;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* lightbox plugin */
+    /* -------------------------------------------------- */
+
+    @media only screen {
+        /* regular <img> in document when hovered */
+        .lightbox_document_img:hover {
+            cursor: pointer;
+        }
+
+        .body_no_scroll {
+            overflow: hidden !important;
+        }
+
+        /* screen overlay */
+        #lightbox_overlay {
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 3;
+        }
+
+        /* middle area containing lightbox image */
+        #lightbox_image_container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        /* bottom area containing caption */
+        #lightbox_bottom_container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            min-height: 100px;
+            max-height: 100px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* image number info text box */
+        #lightbox_number_info {
+            position: absolute;
+            color: #ffffff;
+            font-weight: 600;
+            left: 2px;
+            top: 0;
+            z-index: 4;
+        }
+
+        /* zoom info text box */
+        #lightbox_zoom_info {
+            position: absolute;
+            color: #ffffff;
+            font-weight: 600;
+            right: 2px;
+            top: 0;
+            z-index: 4;
+        }
+
+        /* copy of image caption */
+        #lightbox_caption {
+            box-sizing: border-box;
+            display: inline-block;
+            width: 100%;
+            max-height: 100%;
+            padding: 10px 0;
+            text-align: center;
+            overflow-y: auto;
+            color: #ffffff;
+        }
+
+        /* navigation previous/next button */
+        .lightbox_button {
+            width: 100px;
+            height: 100%;
+            min-width: 100px;
+            min-height: 100%;
+            color: #ffffff;
+        }
+
+        /* navigation previous/next button when hovered */
+        .lightbox_button:hover {
+            background: none !important;
+        }
+
+        /* navigation button icon */
+        .lightbox_button > svg {
+            height: 25px;
+        }
+
+        /* figure auto-number */
+        #lightbox_caption > span:first-of-type {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        /* lightbox image when hovered */
+        #lightbox_img:hover {
+            cursor: grab;
+        }
+
+        /* lightbox image when grabbed */
+        #lightbox_img:active {
+            cursor: grabbing;
+        }
+    }
+
+    /* when on screen < 480px wide */
+    @media only screen and (max-width: 480px) {
+        /* make navigation buttons skinnier on small screens to make more room for caption text */
+        .lightbox_button {
+            width: 50px;
+            min-width: 50px;
+        }
+    }
+
+    /* always hide lightbox on print */
+    @media only print {
+        #lightbox_overlay {
+            display: none;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* hypothesis (annotations) plugin */
+    /* -------------------------------------------------- */
+
+    /* side panel */
+    .annotator-frame {
+        width: 280px !important;
+        z-index: 0 !important;
+    }
+
+    /* match highlight color to rest of theme */
+    .annotator-highlights-always-on .annotator-hl {
+        background-color: #ffeb3b !important;
+    }
+
+    /* match focused color to rest of theme */
+    .annotator-hl.annotator-hl-focused {
+        background-color: #ff8a65 !important;
+    }
+
+    /* match bucket bar color to rest of theme */
+    .annotator-bucket-bar {
+        background: #f5f5f5 !important;
+    }
+
+    /* always hide toolbar and tooltip on print */
+    @media only print {
+        .annotator-frame {
+            display: none !important;
+        }
+
+        hypothesis-adder {
+            display: none !important;
+        }
+    }
+</style>
+<!-- anchors plugin -->
+
+<script>
+    (function() {
+        // /////////////////////////
+        // DESCRIPTION
+        // /////////////////////////
+
+        // This Manubot plugin adds an anchor next to each of a certain type
+        // of element that provides a human-readable url to that specific
+        // item/position in the document (eg "manuscript.html#abstract"). It
+        // also makes it such that scrolling out of view of a target removes
+        // its identifier from the url.
+
+        // /////////////////////////
+        // OPTIONS
+        // /////////////////////////
+
+        // plugin name prefix for url parameters
+        const pluginName = 'anchors';
+
+        // default plugin options
+        const options = {
+            // which types of elements to add anchors next to, in
+            // "document.querySelector" format
+            typesQuery: 'h1, h2, h3, [id^="fig:"], [id^="tbl:"], [id^="eq:"]',
+            // whether plugin is on or not
+            enabled: 'true'
+        };
+
+        // change options above, or override with url parameter, eg:
+        // 'manuscript.html?pluginName-enabled=false'
+
+        // /////////////////////////
+        // SCRIPT
+        // /////////////////////////
+
+        // start script
+        function start() {
+            // add anchor to each element of specified types
+            const elements = document.querySelectorAll(options.typesQuery);
+            for (const element of elements)
+                addAnchor(element);
+
+            // attach scroll listener to window
+            window.addEventListener('scroll', onScroll);
+        }
+
+        // when window is scrolled
+        function onScroll() {
+            // if url has hash and user has scrolled out of view of hash
+            // target, remove hash from url
+            const tolerance = 100;
+            const target = getHashTarget();
+            if (target) {
+                if (
+                    target.getBoundingClientRect().top >
+                        window.innerHeight + tolerance ||
+                    target.getBoundingClientRect().bottom < 0 - tolerance
+                )
+                    history.pushState(null, null, ' ');
+            }
+        }
+
+        // add anchor to element
+        function addAnchor(element) {
+            let addTo; // element to add anchor button to
+
+            // if figure or table, modify withId and addTo to get expected
+            // elements
+            if (element.id.indexOf('fig:') === 0) {
+                addTo = element.querySelector('figcaption');
+            } else if (element.id.indexOf('tbl:') === 0) {
+                addTo = element.querySelector('caption');
+            } else if (element.id.indexOf('eq:') === 0) {
+                addTo = element.querySelector('.eqnos-number');
+            }
+
+            addTo = addTo || element;
+            const id = element.id || null;
+
+            // do not add anchor if element doesn't have assigned id.
+            // id is generated by pandoc and is assumed to be unique and
+            // human-readable
+            if (!id)
+                return;
+
+            // create anchor button
+            const anchor = document.createElement('a');
+            anchor.innerHTML = document.querySelector('.icon_link').innerHTML;
+            anchor.title = 'Link to this part of the document';
+            anchor.classList.add('icon_button', 'anchor');
+            anchor.dataset.ignore = 'true';
+            anchor.href = '#' + id;
+            addTo.appendChild(anchor);
+        }
+
+        // get element that is target of link or url hash
+        function getHashTarget() {
+            const hash = window.location.hash;
+            const id = hash.slice(1);
+            let target = document.querySelector('[id="' + id + '"]');
+            if (!target)
+                return;
+
+            // if figure or table, modify target to get expected element
+            if (id.indexOf('fig:') === 0)
+                target = target.querySelector('figure');
+            if (id.indexOf('tbl:') === 0)
+                target = target.querySelector('table');
+
+            return target;
+        }
+
+        // load options from url parameters
+        function loadOptions() {
+            const url = window.location.search;
+            const params = new URLSearchParams(url);
+            for (const optionName of Object.keys(options)) {
+                const paramName = pluginName + '-' + optionName;
+                const param = params.get(paramName);
+                if (param !== '' && param !== null)
+                    options[optionName] = param;
+            }
+        }
+        loadOptions();
+
+        // start script when document is finished loading
+        if (options.enabled === 'true')
+            window.addEventListener('load', start);
+    })();
+</script>
+
+<!-- link icon -->
+
+<template class="icon_link">
+    <!-- modified from: https://fontawesome.com/icons/link -->
+    <svg width="16" height="16" viewBox="0 0 512 512">
+        <path
+            fill="currentColor"
+            d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"
+        ></path>
+    </svg>
+</template>
+<!-- accordion plugin -->
+
+<script>
+    (function() {
+        // /////////////////////////
+        // DESCRIPTION
+        // /////////////////////////
+
+        // This Manubot plugin allows sections of content under <h2> headings
+        // to be collapsible.
+
+        // /////////////////////////
+        // OPTIONS
+        // /////////////////////////
+
+        // plugin name prefix for url parameters
+        const pluginName = 'accordion';
+
+        // default plugin options
+        const options = {
+            // whether to always start expanded ('false'), always start
+            // collapsed ('true'), or start collapsed when screen small ('auto')
+            startCollapsed: 'auto',
+            // whether plugin is on or not
+            enabled: 'true'
+        };
+
+        // change options above, or override with url parameter, eg:
+        // 'manuscript.html?pluginName-enabled=false'
+
+        // /////////////////////////
+        // SCRIPT
+        // /////////////////////////
+
+        // start script
+        function start() {
+            // run through each <h2> heading
+            const headings = document.querySelectorAll('h2');
+            for (const heading of headings) {
+                addArrow(heading);
+
+                // start expanded/collapsed based on option
+                if (
+                    options.startCollapsed === 'true' ||
+                    (options.startCollapsed === 'auto' && isSmallScreen())
+                )
+                    collapseHeading(heading);
+                else
+                    expandHeading(heading);
+            }
+
+            // attach hash change listener to window
+            window.addEventListener('hashchange', onHashChange);
+        }
+
+        // when hash (eg manuscript.html#introduction) changes
+        function onHashChange() {
+            const target = getHashTarget();
+            if (target)
+                goToElement(target);
+        }
+
+        // add arrow to heading
+        function addArrow(heading) {
+            // add arrow button
+            const arrow = document.createElement('button');
+            arrow.innerHTML = document.querySelector(
+                '.icon_angle_down'
+            ).innerHTML;
+            arrow.classList.add('icon_button', 'accordion_arrow');
+            heading.insertBefore(arrow, heading.firstChild);
+
+            // attach click listener to heading and button
+            heading.addEventListener('click', onHeadingClick);
+            arrow.addEventListener('click', onArrowClick);
+        }
+
+        // determine if on mobile-like device with small screen
+        function isSmallScreen() {
+            return Math.min(window.innerWidth, window.innerHeight) < 480;
+        }
+
+        // scroll to and focus element
+        function goToElement(element, offset) {
+            // expand accordion section if collapsed
+            expandElement(element);
+            const y =
+                getRectInView(element).top -
+                getRectInView(document.documentElement).top -
+                (offset || 0);
+            // trigger any function listening for "onscroll" event
+            window.dispatchEvent(new Event('scroll'));
+            window.scrollTo(0, y);
+            document.activeElement.blur();
+            element.focus();
+        }
+
+        // get element that is target of hash
+        function getHashTarget(link) {
+            const hash = link ? link.hash : window.location.hash;
+            const id = hash.slice(1);
+            let target = document.querySelector('[id="' + id + '"]');
+            if (!target)
+                return;
+
+            // if figure or table, modify target to get expected element
+            if (id.indexOf('fig:') === 0)
+                target = target.querySelector('figure');
+            if (id.indexOf('tbl:') === 0)
+                target = target.querySelector('table');
+
+            return target;
+        }
+
+        // when <h2> heading is clicked
+        function onHeadingClick(event) {
+            // only collapse if <h2> itself is target of click (eg, user did
+            // not click on anchor within <h2>)
+            if (event.target === this)
+                toggleCollapse(this);
+        }
+
+        // when arrow button is clicked
+        function onArrowClick() {
+            toggleCollapse(this.parentNode);
+        }
+
+        // collapse section if expanded, expand if collapsed
+        function toggleCollapse(heading) {
+            if (heading.dataset.collapsed === 'false')
+                collapseHeading(heading);
+            else
+                expandHeading(heading);
+        }
+
+        // elements to exclude from collapse, such as table of contents panel,
+        // hypothesis panel, etc
+        const exclude = '#toc_panel, div.annotator-frame, #lightbox_overlay';
+
+        // collapse section
+        function collapseHeading(heading) {
+            heading.setAttribute('data-collapsed', 'true');
+            const children = getChildren(heading);
+            for (const child of children)
+                child.setAttribute('data-collapsed', 'true');
+        }
+
+        // expand section
+        function expandHeading(heading) {
+            heading.setAttribute('data-collapsed', 'false');
+            const children = getChildren(heading);
+            for (const child of children)
+                child.setAttribute('data-collapsed', 'false');
+        }
+
+        // get list of elements between this <h2> and next <h2> or <h1>
+        // ("children" of the <h2> section)
+        function getChildren(heading) {
+            return nextUntil(heading, 'h2, h1', exclude);
+        }
+
+        // get position/dimensions of element or viewport
+        function getRectInView(element) {
+            let rect = {};
+            rect.left = 0;
+            rect.top = 0;
+            rect.right = document.documentElement.clientWidth;
+            rect.bottom = document.documentElement.clientHeight;
+            let style = {};
+
+            if (element instanceof HTMLElement) {
+                rect = element.getBoundingClientRect();
+                style = window.getComputedStyle(element);
+            }
+
+            const margin = {};
+            margin.left = parseFloat(style.marginLeftWidth) || 0;
+            margin.top = parseFloat(style.marginTopWidth) || 0;
+            margin.right = parseFloat(style.marginRightWidth) || 0;
+            margin.bottom = parseFloat(style.marginBottomWidth) || 0;
+
+            const border = {};
+            border.left = parseFloat(style.borderLeftWidth) || 0;
+            border.top = parseFloat(style.borderTopWidth) || 0;
+            border.right = parseFloat(style.borderRightWidth) || 0;
+            border.bottom = parseFloat(style.borderBottomWidth) || 0;
+
+            const newRect = {};
+            newRect.left = rect.left + margin.left + border.left;
+            newRect.top = rect.top + margin.top + border.top;
+            newRect.right = rect.right + margin.right + border.right;
+            newRect.bottom = rect.bottom + margin.bottom + border.bottom;
+            newRect.width = newRect.right - newRect.left;
+            newRect.height = newRect.bottom - newRect.top;
+
+            return newRect;
+        }
+
+        // get list of elements after a start element up to element matching
+        // query
+        function nextUntil(element, query, exclude) {
+            const elements = [];
+            while (element = element.nextElementSibling, element) {
+                if (element.matches(query))
+                    break;
+                if (!element.matches(exclude))
+                    elements.push(element);
+            }
+            return elements;
+        }
+
+        // get closest element before specified element that matches query
+        function firstBefore(element, query) {
+            while (
+                element &&
+                element !== document.body &&
+                !element.matches(query)
+            )
+                element = element.previousElementSibling || element.parentNode;
+
+            return element;
+        }
+
+        // check if element is part of collapsed heading
+        function isCollapsed(element) {
+            while (element && element !== document.body) {
+                if (element.dataset.collapsed === 'true')
+                    return true;
+                element = element.parentNode;
+            }
+            return false;
+        }
+
+        // expand heading containing element if necesary
+        function expandElement(element) {
+            if (isCollapsed(element)) {
+                const heading = firstBefore(element, 'h2');
+                if (heading)
+                    heading.click();
+            }
+        }
+
+        // load options from url parameters
+        function loadOptions() {
+            const url = window.location.search;
+            const params = new URLSearchParams(url);
+            for (const optionName of Object.keys(options)) {
+                const paramName = pluginName + '-' + optionName;
+                const param = params.get(paramName);
+                if (param !== '' && param !== null)
+                    options[optionName] = param;
+            }
+        }
+        loadOptions();
+
+        // start script when document is finished loading
+        if (options.enabled === 'true')
+            window.addEventListener('load', start);
+    })();
+</script>
+
+<!-- angle down icon -->
+
+<template class="icon_angle_down">
+    <!-- modified from: https://fontawesome.com/icons/angle-down -->
+    <svg width="16" height="16" viewBox="0 0 448 512">
+        <path
+            fill="currentColor"
+            d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"
+        ></path>
+    </svg>
+</template>
+<!-- tooltips plugin -->
+
+<script>
+    (function() {
+        // /////////////////////////
+        // DESCRIPTION
+        // /////////////////////////
+
+        // This Manubot plugin makes it such that when the user hovers or
+        // focuses a link to a citation or figure, a tooltip appears with a
+        // preview of the reference content, along with arrows to navigate
+        // between instances of the same reference in the document.
+
+        // /////////////////////////
+        // OPTIONS
+        // /////////////////////////
+
+        // plugin name prefix for url parameters
+        const pluginName = 'tooltips';
+
+        // default plugin options
+        const options = {
+            // whether user must click off to close tooltip instead of just
+            // un-hovering
+            clickClose: 'false',
+            // delay (in ms) between opening and closing tooltip
+            delay: '100',
+            // whether plugin is on or not
+            enabled: 'true'
+        };
+
+        // change options above, or override with url parameter, eg:
+        // 'manuscript.html?pluginName-enabled=false'
+
+        // /////////////////////////
+        // SCRIPT
+        // /////////////////////////
+
+        // start script
+        function start() {
+            const links = getLinks();
+            for (const link of links) {
+                // attach hover and focus listeners to link
+                link.addEventListener('mouseover', onLinkHover);
+                link.addEventListener('mouseleave', onLinkUnhover);
+                link.addEventListener('focus', onLinkFocus);
+                link.addEventListener('touchend', onLinkTouch);
+            }
+
+            // attach mouse, key, and resize listeners to window
+            window.addEventListener('mousedown', onClick);
+            window.addEventListener('touchstart', onClick);
+            window.addEventListener('keyup', onKeyUp);
+            window.addEventListener('resize', onResize);
+        }
+
+        // when link is hovered
+        function onLinkHover() {
+            // function to open tooltip
+            const delayOpenTooltip = function() {
+                openTooltip(this);
+            }.bind(this);
+
+            // run open function after delay
+            this.openTooltipTimer = window.setTimeout(
+                delayOpenTooltip,
+                options.delay
+            );
+        }
+
+        // when mouse leaves link
+        function onLinkUnhover() {
+            // cancel opening tooltip
+            window.clearTimeout(this.openTooltipTimer);
+
+            // don't close on unhover if option specifies
+            if (options.clickClose === 'true')
+                return;
+
+            // function to close tooltip
+            const delayCloseTooltip = function() {
+                // if tooltip open and if mouse isn't over tooltip, close
+                const tooltip = document.getElementById('tooltip');
+                if (tooltip && !tooltip.matches(':hover'))
+                    closeTooltip();
+            };
+
+            // run close function after delay
+            this.closeTooltipTimer = window.setTimeout(
+                delayCloseTooltip,
+                options.delay
+            );
+        }
+
+        // when link is focused (tabbed to)
+        function onLinkFocus(event) {
+            openTooltip(this);
+        }
+
+        // when link is touched on touch screen
+        function onLinkTouch(event) {
+            // attempt to force hover state on first tap always, and trigger
+            // regular link click (and navigation) on second tap
+            if (event.target === document.activeElement)
+                event.target.click();
+            else {
+                document.activeElement.blur();
+                event.target.focus();
+            }
+            if (event.cancelable)
+                event.preventDefault();
+            event.stopPropagation();
+            return false;
+        }
+
+        // when mouse is clicked anywhere in window
+        function onClick(event) {
+            closeTooltip();
+        }
+
+        // when key pressed
+        function onKeyUp(event) {
+            if (!event || !event.key)
+                return;
+
+            switch (event.key) {
+                // trigger click of prev button
+                case 'ArrowLeft':
+                    const prevButton = document.getElementById(
+                        'tooltip_prev_button'
+                    );
+                    if (prevButton)
+                        prevButton.click();
+                    break;
+                // trigger click of next button
+                case 'ArrowRight':
+                    const nextButton = document.getElementById(
+                        'tooltip_next_button'
+                    );
+                    if (nextButton)
+                        nextButton.click();
+                    break;
+                // close on esc
+                case 'Escape':
+                    closeTooltip();
+                    break;
+            }
+        }
+
+        // when window is resized or zoomed
+        function onResize() {
+            closeTooltip();
+        }
+
+        // get all links of types we wish to handle
+        function getLinks() {
+            const queries = [];
+            // exclude buttons, anchor links, toc links, etc
+            const exclude =
+                ':not(.button):not(.icon_button):not(.anchor):not(.toc_link)';
+            queries.push('a[href^="#ref-"]' + exclude); // citation links
+            queries.push('a[href^="#fig:"]' + exclude); // figure links
+            const query = queries.join(', ');
+            return document.querySelectorAll(query);
+        }
+
+        // get links with same target, get index of link in set, get total
+        // same links
+        function getSameLinks(link) {
+            const sameLinks = [];
+            const links = getLinks();
+            for (const otherLink of links) {
+                if (
+                    otherLink.getAttribute('href') === link.getAttribute('href')
+                )
+                    sameLinks.push(otherLink);
+            }
+
+            return {
+                elements: sameLinks,
+                index: sameLinks.indexOf(link),
+                total: sameLinks.length
+            };
+        }
+
+        // open tooltip
+        function openTooltip(link) {
+            // delete tooltip if it exists, start fresh
+            closeTooltip();
+
+            // make tooltip element
+            const tooltip = makeTooltip(link);
+
+            // if source couldn't be found and tooltip not made, exit
+            if (!tooltip)
+                return;
+
+            // make navbar elements
+            const navBar = makeNavBar(link);
+            if (navBar)
+                tooltip.firstElementChild.appendChild(navBar);
+
+            // attach tooltip to page
+            document.body.appendChild(tooltip);
+
+            // position tooltip
+            const position = function() {
+                positionTooltip(link);
+            };
+            position();
+
+            // if tooltip contains images, position again after they've loaded
+            const imgs = tooltip.querySelectorAll('img');
+            for (const img of imgs)
+                img.addEventListener('load', position);
+        }
+
+        // close (delete) tooltip
+        function closeTooltip() {
+            const tooltip = document.getElementById('tooltip');
+            if (tooltip)
+                tooltip.remove();
+        }
+
+        // make tooltip
+        function makeTooltip(link) {
+            // get target element that link points to
+            const source = getSource(link);
+
+            // if source can't be found, exit
+            if (!source)
+                return;
+
+            // create new tooltip
+            const tooltip = document.createElement('div');
+            tooltip.id = 'tooltip';
+            const tooltipContent = document.createElement('div');
+            tooltipContent.id = 'tooltip_content';
+            tooltip.appendChild(tooltipContent);
+
+            // make copy of source node and put in tooltip
+            const sourceCopy = makeCopy(source);
+            tooltipContent.appendChild(sourceCopy);
+
+            // attach mouse event listeners
+            tooltip.addEventListener('click', onTooltipClick);
+            tooltip.addEventListener('mousedown', onTooltipClick);
+            tooltip.addEventListener('touchstart', onTooltipClick);
+            tooltip.addEventListener('mouseleave', onTooltipUnhover);
+
+            // (for interaction with lightbox plugin)
+            // transfer click on tooltip copied img to original img
+            const sourceImg = source.querySelector('img');
+            const sourceCopyImg = sourceCopy.querySelector('img');
+            if (sourceImg && sourceCopyImg) {
+                const clickImg = function() {
+                    sourceImg.click();
+                    closeTooltip();
+                };
+                sourceCopyImg.addEventListener('click', clickImg);
+            }
+
+            return tooltip;
+        }
+
+        // make carbon copy of html dom element
+        function makeCopy(source) {
+            const sourceCopy = source.cloneNode(true);
+
+            // delete elements marked with ignore (eg anchor and jump buttons)
+            const deleteFromCopy = sourceCopy.querySelectorAll(
+                '[data-ignore="true"]'
+            );
+            for (const element of deleteFromCopy)
+                element.remove();
+
+            // delete certain element attributes
+            const attributes = [
+                'id',
+                'data-collapsed',
+                'data-selected',
+                'data-highlighted',
+                'data-glow'
+            ];
+            for (const attribute of attributes) {
+                sourceCopy.removeAttribute(attribute);
+                const elements = sourceCopy.querySelectorAll(
+                    '[' + attribute + ']'
+                );
+                for (const element of elements)
+                    element.removeAttribute(attribute);
+            }
+
+            return sourceCopy;
+        }
+
+        // when tooltip is clicked
+        function onTooltipClick(event) {
+            // when user clicks on tooltip, stop click from transferring
+            // outside of tooltip (eg, click off to close tooltip, or eg click
+            // off to unhighlight same refs)
+            event.stopPropagation();
+        }
+
+        // when tooltip is unhovered
+        function onTooltipUnhover(event) {
+            if (options.clickClose === 'true')
+                return;
+
+            // make sure new mouse/touch/focus no longer over tooltip or any
+            // element within it
+            const tooltip = document.getElementById('tooltip');
+            if (!tooltip)
+                return;
+            if (this.contains(event.relatedTarget))
+                return;
+
+            closeTooltip();
+        }
+
+        // make nav bar to go betwen prev/next instances of same reference
+        function makeNavBar(link) {
+            // find other links to the same source
+            const sameLinks = getSameLinks(link);
+
+            // don't show nav bar when singular reference
+            if (sameLinks.total <= 1)
+                return;
+
+            // find prev/next links with same target
+            const prevLink = getPrevLink(link, sameLinks);
+            const nextLink = getNextLink(link, sameLinks);
+
+            // create nav bar
+            const navBar = document.createElement('div');
+            navBar.id = 'tooltip_nav_bar';
+            const text = sameLinks.index + 1 + ' of ' + sameLinks.total;
+
+            // create nav bar prev/next buttons
+            const prevButton = document.createElement('button');
+            const nextButton = document.createElement('button');
+            prevButton.id = 'tooltip_prev_button';
+            nextButton.id = 'tooltip_next_button';
+            prevButton.title =
+                'Jump to the previous occurence of this item in the document [←]';
+            nextButton.title =
+                'Jump to the next occurence of this item in the document [→]';
+            prevButton.classList.add('icon_button');
+            nextButton.classList.add('icon_button');
+            prevButton.innerHTML = document.querySelector(
+                '.icon_caret_left'
+            ).innerHTML;
+            nextButton.innerHTML = document.querySelector(
+                '.icon_caret_right'
+            ).innerHTML;
+            navBar.appendChild(prevButton);
+            navBar.appendChild(document.createTextNode(text));
+            navBar.appendChild(nextButton);
+
+            // attach click listeners to buttons
+            prevButton.addEventListener('click', function() {
+                onPrevNextClick(link, prevLink);
+            });
+            nextButton.addEventListener('click', function() {
+                onPrevNextClick(link, nextLink);
+            });
+
+            return navBar;
+        }
+
+        // get previous link with same target
+        function getPrevLink(link, sameLinks) {
+            if (!sameLinks)
+                sameLinks = getSameLinks(link);
+            // wrap index to other side if < 1
+            let index;
+            if (sameLinks.index - 1 >= 0)
+                index = sameLinks.index - 1;
+            else
+                index = sameLinks.total - 1;
+            return sameLinks.elements[index];
+        }
+
+        // get next link with same target
+        function getNextLink(link, sameLinks) {
+            if (!sameLinks)
+                sameLinks = getSameLinks(link);
+            // wrap index to other side if > total
+            let index;
+            if (sameLinks.index + 1 <= sameLinks.total - 1)
+                index = sameLinks.index + 1;
+            else
+                index = 0;
+            return sameLinks.elements[index];
+        }
+
+        // get element that is target of link or url hash
+        function getSource(link) {
+            const hash = link ? link.hash : window.location.hash;
+            const id = hash.slice(1);
+            let target = document.querySelector('[id="' + id + '"]');
+            if (!target)
+                return;
+
+            // if ref or figure, modify target to get expected element
+            if (id.indexOf('ref-') === 0)
+                target = target.querySelector('p');
+            else if (id.indexOf('fig:') === 0)
+                target = target.querySelector('figure');
+
+            return target;
+        }
+
+        // when prev/next arrow button is clicked
+        function onPrevNextClick(link, prevNextLink) {
+            if (link && prevNextLink)
+                goToElement(prevNextLink, window.innerHeight * 0.5);
+        }
+
+        // scroll to and focus element
+        function goToElement(element, offset) {
+            // expand accordion section if collapsed
+            expandElement(element);
+            const y =
+                getRectInView(element).top -
+                getRectInView(document.documentElement).top -
+                (offset || 0);
+            // trigger any function listening for "onscroll" event
+            window.dispatchEvent(new Event('scroll'));
+            window.scrollTo(0, y);
+            document.activeElement.blur();
+            element.focus();
+        }
+
+        // determine position to place tooltip based on link position in
+        // viewport and tooltip size
+        function positionTooltip(link, left, top) {
+            const tooltipElement = document.getElementById('tooltip');
+            if (!tooltipElement)
+                return;
+
+            // get convenient vars for position/dimensions of
+            // link/tooltip/page/view
+            link = getRectInPage(link);
+            const tooltip = getRectInPage(tooltipElement);
+            const view = getRectInPage();
+
+            // horizontal positioning
+            if (left)
+                // use explicit value
+                left = left;
+            else if (link.left + tooltip.width < view.right)
+                // fit tooltip to right of link
+                left = link.left;
+            else if (link.right - tooltip.width > view.left)
+                // fit tooltip to left of link
+                left = link.right - tooltip.width;
+            // center tooltip in view
+            else
+                left = (view.right - view.left) / 2 - tooltip.width / 2;
+
+            // vertical positioning
+            if (top)
+                // use explicit value
+                top = top;
+            else if (link.top - tooltip.height > view.top)
+                // fit tooltip above link
+                top = link.top - tooltip.height;
+            else if (link.bottom + tooltip.height < view.bottom)
+                // fit tooltip below link
+                top = link.bottom;
+            else {
+                // center tooltip in view
+                top = view.top + view.height / 2 - tooltip.height / 2;
+                // nudge off of link to left/right if possible
+                if (link.right + tooltip.width < view.right)
+                    left = link.right;
+                else if (link.left - tooltip.width > view.left)
+                    left = link.left - tooltip.width;
+            }
+
+            tooltipElement.style.left = left + 'px';
+            tooltipElement.style.top = top + 'px';
+        }
+
+        // get position/dimensions of element or viewport
+        function getRectInView(element) {
+            let rect = {};
+            rect.left = 0;
+            rect.top = 0;
+            rect.right = document.documentElement.clientWidth;
+            rect.bottom = document.documentElement.clientHeight;
+            let style = {};
+
+            if (element instanceof HTMLElement) {
+                rect = element.getBoundingClientRect();
+                style = window.getComputedStyle(element);
+            }
+
+            const margin = {};
+            margin.left = parseFloat(style.marginLeftWidth) || 0;
+            margin.top = parseFloat(style.marginTopWidth) || 0;
+            margin.right = parseFloat(style.marginRightWidth) || 0;
+            margin.bottom = parseFloat(style.marginBottomWidth) || 0;
+
+            const border = {};
+            border.left = parseFloat(style.borderLeftWidth) || 0;
+            border.top = parseFloat(style.borderTopWidth) || 0;
+            border.right = parseFloat(style.borderRightWidth) || 0;
+            border.bottom = parseFloat(style.borderBottomWidth) || 0;
+
+            const newRect = {};
+            newRect.left = rect.left + margin.left + border.left;
+            newRect.top = rect.top + margin.top + border.top;
+            newRect.right = rect.right + margin.right + border.right;
+            newRect.bottom = rect.bottom + margin.bottom + border.bottom;
+            newRect.width = newRect.right - newRect.left;
+            newRect.height = newRect.bottom - newRect.top;
+
+            return newRect;
+        }
+
+        // get position of element relative to page
+        function getRectInPage(element) {
+            const rect = getRectInView(element);
+            const body = getRectInView(document.body);
+
+            const newRect = {};
+            newRect.left = rect.left - body.left;
+            newRect.top = rect.top - body.top;
+            newRect.right = rect.right - body.left;
+            newRect.bottom = rect.bottom - body.top;
+            newRect.width = rect.width;
+            newRect.height = rect.height;
+
+            return newRect;
+        }
+
+        // (for interaction with accordion plugin)
+        // get closest element before specified element that matches query
+        function firstBefore(element, query) {
+            while (
+                element &&
+                element !== document.body &&
+                !element.matches(query)
+            )
+                element = element.previousElementSibling || element.parentNode;
+
+            return element;
+        }
+
+        // (for interaction with accordion plugin)
+        // check if element is part of collapsed heading
+        function isCollapsed(element) {
+            while (element && element !== document.body) {
+                if (element.dataset.collapsed === 'true')
+                    return true;
+                element = element.parentNode;
+            }
+            return false;
+        }
+
+        // (for interaction with accordion plugin)
+        // expand heading containing element if necesary
+        function expandElement(element) {
+            if (isCollapsed(element)) {
+                const heading = firstBefore(element, 'h2');
+                if (heading)
+                    heading.click();
+            }
+        }
+
+        // load options from url parameters
+        function loadOptions() {
+            const url = window.location.search;
+            const params = new URLSearchParams(url);
+            for (const optionName of Object.keys(options)) {
+                const paramName = pluginName + '-' + optionName;
+                const param = params.get(paramName);
+                if (param !== '' && param !== null)
+                    options[optionName] = param;
+            }
+        }
+        loadOptions();
+
+        // start script when document is finished loading
+        if (options.enabled === 'true')
+            window.addEventListener('load', start);
+    })();
+</script>
+
+<!-- caret left icon -->
+
+<template class="icon_caret_left">
+    <!-- modified from: https://fontawesome.com/icons/caret-left -->
+    <svg width="16" height="16" viewBox="0 0 192 512">
+        <path
+            fill="currentColor"
+            d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"
+        ></path>
+    </svg>
+</template>
+
+<!-- caret right icon -->
+
+<template class="icon_caret_right">
+    <!-- modified from: https://fontawesome.com/icons/caret-right -->
+    <svg width="16" height="16" viewBox="0 0 192 512">
+        <path
+            fill="currentColor"
+            d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
+        ></path>
+    </svg>
+</template>
+<!-- jump to first plugin -->
+
+<script>
+    (function() {
+        // /////////////////////////
+        // DESCRIPTION
+        // /////////////////////////
+
+        // This Manubot plugin adds a button next to each reference entry,
+        // figure, and table that jumps the page to the first occurrence of a
+        // link to that item in the manuscript.
+
+        // /////////////////////////
+        // OPTIONS
+        // /////////////////////////
+
+        // plugin name prefix for url parameters
+        const pluginName = 'jumpToFirst';
+
+        // default plugin options
+        const options = {
+            // whether to add buttons next to reference entries
+            references: 'true',
+            // whether to add buttons next to figures
+            figures: 'true',
+            // whether to add buttons next to tables
+            tables: 'true',
+            // whether plugin is on or not
+            enabled: 'true'
+        };
+
+        // change options above, or override with url parameter, eg:
+        // 'manuscript.html?pluginName-enabled=false'
+
+        // /////////////////////////
+        // SCRIPT
+        // /////////////////////////
+
+        // start script
+        function start() {
+            if (options.references !== 'false')
+                makeReferenceButtons();
+            if (options.figures !== 'false')
+                makeFigureButtons();
+            if (options.tables !== 'false')
+                makeTableButtons();
+        }
+
+        // when jump button clicked
+        function onButtonClick() {
+            const first = getFirstOccurrence(this.dataset.id);
+            if (!first)
+                return;
+
+            // update url hash so navigating "back" in history will return
+            // user to jump button
+            window.location.hash = this.dataset.id;
+            // scroll to link
+            window.setTimeout(function() {
+                goToElement(first, window.innerHeight * 0.5);
+            }, 0);
+        }
+
+        // get first occurence of link to item in document
+        function getFirstOccurrence(id) {
+            let query = 'a';
+            query += '[href="#' + id + '"]';
+            // exclude buttons, anchor links, toc links, etc
+            query +=
+                ':not(.button):not(.icon_button):not(.anchor):not(.toc_link)';
+            return document.querySelector(query);
+        }
+
+        // add button next to each reference entry
+        function makeReferenceButtons() {
+            const references = document.querySelectorAll('div[id^="ref-"]');
+            for (const reference of references) {
+                // get reference id and element to add button to
+                const id = reference.id;
+                const container = reference.firstElementChild;
+                const first = getFirstOccurrence(id);
+
+                // if can't find link to reference, ignore
+                if (!first)
+                    continue;
+
+                // make jump button
+                let button = document.createElement('button');
+                button.classList.add('icon_button', 'jump_arrow');
+                button.title =
+                    'Jump to the first occurence of this reference in the document';
+                button.innerHTML = document.querySelector(
+                    '.icon_angle_double_up'
+                ).innerHTML;
+                button.dataset.id = id;
+                button.dataset.ignore = 'true';
+                container.innerHTML = button.outerHTML + container.innerHTML;
+                button = container.firstElementChild;
+                button.addEventListener('click', onButtonClick);
+            }
+        }
+
+        // add button next to each figure
+        function makeFigureButtons() {
+            const figures = document.querySelectorAll('[id^="fig:"]');
+            for (const figure of figures) {
+                // get figure id and element to add button to
+                const id = figure.id;
+                const container = figure.querySelector('figcaption') || figure;
+                const first = getFirstOccurrence(id);
+
+                // if can't find link to figure, ignore
+                if (!first)
+                    continue;
+
+                // make jump button
+                const button = document.createElement('button');
+                button.classList.add('icon_button', 'jump_arrow');
+                button.title =
+                    'Jump to the first occurence of this figure in the document';
+                button.innerHTML = document.querySelector(
+                    '.icon_angle_double_up'
+                ).innerHTML;
+                button.dataset.id = id;
+                button.dataset.ignore = 'true';
+                container.insertBefore(button, container.firstElementChild);
+                button.addEventListener('click', onButtonClick);
+            }
+        }
+
+        // add button next to each figure
+        function makeTableButtons() {
+            const tables = document.querySelectorAll('[id^="tbl:"]');
+            for (const table of tables) {
+                // get ref id and element to add button to
+                const id = table.id;
+                const container = table.querySelector('caption') || table;
+                const first = getFirstOccurrence(id);
+
+                // if can't find link to table, ignore
+                if (!first)
+                    continue;
+
+                // make jump button
+                const button = document.createElement('button');
+                button.classList.add('icon_button', 'jump_arrow');
+                button.title =
+                    'Jump to the first occurence of this table in the document';
+                button.innerHTML = document.querySelector(
+                    '.icon_angle_double_up'
+                ).innerHTML;
+                button.dataset.id = id;
+                button.dataset.ignore = 'true';
+                container.insertBefore(button, container.firstElementChild);
+                button.addEventListener('click', onButtonClick);
+            }
+        }
+
+        // scroll to and focus element
+        function goToElement(element, offset) {
+            // expand accordion section if collapsed
+            expandElement(element);
+            const y =
+                getRectInView(element).top -
+                getRectInView(document.documentElement).top -
+                (offset || 0);
+            // trigger any function listening for "onscroll" event
+            window.dispatchEvent(new Event('scroll'));
+            window.scrollTo(0, y);
+            document.activeElement.blur();
+            element.focus();
+        }
+
+        // get position/dimensions of element or viewport
+        function getRectInView(element) {
+            let rect = {};
+            rect.left = 0;
+            rect.top = 0;
+            rect.right = document.documentElement.clientWidth;
+            rect.bottom = document.documentElement.clientHeight;
+            let style = {};
+
+            if (element instanceof HTMLElement) {
+                rect = element.getBoundingClientRect();
+                style = window.getComputedStyle(element);
+            }
+
+            const margin = {};
+            margin.left = parseFloat(style.marginLeftWidth) || 0;
+            margin.top = parseFloat(style.marginTopWidth) || 0;
+            margin.right = parseFloat(style.marginRightWidth) || 0;
+            margin.bottom = parseFloat(style.marginBottomWidth) || 0;
+
+            const border = {};
+            border.left = parseFloat(style.borderLeftWidth) || 0;
+            border.top = parseFloat(style.borderTopWidth) || 0;
+            border.right = parseFloat(style.borderRightWidth) || 0;
+            border.bottom = parseFloat(style.borderBottomWidth) || 0;
+
+            const newRect = {};
+            newRect.left = rect.left + margin.left + border.left;
+            newRect.top = rect.top + margin.top + border.top;
+            newRect.right = rect.right + margin.right + border.right;
+            newRect.bottom = rect.bottom + margin.bottom + border.bottom;
+            newRect.width = newRect.right - newRect.left;
+            newRect.height = newRect.bottom - newRect.top;
+
+            return newRect;
+        }
+
+        // get closest element before specified element that matches query
+        function firstBefore(element, query) {
+            while (
+                element &&
+                element !== document.body &&
+                !element.matches(query)
+            )
+                element = element.previousElementSibling || element.parentNode;
+
+            return element;
+        }
+
+        // check if element is part of collapsed heading
+        function isCollapsed(element) {
+            while (element && element !== document.body) {
+                if (element.dataset.collapsed === 'true')
+                    return true;
+                element = element.parentNode;
+            }
+            return false;
+        }
+
+        // (for interaction with accordion plugin)
+        // expand heading containing element if necesary
+        function expandElement(element) {
+            if (isCollapsed(element)) {
+                const heading = firstBefore(element, 'h2');
+                if (heading)
+                    heading.click();
+            }
+        }
+
+        // load options from url parameters
+        function loadOptions() {
+            const url = window.location.search;
+            const params = new URLSearchParams(url);
+            for (const optionName of Object.keys(options)) {
+                const paramName = pluginName + '-' + optionName;
+                const param = params.get(paramName);
+                if (param !== '' && param !== null)
+                    options[optionName] = param;
+            }
+        }
+        loadOptions();
+
+        // start script when document is finished loading
+        if (options.enabled === 'true')
+            window.addEventListener('load', start);
+    })();
+</script>
+
+<!-- angle double up icon -->
+
+<template class="icon_angle_double_up">
+    <!-- modified from: https://fontawesome.com/icons/angle-double-up -->
+    <svg width="16" height="16" viewBox="0 0 320 512">
+        <path
+            fill="currentColor"
+            d="M177 255.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 351.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 425.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1zm-34-192L7 199.7c-9.4 9.4-9.4 24.6 0 33.9l22.6 22.6c9.4 9.4 24.6 9.4 33.9 0l96.4-96.4 96.4 96.4c9.4 9.4 24.6 9.4 33.9 0l22.6-22.6c9.4-9.4 9.4-24.6 0-33.9l-136-136c-9.2-9.4-24.4-9.4-33.8 0z"
+        ></path>
+    </svg>
+</template>
+<!-- link highlight plugin -->
+
+<script>
+    (function() {
+        // /////////////////////////
+        // DESCRIPTION
+        // /////////////////////////
+
+        // This Manubot plugin makes it such that when a user hovers or
+        // focuses a link, other links that have the same target will be
+        // highlighted. It also makes it such that when clicking a link, the
+        // target of the link (eg reference, figure, table) is briefly
+        // highlighted.
+
+        // /////////////////////////
+        // OPTIONS
+        // /////////////////////////
+
+        // plugin name prefix for url parameters
+        const pluginName = 'linkHighlight';
+
+        // default plugin options
+        const options = {
+            // whether to also highlight links that go to external urls
+            externalLinks: 'false',
+            // whether user must click off to unhighlight instead of just
+            // un-hovering
+            clickUnhighlight: 'false',
+            // whether to also highlight links that are unique
+            highlightUnique: 'true',
+            // whether plugin is on or not
+            enabled: 'true'
+        };
+
+        // change options above, or override with url parameter, eg:
+        // 'manuscript.html?pluginName-enabled=false'
+
+        // /////////////////////////
+        // SCRIPT
+        // /////////////////////////
+
+        // start script
+        function start() {
+            const links = getLinks();
+            for (const link of links) {
+                // attach mouse and focus listeners to link
+                link.addEventListener('mouseenter', onLinkFocus);
+                link.addEventListener('focus', onLinkFocus);
+                link.addEventListener('mouseleave', onLinkUnhover);
+            }
+
+            // attach click and hash change listeners to window
+            window.addEventListener('click', onClick);
+            window.addEventListener('touchstart', onClick);
+            window.addEventListener('hashchange', onHashChange);
+
+            // run hash change on window load in case user has navigated
+            // directly to hash
+            onHashChange();
+        }
+
+        // when link is focused (tabbed to) or hovered
+        function onLinkFocus() {
+            highlight(this);
+        }
+
+        // when link is unhovered
+        function onLinkUnhover() {
+            if (options.clickUnhighlight !== 'true')
+                unhighlightAll();
+        }
+
+        // when the mouse is clicked anywhere in window
+        function onClick(event) {
+            unhighlightAll();
+        }
+
+        // when hash (eg manuscript.html#introduction) changes
+        function onHashChange() {
+            const target = getHashTarget();
+            if (target)
+                glowElement(target);
+        }
+
+        // get element that is target of link or url hash
+        function getHashTarget(link) {
+            const hash = link ? link.hash : window.location.hash;
+            const id = hash.slice(1);
+            let target = document.querySelector('[id="' + id + '"]');
+            if (!target)
+                return;
+
+            return target;
+        }
+
+        // start glow sequence on an element
+        function glowElement(element) {
+            const startGlow = function() {
+                onGlowEnd();
+                element.dataset.glow = 'true';
+                element.addEventListener('animationend', onGlowEnd);
+            };
+            const onGlowEnd = function() {
+                element.removeAttribute('data-glow');
+                element.removeEventListener('animationend', onGlowEnd);
+            };
+            startGlow();
+        }
+
+        // highlight link and all others with same target
+        function highlight(link) {
+            // force unhighlight all to start fresh
+            unhighlightAll();
+
+            // get links with same target
+            if (!link)
+                return;
+            const sameLinks = getSameLinks(link);
+
+            // if link unique and option is off, exit and don't highlight
+            if (sameLinks.length <= 1 && options.highlightUnique !== 'true')
+                return;
+
+            // highlight all same links, and "select" (special highlight) this
+            // one
+            for (const sameLink of sameLinks) {
+                if (sameLink === link)
+                    sameLink.setAttribute('data-selected', 'true');
+                else
+                    sameLink.setAttribute('data-highlighted', 'true');
+            }
+        }
+
+        // unhighlight all links
+        function unhighlightAll() {
+            const links = getLinks();
+            for (const link of links) {
+                link.setAttribute('data-selected', 'false');
+                link.setAttribute('data-highlighted', 'false');
+            }
+        }
+
+        // get links with same target
+        function getSameLinks(link) {
+            const results = [];
+            const links = getLinks();
+            for (const otherLink of links) {
+                if (
+                    otherLink.getAttribute('href') === link.getAttribute('href')
+                )
+                    results.push(otherLink);
+            }
+            return results;
+        }
+
+        // get all links of types we wish to handle
+        function getLinks() {
+            let query = 'a';
+            if (options.externalLinks !== 'true')
+                query += '[href^="#"]';
+            // exclude buttons, anchor links, toc links, etc
+            query +=
+                ':not(.button):not(.icon_button):not(.anchor):not(.toc_link)';
+            return document.querySelectorAll(query);
+        }
+
+        // load options from url parameters
+        function loadOptions() {
+            const url = window.location.search;
+            const params = new URLSearchParams(url);
+            for (const optionName of Object.keys(options)) {
+                const paramName = pluginName + '-' + optionName;
+                const param = params.get(paramName);
+                if (param !== '' && param !== null)
+                    options[optionName] = param;
+            }
+        }
+        loadOptions();
+
+        // start script when document is finished loading
+        if (options.enabled === 'true')
+            window.addEventListener('load', start);
+    })();
+</script>
+<!-- table of contents plugin -->
+
+<script>
+    (function() {
+        // /////////////////////////
+        // DESCRIPTION
+        // /////////////////////////
+
+        // This Manubot plugin provides a "table of contents" (toc) panel on
+        // the side of the document that allows the user to conveniently
+        // navigate between sections of the document.
+
+        // /////////////////////////
+        // OPTIONS
+        // /////////////////////////
+
+        // plugin name prefix for url parameters
+        const pluginName = 'tableOfContents';
+
+        // default plugin options
+        const options = {
+            // which types of elements to add links for, in
+            // "document.querySelector" format
+            typesQuery: 'h1, h2, h3',
+            // whether default behavior is to be closed ('false'), open
+            // ('true'), or only open when screen wide enough to fit panel
+            // ('auto'). note: still always starts closed when page loads.
+            open: 'auto',
+            // if list item is more than this many characters, text will be
+            // truncated
+            charLimit: '50',
+            // whether or not to show bullets next to each toc item
+            bullets: 'false',
+            // whether plugin is on or not
+            enabled: 'true'
+        };
+
+        // change options above, or override with url parameter, eg:
+        // 'manuscript.html?pluginName-enabled=false'
+
+        // /////////////////////////
+        // SCRIPT
+        // /////////////////////////
+
+        // start script
+        function start() {
+            // make toc panel and populate with entries (links to document
+            // sections)
+            const panel = makePanel();
+            if (!panel)
+                return;
+            makeEntries(panel);
+            document.body.insertBefore(panel, document.body.firstChild);
+
+            closePanel();
+
+            // attach click, scroll, and hash change listeners to window
+            window.addEventListener('click', onClick);
+            window.addEventListener('touchstart', onClick);
+            window.addEventListener('scroll', onScroll);
+            window.addEventListener('hashchange', onScroll);
+            window.addEventListener('keyup', onKeyUp);
+            onScroll();
+
+            // add class to push document body down out of way of toc button
+            document.body.classList.add('toc_body_nudge');
+        }
+
+        // determine if screen wide enough to fit toc panel
+        function isSmallScreen() {
+            // in default theme:
+            // 816px = 8.5in = width of "page" (<body>) element
+            // 260px = min width of toc panel (*2 for both sides of <body>)
+            return window.innerWidth < 816 + 260 * 2;
+        }
+
+        // open/close panel based on option and screen size
+        function openOrClosePanel() {
+            if (
+                options.open === 'true' ||
+                (options.open === 'auto' && !isSmallScreen())
+            )
+                openPanel();
+            else
+                closePanel();
+        }
+
+        // when mouse is clicked anywhere in window
+        function onClick() {
+            const panel = document.getElementById('toc_panel');
+            if (!panel)
+                return;
+
+            if (panel.dataset.open === 'true')
+                openOrClosePanel();
+        }
+
+        // when window is scrolled or hash changed
+        function onScroll() {
+            highlightViewed();
+        }
+
+        // when key pressed
+        function onKeyUp(event) {
+            if (!event || !event.key)
+                return;
+
+            // close on esc
+            if (event.key === 'Escape')
+                closePanel();
+        }
+
+        // find entry of currently viewed document section in toc and highlight
+        function highlightViewed() {
+            const firstId = getFirstInView(options.typesQuery);
+
+            // get toc entries (links), unhighlight all, then highlight viewed
+            const list = document.getElementById('toc_list');
+            if (!firstId || !list)
+                return;
+            const links = list.querySelectorAll('a');
+            for (const link of links)
+                link.dataset.viewing = 'false';
+            const link = list.querySelector('a[href="#' + firstId + '"]');
+            if (!link)
+                return;
+            link.dataset.viewing = 'true';
+        }
+
+        // get first or previous toc listed element in top half of view
+        function getFirstInView(query) {
+            // get all elements matching query and with id
+            const elements = document.querySelectorAll(query);
+            const elementsWithIds = [];
+            for (const element of elements) {
+                if (element.id)
+                    elementsWithIds.push(element);
+            }
+
+
+            // get first or previous element in top half of view
+            for (let i = 0; i < elementsWithIds.length; i++) {
+                const element = elementsWithIds[i];
+                const prevElement = elementsWithIds[Math.max(0, i - 1)];
+                if (element.getBoundingClientRect().top >= 0) {
+                    if (
+                        element.getBoundingClientRect().top <
+                        window.innerHeight / 2
+                    )
+                        return element.id;
+                    else
+                        return prevElement.id;
+                }
+            }
+        }
+
+        // make panel
+        function makePanel() {
+            // create panel
+            const panel = document.createElement('div');
+            panel.id = 'toc_panel';
+            if (options.bullets === 'true')
+                panel.dataset.bullets = 'true';
+
+            // create header
+            const header = document.createElement('div');
+            header.id = 'toc_header';
+
+            // create toc button
+            const button = document.createElement('button');
+            button.id = 'toc_button';
+            button.innerHTML = document.querySelector(
+                '.icon_th_list'
+            ).innerHTML;
+            button.classList.add('icon_button');
+
+            // create header text
+            const text = document.createElement('h3');
+            text.innerHTML = 'Table of Contents';
+
+            // create container for toc list
+            const list = document.createElement('div');
+            list.id = 'toc_list';
+
+            // attach click listeners
+            panel.addEventListener('click', onPanelClick);
+            header.addEventListener('click', onHeaderClick);
+            button.addEventListener('click', onButtonClick);
+
+            // attach elements
+            header.appendChild(button);
+            header.appendChild(text);
+            panel.appendChild(header);
+            panel.appendChild(list);
+
+            return panel;
+        }
+
+        // create toc entries (links) to each element of the specified types
+        function makeEntries(panel) {
+            const elements = document.querySelectorAll(options.typesQuery);
+            for (const element of elements) {
+                // do not add link if element doesn't have assigned id
+                if (!element.id)
+                    continue;
+
+                // create link/list item
+                const link = document.createElement('a');
+                link.classList.add('toc_link');
+                switch (element.tagName.toLowerCase()) {
+                    case 'h1':
+                        link.dataset.level = '1';
+                        break;
+                    case 'h2':
+                        link.dataset.level = '2';
+                        break;
+                    case 'h3':
+                        link.dataset.level = '3';
+                        break;
+                    case 'h4':
+                        link.dataset.level = '4';
+                        break;
+                }
+                link.title = element.innerText;
+                let text = element.innerText;
+                if (text.length > options.charLimit)
+                    text = text.slice(0, options.charLimit) + '...';
+                link.innerHTML = text;
+                link.href = '#' + element.id;
+                link.addEventListener('click', onLinkClick);
+
+                // attach link
+                panel.querySelector('#toc_list').appendChild(link);
+            }
+        }
+
+        // when panel is clicked
+        function onPanelClick(event) {
+            // stop click from propagating to window/document and closing panel
+            event.stopPropagation();
+        }
+
+        // when header itself is clicked
+        function onHeaderClick(event) {
+            togglePanel();
+        }
+
+        // when button is clicked
+        function onButtonClick(event) {
+            togglePanel();
+            // stop header underneath button from also being clicked
+            event.stopPropagation();
+        }
+
+        // when link is clicked
+        function onLinkClick() {
+            openOrClosePanel();
+        }
+
+        // open panel if closed, close if opened
+        function togglePanel() {
+            const panel = document.getElementById('toc_panel');
+            if (!panel)
+                return;
+
+            if (panel.dataset.open === 'true')
+                closePanel();
+            else
+                openPanel();
+        }
+
+        // open panel
+        function openPanel() {
+            const panel = document.getElementById('toc_panel');
+            if (panel)
+                panel.dataset.open = 'true';
+        }
+
+        // close panel
+        function closePanel() {
+            const panel = document.getElementById('toc_panel');
+            if (panel)
+                panel.dataset.open = 'false';
+        }
+
+        // load options from url parameters
+        function loadOptions() {
+            const url = window.location.search;
+            const params = new URLSearchParams(url);
+            for (const optionName of Object.keys(options)) {
+                const paramName = pluginName + '-' + optionName;
+                const param = params.get(paramName);
+                if (param !== '' && param !== null)
+                    options[optionName] = param;
+            }
+        }
+        loadOptions();
+
+        // start script when document is finished loading
+        if (options.enabled === 'true')
+            window.addEventListener('load', start);
+    })();
+</script>
+
+<!-- th list icon -->
+
+<template class="icon_th_list">
+    <!-- modified from: https://fontawesome.com/icons/th-list -->
+    <svg width="16" height="16" viewBox="0 0 512 512" tabindex="-1">
+        <path
+            fill="currentColor"
+            d="M96 96c0 26.51-21.49 48-48 48S0 122.51 0 96s21.49-48 48-48 48 21.49 48 48zM48 208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm0 160c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm96-236h352c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h352c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h352c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H144c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"
+            tabindex="-1"
+        ></path>
+    </svg>
+</template>
+<!-- lightbox plugin -->
+
+<script>
+    (function() {
+        // /////////////////////////
+        // DESCRIPTION
+        // /////////////////////////
+
+        // This Manubot plugin makes it such that when a user clicks on an
+        // image, the image fills the screen and the user can pan/drag/zoom
+        // the image and navigate between other images in the document.
+
+        // /////////////////////////
+        // OPTIONS
+        // /////////////////////////
+
+        // plugin name prefix for url parameters
+        const pluginName = 'lightbox';
+
+        // default plugin options
+        const options = {
+            // list of possible zoom/scale factors
+            zoomSteps:
+                '0.1, 0.25, 0.333333, 0.5, 0.666666, 0.75, 1,' +
+                '1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8',
+            // whether to fit image to view ('fit'), display at 100% and shrink
+            // if necessary ('shrink'), or always display at 100% ('100')
+            defaultZoom: 'fit',
+            // whether to zoom in/out toward center of view ('true') or mouse
+            // ('false')
+            centerZoom: 'false',
+            // whether plugin is on or not
+            enabled: 'true'
+        };
+
+        // change options above, or override with url parameter, eg:
+        // 'manuscript.html?pluginName-enabled=false'
+
+        // /////////////////////////
+        // SCRIPT
+        // /////////////////////////
+
+        // start script
+        function start() {
+            // run through each <img> element
+            const imgs = document.querySelectorAll('figure > img');
+            let count = 1;
+            for (const img of imgs) {
+                img.classList.add('lightbox_document_img');
+                img.dataset.number = count;
+                img.dataset.total = imgs.length;
+                img.addEventListener('click', openLightbox);
+                count++;
+            }
+
+            // attach mouse and key listeners to window
+            window.addEventListener('mousemove', onWindowMouseMove);
+            window.addEventListener('keyup', onKeyUp);
+        }
+
+        // when mouse is moved anywhere in window
+        function onWindowMouseMove(event) {
+            window.mouseX = event.clientX;
+            window.mouseY = event.clientY;
+        }
+
+        // when key pressed
+        function onKeyUp(event) {
+            if (!event || !event.key)
+                return;
+
+            switch (event.key) {
+                // trigger click of prev button
+                case 'ArrowLeft':
+                    const prevButton = document.getElementById(
+                        'lightbox_prev_button'
+                    );
+                    if (prevButton)
+                        prevButton.click();
+                    break;
+                // trigger click of next button
+                case 'ArrowRight':
+                    const nextButton = document.getElementById(
+                        'lightbox_next_button'
+                    );
+                    if (nextButton)
+                        nextButton.click();
+                    break;
+                // close on esc
+                case 'Escape':
+                    closeLightbox();
+                    break;
+            }
+        }
+
+        // open lightbox
+        function openLightbox() {
+            const lightbox = makeLightbox(this);
+            if (!lightbox)
+                return;
+
+            blurBody(lightbox);
+            document.body.appendChild(lightbox);
+        }
+
+        // make lightbox
+        function makeLightbox(img) {
+            // delete lightbox if it exists, start fresh
+            closeLightbox();
+
+            // create screen overlay containing lightbox
+            const overlay = document.createElement('div');
+            overlay.id = 'lightbox_overlay';
+
+            // create image info boxes
+            const numberInfo = document.createElement('div');
+            const zoomInfo = document.createElement('div');
+            numberInfo.id = 'lightbox_number_info';
+            zoomInfo.id = 'lightbox_zoom_info';
+
+            // create container for image
+            const imageContainer = document.createElement('div');
+            imageContainer.id = 'lightbox_image_container';
+            const lightboxImg = makeLightboxImg(
+                img,
+                imageContainer,
+                numberInfo,
+                zoomInfo
+            );
+            imageContainer.appendChild(lightboxImg);
+
+            // create bottom container for caption and navigation buttons
+            const bottomContainer = document.createElement('div');
+            bottomContainer.id = 'lightbox_bottom_container';
+            const caption = makeCaption(img);
+            const prevButton = makePrevButton(img);
+            const nextButton = makeNextButton(img);
+            bottomContainer.appendChild(prevButton);
+            bottomContainer.appendChild(caption);
+            bottomContainer.appendChild(nextButton);
+
+            // attach top middle and bottom to overlay
+            overlay.appendChild(numberInfo);
+            overlay.appendChild(zoomInfo);
+            overlay.appendChild(imageContainer);
+            overlay.appendChild(bottomContainer);
+
+            return overlay;
+        }
+
+        // make <img> object that is intuitively draggable and zoomable
+        function makeLightboxImg(
+            sourceImg,
+            container,
+            numberInfoBox,
+            zoomInfoBox
+        ) {
+            // create copy of source <img>
+            const img = sourceImg.cloneNode(true);
+            img.classList.remove('lightbox_document_img');
+            img.removeAttribute('id');
+            img.removeAttribute('width');
+            img.removeAttribute('height');
+            img.style.position = 'unset';
+            img.style.margin = '0';
+            img.style.padding = '0';
+            img.style.width = '';
+            img.style.height = '';
+            img.style.minWidth = '';
+            img.style.minHeight = '';
+            img.style.maxWidth = '';
+            img.style.maxHeight = '';
+            img.id = 'lightbox_img';
+
+            // build sorted list of unique zoomSteps, always including a 100%
+            let zoomSteps = [];
+            const optionsZooms = options.zoomSteps.split(/[^0-9.]/);
+            for (const optionZoom of optionsZooms) {
+                const newZoom = parseFloat(optionZoom);
+                if (newZoom && !zoomSteps.includes(newZoom))
+                    zoomSteps.push(newZoom);
+            }
+            if (!zoomSteps.includes(1))
+                zoomSteps.push(1);
+            zoomSteps = zoomSteps.sort(function sortNumber(a, b) {
+                return a - b;
+            });
+
+            // <img> object property variables
+            let zoom = 1;
+            let translateX = 0;
+            let translateY = 0;
+            let clickMouseX = undefined;
+            let clickMouseY = undefined;
+            let clickTranslateX = undefined;
+            let clickTranslateY = undefined;
+
+            updateNumberInfo();
+
+            // update image numbers displayed in info box
+            function updateNumberInfo() {
+                numberInfoBox.innerHTML =
+                    sourceImg.dataset.number + ' of ' + sourceImg.dataset.total;
+            }
+
+            // update zoom displayed in info box
+            function updateZoomInfo() {
+                let zoomInfo = zoom * 100;
+                if (!Number.isInteger(zoomInfo))
+                    zoomInfo = zoomInfo.toFixed(2);
+                zoomInfoBox.innerHTML = zoomInfo + '%';
+            }
+
+            // move to closest zoom step above current zoom
+            const zoomIn = function() {
+                for (const zoomStep of zoomSteps) {
+                    if (zoomStep > zoom) {
+                        zoom = zoomStep;
+                        break;
+                    }
+                }
+                updateTransform();
+            };
+
+            // move to closest zoom step above current zoom
+            const zoomOut = function() {
+                zoomSteps.reverse();
+                for (const zoomStep of zoomSteps) {
+                    if (zoomStep < zoom) {
+                        zoom = zoomStep;
+                        break;
+                    }
+                }
+                zoomSteps.reverse();
+
+                updateTransform();
+            };
+
+            // update display of <img> based on scale/translate properties
+            const updateTransform = function() {
+                // set transform
+                img.style.transform =
+                    'translate(' +
+                    (translateX || 0) +
+                    'px,' +
+                    (translateY || 0) +
+                    'px) scale(' +
+                    (zoom || 1) +
+                    ')';
+
+                // get new width/height after scale
+                const rect = img.getBoundingClientRect();
+                // limit translate
+                translateX = Math.max(translateX, -rect.width / 2);
+                translateX = Math.min(translateX, rect.width / 2);
+                translateY = Math.max(translateY, -rect.height / 2);
+                translateY = Math.min(translateY, rect.height / 2);
+
+                // set transform
+                img.style.transform =
+                    'translate(' +
+                    (translateX || 0) +
+                    'px,' +
+                    (translateY || 0) +
+                    'px) scale(' +
+                    (zoom || 1) +
+                    ')';
+
+                updateZoomInfo();
+            };
+
+            // fit <img> to container
+            const fit = function() {
+                // no x/y offset, 100% zoom by default
+                translateX = 0;
+                translateY = 0;
+                zoom = 1;
+
+                // widths of <img> and container
+                const imgWidth = img.naturalWidth;
+                const imgHeight = img.naturalHeight;
+                const containerWidth = parseFloat(
+                    window.getComputedStyle(container).width
+                );
+                const containerHeight = parseFloat(
+                    window.getComputedStyle(container).height
+                );
+
+                // how much zooming is needed to fit <img> to container
+                const xRatio = imgWidth / containerWidth;
+                const yRatio = imgHeight / containerHeight;
+                const maxRatio = Math.max(xRatio, yRatio);
+                const newZoom = 1 / maxRatio;
+
+                // fit <img> to container according to option
+                if (options.defaultZoom === 'shrink') {
+                    if (maxRatio > 1)
+                        zoom = newZoom;
+                } else if (options.defaultZoom === 'fit')
+                    zoom = newZoom;
+
+                updateTransform();
+            };
+
+            // when mouse wheel is rolled anywhere in container
+            const onContainerWheel = function(event) {
+                if (!event)
+                    return;
+
+                // let ctrl + mouse wheel to zoom behave as normal
+                if (event.ctrlKey)
+                    return;
+
+                // prevent normal scroll behavior
+                event.preventDefault();
+                event.stopPropagation();
+
+                // point around which to scale img
+                const viewRect = container.getBoundingClientRect();
+                const viewX = (viewRect.left + viewRect.right) / 2;
+                const viewY = (viewRect.top + viewRect.bottom) / 2;
+                const originX = options.centerZoom === 'true' ? viewX : mouseX;
+                const originY = options.centerZoom === 'true' ? viewY : mouseY;
+
+                // get point on image under origin
+                const oldRect = img.getBoundingClientRect();
+                const oldPercentX = (originX - oldRect.left) / oldRect.width;
+                const oldPercentY = (originY - oldRect.top) / oldRect.height;
+
+                // increment/decrement zoom
+                if (event.deltaY < 0)
+                    zoomIn();
+                if (event.deltaY > 0)
+                    zoomOut();
+
+                // get offset between previous image point and origin
+                const newRect = img.getBoundingClientRect();
+                const offsetX =
+                    originX - (newRect.left + newRect.width * oldPercentX);
+                const offsetY =
+                    originY - (newRect.top + newRect.height * oldPercentY);
+
+                // translate image to keep image point under origin
+                translateX += offsetX;
+                translateY += offsetY;
+
+                // perform translate
+                updateTransform();
+            };
+
+            // when container is clicked
+            function onContainerClick(event) {
+                // if container itself is target of click, and not other
+                // element above it
+                if (event.target === this)
+                    closeLightbox();
+            }
+
+            // when mouse button is pressed on image
+            const onImageMouseDown = function(event) {
+                // store original mouse position relative to image
+                clickMouseX = window.mouseX;
+                clickMouseY = window.mouseY;
+                clickTranslateX = translateX;
+                clickTranslateY = translateY;
+                event.stopPropagation();
+                event.preventDefault();
+            };
+
+            // when mouse button is released anywhere in window
+            const onWindowMouseUp = function(event) {
+                // reset original mouse position
+                clickMouseX = undefined;
+                clickMouseY = undefined;
+                clickTranslateX = undefined;
+                clickTranslateY = undefined;
+
+                // remove global listener if lightbox removed from document
+                if (!document.body.contains(container))
+                    window.removeEventListener('mouseup', onWindowMouseUp);
+            };
+
+            // when mouse is moved anywhere in window
+            const onWindowMouseMove = function(event) {
+                if (
+                    clickMouseX === undefined ||
+                    clickMouseY === undefined ||
+                    clickTranslateX === undefined ||
+                    clickTranslateY === undefined
+                )
+                    return;
+
+                // offset image based on original and current mouse position
+                translateX = clickTranslateX + window.mouseX - clickMouseX;
+                translateY = clickTranslateY + window.mouseY - clickMouseY;
+                updateTransform();
+                event.preventDefault();
+
+                // remove global listener if lightbox removed from document
+                if (!document.body.contains(container))
+                    window.removeEventListener('mousemove', onWindowMouseMove);
+            };
+
+            // when window is resized
+            const onWindowResize = function(event) {
+                fit();
+
+                // remove global listener if lightbox removed from document
+                if (!document.body.contains(container))
+                    window.removeEventListener('resize', onWindowResize);
+            };
+
+            // attach the necessary event listeners
+            img.addEventListener('dblclick', fit);
+            img.addEventListener('mousedown', onImageMouseDown);
+            container.addEventListener('wheel', onContainerWheel);
+            container.addEventListener('mousedown', onContainerClick);
+            container.addEventListener('touchstart', onContainerClick);
+            window.addEventListener('mouseup', onWindowMouseUp);
+            window.addEventListener('mousemove', onWindowMouseMove);
+            window.addEventListener('resize', onWindowResize);
+
+            // run fit() after lightbox atttached to document and <img> Loaded
+            // so needed container and img dimensions available
+            img.addEventListener('load', fit);
+
+            return img;
+        }
+
+        // make caption
+        function makeCaption(img) {
+            const caption = document.createElement('div');
+            caption.id = 'lightbox_caption';
+            const captionSource = img.nextElementSibling;
+            if (captionSource.tagName.toLowerCase() === 'figcaption') {
+                const captionCopy = makeCopy(captionSource);
+                caption.innerHTML = captionCopy.innerHTML;
+            }
+
+            caption.addEventListener('touchstart', function(event) {
+                event.stopPropagation();
+            });
+
+            return caption;
+        }
+
+        // make carbon copy of html dom element
+        function makeCopy(source) {
+            const sourceCopy = source.cloneNode(true);
+
+            // delete elements marked with ignore (eg anchor and jump buttons)
+            const deleteFromCopy = sourceCopy.querySelectorAll(
+                '[data-ignore="true"]'
+            );
+            for (const element of deleteFromCopy)
+                element.remove();
+
+            // delete certain element attributes
+            const attributes = [
+                'id',
+                'data-collapsed',
+                'data-selected',
+                'data-highlighted',
+                'data-glow'
+            ];
+            for (const attribute of attributes) {
+                sourceCopy.removeAttribute(attribute);
+                const elements = sourceCopy.querySelectorAll(
+                    '[' + attribute + ']'
+                );
+                for (const element of elements)
+                    element.removeAttribute(attribute);
+            }
+
+            return sourceCopy;
+        }
+
+        // make button to jump to previous image in document
+        function makePrevButton(img) {
+            const prevButton = document.createElement('button');
+            prevButton.id = 'lightbox_prev_button';
+            prevButton.title = 'Jump to the previous image in the document [←]';
+            prevButton.classList.add('icon_button', 'lightbox_button');
+            prevButton.innerHTML = document.querySelector(
+                '.icon_caret_left'
+            ).innerHTML;
+
+            // attach click listeners to button
+            prevButton.addEventListener('click', function() {
+                getPrevImg(img).click();
+            });
+
+            return prevButton;
+        }
+
+        // make button to jump to next image in document
+        function makeNextButton(img) {
+            const nextButton = document.createElement('button');
+            nextButton.id = 'lightbox_next_button';
+            nextButton.title = 'Jump to the next image in the document [→]';
+            nextButton.classList.add('icon_button', 'lightbox_button');
+            nextButton.innerHTML = document.querySelector(
+                '.icon_caret_right'
+            ).innerHTML;
+
+            // attach click listeners to button
+            nextButton.addEventListener('click', function() {
+                getNextImg(img).click();
+            });
+
+            return nextButton;
+        }
+
+        // get previous image in document
+        function getPrevImg(img) {
+            const imgs = document.querySelectorAll('.lightbox_document_img');
+
+            // find index of provided img
+            let index;
+            for (index = 0; index < imgs.length; index++) {
+                if (imgs[index] === img)
+                    break;
+            }
+
+
+            // wrap index to other side if < 1
+            if (index - 1 >= 0)
+                index--;
+            else
+                index = imgs.length - 1;
+            return imgs[index];
+        }
+
+        // get next image in document
+        function getNextImg(img) {
+            const imgs = document.querySelectorAll('.lightbox_document_img');
+
+            // find index of provided img
+            let index;
+            for (index = 0; index < imgs.length; index++) {
+                if (imgs[index] === img)
+                    break;
+            }
+
+
+            // wrap index to other side if > total
+            if (index + 1 <= imgs.length - 1)
+                index++;
+            else
+                index = 0;
+            return imgs[index];
+        }
+
+        // close lightbox
+        function closeLightbox() {
+            focusBody();
+
+            const lightbox = document.getElementById('lightbox_overlay');
+            if (lightbox)
+                lightbox.remove();
+        }
+
+        // make all elements behind lightbox non-focusable
+        function blurBody(overlay) {
+            const all = document.querySelectorAll('*');
+            for (const element of all)
+                element.tabIndex = -1;
+            document.body.classList.add('body_no_scroll');
+        }
+
+        // make all elements focusable again
+        function focusBody() {
+            const all = document.querySelectorAll('*');
+            for (const element of all)
+                element.removeAttribute('tabIndex');
+            document.body.classList.remove('body_no_scroll');
+        }
+
+        // load options from url parameters
+        function loadOptions() {
+            const url = window.location.search;
+            const params = new URLSearchParams(url);
+            for (const optionName of Object.keys(options)) {
+                const paramName = pluginName + '-' + optionName;
+                const param = params.get(paramName);
+                if (param !== '' && param !== null)
+                    options[optionName] = param;
+            }
+        }
+        loadOptions();
+
+        // start script when document is finished loading
+        if (options.enabled === 'true')
+            window.addEventListener('load', start);
+    })();
+</script>
+
+<!-- caret left icon -->
+
+<template class="icon_caret_left">
+    <!-- modified from: https://fontawesome.com/icons/caret-left -->
+    <svg width="16" height="16" viewBox="0 0 192 512">
+        <path
+            fill="currentColor"
+            d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"
+        ></path>
+    </svg>
+</template>
+
+<!-- caret right icon -->
+
+<template class="icon_caret_right">
+    <!-- modified from: https://fontawesome.com/icons/caret-right -->
+    <svg width="16" height="16" viewBox="0 0 192 512">
+        <path
+            fill="currentColor"
+            d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
+        ></path>
+    </svg>
+</template>
+<!-- attributes plugin -->
+
+<script>
+    (function() {
+        // /////////////////////////
+        // DESCRIPTION
+        // /////////////////////////
+
+        // This Manubot plugin allows arbitrary HTML attributes to be attached
+        // to (almost) any element. Place an HTML comment inside or next to the
+        // desired element in the format <!-- $attribute="value" -->
+
+        // /////////////////////////
+        // OPTIONS
+        // /////////////////////////
+
+        // plugin name prefix for url parameters
+        const pluginName = 'attributes';
+
+        // default plugin options
+        const options = {
+            // whether plugin is on or not
+            enabled: 'true'
+        };
+
+        // change options above, or override with url parameter, eg:
+        // 'manuscript.html?pluginName-enabled=false'
+
+        // /////////////////////////
+        // SCRIPT
+        // /////////////////////////
+
+        // start script
+        function start() {
+            // get list of comments in document
+            const comments = findComments();
+
+            for(const comment of comments)
+                if (comment.parentElement)
+                    addAttributes(
+                        comment.parentElement,
+                        comment.nodeValue.trim()
+                    );
+        }
+
+        // add html attributes to specified element based on string of 
+        // html attributes and values
+        function addAttributes(element, text) {
+            // regex's for finding attribute/value pairs in the format of
+            // attribute="value" or attribute='value
+            const regex2 = /\$([a-zA-Z\-]+)?=\"(.+?)\"/;
+            const regex1 = /\$([a-zA-Z\-]+)?=\'(.+?)\'/;
+
+            // loop through attribute/value pairs
+            let match;
+            while(match = text.match(regex2) || text.match(regex1)) {
+                // get attribute and value from regex capture groups
+                let attribute = match[1];
+                let value = match[2];
+
+                // remove from string
+                text = text.substring(match.index + match[0].length);
+
+                if (!attribute || !value)
+                    break;
+
+                // set attribute of parent element
+                try {
+                    element.setAttribute(attribute, value);
+                } catch(error) {
+                    console.log(error);
+                }
+
+                // special case for colspan
+                if (attribute === 'colspan')
+                    removeTableCells(element, value);
+            }
+        }
+
+        // get list of comment elements in document
+        function findComments() {
+            const comments = [];
+
+            // iterate over comment nodes in document
+            function acceptNode(node) {
+                return NodeFilter.FILTER_ACCEPT;
+            }
+            const iterator = document.createNodeIterator(
+                document.body,
+                NodeFilter.SHOW_COMMENT,
+                acceptNode
+            );
+            let node;
+            while(node = iterator.nextNode())
+                comments.push(node);
+
+            return comments;
+        }
+
+        // remove certain number of cells after specified cell
+        function removeTableCells(cell, number) {
+            number = parseInt(number);
+            if (!number)
+                return;
+
+            // remove elements
+            for(; number > 1; number--) {
+                if (cell.nextElementSibling)
+                    cell.nextElementSibling.remove();
+            }
+        }
+
+        // load options from url parameters
+        function loadOptions() {
+            const url = window.location.search;
+            const params = new URLSearchParams(url);
+            for (const optionName of Object.keys(options)) {
+                const paramName = pluginName + '-' + optionName;
+                const param = params.get(paramName);
+                if (param !== '' && param !== null)
+                    options[optionName] = param;
+            }
+        }
+        loadOptions();
+
+        // start script when document is finished loading
+        if (options.enabled === 'true')
+            window.addEventListener('load', start);
+    })();
+</script>
+<!-- math plugin configuration -->
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        "CommonHTML": { linebreaks: { automatic: true } },
+        "HTML-CSS": { linebreaks: { automatic: true } },
+        "SVG": { linebreaks: { automatic: true } },
+        "fast-preview": { disabled: true }
+    });
+</script>
+
+<!-- math plugin -->
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'>
+    // /////////////////////////
+    // DESCRIPTION
+    // /////////////////////////
+
+    // This third-party plugin 'MathJax' allows the proper rendering of
+    // math/equations written in LaTeX.
+
+    // https://www.mathjax.org/
+</script>
+<!-- annotations plugin configuration -->
+
+<script>
+    window.hypothesisConfig = function() {
+        return {
+            branding: {
+                accentColor: '#2196f3',
+                appBackgroundColor: '#f8f8f8',
+                ctaBackgroundColor: '#f8f8f8',
+                ctaTextColor: '#000000',
+                selectionFontFamily: 'Open Sans, Helvetica, sans serif',
+                annotationFontFamily: 'Open Sans, Helvetica, sans serif'
+            }
+        };
+    };
+</script>
+
+<!-- annotations plugin -->
+
+<script src='https://hypothes.is/embed.js'>
+    // /////////////////////////
+    // DESCRIPTION
+    // /////////////////////////
+
+    // This third-party plugin 'Hypothesis' allows public annotation of the
+    // manuscript.
+
+    // https://web.hypothes.is/
+</script>
+<!-- analytics plugin -->
+
+<!-- copy and paste code from Google Analytics or similar service here -->
+</body>
+</html>
