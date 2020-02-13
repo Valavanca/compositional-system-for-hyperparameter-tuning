@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-import pg
+import pygmo as pg
 import numpy as np
 from sklearn.base import BaseEstimator
 
