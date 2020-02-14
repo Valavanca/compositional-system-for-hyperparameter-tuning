@@ -275,13 +275,13 @@ def _predict(estimator, X, y=None, split_y=False, message_clsname='', idx=None, 
 class PredictTutor(BaseEstimator):
     """ Agregate and sort best preidctions from multiple models."""
 
-    def __init__(self, search_space, portfolio: List[BaseEstimator] = None):
+    def __init__(self, bounds, portfolio: List[BaseEstimator] = None):
         """        
         Args:
-            search_space (Tuple): Tuple with lower and higher bound for each feature in objective space.
-            portfolio (List[BaseEstimator], optional): a list of hypotheses to be verified. Defaults to None.
-        """        
-        self.__sp = search_space
+            bounds (Tuple): Tuple with lower and higher bound for each feature in objective space.
+            portfolio (List[BaseEstimator], optional): a list of surrogates to be verified. Defaults to None.
+        """
+        self.__bounds = bounds
         self.__init_dataset: Tuple[list, list] = None
         self.__prf_models = portfolio
 
@@ -293,13 +293,13 @@ class PredictTutor(BaseEstimator):
                        'neg_mean_absolute_error']
 
         self.cv_result = None  # resullts for each train/test folds
-        self.cv_distill = None  # models that pass initial validation
-        self.solution = None  # predict solutions from valid models
+        self.surr_valid = pd.DataFrame()  # surrogates that pass cv validation and aggregation
+        self._solutions = None  # predict solutions from valid surrogates
         self._is_single: bool = False
 
     @property
     def search_space(self):
-        return self.__sp
+        return self.__bounds
 
     @property
     def dataset(self):
@@ -309,88 +309,135 @@ class PredictTutor(BaseEstimator):
     def models(self):
         return self.__prf_models
 
+    @property
+    def solution(self):
+        return self._solutions
+
     def get_name(self):
         names = [type(model).__name__.lower() for model in self.__prf_models]
         return "Prediction Tutor for {}".format(names)
 
-    def fit(self, X, y=None, **fit_params):
+    def fit(self, X, y, **cv_params):
         """ Fit new dataset to class instance.
             Split the dataset to train and test if there are enough experiments.
         """
-        check_X_y(X, y, multi_output=True)
-        self._is_single = y.shape[1] == 1
-        self.__init_dataset = (X, y)
-        self._train = None
-        self._test = None
+        if X is None or y is None:
+            return None
 
-        # There is no validation for set smaller than 8. 25%>2
-        if len(X) > 8:
-            self.__split_dataset(X, y)
+        # There is no validation for set smaller than 8.
+        # 25% of the data set is less than 2 test values for proper scoring.
+        if len(X) >= 8:
+            # rewrite the previous dataset
+            self._train = None
+            self._test = None
+            self._solutions = None
+            self.surr_valid = pd.DataFrame()
+            self.cv_result = None
 
-    def __split_dataset(self, X, y) -> None:
-        print("Split dataset. Validation is {}%".format(TRAIN_TEST_SPLIT))
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=TRAIN_TEST_SPLIT)
-        self._train = (X_train, y_train)
-        self._test = (X_test, y_test)
+            check_X_y(X, y, multi_output=True)
+            self._is_single = y.shape[1] == 1
+            self.__init_dataset = (X, y)
 
-    def cross_validate(self, X, y, **cv_params) -> bool:
-        """ Select models that can descreibe valid hipotesis for X, y """
+            print("Split dataset. Validation set is {}%".format(TRAIN_TEST_SPLIT))
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=TRAIN_TEST_SPLIT)
+            self._train = (X_train, y_train)
+            self._test = (X_test, y_test)
+        else:
+            print("Available {}. At least 8 samples are required".format(len(X)))
+            return None
+
+        # --- STAGE 1: Cross-validation surrogates
+        cv_dataset = self._train or self.__init_dataset
+        cv_score = self.cross_validate(*cv_dataset, **cv_params)
+        self.cv_result = self.cv_result_to_df(cv_score)
+
+        # --- STAGE 2: Trashholding and aggregation.
+        #              Refit valid models on train dataset
+        self.surr_valid = self._results_aggregation(self.cv_result)
+        if not self.surr_valid.empty:
+            print("{} surrogate(s) valid".format(len(self.surr_valid)))
+            self.surr_valid['estimator'].apply(
+                lambda estimator: estimator.fit(*self._train))
+
+        # --- STAGE 3: Score the aggregated surrogates with a test set.
+        #              Sorting tham based on results
+        self._solutions = self.surr_score(*self._test)
+
+        # --- STAGE 4: Generate solution from each valid hypothesis.
+        #              Each valid hypothesis produce own solution(s).
+        #              A Solution is validated based on a score metrics from stage 3.
+        #              By default, a final prediction is a first-class prediction based on this ranging.
+        #              If prediction have multiple solutions - By default, we take `n` solutions randomly from them.
+
+        self._solutions = self.surr_valid.copy()
+        # make a solver(s) on fitted surrogates (hypothesis)
+        self._solutions['solver'] = self._solutions['estimator'].apply(
+            self._construct_solver)
+        # prediction vector(s) from solver(s)
+        self._solutions['prediction'] = self._solutions['solver'].apply(
+            lambda solver: solver.predict())
+        # prediction vector(s) score. Hypervolume or min objective. Depends on solver. Less is better
+        self._solutions['prediction_score'] = self._solutions['solver'].apply(
+            lambda solver: solver.score())
+
+    def cross_validate(self, X, y, **cv_params) -> dict:
+        """ Select models that can describe a valid hypothesis for X, y """
+
+        # -- 1. check parameters for cross-validation
         check_X_y(X, y, multi_output=True)
         if 'scoring' not in cv_params:
             cv_params['scoring'] = self._score
         cv_params['return_estimator'] = True
-
-        self.fit(X, y)  # spliting dataset
-        cv_dataset = self._train or self.__init_dataset  # dataset for cross-validation
-
         # The result of cross-validation cannot be guaranteed for a smaller data set
-        if len(X) < 8:
-            return False
+        if len(X) < 4:
+            return None
 
-        self._check_models_candidate()
+        # -- 2. check surrogates
+        self._check_surr_candidate()
+
+        # -- 3. cross-validation a surrogates as composition
         cv_score = self._candidates_uni.cross_validate(
-            *cv_dataset, **cv_params)
-        self.cv_result = self.cv_result_to_df(cv_score)
-        self.cv_distill = self._distillation(self.cv_result)
+            X, y, **cv_params)
 
-        if not self.cv_distill.empty:
-            print("{} model(s) valid".format(len(self.cv_distill)))
-            self.cv_distill['estimator'].apply(
-                lambda estimator: estimator.fit(*cv_dataset))
+        return cv_score
 
-        return not self.cv_distill.empty
-
-    def _check_models_candidate(self) -> None:
+    def _check_surr_candidate(self) -> None:
         if not self.__prf_models:
             raise ValueError(
                 f"{self.__prf_models}: Models portfolio is empty.")
         if self._candidates_uni is None:
+            #!  What if dynamically change surrogates?
             self._candidates_uni = ModelsUnion(models=self.__prf_models)
 
     def _thresholding(self, cv_result: pd.DataFrame) -> pd.DataFrame:
         # Reise Error in case of custom score metrics
-        if len(self.__init_dataset[0]) < 50:
-            q = '(test_r2 > 0.93) & (test_neg_mean_absolute_error > -2.3) & (test_explained_variance > 0.6)'
+        if len(self.__init_dataset[0]) < 12:
+            q = '(test_r2 > 0.97) & (test_neg_mean_absolute_error > -2.3) & (test_explained_variance > 0.6)'
         else:
-            q = '(test_r2 > 0.6) & (test_neg_mean_absolute_error > -2.3) & (test_explained_variance > 0.6)'
+            q = '(test_r2 > 0.75) & (test_neg_mean_absolute_error > -2.3) & (test_explained_variance > 0.6)'
         return cv_result.query(q)
 
-    def _distillation(self, cv_result) -> pd.DataFrame:
-        # Clean/clone all models
+    def _results_aggregation(self, cv_result: pd.DataFrame) -> pd.DataFrame:
+
+        # -- 1. Threshold validation the surrogates based on cv results
         models_df_score = self._thresholding(cv_result)
         if models_df_score.empty:
             return models_df_score
 
+        # Constructs a new surrogates with the same parameters but that has not been fit on any data
         models_df_score['estimator'] = models_df_score['estimator'].apply(
             clone)
 
-        # Split models to full and partly label space coverage
+        # Type 'Multi-objective': Surrogates that coverage all objective space
         all_y_models = models_df_score.loc[models_df_score.y_index == 'all'].drop_duplicates(
             subset='id')
+
+        # -- 2. Aggregation
+        # Type 'Single-objective': Surrogates that describe only 1 dimension from objective space
         splited_y_models = models_df_score.loc[models_df_score.y_index != 'all']
 
-        # Make groups for each partly labeled dimension
+        # Make groups for each objective dimension. Sorting based on score
         grp = []
         y_names = []
         for name, group_df in splited_y_models.groupby(['y_index']):
@@ -400,24 +447,55 @@ class PredictTutor(BaseEstimator):
             grp.append(group_df_selection.reset_index(drop=True))
             y_names.append("meta_{}".format(name))
 
-        # If not enough models for combination
+        # Absent valid surrogates in some dimension: we cannot restore the full object space
+        # - return 'Multi-objective' type
         if len(self.__init_dataset[1].columns) != len(grp):
             return all_y_models
 
-        # Concat groups & add missing models
-        self._temp_grp = grp
+        # There at least 1 valid surrogate for each objective dimension.
+        # - We can combine groups to at least 1 valid hypothesis on objective space
+        # - If there are multiple valid surrogates for some objective hypothesis we can duplicate
+        #   other surrogates in other objective dimensions to full fill multiple hypotheses
+        # - Compositional 'Multi-objective' surrogate(s) based on 'Single-objective'
         concat_y_groups = pd.concat(grp, axis=1, keys=y_names).fillna(
             method='backfill').fillna(method='ffill')
 
-        # Make list from each cell & sum all dataframes
+        # Make list from each cell & sum all dataframes in compositional 'Multi-objective' surrogates
         grp = [concat_y_groups[n].applymap(lambda x: [x]) for n in y_names]
         grp = sum(grp[1:], grp[0])
         grp['estimator'] = grp['estimator'].apply(lambda models: ModelsUnion(models=clone(models),
                                                                              split_y=True))
         grp['id'] = grp['estimator'].apply(id)
 
-        # Combine & clean
+        # Combine 'Multi-objective' and compositional 'Multi-objective' surrogates
         return pd.concat([all_y_models, grp], ignore_index=True)
+
+    def surr_score(self, X=None, y=None) -> pd.DataFrame:
+        """ Score a distill models on X, y test set and score on
+        not dominated points from this test set """
+        if X is None or y is None:
+            raise ValueError("X and y are None")
+
+        if self.surr_valid is not None:
+            # Add columns with score metrics to dataframe with valid surrogates
+            self.surr_valid['val_score'] = self.surr_valid['estimator'].apply(
+                lambda estimator: estimator.score(*self._test))
+
+            # none-dominated examples from test set
+            ndf, dl, dc, ndr = pg.fast_non_dominated_sorting(y.values)
+            y_ndf_test = y.iloc[ndf[0], :]
+            X_ndf_test = X.iloc[ndf[0], :]
+            self.surr_valid['ndf_val_score'] = self.surr_valid['estimator'].apply(
+                lambda estimator: estimator.score(X_ndf_test, y_ndf_test))
+
+            # Sorting the solution(s). Score on the non dominated solution is more important
+            self.surr_valid.sort_values(
+                by=['ndf_val_score', 'val_score'], inplace=True, ascending=False)
+
+            return self.surr_valid.copy()
+        else:
+            raise ValueError(
+                "There is no valid surrogate model. {}".format(self.surr_valid))
 
     @staticmethod
     def cv_result_to_df(cv_score):
@@ -437,6 +515,47 @@ class PredictTutor(BaseEstimator):
         validate(cv_score)
         return pd.concat(res)
 
+    def _construct_solver(self, estimator):
+        """ Combine estimator(s) with solver"""
+        if isinstance(estimator, ModelsUnion):
+            models = estimator.models
+        else:
+            models = [estimator]
+
+        solver = None
+        if self._is_single is True:
+            solver = Gaco(bounds=self.__bounds).fit(models)
+        else:
+            solver = Nsga2(bounds=self.__bounds).fit(models)
+        return solver
+
+    def predict(self, X=None, y=None, n=1, **predict_params):
+        """ Prediction from the best solution.
+        Solution get from solver, apply to the hypothesis """
+
+        # --- STAGE 5: Manage predictions from valid surrogates.
+        #              - Return predictions from first(best) surrogate model
+
+        if self.surr_valid.empty:
+            # -- 1. If surrogates not valid use sampling plan
+            pass
+        else:
+            # -- 2. Error if surrogates valid but there is no solution
+            if self._solutions is None:
+                raise AttributeError(
+                    " A solution does not exist: {} \n\
+                    Сheck that the surrogate models are fit appropriately".format(self._solutions))
+            else:
+                # -- 3. There is solution from valid surogates. Return `n` predictions 
+                if n is -1:
+                    return self._solutions['prediction'].values[0]
+                else:
+                    S = self._solutions['prediction'].values[0]
+                    n = n if S.shape[0] > n else S.shape[0]
+                    return S[np.random.choice(S.shape[0], n, replace=False), :]
+                
+        return self._random(n=n)
+
     def next_config(self, X, y, n=1, **cv_params):
         if X is not None and y is not None:
             is_valid = self.cross_validate(X, y, **cv_params)
@@ -448,99 +567,39 @@ class PredictTutor(BaseEstimator):
         else:
             return self._sobol(n=n)
 
-    def predict(self, X=None, n=None, **predict_params):
-        """ Prediction from the best solution.
-        Solution get from solver, apply to the hypothesis """
-        if n is None:
-            return self.solution['prediction'].values[0]
-        else:
-            S = self.solution['prediction'].values[0]
-            n = n if S.shape[0] > n else S.shape[0]
-            return S[np.random.choice(S.shape[0], n, replace=False), :]
-
     def predict_proba(self, X=None, **predict_params):
         """ Return all metrics of the best solution """
-        if self.solution is None:
-            self._generate_solution()
-        return self.solution
+        if self._solutions is None:
+            raise AttributeError(
+                " A solution does not exist: {} \n\
+                Сheck that the surrogate models are fit appropriately".format(self._solutions))
+        else:
+            return self._solutions
 
     def _sobol(self, n=1):
         """ Pseudorandom sampling from the search space """
         available = 0 if self.__init_dataset is None else len(
             self.__init_dataset[0])
         # print('available', available)
-        sbl = sobol_sample(self.__sp, n=available+n)[available:]
+        sbl = sobol_sample(self.__bounds, n=available+n)[available:]
         return sbl
 
     def _random(self, n=1):
         """ Random sampling from the search space """
-        return [[uniform(dim[0], dim[1]) for dim in self.__sp] for _ in range(n)]
-
-    def _generate_solution(self):
-        """ Generate solution from surrogat models by solver(s)"""
-        # get score from distill models
-        self.distill_score()
-        self.solution = self.cv_distill
-        # make a solver on the fitted models(hypothesis)
-        self.solution['solver'] = self.solution['estimator'].apply(
-            self._construct_solver)
-        # solution feature verctor(s) from solver
-        self.solution['prediction'] = self.solution['solver'].apply(
-            lambda solver: solver.predict())
-        # solver score. Hypervolume or min objective
-        self.solution['solver score'] = self.solution['solver'].apply(
-            lambda solver: solver.score())
-
-        # Sorting the solution(s). Score on the non dominated solution is more important
-        self.solution.sort_values(
-            by=['ndf_val_score', 'val_score'], inplace=True, ascending=False)
-        return self.solution
-
-    def distill_score(self, X=None, y=None):
-        """Score a distill models on X, y test set and score on
-        not dominated points from this test set"""
-        if X is None and y is None:
-            print("Inner score on a validation set")
-            X, y = self._test or self.__init_dataset
-
-        if self.cv_distill is not None:
-            self.cv_distill['val_score'] = self.cv_distill['estimator'].apply(
-                lambda estimator: estimator.score(*self._test))
-
-            ndf, dl, dc, ndr = pg.fast_non_dominated_sorting(y.values)
-            y_ndf_test = y.iloc[ndf[0], :]
-            X_ndf_test = X.iloc[ndf[0], :]
-            self.cv_distill['ndf_val_score'] = self.cv_distill['estimator'].apply(
-                lambda estimator: estimator.score(X_ndf_test, y_ndf_test))
-
-        return self.cv_distill[['model name', 'val_score', 'ndf_val_score']]
-
-    def _construct_solver(self, estimator):
-        """ Combine estimator with solver"""
-        if isinstance(estimator, ModelsUnion):
-            models = estimator.models
-        else:
-            models = [estimator]
-
-        estimator = None
-        if self._is_single is True:
-            estimator = Gaco(bounds=self.__sp).fit(models)
-        else:
-            estimator = Nsga2(bounds=self.__sp).fit(models)
-        return estimator
+        return [[uniform(dim[0], dim[1]) for dim in self.__bounds] for _ in range(n)]
 
 
 def sobol_sample(bounds, n=1):
     """Sobol sampling
-    
+
     Args:
         bounds (Tuple):  Tuple with lower and higher bound for each feature in objective space.
         Example: (([0., 0.]), ([2., 4.]))
         n (int, optional): Sample count. Defaults to 1.
-    
+
     Returns:
         List: Point from search space
-    """    
+    """
     n_dim = len(bounds[0])
     sb = sobol_seq.i4_sobol_generate(n_dim, n, 1)
     diff = [r-l for l, r in zip(*bounds)]
