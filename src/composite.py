@@ -298,7 +298,7 @@ class PredictTutor(BaseEstimator):
         self._is_single: bool = False
 
     @property
-    def search_space(self):
+    def bounds(self):
         return self.__bounds
 
     @property
@@ -324,6 +324,8 @@ class PredictTutor(BaseEstimator):
         if X is None or y is None:
             return None
 
+        self.__init_dataset = (X, y)
+
         # There is no validation for set smaller than 8.
         # 25% of the data set is less than 2 test values for proper scoring.
         if len(X) >= 8:
@@ -336,7 +338,6 @@ class PredictTutor(BaseEstimator):
 
             check_X_y(X, y, multi_output=True)
             self._is_single = y.shape[1] == 1
-            self.__init_dataset = (X, y)
 
             print("Split dataset. Validation set is {}%".format(TRAIN_TEST_SPLIT))
             X_train, X_test, y_train, y_test = train_test_split(
@@ -553,8 +554,8 @@ class PredictTutor(BaseEstimator):
                     S = self._solutions['prediction'].values[0]
                     n = n if S.shape[0] > n else S.shape[0]
                     return S[np.random.choice(S.shape[0], n, replace=False), :]
-                
-        return self._random(n=n)
+        print("Prediction from sampling plan")     
+        return self._sobol(n=n)
 
     def next_config(self, X, y, n=1, **cv_params):
         if X is not None and y is not None:
@@ -570,9 +571,12 @@ class PredictTutor(BaseEstimator):
     def predict_proba(self, X=None, **predict_params):
         """ Return all metrics of the best solution """
         if self._solutions is None:
-            raise AttributeError(
-                " A solution does not exist: {} \n\
+            print(" A solution does not exist: {} \n\
                 Сheck that the surrogate models are fit appropriately".format(self._solutions))
+            return None
+            # raise AttributeError(
+            #     " A solution does not exist: {} \n\
+            #       Сheck that the surrogate models are fit appropriately".format(self._solutions))
         else:
             return self._solutions
 
@@ -580,17 +584,24 @@ class PredictTutor(BaseEstimator):
         """ Pseudorandom sampling from the search space """
         available = 0 if self.__init_dataset is None else len(
             self.__init_dataset[0])
-        # print('available', available)
+        sbl = sobol_sample(self.__bounds, n=available+n)[available:]
+        return sbl
+
+    def _latin(self, n=1):
+        """ Pseudorandom sampling from the search space """
+        available = 0 if self.__init_dataset is None else len(
+            self.__init_dataset[0])
         sbl = sobol_sample(self.__bounds, n=available+n)[available:]
         return sbl
 
     def _random(self, n=1):
         """ Random sampling from the search space """
-        return [[uniform(dim[0], dim[1]) for dim in self.__bounds] for _ in range(n)]
+        v_uniform = np.vectorize(uniform)
+        return [v_uniform(*self.__bounds) for _ in range(n)]
 
 
 def sobol_sample(bounds, n=1):
-    """Sobol sampling
+    """ Sobol sampling
 
     Args:
         bounds (Tuple):  Tuple with lower and higher bound for each feature in objective space.
@@ -605,3 +616,23 @@ def sobol_sample(bounds, n=1):
     diff = [r-l for l, r in zip(*bounds)]
     left = [l for l, _ in zip(*bounds)]
     return sb*diff+left
+
+
+def lh_sample(bounds, n=1):
+    """ Latin Hypercube sampling
+
+    Args:
+        bounds (Tuple):  Tuple with lower and higher bound for each feature in objective space.
+        Example: (([0., 0.]), ([2., 4.]))
+        n (int, optional): Sample count. Defaults to 1.
+
+    Returns:
+        List: Point from search space
+    """
+    n_dim = len(bounds[0])
+    h_cube = np.random.uniform(size=[n, n_dim])
+    for i in range(0, n_dim):
+        h_cube[:, i] = (np.argsort(h_cube[:, i])+0.5)/n
+    diff = [r-l for l, r in zip(*bounds)]
+    left = [l for l, _ in zip(*bounds)]
+    return h_cube*diff+left
