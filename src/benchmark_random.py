@@ -1,38 +1,93 @@
+from random import uniform
+from pprint import pformat
 import datetime
 import time
 import random
 import string
 import os
 import logging
-logging.basicConfig(filename='./temp_moea.log', level=logging.INFO)
-
-
-from pprint import pformat
+logging.basicConfig(filename='./temp_rand.log', level=logging.INFO)
 
 import pygmo as pg
 import pandas as pd
 import numpy as np
+import sobol_seq
 
 from sklearn.model_selection import ParameterGrid
 
+
+def sobol_sample(bounds=([0., 0.], [5., 5.]), n=1):
+    """ Sobol sampling
+
+    Args:
+        bounds (Tuple):  Tuple with lower and higher bound for each feature in objective space.
+        Example: (([0., 0.]), ([2., 4.]))
+        n (int, optional): Sample count. Defaults to 1.
+
+    Returns:
+        List: 2D list of point(s) from search space
+    """
+    n_dim = len(bounds[0])
+    sb = sobol_seq.i4_sobol_generate(n_dim, n, 1)
+    diff = [r-l for l, r in zip(*bounds)]
+    left = [l for l, _ in zip(*bounds)]
+    return (sb*diff+left).tolist()
+
+
+def lh_sample(bounds=([0., 0.], [5., 5.]), n=1):
+    """ Latin Hypercube sampling
+
+    Args:
+        bounds (Tuple):  Tuple with lower and higher bound for each feature in objective space.
+        Example: (([0., 0.]), ([2., 4.]))
+        n (int, optional): Sample count. Defaults to 1.
+
+    Returns:
+        List: 2D list of point(s) from search space
+    """
+    n_dim = len(bounds[0])
+    h_cube = np.random.uniform(size=[n, n_dim])
+    for i in range(0, n_dim):
+        h_cube[:, i] = (np.argsort(h_cube[:, i])+0.5)/n
+    diff = [r-l for l, r in zip(*bounds)]
+    left = [l for l, _ in zip(*bounds)]
+    return (h_cube*diff+left).tolist()
+
+
+def random_sample(bounds=([0., 0.], [5., 5.]), n=1):
+    """ Random sampling
+
+    Args:
+        bounds (Tuple):  Tuple with lower and higher bound for each feature in objective space.
+        Example: (([0., 0.]), ([2., 4.]))
+        n (int, optional): Sample count. Defaults to 1.
+
+    Returns:
+        List: 2D list of point(s) from search space
+    """
+    v_uniform = np.vectorize(uniform)
+    return [v_uniform(*bounds).tolist() for _ in range(n)]
+
+
 def make_nd_pop(pro, x, y):
     nd_front = pg.fast_non_dominated_sorting(y)[0][0]
-    nd_x = x[nd_front]
-    nd_y = y[nd_front]
+    nd_x = np.array(x)[nd_front]
+    nd_y = np.array(y)[nd_front]
     t_pop = pg.population(pro)
     for i, p_vector in enumerate(nd_x):
         t_pop.push_back(x=p_vector, f=nd_y[i])
     return t_pop
 
 
-def experiment(problem_name: str,
+def experiment_random(problem_name: str,
                prob_id: int,
                prob_dim: int,
                obj: int,
-               pop_size: int,
-               gen: int,
-               algo_name='nsga2',
+               random_points: int,
+               sampling_plan: str,
                seed=None):
+
+    np.random.seed(seed)
 
     result = {
         "problem_name": problem_name,
@@ -40,14 +95,12 @@ def experiment(problem_name: str,
         "problem_id": prob_id,
         "objectives": obj,
         "feature_dim": prob_dim,
-        'algo_name': algo_name,
-        "pop_size": pop_size,
-        "generation": gen,
-        "pop_ndf_x": '',
-        "pop_ndf_f": '',
+        "random_points": random_points,
+        "sampling_plan": sampling_plan,
+        "ndf_x": '',
+        "ndf_f": '',
         "fevals": '',
         "evolve_time": '',
-        "total_time": '',
         "date": '',
         "p_distance": '',
         "hypervolume": '',
@@ -71,35 +124,37 @@ def experiment(problem_name: str,
         result['error'] = "Init problem: {}".format(err)
         return result
 
-    t_start = time.time()
-    # ----------------------                                                            Initial population
-    # try:
-    #     pop = pg.population(prob=udp, size=pop_size, seed=seed)
-    # except Exception as err:
-    #     result['error'] = "Init population: {}".format(err)
-    #     return result
-
-    # ----------------------                                                            Initialization algorithm
+    # ----------------------                                                            Sampling plan initialization
     try:
-        algo = pg.algorithm(getattr(pg, algo_name)(gen=gen, seed=seed))
+        points = None
+        if sampling_plan is 'random':
+            points = random_sample(bounds=prob.get_bounds(), n=random_points)
+        elif sampling_plan is 'sobol':
+            points = sobol_sample(bounds=prob.get_bounds(), n=random_points)
+        elif sampling_plan is 'latin':
+            points = lh_sample(bounds=prob.get_bounds(), n=random_points)
+        else:
+            raise ValueError(
+                f"{sampling_plan}. Parameter error! Acceptable values: 'random','sobol','latin'")
     except Exception as err:
-        result['error'] = "Init algorithm: {}".format(err)
+        result['error'] = "Sampling plan initialization: {}".format(err)
         return result
 
     # ----------------------                                                            Solving
     evolve_start = time.time()
     try:
-        isl = pg.island(algo=algo, prob=udp, size=pop_size,
-                        udi=pg.mp_island(), seed=seed)
-        isl.evolve()
-        isl.wait()
-        pop = isl.get_population()
+        points_f = pg.bfe()(prob, np.array(points).flatten()).reshape(-1, obj).tolist()
 
-        result["fevals"] = pop.problem.get_fevals()
+        result["fevals"] = prob.get_fevals()
         #This returns the first (i.e., best) non-dominated individual from population:
-        nd_pop = make_nd_pop(prob, pop.get_x(), pop.get_f())
+        nd_pop = make_nd_pop(prob, points, points_f)
 
         score = udp.p_distance(nd_pop) if hasattr(udp, 'p_distance') else None
+
+        result["p_distance"] = score or None
+        result["ndf_x"] = nd_pop.get_x().tolist()
+        result["ndf_f"] = nd_pop.get_f().tolist()
+        result["ndf_size"] = len(nd_pop.get_f())
     except Exception as err:
         result['error'] = "Evolve: {}".format(err)
         return result
@@ -114,7 +169,7 @@ def experiment(problem_name: str,
         return result
 
     # ----------------------                                                            Spacing metric
-    #     The spacing metric aims at assessing the spread (distribution)
+    # The spacing metric aims at assessing the spread (distribution)
     # of vectors throughout the set of nondominated solutions.
     try:
         dist = pg.crowding_distance(points=nd_pop.get_f())
@@ -128,21 +183,17 @@ def experiment(problem_name: str,
         return result
 
     # ----------------------                                                            Write results
+
     try:
         t_end = time.time()
 
-        result["problem_name"] = pop.problem.get_name()
-        result["objectives"] = pop.problem.get_nobj()
-        result["feature_dim"] = pop.problem.get_nx()
-        result["pop_ndf_x"] = nd_pop.get_x()
-        result["pop_ndf_f"] = nd_pop.get_f()
+        result["problem_name"] = nd_pop.problem.get_name()
+        result["objectives"] = nd_pop.problem.get_nobj()
+        result["feature_dim"] = nd_pop.problem.get_nx()
         result["evolve_time"] = t_end - evolve_start
-        result["total_time"] = t_end - t_start
         result["date"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
         result["final"] = True
-        result['algo_name'] = algo_name
-        result["p_distance"] = score or None
-        result["ndf_size"] = len(nd_pop.get_f())
+        result["sampling_plan"] = sampling_plan
 
     except Exception as err:
         result['error'] = "Write results: {}".format(err)
@@ -151,8 +202,8 @@ def experiment(problem_name: str,
 
 
 if __name__ == "__main__":
-    logging.info("----\n Start MOEA benchamrk on multy-objective problems\n ---- ")
-
+    logging.info(
+        "----\n Start Random benchamrk on multy-objective problems\n ---- ")
     print("Start")
 
     test_set = [
@@ -161,9 +212,8 @@ if __name__ == "__main__":
             'prob_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
             'prob_dim': [2, 4, 6, 8, 10],
             'obj': [2, 4, 6, 8, 10],
-            'pop_size': [40, 100, 200, 400, 800],
-            'gen': [50, 100, 200, 400],
-            'algo_name': ['moead', 'nsga2', 'maco', 'nspso'],
+            'random_points': [40, 100, 200, 400, 800, 5000, 10000],
+            'sampling_plan': ['sobol', 'random', 'latin'],
             'seed': [42, 72, 112, 774]
         },
         {
@@ -171,9 +221,8 @@ if __name__ == "__main__":
             'prob_id': [1, 2, 3, 4, 5, 6],
             'prob_dim': [2, 4, 6, 8, 10],
             'obj': [2, 4, 6, 8, 10],
-            'pop_size': [40, 100, 200, 400, 800],
-            'gen': [50, 100, 200, 400],
-            'algo_name': ['moead', 'nsga2', 'maco', 'nspso'],
+            'random_points': [40, 100, 200, 400, 800, 5000, 10000],
+            'sampling_plan': ['sobol', 'random', 'latin'],
             'seed': [42, 72, 112, 774]
         },
         {
@@ -181,9 +230,8 @@ if __name__ == "__main__":
             'prob_id': [1, 2, 3, 4, 5, 6, 7],
             'prob_dim': [2, 4, 6, 8, 10],
             'obj': [2, 4, 6, 8, 10],
-            'pop_size': [40, 100, 200, 400, 800],
-            'gen': [50, 100, 200, 400],
-            'algo_name': ['moead', 'nsga2', 'maco', 'nspso'],
+            'random_points': [40, 100, 200, 400, 800, 5000, 10000],
+            'sampling_plan': ['sobol', 'random', 'latin'],
             'seed': [42, 72, 112, 774]
         }
     ]
@@ -201,21 +249,21 @@ if __name__ == "__main__":
             i = i+1
             logging.info(
                 "\n Evaluation.: {} \n i: {} from {}".format(p, i, total_comb))
-            res.append(experiment(**p))
+            res.append(experiment_random(**p))
 
         i_total = i_total + i
 
         # File and path to folder
         prefix = ''.join(random.choices(
             string.ascii_lowercase + string.digits, k=10))
-        file_name = '/benchmark_results/MOEA_on_{}_i{}.{}.csv'.format(
+        file_name = '/benchmark_results/Random_on_{}_i{}.{}.csv'.format(
             param_grid['problem_name'][0], i, prefix)
         path = os.path.dirname(os.path.abspath(__file__)) + file_name
 
         # Write results
-        logging.info("\n Total evaluations: {}".format(i_total))
-        logging.info(" Write results. Path:{} \n".format(path))
+        logging.info("\n Total evaluations: %s", i_total)
+        logging.info(" Write results. Path: %s \n", path)
         res_table = pd.DataFrame(res)
         res_table.to_csv(path, mode='a+', index=False)
 
-    print("finish")
+    print("Finish")

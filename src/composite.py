@@ -450,7 +450,7 @@ class PredictTutor(BaseEstimator):
 
         # Absent valid surrogates in some dimension: we cannot restore the full object space
         # - return 'Multi-objective' type
-        if len(self.__init_dataset[1].columns) != len(grp):
+        if self.__init_dataset[1].shape[1] != len(grp):
             return all_y_models
 
         # There at least 1 valid surrogate for each objective dimension.
@@ -483,9 +483,10 @@ class PredictTutor(BaseEstimator):
                 lambda estimator: estimator.score(*self._test))
 
             # none-dominated examples from test set
-            ndf, dl, dc, ndr = pg.fast_non_dominated_sorting(y.values)
-            y_ndf_test = y.iloc[ndf[0], :]
-            X_ndf_test = X.iloc[ndf[0], :]
+            ndf, dl, dc, ndr = pg.fast_non_dominated_sorting(np.array(y))
+            y_ndf_test = np.array(y)[ndf[0], :]
+            X_ndf_test = np.array(X)[ndf[0], :]
+
             self.surr_valid['ndf_val_score'] = self.surr_valid['estimator'].apply(
                 lambda estimator: estimator.score(X_ndf_test, y_ndf_test))
 
@@ -591,7 +592,7 @@ class PredictTutor(BaseEstimator):
         """ Pseudorandom sampling from the search space """
         available = 0 if self.__init_dataset is None else len(
             self.__init_dataset[0])
-        sbl = sobol_sample(self.__bounds, n=available+n)[available:]
+        sbl = lh_sample(self.__bounds, n=available+n)[available:]
         return sbl
 
     def _random(self, n=1):
