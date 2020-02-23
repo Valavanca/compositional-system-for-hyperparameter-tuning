@@ -1,6 +1,10 @@
 from random import uniform
-
+import logging
 import pandas as pd
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 class SamplesGenerator():
 
@@ -51,10 +55,10 @@ class SamplesGenerator():
             self._X.reset_index(drop=True, inplace=True)
             self._y.reset_index(drop=True, inplace=True)
 
-            print("In dataset add {} new results".format(
+            logging.info("In dataset add {} new results".format(
                 len(self._X.index)-len(old_df.index)))
         else:
-            print("Initialization data generator")
+            logging.info("Initialization data generator")
             self._X = X_new
             self._y = y_new
 

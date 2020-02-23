@@ -1,5 +1,6 @@
 from typing import List, Tuple
 import hashlib
+import logging
 from random import uniform
 
 import pygmo as pg
@@ -21,9 +22,11 @@ import sklearn.gaussian_process as gp
 
 from joblib import Parallel, delayed
 
-from .search import Gaco, Nsga2
+from search import Gaco, Nsga2
 
-np.random.seed(1)
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+# np.random.seed(1)
 
 TRAIN_TEST_SPLIT = 0.25
 
@@ -143,7 +146,7 @@ class ModelsUnion(TransformerMixin, BaseEstimator):
 
         if self.split_y:
             if len(self._models) == 1:
-                print("Expand the model count for each label. Clone: {}".format(
+                logging.info("Expand the model count for each label. Clone: {}".format(
                     type(self._models[0]).__name__))
                 etalon = self._models[0]
                 self._models = [clone(etalon) for _ in range(y.shape[1])]
@@ -268,12 +271,22 @@ def _predict(estimator, X, y=None, split_y=False, message_clsname='', idx=None, 
     Returns:
         List or Number: Prediction
     """
-    print(message_clsname, message)
+    logging.info(message_clsname, message)
     return estimator.predict(X, **predict_params).tolist()
 
 
 class PredictTutor(BaseEstimator):
     """ Agregate and sort best preidctions from multiple models."""
+
+    """
+        1. define categorical columns -> transform pipeline as parameter
+        2. fit -> generate surrogate(s) models for all parameters
+        3. Find best categories with sampling strategies.
+           Exampl: Generate 100 full-dim points -> Evaluate -> Take only categories from best samples. Fix it.
+        4. Fix categories as mask for optimization algorithm. Categories become ortogonal for optimization problem
+        5. For final predictions combine categories and population
+
+    """
 
     def __init__(self, bounds, portfolio: List[BaseEstimator] = None):
         """        
@@ -296,6 +309,10 @@ class PredictTutor(BaseEstimator):
         self.surr_valid = pd.DataFrame()  # surrogates that pass cv validation and aggregation
         self._solutions = None  # predict solutions from valid surrogates
         self._is_single: bool = False
+
+        # dimensions mask
+        # self._mask_col = mask_col,
+        # self._mask_value = mask_val
 
     @property
     def bounds(self):
@@ -339,13 +356,15 @@ class PredictTutor(BaseEstimator):
             check_X_y(X, y, multi_output=True)
             self._is_single = y.shape[1] == 1
 
-            print("Split dataset. Validation set is {}%".format(TRAIN_TEST_SPLIT))
+            logging.info(
+                "Split dataset. Validation set is {}%".format(TRAIN_TEST_SPLIT))
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=TRAIN_TEST_SPLIT)
             self._train = (X_train, y_train)
             self._test = (X_test, y_test)
         else:
-            print("Available {}. At least 8 samples are required".format(len(X)))
+            logging.info(
+                "Available {}. At least 8 samples are required".format(len(X)))
             return None
 
         # --- STAGE 1: Cross-validation surrogates
@@ -357,30 +376,34 @@ class PredictTutor(BaseEstimator):
         #              Refit valid models on train dataset
         self.surr_valid = self._results_aggregation(self.cv_result)
         if not self.surr_valid.empty:
-            print("{} surrogate(s) valid".format(len(self.surr_valid)))
+            logging.info("{} surrogate(s) valid".format(len(self.surr_valid)))
             self.surr_valid['estimator'].apply(
                 lambda estimator: estimator.fit(*self._train))
+            # --- STAGE 3: Score the aggregated surrogates with a test set.
+            #              Sorting tham based on results
+            self.surr_score(*self._test)
 
-        # --- STAGE 3: Score the aggregated surrogates with a test set.
-        #              Sorting tham based on results
-        self._solutions = self.surr_score(*self._test)
+            # --- STAGE 4: Generate solution from each valid hypothesis.
+            #              Each valid hypothesis produce own solution(s).
+            #              A Solution is validated based on a score metrics from stage 3.
+            #              By default, a final prediction is a first-class prediction based on this ranging.
+            #              If prediction have multiple solutions - By default, we take `n` solutions randomly from them.
 
-        # --- STAGE 4: Generate solution from each valid hypothesis.
-        #              Each valid hypothesis produce own solution(s).
-        #              A Solution is validated based on a score metrics from stage 3.
-        #              By default, a final prediction is a first-class prediction based on this ranging.
-        #              If prediction have multiple solutions - By default, we take `n` solutions randomly from them.
-
-        self._solutions = self.surr_valid.copy()
-        # make a solver(s) on fitted surrogates (hypothesis)
-        self._solutions['solver'] = self._solutions['estimator'].apply(
-            self._construct_solver)
-        # prediction vector(s) from solver(s)
-        self._solutions['prediction'] = self._solutions['solver'].apply(
-            lambda solver: solver.predict())
-        # prediction vector(s) score. Hypervolume or min objective. Depends on solver. Less is better
-        self._solutions['prediction_score'] = self._solutions['solver'].apply(
-            lambda solver: solver.score())
+            self._solutions = self.surr_valid.copy()
+            # make a solver(s) on fitted surrogates (hypothesis)
+            self._solutions['solver'] = self._solutions['estimator'].apply(
+                self._construct_solver)
+            # prediction vector(s) from solver(s)
+            self._solutions['prediction'] = self._solutions['solver'].apply(
+                lambda solver: solver.predict())
+            # prediction vector(s) score. Hypervolume or min objective. Depends on solver. Less is better
+            self._solutions['prediction_score'] = self._solutions['solver'].apply(
+                lambda solver: solver.score())
+        else:
+            self._solutions = pd.DataFrame([{
+                "model name": "sampling plan",
+                "prediction": self._sobol(n=1)
+            }])
 
     def cross_validate(self, X, y, **cv_params) -> dict:
         """ Select models that can describe a valid hypothesis for X, y """
@@ -427,7 +450,7 @@ class PredictTutor(BaseEstimator):
             return models_df_score
 
         # Constructs a new surrogates with the same parameters but that has not been fit on any data
-        models_df_score['estimator'] = models_df_score['estimator'].apply(
+        models_df_score.loc[:, 'estimator'] = models_df_score['estimator'].apply(
             clone)
 
         # Type 'Multi-objective': Surrogates that coverage all objective space
@@ -464,9 +487,9 @@ class PredictTutor(BaseEstimator):
         # Make list from each cell & sum all dataframes in compositional 'Multi-objective' surrogates
         grp = [concat_y_groups[n].applymap(lambda x: [x]) for n in y_names]
         grp = sum(grp[1:], grp[0])
-        grp['estimator'] = grp['estimator'].apply(lambda models: ModelsUnion(models=clone(models),
+        grp.loc[:, 'estimator'] = grp['estimator'].apply(lambda models: ModelsUnion(models=clone(models),
                                                                              split_y=True))
-        grp['id'] = grp['estimator'].apply(id)
+        grp.loc[:, 'id'] = grp['estimator'].apply(id)
 
         # Combine 'Multi-objective' and compositional 'Multi-objective' surrogates
         return pd.concat([all_y_models, grp], ignore_index=True)
@@ -479,7 +502,7 @@ class PredictTutor(BaseEstimator):
 
         if self.surr_valid is not None:
             # Add columns with score metrics to dataframe with valid surrogates
-            self.surr_valid['val_score'] = self.surr_valid['estimator'].apply(
+            self.surr_valid.loc[:, 'surr_score'] = self.surr_valid['estimator'].apply(
                 lambda estimator: estimator.score(*self._test))
 
             # none-dominated examples from test set
@@ -487,12 +510,12 @@ class PredictTutor(BaseEstimator):
             y_ndf_test = np.array(y)[ndf[0], :]
             X_ndf_test = np.array(X)[ndf[0], :]
 
-            self.surr_valid['ndf_val_score'] = self.surr_valid['estimator'].apply(
+            self.surr_valid.loc[:, 'ndf_surr_score'] = self.surr_valid['estimator'].apply(
                 lambda estimator: estimator.score(X_ndf_test, y_ndf_test))
 
             # Sorting the solution(s). Score on the non dominated solution is more important
             self.surr_valid.sort_values(
-                by=['ndf_val_score', 'val_score'], inplace=True, ascending=False)
+                by=['ndf_surr_score', 'surr_score'], inplace=True, ascending=False)
 
             return self.surr_valid.copy()
         else:
@@ -542,11 +565,11 @@ class PredictTutor(BaseEstimator):
             # -- 1. If surrogates not valid use sampling plan
             pass
         else:
-            # -- 2. Error if surrogates valid but there is no solution
             if self._solutions is None:
+                # -- 2. Error if surrogates valid but there is no solution
                 raise AttributeError(
                     " A solution does not exist: {} \n\
-                    Сheck that the surrogate models are fit appropriately".format(self._solutions))
+                        Сheck that the surrogate models are fit appropriately".format(self._solutions))
             else:
                 # -- 3. There is solution from valid surogates. Return `n` predictions 
                 if n is -1:
@@ -555,29 +578,20 @@ class PredictTutor(BaseEstimator):
                     S = self._solutions['prediction'].values[0]
                     n = n if S.shape[0] > n else S.shape[0]
                     return S[np.random.choice(S.shape[0], n, replace=False), :]
-        print("Prediction from sampling plan")     
-        return self._sobol(n=n)
 
-    def next_config(self, X, y, n=1, **cv_params):
-        if X is not None and y is not None:
-            is_valid = self.cross_validate(X, y, **cv_params)
-            if is_valid:
-                self._generate_solution()
-                return self.predict(n=n)
-            else:
-                return self._sobol(n=n)
-        else:
-            return self._sobol(n=n)
+        logging.info("Prediction from sampling plan")
+        self._solutions = pd.DataFrame([{
+            "model name": "sampling plan",
+            "prediction": self._sobol(n=n)
+        }])
+        return self._solutions["prediction"][0].tolist()
 
     def predict_proba(self, X=None, **predict_params):
         """ Return all metrics of the best solution """
         if self._solutions is None:
-            print(" A solution does not exist: {} \n\
-                Сheck that the surrogate models are fit appropriately".format(self._solutions))
+            logging.info(
+                " A solution does not exist: {}".format(self._solutions))
             return None
-            # raise AttributeError(
-            #     " A solution does not exist: {} \n\
-            #       Сheck that the surrogate models are fit appropriately".format(self._solutions))
         else:
             return self._solutions
 

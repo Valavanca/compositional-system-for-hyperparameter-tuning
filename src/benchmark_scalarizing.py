@@ -4,7 +4,6 @@ import random
 import string
 import os
 import logging
-logging.basicConfig(filename='./temp_moea.log', level=logging.INFO)
 
 
 from pprint import pformat
@@ -15,10 +14,25 @@ import numpy as np
 
 from sklearn.model_selection import ParameterGrid
 
+logging.basicConfig(filename='./temp_scal.log', level=logging.INFO)
+
+
+
+def uniform_weights(dim: int = 2, total_sum=1):
+    if dim == 1:
+        return [total_sum]
+    if total_sum <= 0:
+        return [uniform_weights(dim-1, 0)]
+
+    i_weight = random.uniform(0, total_sum)
+
+    results = [i_weight] + uniform_weights(dim-1, total_sum - i_weight)
+    return random.sample(results, len(results))
+
 def make_nd_pop(pro, x, y):
     nd_front = pg.fast_non_dominated_sorting(y)[0][0]
-    nd_x = x[nd_front]
-    nd_y = y[nd_front]
+    nd_x = np.array(x)[nd_front]
+    nd_y = np.array(y)[nd_front]
     t_pop = pg.population(pro)
     for i, p_vector in enumerate(nd_x):
         t_pop.push_back(x=p_vector, f=nd_y[i])
@@ -29,10 +43,9 @@ def experiment(problem_name: str,
                prob_id: int,
                prob_dim: int,
                obj: int,
-               pop_size: int,
-               gen: int,
-               algo_name='nsga2',
-               seed=None):
+               loop_size: int,
+               scal_method: str,
+               seed: int = None):
 
     result = {
         "problem_name": problem_name,
@@ -40,9 +53,8 @@ def experiment(problem_name: str,
         "problem_id": prob_id,
         "objectives": obj,
         "feature_dim": prob_dim,
-        'algo_name': algo_name,
-        "pop_size": pop_size,
-        "generation": gen,
+        'scal_method': scal_method,
+        "loop_size": loop_size,
         "pop_ndf_x": '',
         "pop_ndf_f": '',
         "fevals": '',
@@ -74,34 +86,57 @@ def experiment(problem_name: str,
     t_start = time.time()
     # ----------------------                                                            Initial population
     # try:
-    #     pop = pg.population(prob=udp, size=pop_size, seed=seed)
+    #     pop = pg.population(prob=udp, size=loop_size, seed=seed)
     # except Exception as err:
     #     result['error'] = "Init population: {}".format(err)
     #     return result
 
     # ----------------------                                                            Initialization algorithm
     try:
-        algo = pg.algorithm(getattr(pg, algo_name)(gen=gen, seed=seed))
+        algo = pg.algorithm(pg.simulated_annealing(
+            Ts=10., Tf=1e-5, n_T_adj=100))
     except Exception as err:
         result['error'] = "Init algorithm: {}".format(err)
         return result
 
-    # ----------------------                                                            Solving
+    # ----------------------                                                            Loop optimization
     evolve_start = time.time()
     try:
-        isl = pg.island(algo=algo, prob=udp, size=pop_size,
-                        udi=pg.mp_island(), seed=seed)
-        isl.evolve()
-        isl.wait()
-        pop = isl.get_population()
+        islands = []
+        # loop size defines how much Pareto-optimal points will be produced
+        for _ in range(loop_size):
+            scal_pro = pg.problem(pg.decompose(
+                prob=prob, method=scal_method, weight=uniform_weights(obj, 1), z=[0.0]*obj))
+            islands.append(pg.island(algo=algo, prob=scal_pro, size=1,
+                            udi=pg.mp_island(), seed=seed))
 
-        result["fevals"] = pop.problem.get_fevals()
-        #This returns the first (i.e., best) non-dominated individual from population:
-        nd_pop = make_nd_pop(prob, pop.get_x(), pop.get_f())
+        _ = [isl.evolve() for isl in islands]
+        _ = [isl.wait() for isl in islands]
+
+        x = [isl.get_population().champion_x for isl in islands]
+        result["fevals"] = sum(
+            [isl.get_population().problem.get_fevals() for isl in islands])
+    except Exception as err:
+        result['error'] = "Loop: {}".format(err)
+        return result
+
+
+    try:
+        # Convert scaled predictions back to an original multi-objective problem
+        y = [prob.fitness(p).tolist() for p in x]
+        loop_pop = make_nd_pop(prob, x, y)
+
+        # This returns the first (i.e., best) non-dominated individual from population:
+        nd_pop = make_nd_pop(prob, loop_pop.get_x(), loop_pop.get_f())
 
         score = udp.p_distance(nd_pop) if hasattr(udp, 'p_distance') else None
+        result["p_distance"] = score
+        result["pop_ndf_x"] = nd_pop.get_x().tolist()
+        result["pop_ndf_f"] = nd_pop.get_f().tolist()
+        result["ndf_size"] = len(nd_pop.get_f())
+
     except Exception as err:
-        result['error'] = "Evolve: {}".format(err)
+        result['error'] = "Non-dominated pop: {}".format(err)
         return result
 
     # ----------------------                                                            Hypervolume
@@ -114,8 +149,8 @@ def experiment(problem_name: str,
         return result
 
     # ----------------------                                                            Spacing metric
-    #     The spacing metric aims at assessing the spread (distribution)
-    # of vectors throughout the set of nondominated solutions.
+    # The spacing metric aims at assessing the spread (distribution)
+    # of vectors throughout the set of non-dominated solutions
     try:
         dist = pg.crowding_distance(points=nd_pop.get_f())
         not_inf_dist = dist[np.isfinite(dist)]
@@ -131,18 +166,13 @@ def experiment(problem_name: str,
     try:
         t_end = time.time()
 
-        result["problem_name"] = pop.problem.get_name()
-        result["objectives"] = pop.problem.get_nobj()
-        result["feature_dim"] = pop.problem.get_nx()
-        result["pop_ndf_x"] = nd_pop.get_x()
-        result["pop_ndf_f"] = nd_pop.get_f()
+        result["problem_name"] = nd_pop.problem.get_name()
+        result["objectives"] = nd_pop.problem.get_nobj()
+        result["feature_dim"] = nd_pop.problem.get_nx()
         result["evolve_time"] = t_end - evolve_start
         result["total_time"] = t_end - t_start
         result["date"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
         result["final"] = True
-        result['algo_name'] = algo_name
-        result["p_distance"] = score or None
-        result["ndf_size"] = len(nd_pop.get_f())
 
     except Exception as err:
         result['error'] = "Write results: {}".format(err)
@@ -151,7 +181,8 @@ def experiment(problem_name: str,
 
 
 if __name__ == "__main__":
-    logging.info("----\n Start MOEA benchamrk on multy-objective problems\n ---- ")
+    logging.info(
+        "----\n Start Scalarization benchamrk on multy-objective problems\n ---- ")
 
     print("Start")
 
@@ -159,32 +190,29 @@ if __name__ == "__main__":
         {
             'problem_name': ['wfg'],
             'prob_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
-            'prob_dim': [2, 4, 6, 8],
-            'obj': [2, 6],
-            'pop_size': [40, 100, 200],
-            'gen': [50, 100, 200, 400],
-            'algo_name': ['moead', 'nsga2', 'maco', 'nspso'],
-            'seed': [42, 72, 112, 774]
+            'prob_dim': [2, 4, 6, 8, 10],
+            'obj': [2, 4, 6, 8, 10],
+            'loop_size': [40, 100, 200, 400, 800],
+            'scal_method': ['bi', 'tchebycheff', 'weighted'],
+            'seed': [42, 72, 112, 774, 111]
         },
         {
             'problem_name': ['zdt'],
             'prob_id': [1, 2, 3, 4, 5, 6],
             'prob_dim': [2, 4, 6, 8, 10],
             'obj': [2, 4, 6, 8, 10],
-            'pop_size': [40, 100, 200, 400, 800],
-            'gen': [50, 100, 200, 400],
-            'algo_name': ['moead', 'nsga2', 'maco', 'nspso'],
-            'seed': [42, 72, 112, 774]
+            'loop_size': [40, 100, 200, 400, 800],
+            'scal_method': ['bi', 'tchebycheff', 'weighted'],
+            'seed': [42, 72, 112, 774, 111]
         },
         {
             'problem_name': ['dtlz'],
             'prob_id': [1, 2, 3, 4, 5, 6, 7],
             'prob_dim': [2, 4, 6, 8, 10],
             'obj': [2, 4, 6, 8, 10],
-            'pop_size': [40, 100, 200, 400, 800],
-            'gen': [50, 100, 200, 400],
-            'algo_name': ['moead', 'nsga2', 'maco', 'nspso'],
-            'seed': [42, 72, 112, 774]
+            'loop_size': [40, 100, 200, 400, 800],
+            'scal_method': ['bi', 'tchebycheff', 'weighted'],
+            'seed': [42, 72, 112, 774, 111]
         }
     ]
 
@@ -208,7 +236,7 @@ if __name__ == "__main__":
         # File and path to folder
         prefix = ''.join(random.choices(
             string.ascii_lowercase + string.digits, k=10))
-        file_name = '/benchmark_results/MOEA_on_{}_i{}.{}.csv'.format(
+        file_name = '/benchmark_results/scal_on_{}_i{}.{}.csv'.format(
             param_grid['problem_name'][0], i, prefix)
         path = os.path.dirname(os.path.abspath(__file__)) + file_name
 
