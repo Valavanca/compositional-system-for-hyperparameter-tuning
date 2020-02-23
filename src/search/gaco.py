@@ -9,14 +9,16 @@ import numpy as np
 from .abs_solver import Solver
 from .share import Pagmo_problem
 
-DEFAULT_POP_SIZE = 80
-DEFAULT_GENERATION = 50
+DEFAULT_POP_SIZE = 100
+DEFAULT_GENERATION = 100
 
 
 class Gaco(Solver):
     def __init__(self,
                  models: List[BaseEstimator] = None,
                  bounds: Tuple[List] = None,
+                 mask_col: List[int] = None,
+                 mask_val: List[int] = None,
                  pop_size=DEFAULT_POP_SIZE,
                  gen=DEFAULT_GENERATION):
         super(Gaco, self).__init__(models)
@@ -26,6 +28,9 @@ class Gaco(Solver):
         self._score_ref_point = None
         self._population = None
         self._problem = None
+        # dimensions mask
+        self._mask_col = mask_col,
+        self._mask_value = mask_val
 
     @property
     def problem(self):
@@ -51,37 +56,55 @@ class Gaco(Solver):
     def population(self):
         return self._population
 
+    def set_mask(self, columns: List[int], values: List[int]) -> None:
+        self._mask_col = columns
+        self._mask_value = values
+        self.__evolve()
+
+    def get_mask(self):
+        return self._mask_col, self._mask_value
+
     def set_bounds(self, bounds) -> None:
         self._bounds = bounds
 
     def get_bounds(self) -> Tuple[List]:
         return self._bounds
 
-    def __def_problem(self):
-        if self.estimator and self._bounds is not None:
+    def __def_problem(self, is_mask=False):
+        problem = None
+        if self._estimators and self._bounds is not None:
             instance = Pagmo_problem(
-                models=self.estimator,
-                is_single=True,
+                models=self._estimators,
                 bounds=self._bounds)
-            self._problem = pg.problem(instance)
+            if is_mask:
+                instance.set_mask(self._mask_col, self._mask_value)
+            problem = pg.problem(instance)
         else:
             raise Exception(
-                'Models and Estimators should not be None.\n Models:\n {} \n Bounds: {}'.format(self.estimator, self._bounds))
-        return self._problem
+                'Models and Bounds should not be None.\n Models:\n {} \n Bounds: {}'.format(self._estimators, self._bounds))
+        return problem
 
     def __evolve(self):
-        self.__def_problem()
-        init_pop = pg.population(self._problem, size=self._pop_size)
-        # self._population = init_pop
+        self._problem = self.__def_problem(is_mask=True)
+        algo = pg.algorithm(pg.nsga2(gen=self._gen))
+        isl = pg.island(algo=algo, prob=self._problem, size=self._pop_size)
+        isl.evolve()
+        isl.wait()
+        e_pop = isl.get_population()
 
-        # old_score = self.score()
-        algo = pg.algorithm(pg.gaco(gen=self._gen))
-        algo.set_verbosity(200)
-        self._population = algo.evolve(init_pop)
-        # score = self.score()
-        # print("Hypervolume: {}, Delta: {}".format(score, score-old_score))
+        if None not in (self._mask_col, self._mask_value):
+            t_pop = pg.population(self.__def_problem(is_mask=False))
+            evolve_x = e_pop.get_x()
+            evolve_y = e_pop.get_f()
+            for i, x_vector in enumerate(evolve_x):
+                for c, v in zip(self._mask_col, self._mask_value):
+                    x_vector = np.insert(x_vector, c, v, 0)
+                t_pop.push_back(x=x_vector, f=evolve_y[i])
+            self._population = t_pop
+        else:
+            self._population = e_pop
 
-        print("Gaco: Evolve {} by {} population size in {} generation".format(
+        print("GACO: Evolve {} by {} population size in {} generation".format(
             self._problem.get_name(), self._pop_size, self._gen))
 
     def transform(self, X, *arg, y=None, **kwargs):
