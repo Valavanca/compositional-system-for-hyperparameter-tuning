@@ -89,7 +89,7 @@
       },
       {
         "family": "Vicente",
-        "given": "Luı́s Nunes"
+        "given": "Luís Nunes"
       }
     ],
     "container-title": "SIAM Journal on Optimization",
@@ -449,7 +449,7 @@
         "given": "Hirotaka"
       }
     ],
-    "container-title": "Practical approaches to multi-objective optimization, 7.-12. November 2004",
+    "container-title": "Practical approaches to multi-objective optimization, 7.-12. november 2004",
     "id": "15iylVSF0",
     "issued": {
       "date-parts": [
@@ -968,7 +968,6 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:autosklearn:feurer2015efficient"
   },
   {
-    "URL": "http://arxiv.org/abs/1903.02915",
     "author": [
       {
         "family": "Benitez-Hidalgo",
@@ -1005,7 +1004,6 @@
     "type": "entry"
   },
   {
-    "URL": "http://arxiv.org/abs/1906.11152",
     "author": [
       {
         "family": "Bodin",
@@ -1045,7 +1043,6 @@
     "type": "entry"
   },
   {
-    "URL": "http://arxiv.org/abs/1309.0238",
     "author": [
       {
         "family": "Buitinck",
@@ -1258,7 +1255,6 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:francesco_biscani_2019"
   },
   {
-    "URL": "http://arxiv.org/abs/1801.02381",
     "author": [
       {
         "dropping-particle": "van der",

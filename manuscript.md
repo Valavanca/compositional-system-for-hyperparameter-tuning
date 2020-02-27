@@ -1,7 +1,7 @@
 ---
 author-meta:
 - Oleksandr Husak
-date-meta: '2020-02-25'
+date-meta: '2020-02-27'
 header-includes: '<!--
 
   Manubot generated metadata rendered from header-includes-template.html.
@@ -20,9 +20,9 @@ header-includes: '<!--
 
   <meta property="twitter:title" content="Compositional Multi-objective Parameter tuning" />
 
-  <meta name="dc.date" content="2020-02-25" />
+  <meta name="dc.date" content="2020-02-27" />
 
-  <meta name="citation_publication_date" content="2020-02-25" />
+  <meta name="citation_publication_date" content="2020-02-27" />
 
   <meta name="dc.language" content="en-US" />
 
@@ -54,11 +54,11 @@ header-includes: '<!--
 
   <link rel="alternate" type="application/pdf" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
 
-  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/7d72f2b6c68e10842430b93c461a91c976fc4282/" />
+  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/ea6b96b58fdd1ab152d7e8b3ae3d7326b92a2892/" />
 
-  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/7d72f2b6c68e10842430b93c461a91c976fc4282/" />
+  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/ea6b96b58fdd1ab152d7e8b3ae3d7326b92a2892/" />
 
-  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/7d72f2b6c68e10842430b93c461a91c976fc4282/manuscript.pdf" />
+  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/ea6b96b58fdd1ab152d7e8b3ae3d7326b92a2892/manuscript.pdf" />
 
   <meta property="og:type" content="article" />
 
@@ -87,10 +87,10 @@ title: Compositional Multi-objective Parameter tuning
 
 <small><em>
 This manuscript
-([permalink](https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/7d72f2b6c68e10842430b93c461a91c976fc4282/))
+([permalink](https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/ea6b96b58fdd1ab152d7e8b3ae3d7326b92a2892/))
 was automatically generated
-from [Valavanca/compositional-system-for-hyperparameter-tuning@7d72f2b](https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/7d72f2b6c68e10842430b93c461a91c976fc4282)
-on February 25, 2020.
+from [Valavanca/compositional-system-for-hyperparameter-tuning@ea6b96b](https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/ea6b96b58fdd1ab152d7e8b3ae3d7326b92a2892)
+on February 27, 2020.
 </em></small>
 
 ## Authors
@@ -195,16 +195,16 @@ parameter tuning tools to explore thousands to millions of inputs for
 their systems.
 
 In this article assume that parameter tuning is a subset problem of
-general, global optimizations. It's also mean that we consider some
-fitness function 'f' that converts the parameter vector to output
-objectives. Note that the term \"real evaluation\" or \"black-box
-evaluation\" as a synonym for the fitness function 'f'. The goal of
+general, global optimizations. It’s also mean that we consider some
+fitness function ‘f‘ that converts the parameter vector to output
+objectives. Note that the term “real evaluation” or “black-box
+evaluation” as a synonym for the fitness function ‘f‘. The goal of
 parameter tuning as an optimization task lay on fast iterative search
-with improvements in each objective dimension. The term \"fast\" means
+with improvements in each objective dimension. The term “fast” means
 that the convergence to global optimum is achieved with the least real
 evaluations and shorter time frame.
 
-We consider fitness function 'f' as black-box with parameter and
+We consider fitness function ‘f‘ as black-box with parameter and
 objective space. Parameter space has structure and could consist from
 continues and categorical dimensions. Sometimes, some combinations of
 parameter settings are forbidden. Each pony from parameter space lead to
@@ -265,16 +265,16 @@ points, that placing on a Pareto front. Knowledge of the Pareto front
 allows visualizing appropriate decisions in terms of performance for
 each objective.
 
-\"Multi-objective optimization(MOO) deals with such conflicting
+“Multi-objective optimization(MOO) deals with such conflicting
 objectives. It provides a mathematical framework to arrive at optimal
 design state which accommodates the various criteria demanded by the
 application. The process of optimizing systematically and simultaneously
 a collection of objective functions are called multi-objective
-optimization (MOO) [@NTeA6uPp]\".
+optimization (MOO) [@NTeA6uPp]”.
 
-For a multi-objective problem, we consider \"solution\" as points from
+For a multi-objective problem, we consider “solution” as points from
 parameter space that lead to non-dominated results in objective space.
-This set of points approximate real Pareto-front. Improving \"solution\"
+This set of points approximate real Pareto-front. Improving “solution”
 means that sets of points coincide better with real Pareto-front. How to
 search for an optimal solution to the multi-objective optimization
 problem?
@@ -285,22 +285,22 @@ Scalarizing approach is built on the traditional techniques to creating
 an alternative problem with a single, composite objective function.
 Single objective optimization techniques are then applied to this
 composite function to obtain a single optimal solution. The weighted-sum
-methods it's a well known type of scalarizing technic is applied to
+methods it’s a well known type of scalarizing technic is applied to
 simplify a multiobjective problem. Concatenate the objectives into one
 criterion by using magic weighted sum factors. The merged objective is
 used to evaluate and define the optimal solution. Weighted sum methods
 have difficulties in selecting proper weight especially when there is no
 connected a priori knowledge among objectives. Furthermore, Uniform
-distribution points in parameters space don't generate uniform
-distribution points on objective space. This means that we can't
+distribution points in parameters space don’t generate uniform
+distribution points on objective space. This means that we can’t
 approximate Pareto-front completely even with multiple optimization
 rounds. Some scalarizing technics try to improve exploration of
-parameter space by assigning more \"intelligence\" aggregation to the
+parameter space by assigning more “intelligence” aggregation to the
 objectives. Such solutions may be fragile. They change dramatically if
 we modify algorithm parameters.
 
 Moreover, the weighting method can not provide a solution among
-underparts of the Pareto surface due to "duality gap" for not convex
+underparts of the Pareto surface due to “duality gap” for not convex
 cases. Even for convex cases, for example, in linear cases, even if we
 want to get a point in the middle of a line segment between two points,
 we hardly get a peak of Pareto surface, as long as the well-known
@@ -325,11 +325,11 @@ that simulate the process of natural evolution. Using simplifications,
 this EA is subsequently determined by the two basic principles:
 selection and variation. While selection imitates the competition for
 reproduction and resources among living beings, the other principle,
-variation, imitates the natural ability to create "new" living beings
+variation, imitates the natural ability to create ”new” living beings
 through recombination and mutation. Evolutionary algorithm possesses
 several characteristics that are desirable for problems including
 multiple conflicting objectives, and large and complicated search
-spaces. However, EA still need many evaluations of the \"black box\"
+spaces. However, EA still need many evaluations of the “black box”
 system to solve a common multi-objective problem. This is further
 complicated by the fact that many such problems are very expensive.
 Consolidated, this makes EAs unfeasible for costly and Multy-objective
@@ -421,9 +421,9 @@ follow for improving solutions:
 -   Maximize non-dominant decisions in the total population
 
 Also distribution and spread indicators is consider in this work.
-According to [@DCdONjBz], "the spread metrics try to measure the
+According to [@DCdONjBz], “the spread metrics try to measure the
 extents of the spread achieved in a computed Pareto front
-approximation". They are not useful to evaluate the convergence of an
+approximation”. They are not useful to evaluate the convergence of an
 algorithm, or at comparing algorithms. They only make sense when the
 Pareto set is composed of several solutions.
 
@@ -461,7 +461,9 @@ For optimization expensive black-box:
 
 -   Scalable algorithms that convert multi-objective to single objective
     problem produce solution that not accurate enough(Scalarizing). Also
-    this approach suitable for a limited type of problem.
+    this approach suitable for a limited type of problem. Also&lt; there
+    are a lot important parameters that significant influence on
+    algorithm performance.
 
 -   Genetic algorithms. This approach is costly to perform and not
     appropriate for expensive problems.
@@ -580,8 +582,8 @@ argument(s) why we need a new architecture. Reference to composition
 architecture.
 
 Surrogate based optimization has proven effective in many aspects of
-engineering and in applications where data is \"expensive\", or
-difficult, to evaluate.
+engineering and in applications where data is “expensive”, or difficult,
+to evaluate.
 
 Compositional architecture
 --------------------------
@@ -589,7 +591,7 @@ Compositional architecture
 We could describe compositional-based surrogate optimization as compound
 grey-box system whit a lot of open research areas where surrogate should
 improve, managing portfolio, compare of predictions Pareto fronts. As a
-developer, you can be focused on a specific problem and don't know how
+developer, you can be focused on a specific problem and don’t know how
 to implement other components. This is one of the main advantages of the
 described approach.
 
@@ -657,48 +659,86 @@ Solution:
 Concept
 =======
 
+General problem trade-off is producing the best possible multi-objective
+solution with less effort. Because we consider expensive to the
+evaluation system, an effort first of all means really evaluated
+examples. Each of this evaluation can require a lot of time, energy or
+other resources. That is why the main comparison criteria for approach
+in solving the multi-objective problem is reducing the count of
+experiments. Moving further is a question: What does it mean, solving a
+multi-obj problem?
+
+-   Single-point, that is Pareto optimal solution
+
+-   Multi-point solutions that all is Pareto optimal
+
+In this work under solving a multi-objective problem, we intend to find
+a set of none-dominated points that cover a wide range of objectives
+values and close to true Pareto front as possible. For reach, this goal
+multiple algorithms could be applied but MOEA is favoured choice. The
+advantage of evolutionary algorithms is that it could be easily
+modified. It operate on a set of solution candidates, that are
+well-fitted to approximate Pareto-front. Finally, it has been
+demonstrated in various usecases that evolutionary algorithms can
+estimate highly complex problems. With constrains as expensive
+evaluations, the real count of experiments could be reduced throw
+applying a multi-objective algorithm on a surrogate model. This
+technique is the preferred choice for functional optimization when the
+evaluation cost is large.
+
+As shown before for a black-box expensive problem suited surrogate or
+model-based optimization. But this approach also has open questions and
+limitations:
+
+-   Multi-objectivity. They are not too many surrogate models that can
+    handle multi-dimensional objective space. Also scaling existing
+    multi-output surrogate model is an open research question
+
+-   Surrogate is domain-specific. For improving and reach the best of
+    the best prediction we should know in cross-grain basic objective
+    surface to apply certain surrogate. Universal surrogates can gain
+    optimal results but not the best possible
+
+-   Quality of prediction depends on how much samples do we have for a
+    specific type of surrogate. There is additionally trade-off between
+    reducing samples size and maximize the quality of prediction.
+
+-   Categorical features. A lot of real-world problems depends on the
+    categorical feature. Parameter tuning with that type of space is not
+    trivial
+
+-   Often Optimization algorithm and surrogate model are very tightly
+    coupled. Highly united implementation can reduce the search
+    possibility of algorithm and suitable for a specific type of
+    problem. Reimplementing these algorithms for each usage scenario
+    becomes timeconsuming and error-prone.
+
+Mainly two groups are affected by this problem:
+
+-   Application engineers who need to choose, implement, and apply
+    state-of- the-art algorithms without in-depth programming knowledge
+    and expertise in the optimization domain
+
+-   Developers of optimization methods who want to evaluate algorithms
+    on different test problems and compare a variety of competing
+    methods
+
 For slow computational problems, it would be useful to modulate a
 problem using a quite small number of most informative examples. This
 general topic introduces compositional surrogate, as a proxy model that
 approximate objectives surfaces and support MOEA to evaluates near a
 multi-objective solution and predict better multi-objective samples on
-each iteration. Model-based or optimization with a surrogate is the
-preferred choice for functional optimization when the evaluation cost is
-very large.
-
-As discussed in Section 3, current MOEAs use increasingly complex opera-
-tors. Re-implementing these algorithms for each usage scenario becomes
-timeconsuming and error-prone. Mainly two groups are affected by this
-problem: -- Application engineers who need to choose, implement, and
-apply state-of- the-art algorithms without in-depth programming
-knowledge and expertise in the optimization domain. -- Developers of
-optimization methods who want to evaluate algorithms on different test
-problems and compare a variety of competing methods.
-
-A different approach, called PISA (A Platform and programming language
-independent Interface for Search Algorithms), was presented in \[3\].
-The underlying concept is discussed in the following section.
-
-The basic idea is to divide the implementation of an optimization method
-into an algorithm-specific part and an application-specific part as
-shown in Fig. 15. The former contains the selection procedure, while the
-latter encapsulates the representation of solutions, the generation of
-new solutions, and the calculation of objective function values.
-
-Nevertheless it is easy to add the interface functionality to an
-existing algorithm or application since the whole communication only
-consists of a few text file operations. As a negative consequence, the
-data transfer introduces an additional overhead into the optimization.
+each iteration.
 
 There is a clear need for a method to provide and distribute
 ready-to-use implementations of optimization methods and ready-to-use
-benchmark and real- world problems. These modules should be freely
+benchmark and real-world problems. These modules should be freely
 combinable. Since the above- mentioned issues are not constrained to
-evolutionary optimization a candidate solution should be applicable to a
-broader range of search algorithms.
+evolutionary optimization a candidate surrogates solution should be
+applicable to a broader range of search algorithms.
 
 The main objective of this part is to provide a thorough treatment of
-multy-objective parameter tuning with evolutionary algorithm(s)
+multi-objective parameter tuning with evolutionary algorithm(s)
 
 Key description how to improve solutions for problems in research
 questions.
@@ -707,113 +747,117 @@ Multi-objective optimizations are frequently encountered in engineering
 practices. The solution techniques and parametric selections however are
 usually problem-specific. [@BvoEknRH]
 
-Reduce effort for multi-obj prediction/solution
------------------------------------------------
+Compositional Surrogate Model
+-----------------------------
 
-##### Surrogate model. Hypothesis as a middleware
+The potential for applying surrogate is laid in the fast evaluation of
+the surrogate model. This advantage should outperform disadvantage in
+time required to build this surrogate model. In classical model-based
+optimization is used single surrogate-model that provide a hypothesis on
+the relation between parameter and objective space. There is a lot type
+of models that can do it but out and away fewer models that can manage
+multidimensionality objective space. The perspective way to create
+multi-objective surrogate is stacking multiple simple models into one
+that describes complex objective space. Notwithstanding that those
+models could be completely different and build in parallel, they still
+related because fitted on intersection features. Splitting optimization
+problem to multiple stages improves the reusability of code and makes
+approach scalable. Nevertheless, we can switch from single-obj to multi
+obj and change optimization technic on the fly.
 
-Key idea is to use hypothesis model as middleware for genetic
-multi-objective algorithms. This hypothesis could be compositional and
-delineate target objectives.
+Domain-specific problem
+-----------------------
 
-Reusability in parameter tuning
--------------------------------
+With gain to find the best solution with less effort surrogate models is
+domain-specific. It’s mean that from two surrogate models in two
+different problems the best surrogate is changing. It could interpreter
+as Non-free lunch theorem in model-based optimization. If we extend this
+argument then the same optimization problem in different parameter
+tuning iteration could be interpreted as another optimization problem.
+This means that to reduce effort and increase the convergence of an
+algorithm we should change the surrogate model depend on how much
+samples do we have. As one would expect, no approximation method is
+universal. This leads us to use a portfolio with surrogate models. As a
+negative consequence, the model fitting additional introduces an
+additional overhead into the optimization.
 
-Parameter tuning can be splitted down into steps that are common for the
-many/single-objective optimizations. Each step in optimization workflow
-has variability via implemented interfaces. Single-objective hypotheses
-can be combined for multi-objective optimization with compositional
-design.
+Surrogate Validation
+--------------------
 
-API of metric-learn is compatible with scikit-learn, the leading library
-for machine learning in Python. This allows to use all the scikit-learn
-routines (for pipelining, model selection, etc) with metric learning
-algorithms through a unified interface.
+It is necessary to sacrifice a small portion of the data experiments to
+check the quality of the surrogate model on it. Based on validation
+results we can discard inadequate models and in a complex manner
+evaluated quality of solutions from valid models. If neither model is
+valid, this means that the best solution right now is a random solution.
+This may be due to insufficiently count of samples for the model or
+incorrect surrogate model, which is unable to describe the hypothesis
+between the configuration and objective space. In the context of
+parameter tuning a common misconception is that we are interested in the
+accuracy of the model not in the entire space but in the optimal region.
+That is why evaluation surrogate validity based only on the coefficient
+of determination(R2) metrics is incorrect. Global R2 can be anyway used
+as a threshold in which if the models score becomes smaller of some
+threshold value it is not valid even without further estimations.
 
-\[!TODO\] Real, integer, ordinal and categorical variables.
+Real parameters for optimization
+--------------------------------
 
-Surrogate portfolio
--------------------
+Parameter tuning is not a trivial task. Coding features for a surrogate
+model can transform es in mining full form, understandable for a
+surrogate model. Encoding just represents a feature in another form that
+help model instanciation relation and a correlation between features.
+Based on this inner interpretation model can predict the values of
+labels based on a parameter vector. The problem occurs what we use the
+model as black-box to find a minimum of prediction and make reverse
+interpretation of this optimal predictions in the context of parameter
+space. Offen this prediction is not a feasible point from parameters
+space. As a possible solution, it partly transforms problem in multiple
+classification tasks and then considers there relation as a continuous
+problem for optimization \[TPE\]. For general surrogate model with mixed
+parameters, we can solve problem orthogonally with multiple optimizers.
+All categorical feature are encoded and with other numerical parameters
+were fitted to the surrogate model. Then we use this model as a source
+that describes the function of the mapping parameter to objective space.
+We incrementally solve this optimization problem on a subset of
+dimension iteratively. For example, we find optimal parameters in
+categorical dimensions and then fix these values and optimize surrogate
+on the left sub set of numerical dimensions where categories are fixed.
 
-A Surrogate(s) is a simplified version of the examples. The
-simplifications are meant to discard the superfluous details that are
-unlikely to generalize to new instances. However, to decide what data to
-discard and what data to keep, you must make hypothesis. For example, a
-linear model makes the hypothesis that the data is fundamentally linear
-and that the distance between the instances and the straight line is
-just noise, which can safely be ignored.
+Infill criteria
+---------------
 
-If there is no hypothesis about the data, then there is no reason to
-prefer one surrogate over any other. This is called the No Free Lunch
-(NFL) theorem. For some datasets the best model is a linear model, while
-for other datasets it is a neural network. There is no model that is a
-priori guaranteed to work better (hence the name of the theorem). The
-only way to know for sure which model is best is to evaluate them all.
-Since this is not possible, in practice you make some reasonable
-assumptions about the data and you evaluate only a few reasonable
-models. For example, for simple tasks you may evaluate linear models
-with various levels of regularization, and for a complex problem you may
-evaluate various neural networks.
+In the case of MOEA, solution of algorithm present as non-dominated
+final population. Based on unbiased, multi-objective criteria, they all
+uniformly could be presented as a prediction to the next evaluation.
+Thay represents current solution based on the surrogate model.
+Nevertheless, there is prior knowledge available in samples which can be
+taken into account. To reduce the number of candidates in the
+population, it is possible to deny those in which the distance to the
+nearest available sample is less than their average distance. So there
+are two strategies for predicting from a population:
 
-\"No Free Lunch\" (NFL) theorems demonstrate that if an algorithm
-performs well on a certain class of problems then it necessarily pays
-for that with degraded performance on the set of all remaining problems
-Additionally, the name emphasizes the parallel with similar results in
-supervised learning.
+-   Prior and posterior knowledge. Based on changing metrics in
+    available and proposed solutions
 
-1.  You have to try multiple types of surrogate(models) to find the best
-    one for your data.
-
-2.  A number of NFL theorems were derived that demonstrate the danger of
-    comparing algorithms by their performance on a small sample of
-    problems.
-
-GALE uses MOEA decomposition but avoids certain open issues with
-E-domination and MOEA/D. GALE does the subproblems is determined via a
-recursive median split not need some outside oracle to specify E.
-Rather, the size of on dimensions synthesized using a PCA-approximation
-
-##### Reusable software
-
-Problem that each optimization framework/library use inner interfaces.
-It is necessary to define a standard that implements best practices for
-extension libraries [@2iBa9w3z]. We introduce new Model-based
-line for parameter tuning.
+-   Posterior knowledge. Proposed solutions are all equal
 
 Conclusions
 -----------
 
-Also, to the best of our knowledge, has not been previously reported in
-the SBSE literature. GALE's cost reduction of MOEA to O2 log2N
-evaluations
+Also, to the best of our knowledge, has not been previously or stingy
+reported in the efficient multi-objective optimization. Contribution:
 
-1.  Surrogate portfolio. Search a better hypothesis for a specific
+-   Surrogate combination/composition. Current approaches use the same
+    model for each dimensionality
+
+-   Surrogate portfolio. Search a better hypothesis for a specific
     problem at a particular stage of parameter tuning
 
-2.  Large set of evaluation problems for comprehensive and fair
-    comparison
+-   Metric combination for evaluation Pareto optimal points
 
-3.  Interfaces for reusability and scalability.
+-   Samples size depends on model(s) validity
 
-Optimization problems involving multiple objectives are common. In this
-context, evolutionary computation represents a valuable tool, in
-particular -- if we would like to be flexible with respect to the
-problem formulation, -- if we are interested in approximating the Pareto
-set, and -- if the problem complexity prevents exacts methods from being
-applicable.
-
-Flexibility is important if the underlying model is not fixed and may
-change or needs further refinement. The advantage of evolutionary
-algorithms is that they have minimum requirements regarding the problem
-formulation; objectives can be easily added, removed, or modified.
-Moreover, due the fact that they operate on a set of solution
-candidates, evolutionary algorithms are well-suited to generate Pareto
-set approximations. This is reflected by the rapidly increasing interest
-in the field of evolutionary multiobjective optimization. Finally, it
-has been demonstrated in various applications that evolutionary
-algorithms are able to tackle highly complex problems and therefore they
-can be seen as an approach complementary to traditional methods such as
-integer linear programming.
+-   Combination of different(orthogonal) solvers
 
 
 Implementation. Development
@@ -843,9 +887,16 @@ There are main approaches how produce single solution:
 
 ##### Designing a Sampling Plan
 
-\- The most straightforward way of sampling a design space in a uniform
+- The most straightforward way of sampling a design space in a uniform
 fashion is by [@yGyc3usi] means of a rectangular grid of points. This
 is the full factorial sampling technique referred - Latin Squares
+
+Random sampling has the downside that for small sample sizes, there is
+often signficant clustering of samples, which is not ideal for
+interpolation since clustered samples can be wasteful. Instead, often a
+better option is to use a Latin hypercube, which enforces a condition
+that sample bins may not share the same coordinates for any coordinate
+axis
 
 Dependencies
 ------------
@@ -893,8 +944,55 @@ Tests suits:
     box-constrained continuous n-dimensional multi-objective problems,
     scalable in fitness dimension.
 
-Portfolio with hypothesis
--------------------------
+Reusability in parameter tuning
+-------------------------------
+
+Parameter tuning can be splitted down into steps that are common for the
+many/single-objective optimizations. Each step in optimization workflow
+has variability via implemented interfaces. Single-objective hypotheses
+can be combined for multi-objective optimization with compositional
+design.
+
+API of metric-learn is compatible with scikit-learn, the leading library
+for machine learning in Python. This allows to use all the scikit-learn
+routines (for pipelining, model selection, etc) with metric learning
+algorithms through a unified interface.
+
+Surrogate hypothesis portfolio
+------------------------------
+
+A Surrogate(s) is a simplified hypothesis of the relation between
+parameters and objectives space build on examples. The simplifications
+are mean to discard the superfluous details that are unlikely to
+generalize to new instances. However, to decide what data to discard and
+what data to keep, you must make a hypothesis. For example, a linear
+model makes the hypothesis that the data is fundamentally linear and
+that the distance between the instances and the straight line is just
+noise, which can safely be ignored.
+
+If there is no hypothesis about the data, then there is no reason to
+prefer one surrogate over any other. For some datasets, the best model
+is a linear model, while for other datasets it is a neural network. No
+model is a priori guaranteed to work better, this is consequences from
+the No Free Lunch (NFL) theorem. The only way to know for sure which
+model is best is to evaluate them all. Since this is not possible, in
+practice you make some reasonable assumptions about the data and you
+evaluate only a few reasonable models. For example, for simple tasks,
+you may evaluate linear models with various levels of regularization,
+and for a complex problem, you may evaluate various neural networks.
+
+“No Free Lunch” (NFL) theorems demonstrate that if an algorithm performs
+well on a certain class of problems then it necessarily pays for that
+with degraded performance on the set of all remaining problems
+Additionally, the name emphasizes the parallel with similar results in
+supervised learning.
+
+1.  You have to try multiple types of surrogate(models) to find the best
+    one for your data.
+
+2.  A number of NFL theorems were derived that demonstrate the danger of
+    comparing algorithms by their performance on a small sample of
+    problems.
 
 A set of models is defined that can form a partial or complete
 hypothesis to describe the problem. Also during the increase of the
@@ -903,14 +1001,24 @@ problem As a result, there is variability for each problem and
 configuration step at the same time. A set of hypotheses can solve this
 problem but it takes longer time for cross validation.
 
+##### Inner interfaces
+
+Supervised learning consists in learning the link between two datasets:
+the observed data X and an external variable y that we are trying to
+predict, usually called target or labels. Most often, y is a 1D array of
+length $n_samples$. All supervised estimators in scikit-learn implement
+a fit(X, y) method to fit the model and a predict(X) method that, given
+unlabeled observations X, returns the predicted labels y.
+
+Using arbitrary regression models from scikit-learn as surrogates
+
+Problem that each optimization framework/library use inner interfaces.
+It is necessary to define a standard that implements best practices for
+extension libraries [@2iBa9w3z]. We introduce new Model-based
+line for parameter tuning.
+
 Validate hypothesis
 -------------------
-
-::: {.epigraph}
-"All models are wrong but some are useful"
-
-*-- George Box*
-:::
 
 The main task of learning algorithms is to be able to generalize to
 unseen data. Surrogate model as learning model should generalize
@@ -938,6 +1046,18 @@ case, provided a carefully check that the model assumptions seem valid.
 for other set of parameters, and make a choice from more diverse pool of
 models.
 
+Results
+-------
+
+\[ref: Multi-Objective Parameter Configuration of Machine Learning
+Algorithms using Model-Based Optimization\] The approach is linked to
+the field of surrogate assisted optimizations. In many practical
+settings only a restricted budget is spendable. For example, the arise
+of Big Data confronts many machine learning techniques with new
+expensive parameter configuration problems. A single training of a
+Support Vector Machine (SVM) on a data-set containing less than a
+million observations can take several hours.
+
 
 Evaluation. Experimental Results
 ================================
@@ -946,37 +1066,39 @@ This chapter presents the evaluation of the proposed method on test
 problems with diverse objective landscape and with a various number of
 search variables.
 
-Roughly speaking, an MOEA is called globally convergent if the sequence
-of Pareto front approximations A(t) it produces converges to the true
-Pareto front Y while the number of generations t goes to infinity. It is
-intuitively clear that this property can only be fulfilled with
-unlimited memory resources, as the cardinality of the Pareto front can
-be arbitrary large in general \[Convergence properties of some
-multi-objective evolutionary algorithms.\].
+MOEA is called globally convergent if the produced, non-dominated
+population converges to the true Pareto front while the number of
+generations goes to infinity.
+
+Questions to find out:
+
+-   Advantages and disadvantages of the model-based optimization over
+    the classic MOEA
+
+-   Model-based optimization (MBO): compositional vs single surrogate
+
+-   MBO: several identical surrogate vs surrogate portfolio
+
+-   Infill criteria: Selection a point from Pareto-front approximated
+    population. Prior vs Posterior
 
 [@Vb3fs8xv]
-
-Will be used two types of problems: Synthetic and Real physical
-
-Idea: Generate problem from data set and try to optimize it with
-parameter tunning from the beginning. Need models with accuracy  96 amd
-multiply objectives.
 
 Test suite: ZDT
 ---------------
 
 This widespread test suite was conceived for two-objective problems and
 takes its name from its authors Zitzler, Deb and Thiele.
-Ref\["Comparison of multiobjective evolutionary algorithms: Empirical
-results.", 2000\]
+Ref\[“Comparison of multiobjective evolutionary algorithms: Empirical
+results.”, 2000\]
 
 Test suite: DTLZ
 ----------------
 
 This widespread test suite was conceived for multiobjective problems
 with scalable fitness dimensions and takes its name from its authors
-Deb, Thiele, Laumanns and Zitzler. Ref\[\"Scalable Test Problems for
-Evolutionary Multiobjective Optimization\", 2005\]
+Deb, Thiele, Laumanns and Zitzler. Ref\[“Scalable Test Problems for
+Evolutionary Multiobjective Optimization”, 2005\]
 
 Test suite: WFG
 ---------------
@@ -1005,43 +1127,15 @@ covered.
 
 5.  Both non-separable and multimodal problems should also be addressed.
 
-Ref\[ "A Review of Multi-Objective Test Problems and a Scalable Test
-Problem Toolkit", 2006\]
+Ref\[ “A Review of Multi-Objective Test Problems and a Scalable Test
+Problem Toolkit”, 2006\]
 
 Problem suite: CEC 2009
 -----------------------
 
-Competition on "Performance Assessment of Constrained / Bound
-Constrained Multi-Objective Optimization Algorithms". All problems are
+Competition on “Performance Assessment of Constrained / Bound
+Constrained Multi-Objective Optimization Algorithms”. All problems are
 continuous, multi objective problems.
-
-Physical. Real world problem
-----------------------------
-
-Computational models describing the behavior of complex physical systems
-are often used in the engineering design field to identify better or
-optimal solutions with respect to previously defined performance
-criteria. Multi-objective optimization problems arise and the set of
-optimal compromise solutions (Pareto front) has to be identified by an
-effective and complete search procedure in order to let the decision
-maker, the designer, to carry out the best choice.
-
-### Materials Selection in mechanical design
-
-### Test generation
-
-### Gold or oil search. Geodesy
-
-### Space crafts
-
-Problem 1: obtain a set of geometric design parameters to get minimum
-heat pipe mass and the maximum thermal conductance. Thus, a set of
-geometric design parameters lead to minimum pressure total cost and
-maximum pressure vessel volume. The alternative solutions are very
-difficult to be adopted to practical engineering decision directly.
-Ref\[Multi-Objective Optimization Problems in Engineering Design Using
-Genetic Algorithm Case Solution\] Problem 2: Solar sailing mission
-design
 
 Conclusion
 ----------
@@ -1049,6 +1143,55 @@ Conclusion
 The quality of the results obtained with X was similar to the results
 obtained with Y, but with significantly fewer exactly evaluated
 solutions during the optimization process.
+
+##### Neuroevolution of augmenting topologies
+
+\*Training Neural Networks (especially deep ones) is hard and has many
+issues (non-convex cost functions - local minima, vanishing and
+exploding gradients etc.).
+
+Training Neural Networks (NNs) with Genetic Algorithms (GAs) is not only
+feasible, there are some niche areas where the performance is good
+enough to be used frequently. A good example of this is Neuroevolution
+of augmenting topologies or NEAT, which a successful approach to
+generating controllers in simple environments, such as games.
+
+In the more general case though, the approach does not scale well to
+large, deep networks with many parameters to tune.
+
+Genetic algorithms and other global searches for optimal parameters are
+robust in ways that gradient-based algorithms are not. For instance, you
+could train a NN with step function activations, or any other
+non-differentiable activation functions. They have weaknesses elsewhere.
+One thing relevant in the case of GAs used for NNs, is that weight
+parameters are interchangeable in some combinations but heavily
+co-dependent in other combinations. Merging two equally good neural
+networks with different parameters - which you would do in cross-over in
+a GA - will usually result in a third network with poor performance.
+NEAT’s success is partially in finding a way to address that issue by
+“growing” the NN’s connections and matching them up between similar
+neural networks.
+
+Gradient-based approaches are much more efficient. In general, and not
+just in domain of NNs, if you can calculate gradient of a function with
+respect to parameters, then you can find optimal parameters faster than
+most other optimising techniques. An accurate gradient guarantees at
+least a small improvement from a single evaluation, and most other
+optimisers fall into a generate-and-retry paradigm which cannot make
+that kind of guarantee. The weakness of tending to find local optima has
+turned out not be a major hindrance for the loss functions in NNs, and
+has been tackled with some degree of success using extensions to basic
+gradient descent such as momentum, RPROP, Adam etc.
+
+In practice on a large multi-layer network, gradient methods are likely
+orders of magnitude faster than GA searches such as NEAT for finding
+network parameters. You won’t find any GA-trained CNNs that solve
+ImageNet, or even MNIST, where the GA has found the network weights
+unaided. However, GAs, or at least some variants of them, are not 100’%’
+ruled out. For instance this 2017 blog reviews recent papers including
+Large-Scale Evolution of Image Classifiers which explores using GAs to
+discover NN hyperparameters which is an important task in machine
+learning, and not very tractable using gradient-based methods.
 
 
 Related work
@@ -1097,6 +1240,14 @@ candidate
 
 [@d1YE9XcQ] raw:PlatEMO: A MATLAB Platform for Evolutionary Multi-Objective
 Optimization
+
+##### mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions
+
+##### ParEGO
+
+ParEGO was enhanced to a multi-point proposal by increasing the number
+of weight vectors randomly drawn in each iteration. If N points are
+desired, cN (c &gt; 1) weight vectors are selected.
 
 
 Conclusion and Future Work
