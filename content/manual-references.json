@@ -95,7 +95,6 @@
     "type": "paper-conference"
   },
   {
-    "URL": "http://arxiv.org/abs/1903.02915",
     "author": [
       {
         "family": "Benitez-Hidalgo",
@@ -131,7 +130,6 @@
     "type": "no-type"
   },
   {
-    "URL": "http://arxiv.org/abs/1906.11152",
     "author": [
       {
         "family": "Bodin",
@@ -170,7 +168,6 @@
     "type": "no-type"
   },
   {
-    "URL": "http://arxiv.org/abs/1309.0238",
     "author": [
       {
         "family": "Buitinck",
@@ -299,7 +296,7 @@
       },
       {
         "family": "Vicente",
-        "given": "Luı́s Nunes"
+        "given": "Luís Nunes"
       }
     ],
     "container-title": "SIAM Journal on Optimization",
@@ -660,7 +657,6 @@
     "volume": "9"
   },
   {
-    "URL": "http://arxiv.org/abs/1801.02381",
     "author": [
       {
         "dropping-particle": "van der",
@@ -820,7 +816,7 @@
         "given": "Hirotaka"
       }
     ],
-    "container-title": "Practical approaches to multi-objective optimization, 7.-12. November 2004",
+    "container-title": "Practical approaches to multi-objective optimization, 7.-12. november 2004",
     "id": "raw:Nakayama05",
     "issued": {
       "date-parts": [
