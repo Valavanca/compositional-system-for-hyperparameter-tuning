@@ -1278,5 +1278,38 @@
     "title-short": "Comparison of multiobjective evolutionary algorithms",
     "type": "article-journal",
     "volume": "8"
+  },
+  {
+    "DOI": "10.1007/s00500-017-2965-0",
+    "author": [
+      {
+        "family": "Chugh",
+        "given": "Tinkle"
+      },
+      {
+        "family": "Sindhya",
+        "given": "Karthik"
+      },
+      {
+        "family": "Hakanen",
+        "given": "Jussi"
+      },
+      {
+        "family": "Miettinen",
+        "given": "Kaisa"
+      }
+    ],
+    "container-title": "Soft Computing",
+    "id": "raw:SoftSurvey",
+    "issued": {
+      "date-parts": [
+        [
+          2017,
+          12
+        ]
+      ]
+    },
+    "title": "A survey on handling computationally expensive multiobjective optimization problems with evolutionary algorithms",
+    "type": "article-journal"
   }
 ]

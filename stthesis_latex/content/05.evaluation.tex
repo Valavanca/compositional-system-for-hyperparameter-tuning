@@ -10,40 +10,69 @@ Questions to find out:
     \item Model-based optimization (MBO): compositional vs single surrogate 
     \item MBO: several identical surrogate vs surrogate portfolio
     \item Infill criteria: Selection a point from Pareto-front approximated population. Prior vs Posterior
+    \item Efficacy in handling problems having more than two objectives
 \end{itemize}
 
 \cite{kouwe2018benchmarking}
 
-\section{Test suite: ZDT}
-This widespread test suite was conceived for two-objective problems and takes its name from its authors Zitzler, Deb and Thiele.
-Ref[“Comparison of multiobjective evolutionary algorithms: Empirical results.”, 2000]
+% --------------------------------------------------------------------------------------------
+% ------------------------------------------------     Benchmark problems      
+% --------------------------------------------------------------------------------------------
+\section{Benchmark problems}
+For comparison was selected several widespread synthetic benchmark suites. All of them are scalable in parameters space and some in objective space also. They simulate real life problem and have main related chalanges such as multi-modality, different surface type,not uniform search space and etsetra.
 
-\section{Test suite: DTLZ}
-This widespread test suite was conceived for multiobjective problems with scalable fitness dimensions and takes its name from its authors Deb, Thiele, Laumanns and Zitzler.
-Ref["Scalable Test Problems for Evolutionary Multiobjective Optimization", 2005]
+    % ------------------------------------------------  ZDT      
+    \paragraph{ZDT}
+    This widespread test suite\cite{ZitzlerDT00} was conceived for two-objective problems and takes its name from its authors Zitzler, Deb and Thiele. Each test function involves a particular feature that is known to cause difficulty in the evolutionary optimization process, mainly in converging to the Pareto-optimal front (e.g., multimodality and deception).
 
-\section{Test suite: WFG}
-This test suite was conceived to exceed the functionalities of previously implemented test suites.
-In particular, non-separable problems, deceptive problems, truly degenerative problems and mixed shape Pareto front problems are thoroughly covered, 
-as well as scalable problems in both the number of objectives and variables. Also, problems with dependencies between position and distance related parameters are covered.
-    \begin{enumerate}
+    \begin{itemize}
+        \item ZDT1: function has a convex Pareto-optimal front
+        \item ZDT2: function has a non-convex Pareto-optimal front
+        \item ZDT3: function adds a discreteness feature to the front. Its Pareto-optimal front consists of several noncontiguous convex parts. The introduction of a sine function in this objective function causes discontinuities in the Pareto-optimal front, but not in the parameter space.
+        \item ZDT4: function has 21 local Pareto-optimal fronts and therefore is highly multi-modal
+        \item ZDT5: integer problem
+        \item ZDT6: function has a non-uniform search space: the Pareto-optimal solutions are non-uniformly distributed along the global Pareto front, and also the density of the solutions is lowest near the Pareto optimal front and highest away from the front
+    \end{itemize}
 
-        \item A few unimodal test problems should be present in the test suite. 
-        Various Pareto optimal geometries and bias conditions should define these problems, 
-        in order to test how the convergence velocity is influenced by these aspects.
+    In their paper the authors propose a set of 6 different scalable problems all originating from a well thought combination of functions allowing, by construction, to measure the distance of any point to the Pareto front
 
-        \item The following three Pareto optimal geometries should be present in the test suite: 
-        degenerate Pareto optimal fronts, disconnected Pareto optimal fronts and disconnected Pareto optimal sets.
+    % ------------------------------------------------  DTLZ
+    \paragraph{DTLZ}
+    This benchmark suite\cite{DebTLZ05} was conceived for multiobjective problems with scalable fitness and objective dimensions and takes its name from its authors Deb, Thiele, Laumanns and Zitzler. All problems in this test suite are box-constrained continuous n-dimensional multi-objective problems, scalable in fitness dimension.
 
-        \item Many problems should be multimodal, and a few deceptive problems should also be covered.
-        \item The majority of test problems should be non-separable.
-        \item Both non-separable and multimodal problems should also be addressed.
-    \end{enumerate}
-Ref[ “A Review of Multi-Objective Test Problems and a Scalable Test Problem Toolkit”, 2006]
+    \begin{itemize}
+        \item DTLZ1: The optimal pareto front lies on a linear hyperplane
+        \item DTLZ2: The search space is continous, unimodal and the problem is not deceptive
+        \item DTLZ3: The search space is continous, unimodal and the problem is not deceptive. It is supposed to be harder to converge towards the optimal pareto front than DTLZ2
+        \item DTLZ4: The search space contains a dense area of solutions next to the plane
+        \item DTLZ5: This problem will test an MOEA’s ability to converge to a cruve and will also allow an easier way to visually demonstrate (just by plotting $f_M$ with any other objective function) the performance of an MOEA. Since there is a natural bias for solutions close to this Pareto-optimal curve, this problem may be easy for an algorithmn to solve. Because of its simplicity its recommended to use a higher number of objectives
+        \item DTLZ6: A more difficult version of the DTLZ5 problem with the non-linear distance function g makes it harder to convergence against the pareto optimal curve
+        \item DTLZ7: This problem has disconnected Pareto-optimal regions in the search space
+    \end{itemize}
 
-\section{Problem suite: CEC 2009}
-Competition on “Performance Assessment of Constrained / Bound Constrained Multi-Objective Optimization Algorithms”. All problems are continuous, multi objective problems.
 
+    % ------------------------------------------------  WFG
+    \paragraph{WFG}
+    This test suite \cite{WFGref} was conceived to exceed the functionalities of previously implemented test suites. In particular, non-separable problems, deceptive problems, truly degenerative problems and mixed shape Pareto front problems are thoroughly covered, as well as scalable problems in both the number of objectives and variables. Also, problems with dependencies between position and distance related parameters are covered. The WFG test suite was introduced by Simon Huband, Luigi Barone, Lyndon While, and Phil Hingston. All these problems, were developed satisfying the following guidelines:
+        \begin{enumerate}
+            \item A few unimodal test problems should be present in the test suite. Various Pareto optimal geometries and bias conditions should define these problems, in order to test how the convergence velocity is influenced by these aspects.
+            \item The following three Pareto optimal geometries should be present in the test suite: degenerate Pareto optimal fronts, disconnected Pareto optimal fronts and disconnected Pareto optimal sets
+            \item Many problems should be multimodal, and a few deceptive problems should also be covered
+            \item The majority of test problems should be non-separable
+            \item Both non-separable and multimodal problems should also be addressed
+        \end{enumerate}
+
+        \begin{itemize}
+            \item WFG1: This problems skews the relative significance of different parameters by employing different weights in the weighted sum reduction. Also, this problem is unimodal and with a convex and mixed Pareto optimal geometry
+            \item WFG2: This problem is non-separable, unimodal and with a convex and disconnected Pareto optimal geometry
+            \item WFG3: This is a non-separable, unimodal problem in all its objective except for the last one, which is multimodal
+            \item WFG4: This is a separable, multimodal problem with a concave Pareto optimal geometry. The multimodality of this problem has larger “hill sizes” than that of WFG9: this makes it thus more difficult.
+            \item WFG5: This is a deceptive, separable problem with a concave Pareto optimal geometry.
+            \item WFG6: This problem is non-separable and unimodal. Its Pareto optimal geometry is concave. The non-separable reduction of this problem makes it more difficult than that of WFG2 and WFG3
+            \item WFG7: This problem is separable, unimodal and with a concave Pareto optimal geometry. This, together with WFG1, is the only problem that is both separable and unimodal.
+            \item WFG8: This is a non-separable, unimodal problem with a concave Pareto optimal geometry
+            \item WFG9: This is a multimodal, deceptive and non-separable problem with a concave Pareto optimal geometry. Similar to WFG6, the non-separable reduction of this problem makes it more difficult than that of WFG2 and WFG3. Also, this problem is only deceptive on its position parameters.
+        \end{itemize}
 
 \section{Conclusion}
 
