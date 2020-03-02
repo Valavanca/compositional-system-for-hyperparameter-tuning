@@ -708,6 +708,40 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Schott1995FaultTD"
   },
   {
+    "DOI": "10.1007/s00500-017-2965-0",
+    "author": [
+      {
+        "family": "Chugh",
+        "given": "Tinkle"
+      },
+      {
+        "family": "Sindhya",
+        "given": "Karthik"
+      },
+      {
+        "family": "Hakanen",
+        "given": "Jussi"
+      },
+      {
+        "family": "Miettinen",
+        "given": "Kaisa"
+      }
+    ],
+    "container-title": "Soft Computing",
+    "id": "CrJQ8Xau",
+    "issued": {
+      "date-parts": [
+        [
+          2017,
+          12
+        ]
+      ]
+    },
+    "title": "A survey on handling computationally expensive multiobjective optimization problems with evolutionary algorithms",
+    "type": "article-journal",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:SoftSurvey"
+  },
+  {
     "DOI": "10.1016/j.ress.2006.04.014",
     "URL": "https://doi.org/10.1016/j.ress.2006.04.014",
     "author": [

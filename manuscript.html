@@ -5,7 +5,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Oleksandr Husak" />
-  <meta name="dcterms.date" content="2020-02-27" />
+  <meta name="dcterms.date" content="2020-03-02" />
   <meta name="keywords" content="multi-objective, surrogate optimization, software design, sequential parameter optimization" />
   <title>Compositional Multi-objective Parameter tuning</title>
   <style>
@@ -28,8 +28,8 @@
   <meta name="citation_title" content="Compositional Multi-objective Parameter tuning" />
   <meta property="og:title" content="Compositional Multi-objective Parameter tuning" />
   <meta property="twitter:title" content="Compositional Multi-objective Parameter tuning" />
-  <meta name="dc.date" content="2020-02-27" />
-  <meta name="citation_publication_date" content="2020-02-27" />
+  <meta name="dc.date" content="2020-03-02" />
+  <meta name="citation_publication_date" content="2020-03-02" />
   <meta name="dc.language" content="en-US" />
   <meta name="citation_language" content="en-US" />
   <meta name="dc.relation.ispartof" content="Manubot" />
@@ -45,9 +45,9 @@
   <meta name="citation_fulltext_html_url" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/" />
   <meta name="citation_pdf_url" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
   <link rel="alternate" type="application/pdf" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
-  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/ea6b96b58fdd1ab152d7e8b3ae3d7326b92a2892/" />
-  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/ea6b96b58fdd1ab152d7e8b3ae3d7326b92a2892/" />
-  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/ea6b96b58fdd1ab152d7e8b3ae3d7326b92a2892/manuscript.pdf" />
+  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/" />
+  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/" />
+  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/manuscript.pdf" />
   <meta property="og:type" content="article" />
   <meta property="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/png" sizes="192x192" href="https://manubot.org/favicon-192x192.png" />
@@ -61,10 +61,10 @@
 </header>
 <p><small><em>
 This manuscript
-(<a href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/ea6b96b58fdd1ab152d7e8b3ae3d7326b92a2892/">permalink</a>)
+(<a href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/">permalink</a>)
 was automatically generated
-from <a href="https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/ea6b96b58fdd1ab152d7e8b3ae3d7326b92a2892">Valavanca/compositional-system-for-hyperparameter-tuning@ea6b96b</a>
-on February 27, 2020.
+from <a href="https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/3da42322d11b3e3fc618a68cdf1be9728561efde">Valavanca/compositional-system-for-hyperparameter-tuning@3da4232</a>
+on March 2, 2020.
 </em></small></p>
 <h2 id="authors">Authors</h2>
 <ul>
@@ -78,6 +78,18 @@ Research Student Assistant in TUD
 </small></li>
 </ul>
 <h1 id="introduction.-challenges-and-problems.">Introduction. Challenges and Problems.</h1>
+<p>The main goal of this thesis is to investigate portfolio of surrogate
+models that can be used to improve applicability model-based
+optimization methods to a verity of problems such as parameter tuning.
+Surrogate model or models based optimization is a common approach for a
+deal with expensive black-box function, but as far as the author is
+aware, there is no published research where the influence of
+heterogeneous portfolio of surrogate models was studied. The main target
+problem is an expensive multi-objective problem but the developed
+approach is also suitable for expensive single-objective optimization.
+As black-box, we can’t say what type of surface does the problem have.
+That is why it should be customized in the optimization process. The
+goal is to determine if the variability in extrapolation worth it</p>
 <p>Multi-objective optimisation is an established parameter tuning
 technique. It is especially suited to solve complex, multidisciplinary
 design problems with an accent on system design.</p>
@@ -112,22 +124,23 @@ initialization</p></li>
 evaluations</p>
 <h2 id="research-questions">Research Questions</h2>
 <ol type="1">
-<li><p>RQ(Cost): Does surrogate-based optimization cheaper in evaluations
-than other multi-goal optimization tools?</p></li>
-<li><p>RQ(Convergence speed): Does with surrogate-based optimization
-solutions converge faster to Pareto-front than with other multi-goal
-optimization tools?</p></li>
-<li><p>RQ(Quality): Does surrogate-based optimization return similar or
-better solutions than other optimization tools?</p></li>
-<li><p>RQ(Extensions and reusability): Reusable compositional system for
-optimization. Is it possible to extend light-weight single-objective
-experiments to heavy-weight multi/many-objective?</p></li>
+<li><p>RQ(Surrogate portfolio): How a surrogate portfolio influence on the
+optimization process?</p></li>
+<li><p>RQ(Composition model): How a compositional surrogate model influence
+on the optimization process?</p></li>
+<li><p>RQ(Sampling plan): Is the relation of the sampling plan with a
+surrogate validation can reduce samples set size?</p></li>
 </ol>
 <p>In numerous test problems, compositional-surrogate finds comparable
 solutions to standard MOEA (NSGA-II, MOEAD, MACO, NSPSO) doing
 considerably fewer evaluations (300 vs 5000). Surrogate-based
 optimization is recommended when a model is expensive to evaluate.</p>
 <h1 id="foundation">Foundation</h1>
+<h5 id="intro">Intro</h5>
+<p>General background information introduce. What is parameter tuning? Why
+multi-objective is important? Why we can’t use the standard
+multi-objective approach in real-life problem/parameter tuning task, and
+why model-based or surrogate optimization is the best solution?</p>
 <p>In common old-fashioned software design, engineers carefully convert
 overall models into domain-specific tools. In this approach, designers
 codify the current understanding of the problem into the parameters.</p>
@@ -526,6 +539,16 @@ evaluate. Single/Multi-objective parameter tuning</p></li>
 <li><p>Compositional-based surrogate optimization with MOEA</p></li>
 </ol>
 <h1 id="concept">Concept</h1>
+<h5 id="into">Into</h5>
+<ol type="1">
+<li><p>Classification approaches with surrogate model</p></li>
+<li><p>Define problems that related with surrogates model</p></li>
+<li><p>Ideas on how to solve it</p></li>
+<li><p>Discussion</p></li>
+</ol>
+<p>In this section general applicability of surrogate model presented. With
+different applicability use cases, there are some obstacles occurred
+that have a place to be in all circumstances.</p>
 <p>General problem trade-off is producing the best possible multi-objective
 solution with less effort. Because we consider expensive to the
 evaluation system, an effort first of all means really evaluated
@@ -577,7 +600,7 @@ becomes timeconsuming and error-prone.</p></li>
 <p>Mainly two groups are affected by this problem:</p>
 <ul>
 <li><p>Application engineers who need to choose, implement, and apply
-state-of- the-art algorithms without in-depth programming knowledge
+state-of-the-art algorithms without in-depth programming knowledge
 and expertise in the optimization domain</p></li>
 <li><p>Developers of optimization methods who want to evaluate algorithms
 on different test problems and compare a variety of competing
@@ -617,6 +640,13 @@ related because fitted on intersection features. Splitting optimization
 problem to multiple stages improves the reusability of code and makes
 approach scalable. Nevertheless, we can switch from single-obj to multi
 obj and change optimization technic on the fly.</p>
+<p>A surrogate model is either selected randomly or due to its popularity
+in the area with which the problem is associated. However, there are
+still some open challenges related to the ensemble of meta- models such
+as what should be the criterion for choosing different metamodels or how
+different metamodels can be used simultaneously? In addition, there are
+no guidelines for using different models for different objective
+functions <span class="citation" data-cites="CrJQ8Xau">[<a href="#ref-CrJQ8Xau" role="doc-biblioref">28</a>]</span>.</p>
 <h2 id="domain-specific-problem">Domain-specific problem</h2>
 <p>With gain to find the best solution with less effort surrogate models is
 domain-specific. It’s mean that from two surrogate models in two
@@ -666,13 +696,14 @@ We incrementally solve this optimization problem on a subset of
 dimension iteratively. For example, we find optimal parameters in
 categorical dimensions and then fix these values and optimize surrogate
 on the left sub set of numerical dimensions where categories are fixed.</p>
-<h2 id="infill-criteria">Infill criteria</h2>
-<p>In the case of MOEA, solution of algorithm present as non-dominated
-final population. Based on unbiased, multi-objective criteria, they all
-uniformly could be presented as a prediction to the next evaluation.
-Thay represents current solution based on the surrogate model.
-Nevertheless, there is prior knowledge available in samples which can be
-taken into account. To reduce the number of candidates in the
+<h2 id="discussion-1">Discussion</h2>
+<h5 id="section"></h5>
+<p><span>Infill criteria</span> In the case of MOEA, solution of algorithm present
+as non-dominated final population. Based on unbiased, multi-objective
+criteria, they all uniformly could be presented as a prediction to the
+next evaluation. They represents current solution based on the surrogate
+model. Nevertheless, there is prior knowledge available in samples which
+can be taken into account. To reduce the number of candidates in the
 population, it is possible to deny those in which the distance to the
 nearest available sample is less than their average distance. So there
 are two strategies for predicting from a population:</p>
@@ -681,7 +712,6 @@ are two strategies for predicting from a population:</p>
 available and proposed solutions</p></li>
 <li><p>Posterior knowledge. Proposed solutions are all equal</p></li>
 </ul>
-<h2 id="conclusions">Conclusions</h2>
 <p>Also, to the best of our knowledge, has not been previously or stingy
 reported in the efficient multi-objective optimization. Contribution:</p>
 <ul>
@@ -693,6 +723,20 @@ problem at a particular stage of parameter tuning</p></li>
 <li><p>Samples size depends on model(s) validity</p></li>
 <li><p>Combination of different(orthogonal) solvers</p></li>
 </ul>
+<p>Some of the major findings were <span class="citation" data-cites="CrJQ8Xau">[<a href="#ref-CrJQ8Xau" role="doc-biblioref">28</a>]</span>:</p>
+<ol type="1">
+<li><p>Kriging and neural networks were the most commonly used surrogate
+models</p></li>
+<li><p>Most of the algorithms were based on dominance-based evolutionary
+algorithms</p></li>
+<li><p>Most of the algorithms solved the problems with no more than three
+objectives</p></li>
+<li><p>The number of decision variables was also limited especially when
+using Kriging</p></li>
+<li><p>Only few algorithms used an ensemble of metamodels</p></li>
+<li><p>Many algorithms were tested only on benchmark problems which were
+not at all computationally expensive</p></li>
+</ol>
 <h1 id="implementation.-development">Implementation. Development</h1>
 <p>Without automated tools, it can take days for experts to review just a
 few dozen examples. In that same time, an automatic tool can explore
@@ -726,7 +770,7 @@ axis</p>
 <p>Adapted to provide base implementation for stages in parameter tuning
 with multi-objective</p>
 <h5 id="pagmo2">Pagmo2</h5>
-<p>A Python platform <span class="citation" data-cites="14vOEgTO2">[<a href="#ref-14vOEgTO2" role="doc-biblioref">28</a>]</span> to perform parallel
+<p>A Python platform <span class="citation" data-cites="14vOEgTO2">[<a href="#ref-14vOEgTO2" role="doc-biblioref">29</a>]</span> to perform parallel
 computations of optimisation tasks (global and local) via the
 asynchronous generalized island model. All test suites and basic
 multi-objective solvers:</p>
@@ -744,7 +788,7 @@ multi-objective solvers:</p>
 all beginning from a combination of functions allowing, to measure
 the distance of any point to the Pareto front while creating
 problems.</p></li>
-<li><p>WFG <span class="citation" data-cites="1HFetF7vb">[<a href="#ref-1HFetF7vb" role="doc-biblioref">29</a>]</span> was conceived to exceed the functionalities of
+<li><p>WFG <span class="citation" data-cites="1HFetF7vb">[<a href="#ref-1HFetF7vb" role="doc-biblioref">30</a>]</span> was conceived to exceed the functionalities of
 previously implemented test suites. In particular, non-separable
 problems, deceptive problems, truly degenerative problems and mixed
 shape Pareto front problems are thorougly covered, as well as
@@ -754,7 +798,7 @@ related parameters are covered. In their paper the authors identify
 the need for nonseparable multimodal problems to test
 multi-objective optimization algorithms. Given this, they propose a
 set of 9 different scalable multi-objective unconstrained problems.</p></li>
-<li><p>DTLZ <span class="citation" data-cites="yHWkop2U">[<a href="#ref-yHWkop2U" role="doc-biblioref">30</a>]</span>. All problems in this test suite are
+<li><p>DTLZ <span class="citation" data-cites="yHWkop2U">[<a href="#ref-yHWkop2U" role="doc-biblioref">31</a>]</span>. All problems in this test suite are
 box-constrained continuous n-dimensional multi-objective problems,
 scalable in fitness dimension.</p></li>
 </ul>
@@ -799,6 +843,11 @@ one for your data.</p></li>
 comparing algorithms by their performance on a small sample of
 problems.</p></li>
 </ol>
+<p>As metamodel-based algorithms are generally developed for black box
+problems, where characteristics of the problems to be solved are not
+known a priori, one can measure the efficiency of an algorithm by its
+ability to provide meaning- ful solutions in a least number of function
+evaluations <span class="citation" data-cites="CrJQ8Xau">[<a href="#ref-CrJQ8Xau" role="doc-biblioref">28</a>]</span>.</p>
 <p>A set of models is defined that can form a partial or complete
 hypothesis to describe the problem. Also during the increase of the
 experiments may change the model that best describes the existing
@@ -815,7 +864,7 @@ unlabeled observations X, returns the predicted labels y.</p>
 <p>Using arbitrary regression models from scikit-learn as surrogates</p>
 <p>Problem that each optimization framework/library use inner interfaces.
 It is necessary to define a standard that implements best practices for
-extension libraries <span class="citation" data-cites="2iBa9w3z">[<a href="#ref-2iBa9w3z" role="doc-biblioref">31</a>]</span>. We introduce new Model-based
+extension libraries <span class="citation" data-cites="2iBa9w3z">[<a href="#ref-2iBa9w3z" role="doc-biblioref">32</a>]</span>. We introduce new Model-based
 line for parameter tuning.</p>
 <h2 id="validate-hypothesis">Validate hypothesis</h2>
 <p>The main task of learning algorithms is to be able to generalize to
@@ -862,26 +911,80 @@ the classic MOEA</p></li>
 <li><p>MBO: several identical surrogate vs surrogate portfolio</p></li>
 <li><p>Infill criteria: Selection a point from Pareto-front approximated
 population. Prior vs Posterior</p></li>
+<li><p>Efficacy in handling problems having more than two objectives</p></li>
 </ul>
-<p><span class="citation" data-cites="Vb3fs8xv">[<a href="#ref-Vb3fs8xv" role="doc-biblioref">32</a>]</span></p>
-<h2 id="test-suite-zdt">Test suite: ZDT</h2>
-<p>This widespread test suite was conceived for two-objective problems and
-takes its name from its authors Zitzler, Deb and Thiele.
-Ref[“Comparison of multiobjective evolutionary algorithms: Empirical
-results.”, 2000]</p>
-<h2 id="test-suite-dtlz">Test suite: DTLZ</h2>
-<p>This widespread test suite was conceived for multiobjective problems
-with scalable fitness dimensions and takes its name from its authors
-Deb, Thiele, Laumanns and Zitzler. Ref[“Scalable Test Problems for
-Evolutionary Multiobjective Optimization”, 2005]</p>
-<h2 id="test-suite-wfg">Test suite: WFG</h2>
-<p>This test suite was conceived to exceed the functionalities of
+<p><span class="citation" data-cites="Vb3fs8xv">[<a href="#ref-Vb3fs8xv" role="doc-biblioref">33</a>]</span></p>
+<h2 id="benchmark-problems">Benchmark problems</h2>
+<p>For comparison was selected several widespread synthetic benchmark
+suites. All of them are scalable in parameters space and some in
+objective space also. They simulate real life problem and have main
+related chalanges such as multi-modality, different surface type,not
+uniform search space and etsetra.</p>
+<h5 id="zdt">ZDT</h5>
+<p>This widespread test suite<span class="citation" data-cites="cgOPGY3M">[<a href="#ref-cgOPGY3M" role="doc-biblioref">4</a>]</span> was conceived for two-objective
+problems and takes its name from its authors Zitzler, Deb and Thiele.
+Each test function involves a particular feature that is known to cause
+difficulty in the evolutionary optimization process, mainly in
+converging to the Pareto-optimal front (e.g., multimodality and
+deception).</p>
+<ul>
+<li><p>ZDT1: function has a convex Pareto-optimal front</p></li>
+<li><p>ZDT2: function has a non-convex Pareto-optimal front</p></li>
+<li><p>ZDT3: function adds a discreteness feature to the front. Its
+Pareto-optimal front consists of several noncontiguous convex parts.
+The introduction of a sine function in this objective function
+causes discontinuities in the Pareto-optimal front, but not in the
+parameter space.</p></li>
+<li><p>ZDT4: function has 21 local Pareto-optimal fronts and therefore is
+highly multi-modal</p></li>
+<li><p>ZDT5: integer problem</p></li>
+<li><p>ZDT6: function has a non-uniform search space: the Pareto-optimal
+solutions are non-uniformly distributed along the global Pareto
+front, and also the density of the solutions is lowest near the
+Pareto optimal front and highest away from the front</p></li>
+</ul>
+<p>In their paper the authors propose a set of 6 different scalable
+problems all originating from a well thought combination of functions
+allowing, by construction, to measure the distance of any point to the
+Pareto front</p>
+<h5 id="dtlz">DTLZ</h5>
+<p>This benchmark suite<span class="citation" data-cites="yHWkop2U">[<a href="#ref-yHWkop2U" role="doc-biblioref">31</a>]</span> was conceived for multiobjective
+problems with scalable fitness and objective dimensions and takes its
+name from its authors Deb, Thiele, Laumanns and Zitzler. All problems in
+this test suite are box-constrained continuous n-dimensional
+multi-objective problems, scalable in fitness dimension.</p>
+<ul>
+<li><p>DTLZ1: The optimal pareto front lies on a linear hyperplane</p></li>
+<li><p>DTLZ2: The search space is continous, unimodal and the problem is
+not deceptive</p></li>
+<li><p>DTLZ3: The search space is continous, unimodal and the problem is
+not deceptive. It is supposed to be harder to converge towards the
+optimal pareto front than DTLZ2</p></li>
+<li><p>DTLZ4: The search space contains a dense area of solutions next to
+the plane</p></li>
+<li><p>DTLZ5: This problem will test an MOEA’s ability to converge to a
+cruve and will also allow an easier way to visually demonstrate
+(just by plotting <span class="math inline">\(f_M\)</span> with any other objective function) the
+performance of an MOEA. Since there is a natural bias for solutions
+close to this Pareto-optimal curve, this problem may be easy for an
+algorithmn to solve. Because of its simplicity its recommended to
+use a higher number of objectives</p></li>
+<li><p>DTLZ6: A more difficult version of the DTLZ5 problem with the
+non-linear distance function g makes it harder to convergence
+against the pareto optimal curve</p></li>
+<li><p>DTLZ7: This problem has disconnected Pareto-optimal regions in the
+search space</p></li>
+</ul>
+<h5 id="wfg">WFG</h5>
+<p>This test suite <span class="citation" data-cites="1HFetF7vb">[<a href="#ref-1HFetF7vb" role="doc-biblioref">30</a>]</span> was conceived to exceed the functionalities of
 previously implemented test suites. In particular, non-separable
 problems, deceptive problems, truly degenerative problems and mixed
 shape Pareto front problems are thoroughly covered, as well as scalable
 problems in both the number of objectives and variables. Also, problems
 with dependencies between position and distance related parameters are
-covered.</p>
+covered. The WFG test suite was introduced by Simon Huband, Luigi
+Barone, Lyndon While, and Phil Hingston. All these problems, were
+developed satisfying the following guidelines:</p>
 <ol type="1">
 <li><p>A few unimodal test problems should be present in the test suite.
 Various Pareto optimal geometries and bias conditions should define
@@ -889,18 +992,40 @@ these problems, in order to test how the convergence velocity is
 influenced by these aspects.</p></li>
 <li><p>The following three Pareto optimal geometries should be present in
 the test suite: degenerate Pareto optimal fronts, disconnected
-Pareto optimal fronts and disconnected Pareto optimal sets.</p></li>
+Pareto optimal fronts and disconnected Pareto optimal sets</p></li>
 <li><p>Many problems should be multimodal, and a few deceptive problems
-should also be covered.</p></li>
-<li><p>The majority of test problems should be non-separable.</p></li>
-<li><p>Both non-separable and multimodal problems should also be addressed.</p></li>
+should also be covered</p></li>
+<li><p>The majority of test problems should be non-separable</p></li>
+<li><p>Both non-separable and multimodal problems should also be addressed</p></li>
 </ol>
-<p>Ref[ “A Review of Multi-Objective Test Problems and a Scalable Test
-Problem Toolkit”, 2006]</p>
-<h2 id="problem-suite-cec-2009">Problem suite: CEC 2009</h2>
-<p>Competition on “Performance Assessment of Constrained / Bound
-Constrained Multi-Objective Optimization Algorithms”. All problems are
-continuous, multi objective problems.</p>
+<ul>
+<li><p>WFG1: This problems skews the relative significance of different
+parameters by employing different weights in the weighted sum
+reduction. Also, this problem is unimodal and with a convex and
+mixed Pareto optimal geometry</p></li>
+<li><p>WFG2: This problem is non-separable, unimodal and with a convex and
+disconnected Pareto optimal geometry</p></li>
+<li><p>WFG3: This is a non-separable, unimodal problem in all its objective
+except for the last one, which is multimodal</p></li>
+<li><p>WFG4: This is a separable, multimodal problem with a concave Pareto
+optimal geometry. The multimodality of this problem has larger “hill
+sizes” than that of WFG9: this makes it thus more difficult.</p></li>
+<li><p>WFG5: This is a deceptive, separable problem with a concave Pareto
+optimal geometry.</p></li>
+<li><p>WFG6: This problem is non-separable and unimodal. Its Pareto optimal
+geometry is concave. The non-separable reduction of this problem
+makes it more difficult than that of WFG2 and WFG3</p></li>
+<li><p>WFG7: This problem is separable, unimodal and with a concave Pareto
+optimal geometry. This, together with WFG1, is the only problem that
+is both separable and unimodal.</p></li>
+<li><p>WFG8: This is a non-separable, unimodal problem with a concave
+Pareto optimal geometry</p></li>
+<li><p>WFG9: This is a multimodal, deceptive and non-separable problem with
+a concave Pareto optimal geometry. Similar to WFG6, the
+non-separable reduction of this problem makes it more difficult than
+that of WFG2 and WFG3. Also, this problem is only deceptive on its
+position parameters.</p></li>
+</ul>
 <h2 id="conclusion-1">Conclusion</h2>
 <p>The quality of the results obtained with X was similar to the results
 obtained with Y, but with significantly fewer exactly evaluated
@@ -965,16 +1090,16 @@ Sobol sequence (and Latin hypercube).</p></li>
 multi-objective, feasibility constraints.</p>
 <h2 id="dependencies-1">Dependencies</h2>
 <h5 id="auto-sklearn">AUTO-SKLEARN</h5>
-<p><span class="citation" data-cites="wqiAUHlQ">[<a href="#ref-wqiAUHlQ" role="doc-biblioref">33</a>]</span> - CASH (Combined Algorithm Selection
+<p><span class="citation" data-cites="wqiAUHlQ">[<a href="#ref-wqiAUHlQ" role="doc-biblioref">34</a>]</span> - CASH (Combined Algorithm Selection
 and Hyperparameter optimization) problem</p>
 <h5 id="tpot">TPOT</h5>
-<p><span class="citation" data-cites="1GyLc6Kgv">[<a href="#ref-1GyLc6Kgv" role="doc-biblioref">34</a>]</span> Already implemented TPOT automodel as hypothesis
+<p><span class="citation" data-cites="1GyLc6Kgv">[<a href="#ref-1GyLc6Kgv" role="doc-biblioref">35</a>]</span> Already implemented TPOT automodel as hypothesis
 candidate</p>
 <h5 id="jmetalpy">jMetalpy</h5>
-<p><span class="citation" data-cites="om6wdVM3">[<a href="#ref-om6wdVM3" role="doc-biblioref">35</a>]</span> Partially implemented some solvers.</p>
+<p><span class="citation" data-cites="om6wdVM3">[<a href="#ref-om6wdVM3" role="doc-biblioref">36</a>]</span> Partially implemented some solvers.</p>
 <h5 id="hyperopt">Hyperopt</h5>
 <h5 id="rawplatemo">raw:PlatEMO</h5>
-<p><span class="citation" data-cites="d1YE9XcQ">[<a href="#ref-d1YE9XcQ" role="doc-biblioref">36</a>]</span> raw:PlatEMO: A MATLAB Platform for Evolutionary Multi-Objective
+<p><span class="citation" data-cites="d1YE9XcQ">[<a href="#ref-d1YE9XcQ" role="doc-biblioref">37</a>]</span> raw:PlatEMO: A MATLAB Platform for Evolutionary Multi-Objective
 Optimization</p>
 <h5 id="mlrmbo-a-modular-framework-for-model-based-optimization-of-expensive-black-box-functions">mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions</h5>
 <h5 id="parego">ParEGO</h5>
@@ -1152,52 +1277,58 @@ DOI: <a href="https://doi.org/10.1109/TSMCC.2004.841905">10.1109/tsmcc.2004.8419
 Jiong Tang Pei Cao<br />
 <em>CoRR</em> (2018) <a href="http://arxiv.org/abs/1812.07958">http://arxiv.org/abs/1812.07958</a></p>
 </div>
+<div id="ref-CrJQ8Xau">
+<p>28. <strong>A survey on handling computationally expensive multiobjective optimization problems with evolutionary algorithms</strong><br />
+Tinkle Chugh, Karthik Sindhya, Jussi Hakanen, Kaisa Miettinen<br />
+<em>Soft Computing</em> (2017-12)<br />
+DOI: <a href="https://doi.org/10.1007/s00500-017-2965-0">10.1007/s00500-017-2965-0</a></p>
+</div>
 <div id="ref-14vOEgTO2">
-<p>28. <strong>Esa/pagmo2: Pagmo 2.12.0</strong><br />
+<p>29. <strong>Esa/pagmo2: Pagmo 2.12.0</strong><br />
 Francesco Biscani, Dario Izzo, Wenzel Jakob, GiacomoAcciarini, Marcus Märtens, Micky C, Alessio Mereta, Cord Kaldemeyer, Sergey Lyskov, Giacomo Acciarini, … Andrea Mambrini<br />
 <em>Zenodo</em> (2019-12) <a href="https://doi.org/10.5281/zenodo.3582877">https://doi.org/10.5281/zenodo.3582877</a><br />
 DOI: <a href="https://doi.org/10.5281/zenodo.3582877">10.5281/zenodo.3582877</a></p>
 </div>
 <div id="ref-1HFetF7vb">
-<p>29. <strong>A review of multiobjective test problems and a scalable test problem toolkit</strong><br />
+<p>30. <strong>A review of multiobjective test problems and a scalable test problem toolkit</strong><br />
 S. Huband, P. Hingston, L. Barone, L. While<br />
 <em>IEEE Transactions on Evolutionary Computation</em> (2006-10)<br />
 DOI: <a href="https://doi.org/10.1109/TEVC.2005.861417">10.1109/tevc.2005.861417</a></p>
 </div>
 <div id="ref-yHWkop2U">
-<p>30. <strong>Scalable test problems for evolutionary multiobjective optimization</strong><br />
+<p>31. <strong>Scalable test problems for evolutionary multiobjective optimization</strong><br />
 Kalyanmoy Deb, Lothar Thiele, Marco Laumanns, Eckart Zitzler<br />
 <em>Evolutionary multiobjective optimization</em> (2005) <a href="https://doi.org/10.1007/1-84628-137-7\_6">https://doi.org/10.1007/1-84628-137-7\_6</a><br />
 DOI: <a href="https://doi.org/10.1007/1-84628-137-7\_6">10.1007/1-84628-137-7\_6</a></p>
 </div>
 <div id="ref-2iBa9w3z">
-<p>31. <strong>API design for machine learning software: Experiences from the scikit-learn project</strong><br />
+<p>32. <strong>API design for machine learning software: Experiences from the scikit-learn project</strong><br />
 Lars Buitinck, Gilles Louppe, Mathieu Blondel, Fabian Pedregosa, Andreas Mueller, Olivier Grisel, Vlad Niculae, Peter Prettenhofer, Alexandre Gramfort, Jaques Grobler, … Gaël Varoquaux<br />
 (2013)</p>
 </div>
 <div id="ref-Vb3fs8xv">
-<p>32. <strong>Benchmarking crimes: An emerging threat in systems security</strong><br />
+<p>33. <strong>Benchmarking crimes: An emerging threat in systems security</strong><br />
 Erik van der Kouwe, Dennis Andriesse, Herbert Bos, Cristiano Giuffrida, Gernot Heiser<br />
 (2018)</p>
 </div>
 <div id="ref-wqiAUHlQ">
-<p>33. <strong>Efficient and robust automated machine learning</strong><br />
+<p>34. <strong>Efficient and robust automated machine learning</strong><br />
 Matthias Feurer, Aaron Klein, Katharina Eggensperger, Jost Springenberg, Manuel Blum, Frank Hutter<br />
 <em>Advances in neural information processing systems</em> (2015)</p>
 </div>
 <div id="ref-1GyLc6Kgv">
-<p>34. <strong>Evaluation of a tree-based pipeline optimization tool for automating data science</strong><br />
+<p>35. <strong>Evaluation of a tree-based pipeline optimization tool for automating data science</strong><br />
 Randal S. Olson, Nathan Bartley, Ryan J. Urbanowicz, Jason H. Moore<br />
 <em>Proceedings of the genetic and evolutionary computation conference 2016</em> (2016) <a href="http://doi.acm.org/10.1145/2908812.2908918">http://doi.acm.org/10.1145/2908812.2908918</a><br />
 DOI: <a href="https://doi.org/10.1145/2908812.2908918">10.1145/2908812.2908918</a> · ISBN: <a href="https://worldcat.org/isbn/978-1-4503-4206-3">978-1-4503-4206-3</a></p>
 </div>
 <div id="ref-om6wdVM3">
-<p>35. <strong>JMetalPy: A python framework for multi-objective optimization with metaheuristics</strong><br />
+<p>36. <strong>JMetalPy: A python framework for multi-objective optimization with metaheuristics</strong><br />
 Antonio Benitez-Hidalgo, Antonio J. Nebro, Jose Garcia-Nieto, Izaskun Oregi, Javier Del Ser<br />
 (2019)</p>
 </div>
 <div id="ref-d1YE9XcQ">
-<p>36. <strong>raw:PlatEMO: A MATLAB platform for evolutionary multi-objective optimization</strong><br />
+<p>37. <strong>raw:PlatEMO: A MATLAB platform for evolutionary multi-objective optimization</strong><br />
 Ye Tian, Ran Cheng, Xingyi Zhang, Yaochu Jin<br />
 <em>IEEE Computational Intelligence Magazine</em> (2017)</p>
 </div>
