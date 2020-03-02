@@ -54,11 +54,11 @@ header-includes: '<!--
 
   <link rel="alternate" type="application/pdf" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
 
-  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/" />
+  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/" />
 
-  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/" />
+  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/" />
 
-  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/manuscript.pdf" />
+  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/manuscript.pdf" />
 
   <meta property="og:type" content="article" />
 
@@ -87,9 +87,9 @@ title: Compositional Multi-objective Parameter tuning
 
 <small><em>
 This manuscript
-([permalink](https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/))
+([permalink](https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/))
 was automatically generated
-from [Valavanca/compositional-system-for-hyperparameter-tuning@3da4232](https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/3da42322d11b3e3fc618a68cdf1be9728561efde)
+from [Valavanca/compositional-system-for-hyperparameter-tuning@cb56ee7](https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/cb56ee707b172ae96d8f2f586a035972a38a91c3)
 on March 2, 2020.
 </em></small>
 
@@ -178,8 +178,15 @@ Research Questions
 2.  RQ(Composition model): How a compositional surrogate model influence
     on the optimization process?
 
-3.  RQ(Sampling plan): Is the relation of the sampling plan with a
-    surrogate validation can reduce samples set size?
+3.  RQ(Sampling plan): Dynamic sampling plan on arbitrary problem
+
+<!-- -->
+
+1.  RQ1: Heterogeneous surrogate models for multiobjective optimization
+
+2.  RQ2: Domain independent sampling strategies
+
+3.  RQ3: Scalable surrogate-based optimization
 
 In numerous test problems, compositional-surrogate finds comparable
 solutions to standard MOEA (NSGA-II, MOEAD, MACO, NSPSO) doing
@@ -192,7 +199,8 @@ Foundation
 
 ##### Intro
 
-General background information introduce. What is parameter tuning? Why
+In this chapter present general background information needed to follow
+the terms and methods used in this thesis. What is parameter tuning? Why
 multi-objective is important? Why we can’t use the standard
 multi-objective approach in real-life problem/parameter tuning task, and
 why model-based or surrogate optimization is the best solution?
@@ -794,6 +802,9 @@ problem to multiple stages improves the reusability of code and makes
 approach scalable. Nevertheless, we can switch from single-obj to multi
 obj and change optimization technic on the fly.
 
+![Generalized MBMO
+algorithm[]{data-label="fig:generalMBMO"}](content/images/mbmo.png){width="\textwidth"}
+
 A surrogate model is either selected randomly or due to its popularity
 in the area with which the problem is associated. However, there are
 still some open challenges related to the ensemble of meta- models such
@@ -1123,9 +1134,9 @@ million observations can take several hours.
 Evaluation. Experimental Results
 ================================
 
-This chapter presents the evaluation of the proposed method on test
-problems with diverse objective landscape and with a various number of
-search variables.
+In this section, we present the results obtained for proposed methods on
+test problems with diverse objective landscape and with a various number
+of search variables.
 
 MOEA is called globally convergent if the produced, non-dominated
 population converges to the true Pareto front while the number of
@@ -1153,8 +1164,8 @@ Benchmark problems
 For comparison was selected several widespread synthetic benchmark
 suites. All of them are scalable in parameters space and some in
 objective space also. They simulate real life problem and have main
-related chalanges such as multi-modality, different surface type,not
-uniform search space and etsetra.
+related challenges such as multi-modality, different surface type, not
+uniform search space, etc.
 
 ##### ZDT
 
@@ -1288,12 +1299,40 @@ developed satisfying the following guidelines:
     that of WFG2 and WFG3. Also, this problem is only deceptive on its
     position parameters.
 
+### Model-tutor parameters
+
+-   Surrogate models
+
+    -   Surrogate portfolio
+
+    -   Surrogates configurations
+
+    -   Validation threshold
+
+    -   Train/test split. Smallest dataset size
+
+-   Solver
+
+    -   MOEA (Population/Generation, Parameter control)
+
+    -   Scalarization with single-optimization algorithms
+
+    -   Random
+
+-   Sampling strategies
+
+-   Pareto front infill criteria (Prior/Posterior)
+
+-   Solutions combination
+
+-   Prediction count
+
 Conclusion
 ----------
 
-The quality of the results obtained with X was similar to the results
-obtained with Y, but with significantly fewer exactly evaluated
-solutions during the optimization process.
+Up to now, most papers used the The quality of the results obtained with
+X was similar to the results obtained with Y, but with significantly
+fewer exactly evaluated solutions during the optimization process.
 
 ##### Neuroevolution of augmenting topologies
 

@@ -45,9 +45,9 @@
   <meta name="citation_fulltext_html_url" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/" />
   <meta name="citation_pdf_url" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
   <link rel="alternate" type="application/pdf" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
-  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/" />
-  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/" />
-  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/manuscript.pdf" />
+  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/" />
+  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/" />
+  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/manuscript.pdf" />
   <meta property="og:type" content="article" />
   <meta property="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/png" sizes="192x192" href="https://manubot.org/favicon-192x192.png" />
@@ -61,9 +61,9 @@
 </header>
 <p><small><em>
 This manuscript
-(<a href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/3da42322d11b3e3fc618a68cdf1be9728561efde/">permalink</a>)
+(<a href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/">permalink</a>)
 was automatically generated
-from <a href="https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/3da42322d11b3e3fc618a68cdf1be9728561efde">Valavanca/compositional-system-for-hyperparameter-tuning@3da4232</a>
+from <a href="https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/cb56ee707b172ae96d8f2f586a035972a38a91c3">Valavanca/compositional-system-for-hyperparameter-tuning@cb56ee7</a>
 on March 2, 2020.
 </em></small></p>
 <h2 id="authors">Authors</h2>
@@ -128,8 +128,13 @@ evaluations</p>
 optimization process?</p></li>
 <li><p>RQ(Composition model): How a compositional surrogate model influence
 on the optimization process?</p></li>
-<li><p>RQ(Sampling plan): Is the relation of the sampling plan with a
-surrogate validation can reduce samples set size?</p></li>
+<li><p>RQ(Sampling plan): Dynamic sampling plan on arbitrary problem</p></li>
+</ol>
+<!-- -->
+<ol type="1">
+<li><p>RQ1: Heterogeneous surrogate models for multiobjective optimization</p></li>
+<li><p>RQ2: Domain independent sampling strategies</p></li>
+<li><p>RQ3: Scalable surrogate-based optimization</p></li>
 </ol>
 <p>In numerous test problems, compositional-surrogate finds comparable
 solutions to standard MOEA (NSGA-II, MOEAD, MACO, NSPSO) doing
@@ -137,7 +142,8 @@ considerably fewer evaluations (300 vs 5000). Surrogate-based
 optimization is recommended when a model is expensive to evaluate.</p>
 <h1 id="foundation">Foundation</h1>
 <h5 id="intro">Intro</h5>
-<p>General background information introduce. What is parameter tuning? Why
+<p>In this chapter present general background information needed to follow
+the terms and methods used in this thesis. What is parameter tuning? Why
 multi-objective is important? Why we can’t use the standard
 multi-objective approach in real-life problem/parameter tuning task, and
 why model-based or surrogate optimization is the best solution?</p>
@@ -640,6 +646,10 @@ related because fitted on intersection features. Splitting optimization
 problem to multiple stages improves the reusability of code and makes
 approach scalable. Nevertheless, we can switch from single-obj to multi
 obj and change optimization technic on the fly.</p>
+<figure>
+<img src="content/images/mbmo.png" alt="" /><figcaption>Generalized MBMO
+algorithm<span data-label="fig:generalMBMO"></span></figcaption>
+</figure>
 <p>A surrogate model is either selected randomly or due to its popularity
 in the area with which the problem is associated. However, there are
 still some open challenges related to the ensemble of meta- models such
@@ -897,9 +907,9 @@ expensive parameter configuration problems. A single training of a
 Support Vector Machine (SVM) on a data-set containing less than a
 million observations can take several hours.</p>
 <h1 id="evaluation.-experimental-results">Evaluation. Experimental Results</h1>
-<p>This chapter presents the evaluation of the proposed method on test
-problems with diverse objective landscape and with a various number of
-search variables.</p>
+<p>In this section, we present the results obtained for proposed methods on
+test problems with diverse objective landscape and with a various number
+of search variables.</p>
 <p>MOEA is called globally convergent if the produced, non-dominated
 population converges to the true Pareto front while the number of
 generations goes to infinity.</p>
@@ -918,8 +928,8 @@ population. Prior vs Posterior</p></li>
 <p>For comparison was selected several widespread synthetic benchmark
 suites. All of them are scalable in parameters space and some in
 objective space also. They simulate real life problem and have main
-related chalanges such as multi-modality, different surface type,not
-uniform search space and etsetra.</p>
+related challenges such as multi-modality, different surface type, not
+uniform search space, etc.</p>
 <h5 id="zdt">ZDT</h5>
 <p>This widespread test suite<span class="citation" data-cites="cgOPGY3M">[<a href="#ref-cgOPGY3M" role="doc-biblioref">4</a>]</span> was conceived for two-objective
 problems and takes its name from its authors Zitzler, Deb and Thiele.
@@ -1026,10 +1036,30 @@ non-separable reduction of this problem makes it more difficult than
 that of WFG2 and WFG3. Also, this problem is only deceptive on its
 position parameters.</p></li>
 </ul>
+<h3 id="model-tutor-parameters">Model-tutor parameters</h3>
+<ul>
+<li><p>Surrogate models</p>
+<ul>
+<li><p>Surrogate portfolio</p></li>
+<li><p>Surrogates configurations</p></li>
+<li><p>Validation threshold</p></li>
+<li><p>Train/test split. Smallest dataset size</p></li>
+</ul></li>
+<li><p>Solver</p>
+<ul>
+<li><p>MOEA (Population/Generation, Parameter control)</p></li>
+<li><p>Scalarization with single-optimization algorithms</p></li>
+<li><p>Random</p></li>
+</ul></li>
+<li><p>Sampling strategies</p></li>
+<li><p>Pareto front infill criteria (Prior/Posterior)</p></li>
+<li><p>Solutions combination</p></li>
+<li><p>Prediction count</p></li>
+</ul>
 <h2 id="conclusion-1">Conclusion</h2>
-<p>The quality of the results obtained with X was similar to the results
-obtained with Y, but with significantly fewer exactly evaluated
-solutions during the optimization process.</p>
+<p>Up to now, most papers used the The quality of the results obtained with
+X was similar to the results obtained with Y, but with significantly
+fewer exactly evaluated solutions during the optimization process.</p>
 <h5 id="neuroevolution-of-augmenting-topologies">Neuroevolution of augmenting topologies</h5>
 <p>*Training Neural Networks (especially deep ones) is hard and has many
 issues (non-convex cost functions - local minima, vanishing and
