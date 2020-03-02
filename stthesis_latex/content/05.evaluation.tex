@@ -1,6 +1,6 @@
 \chapter{Evaluation. Experimental Results} 
 
-This chapter presents the evaluation of the proposed method on test problems with diverse objective landscape and with a various number of search variables.
+In this section, we present the results obtained for proposed methods on test problems with diverse objective landscape and with a various number of search variables.
 
 MOEA is called globally convergent if the produced, non-dominated population converges to the true Pareto front while the number of generations goes to infinity.
 
@@ -19,7 +19,7 @@ Questions to find out:
 % ------------------------------------------------     Benchmark problems      
 % --------------------------------------------------------------------------------------------
 \section{Benchmark problems}
-For comparison was selected several widespread synthetic benchmark suites. All of them are scalable in parameters space and some in objective space also. They simulate real life problem and have main related chalanges such as multi-modality, different surface type,not uniform search space and etsetra.
+For comparison was selected several widespread synthetic benchmark suites. All of them are scalable in parameters space and some in objective space also. They simulate real life problem and have main related challenges such as multi-modality, different surface type, not uniform search space, etc.
 
     % ------------------------------------------------  ZDT      
     \paragraph{ZDT}
@@ -74,10 +74,34 @@ For comparison was selected several widespread synthetic benchmark suites. All o
             \item WFG9: This is a multimodal, deceptive and non-separable problem with a concave Pareto optimal geometry. Similar to WFG6, the non-separable reduction of this problem makes it more difficult than that of WFG2 and WFG3. Also, this problem is only deceptive on its position parameters.
         \end{itemize}
 
+\subsection{Model-tutor parameters}
+
+\begin{itemize}
+    \item Surrogate models
+        \begin{itemize}
+            \item Surrogate portfolio
+            \item Surrogates configurations
+            \item Validation threshold
+            \item Train/test split. Smallest dataset size
+        \end{itemize}
+    \item Solver
+        \begin{itemize}
+            \item MOEA (Population/Generation, Parameter control)
+            \item Scalarization with single-optimization algorithms
+            \item Random 
+        \end{itemize}
+    \item Sampling strategies
+    \item Pareto front infill criteria (Prior/Posterior)
+    \item Solutions combination
+    \item Prediction count
+\end{itemize}
+
+
+
 \section{Conclusion}
 
-The quality of the results obtained with X was similar to the results obtained with Y,
- but with significantly fewer exactly evaluated solutions during the optimization process. 
+Up to now, most papers used the
+The quality of the results obtained with X was similar to the results obtained with Y, but with significantly fewer exactly evaluated solutions during the optimization process. 
 
 
 \paragraph{Neuroevolution of augmenting topologies}

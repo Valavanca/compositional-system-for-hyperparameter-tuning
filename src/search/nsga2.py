@@ -130,5 +130,6 @@ class Nsga2(Solver):
         return "NSGA2: " + self._problem.get_name() if self._problem else 'None'
 
     def score(self, X=None, y=None, sample_weight=None):
-        hv = pg.hypervolume(-self._population.get_f())
-        return hv.compute([2]*self._population.get_f().shape[1])
+        ref_point = pg.nadir(self._population.get_f())
+        hv = pg.hypervolume(self._population.get_f())
+        return hv.compute(ref_point)

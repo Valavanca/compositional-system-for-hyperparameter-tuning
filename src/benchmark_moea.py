@@ -106,8 +106,9 @@ def experiment(problem_name: str,
 
     # ----------------------                                                            Hypervolume
     try:
+        ref_point = pg.nadir(pop.get_f())
         hypervolume = pg.hypervolume(-nd_pop.get_f()
-                                     ).compute([0]*nd_pop.problem.get_nobj())
+                                     ).compute(ref_point)
         result['hypervolume'] = hypervolume or None
     except Exception as err:
         result['error'] = "Hypervolume: {}".format(err)
