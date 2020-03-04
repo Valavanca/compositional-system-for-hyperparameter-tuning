@@ -9,7 +9,7 @@ import string
 import json
 import os
 import logging
-logging.basicConfig(filename='./temp_tutor.log', level=logging.INFO)
+logging.basicConfig(filename='./temp_tutor_v2.log', level=logging.INFO)
 
 from sklearn import clone
 from sklearn.model_selection import ParameterGrid
@@ -59,16 +59,16 @@ def get_static_ref_point(prob, offset=1):
     nspso_pop = algo.evolve(pg.population(prob, size=100, seed=SEED))
 
     sum_pop_f = np.concatenate(
-        (moead_pop.get_f(), 
-        nsga_pop.get_f(), 
-        nspso_pop.get_f(), 
-        rand_pop.get_f()), 
+        (moead_pop.get_f(),
+         nsga_pop.get_f(),
+         nspso_pop.get_f(),
+         rand_pop.get_f()),
         axis=0)
 
     return pg.nadir(sum_pop_f+offset)
 
 
-def tuning_loop(pro, surr_portfolio, n_iter, n_pred=1):
+def tuning_loop(pro, surr_portfolio, eval_budget, n_pred=1):
     gen = SamplesGenerator(pro)
     # ref_point = get_static_ref_point(pro)
     tutor = PredictTutor(pro.get_bounds(), portfolio=surr_portfolio)
@@ -76,12 +76,14 @@ def tuning_loop(pro, surr_portfolio, n_iter, n_pred=1):
     loop_start = time.time()
     iter_solution = []
     i = 0
+
+    n_iter = int(eval_budget/n_pred)
     while i < n_iter:
         i = i+1
         logging.info("\n--- {}".format(i))
         X, y = gen.return_X_y()
         tutor.fit(X, y, cv=4)
-        propos = tutor.predict(n_pred=n_pred)
+        propos = tutor.predict(n=n_pred)
         logging.info(propos)
 
         pred = json.loads(tutor.predict_proba(
@@ -101,7 +103,7 @@ def tuning_loop(pro, surr_portfolio, n_iter, n_pred=1):
             continue
 
         try:
-            ref_point = pg.nadir(samples_y)
+            ref_point = pg.nadir(np.array(samples_y))
             pred['ref_point'] = ref_point
             nd_pop = make_nd_pop(pro, np.array(samples_x), np.array(samples_y))
             hypervolume = pg.hypervolume(nd_pop.get_f()
@@ -110,9 +112,8 @@ def tuning_loop(pro, surr_portfolio, n_iter, n_pred=1):
             pred["ndf_size"] = len(nd_pop.get_f())
         except Exception as err:
             pred['error'] = "Hypervolume: {}".format(err)
-            # iter_solution.append(pred)
-            # continue
-
+            iter_solution.append(pred)
+            continue
         # ----------------------                                                            Spacing metric
         try:
             dist = pg.crowding_distance(points=nd_pop.get_f())
@@ -135,7 +136,7 @@ def tuning_loop(pro, surr_portfolio, n_iter, n_pred=1):
 
     # File and path to folder
     loop_prefix = loop.iloc[-1].tutor_id
-    rel_path = '/benchmark_results/{}_{}_tutor_loop.{}.csv'.format(
+    rel_path = '/benchmark_results/{}_{}_tutor_loop.{}v2.csv'.format(
         pro.get_name(), pro.get_nobj(), loop_prefix)
     path = os.path.dirname(os.path.abspath(__file__))
 
@@ -151,6 +152,7 @@ def experiment(problem_name: str,
                prob_id: int,
                prob_dim: int,
                obj: int,
+               pred_count: int,
                eval_budget: int,
                surr_port,
                seed=None):
@@ -161,6 +163,7 @@ def experiment(problem_name: str,
         "problem_id": prob_id,
         "objectives": obj,
         "feature_dim": prob_dim,
+        "pred_count": pred_count,
 
         'eval_budget': eval_budget,
         'surr_portfolio': surr_port,
@@ -195,7 +198,7 @@ def experiment(problem_name: str,
     # ----------------------                                                            Tutor model loop
     evolve_start = time.time()
     try:
-        x_loop, y_loop = tuning_loop(prob, surr_port, eval_budget)
+        x_loop, y_loop = tuning_loop(prob, surr_port, eval_budget, n_pred=pred_count)
 
         result["fevals"] = prob.get_fevals()
         nd_pop = make_nd_pop(prob, x_loop, y_loop)
@@ -207,8 +210,9 @@ def experiment(problem_name: str,
 
     # ----------------------                                                            Hypervolume
     try:
-        hypervolume = pg.hypervolume(-nd_pop.get_f()
-                                     ).compute([0]*nd_pop.problem.get_nobj())
+        ref_point = pg.nadir(y_loop)
+        hypervolume = pg.hypervolume(nd_pop.get_f()
+                                     ).compute(ref_point)
         result['hypervolume'] = hypervolume or None
     except Exception as err:
         result['error'] = "Hypervolume: {}".format(err)
@@ -255,7 +259,7 @@ if __name__ == "__main__":
     # tea_pot = TpotWrp(generations=2, population_size=10)
     # 2
     gp_mauna = gp.GaussianProcessRegressor(
-        kernel=KERNEL_MAUNA, alpha=0, n_restarts_optimizer=10, normalize_y=True)
+        kernel=KERNEL_MAUNA, n_restarts_optimizer=20)
     # 3
     grad_uni = ModelsUnion(
         models=[GradientBoostingRegressor(n_estimators=500)],
@@ -268,7 +272,7 @@ if __name__ == "__main__":
     svr_uni = ModelsUnion(models=[svr_rbf], split_y=True)
 
     # 6
-    mlp_reg = MLPRegressor(activation='relu', solver='lbfgs')
+    mlp_reg = MLPRegressor(hidden_layer_sizes=(20, 60, 20), activation='relu', solver='lbfgs')
     mlp_uni = ModelsUnion(models=[mlp_reg], split_y=True)
 
 
@@ -278,28 +282,29 @@ if __name__ == "__main__":
             'prob_id': [1, 2, 3, 4, 5, 6],
             'prob_dim': [2],
             'obj': [2],
-            'eval_budget': [300],
-            'surr_port': [[gp_mauna], [gp_mauna, grad_uni, svr_uni, mlp_uni]],
-            'seed': [42]
-        },
-        {
-            'problem_name': ['wfg'],
-            'prob_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
-            'prob_dim': [2],
-            'obj': [2],
-            'eval_budget': [300],
-            'surr_port': [[gp_mauna], [gp_mauna, grad_uni, svr_uni, mlp_uni]],
-            'seed': [42]
-        },
-        {
-            'problem_name': ['dtlz'],
-            'prob_id': [1, 2, 3, 4, 5, 6, 7],
-            'prob_dim': [2, 4, 6, 8, 10],
-            'obj': [2, 4, 6, 8, 10],
-            'eval_budget': [300],
-            'surr_port': [[gp_mauna], [gp_mauna, grad_uni, svr_uni, mlp_uni]],
+            'eval_budget': [1000],
+            'pred_count': [10, 25, 50],
+            'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
             'seed': [42]
         }
+        # {
+        #     'problem_name': ['wfg'],
+        #     'prob_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        #     'prob_dim': [2],
+        #     'obj': [2],
+        #     'eval_budget': [300],
+        #     'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
+        #     'seed': [42]
+        # },
+        # {
+        #     'problem_name': ['dtlz'],
+        #     'prob_id': [1, 2, 3, 4, 5, 6, 7],
+        #     'prob_dim': [2, 4, 6, 8, 10],
+        #     'obj': [2, 4, 6, 8, 10],
+        #     'eval_budget': [300],
+        #     'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
+        #     'seed': [42]
+        # }
     ]
 
     logging.info(pformat(test_set))

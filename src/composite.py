@@ -22,6 +22,7 @@ import sklearn.gaussian_process as gp
 
 from joblib import Parallel, delayed
 
+# from .search import Gaco, Nsga2
 from search import Gaco, Nsga2
 
 logger = logging.getLogger()
@@ -295,7 +296,7 @@ class PredictTutor(BaseEstimator):
             portfolio (List[BaseEstimator], optional): a list of surrogates to be verified. Defaults to None.
         """
         self.__bounds = bounds
-        self.__init_dataset: Tuple[list, list] = None
+        self._init_dataset: Tuple[list, list] = None
         self.__prf_models = portfolio
 
         self._train: Tuple[list, list] = None
@@ -320,7 +321,7 @@ class PredictTutor(BaseEstimator):
 
     @property
     def dataset(self):
-        return self.__init_dataset
+        return self._init_dataset
 
     @property
     def models(self):
@@ -341,11 +342,11 @@ class PredictTutor(BaseEstimator):
         if X is None or y is None:
             return None
 
-        self.__init_dataset = (X, y)
+        self._init_dataset = (X, y)
 
         # There is no validation for set smaller than 8.
         # 25% of the data set is less than 2 test values for proper scoring.
-        if len(X) >= 8:
+        if len(X) >= 12:
             # rewrite the previous dataset
             self._train = None
             self._test = None
@@ -364,11 +365,11 @@ class PredictTutor(BaseEstimator):
             self._test = (X_test, y_test)
         else:
             logging.info(
-                "Available {}. At least 8 samples are required".format(len(X)))
+                "Available {}. At least 12 samples are required".format(len(X)))
             return None
 
         # --- STAGE 1: Cross-validation surrogates
-        cv_dataset = self._train or self.__init_dataset
+        cv_dataset = self._train
         cv_score = self.cross_validate(*cv_dataset, **cv_params)
         self.cv_result = self.cv_result_to_df(cv_score)
 
@@ -376,12 +377,14 @@ class PredictTutor(BaseEstimator):
         #              Refit valid models on train dataset
         self.surr_valid = self._results_aggregation(self.cv_result)
         if not self.surr_valid.empty:
-            logging.info("{} surrogate(s) valid".format(len(self.surr_valid)))
+            logging.info("Stage-2: {} surrogate(s) valid".format(len(self.surr_valid)))
             self.surr_valid['estimator'].apply(
                 lambda estimator: estimator.fit(*self._train))
             # --- STAGE 3: Score the aggregated surrogates with a test set.
             #              Sorting tham based on results
             self.surr_score(*self._test)
+            self.surr_valid.query('ndf_surr_score > 0.6', inplace=True)
+            logging.info("Stage-3: {} surrogate(s) pass surr score".format(len(self.surr_valid)))
 
             # --- STAGE 4: Generate solution from each valid hypothesis.
             #              Each valid hypothesis produce own solution(s).
@@ -400,6 +403,7 @@ class PredictTutor(BaseEstimator):
             self._solutions['prediction_score'] = self._solutions['solver'].apply(
                 lambda solver: solver.score())
         else:
+            logging.info("Fit: Prediction from sampling plan")
             self._solutions = pd.DataFrame([{
                 "model name": "sampling plan",
                 "prediction": self._sobol(n=1)
@@ -414,7 +418,7 @@ class PredictTutor(BaseEstimator):
             cv_params['scoring'] = self._score
         cv_params['return_estimator'] = True
         # The result of cross-validation cannot be guaranteed for a smaller data set
-        if len(X) < 4:
+        if len(X) < 8:
             return None
 
         # -- 2. check surrogates
@@ -436,10 +440,10 @@ class PredictTutor(BaseEstimator):
 
     def _thresholding(self, cv_result: pd.DataFrame) -> pd.DataFrame:
         # Reise Error in case of custom score metrics
-        if len(self.__init_dataset[0]) < 12:
+        if len(self._init_dataset[0]) < 12:
             q = '(test_r2 > 0.97) & (test_neg_mean_absolute_error > -2.3) & (test_explained_variance > 0.6)'
         else:
-            q = '(test_r2 > 0.75) & (test_neg_mean_absolute_error > -2.3) & (test_explained_variance > 0.6)'
+            q = '(test_r2 > 0.65) & (test_neg_mean_absolute_error > -2.3) & (test_explained_variance > 0.6)'
         return cv_result.query(q)
 
     def _results_aggregation(self, cv_result: pd.DataFrame) -> pd.DataFrame:
@@ -473,7 +477,7 @@ class PredictTutor(BaseEstimator):
 
         # Absent valid surrogates in some dimension: we cannot restore the full object space
         # - return 'Multi-objective' type
-        if self.__init_dataset[1].shape[1] != len(grp):
+        if self._init_dataset[1].shape[1] != len(grp):
             return all_y_models
 
         # There at least 1 valid surrogate for each objective dimension.
@@ -563,6 +567,7 @@ class PredictTutor(BaseEstimator):
 
         if self.surr_valid.empty:
             # -- 1. If surrogates not valid use sampling plan
+            logging.info("There is no valid surrogates")
             pass
         else:
             if self._solutions is None:
@@ -571,8 +576,8 @@ class PredictTutor(BaseEstimator):
                     " A solution does not exist: {} \n\
                         Сheck that the surrogate models are fit appropriately".format(self._solutions))
             else:
-                # -- 3. There is solution from valid surogates. Return `n` predictions 
-                if n is -1:
+                # -- 3. There is solution from valid surogates. Return `n` predictions
+                if n is None:
                     return self._solutions['prediction'].values[0]
                 else:
                     S = self._solutions['prediction'].values[0]
@@ -597,15 +602,15 @@ class PredictTutor(BaseEstimator):
 
     def _sobol(self, n=1):
         """ Pseudorandom sampling from the search space """
-        available = 0 if self.__init_dataset is None else len(
-            self.__init_dataset[0])
+        available = 0 if self._init_dataset is None else len(
+            self._init_dataset[0])
         sbl = sobol_sample(self.__bounds, n=available+n)[available:]
         return sbl
 
     def _latin(self, n=1):
         """ Pseudorandom sampling from the search space """
-        available = 0 if self.__init_dataset is None else len(
-            self.__init_dataset[0])
+        available = 0 if self._init_dataset is None else len(
+            self._init_dataset[0])
         sbl = lh_sample(self.__bounds, n=available+n)[available:]
         return sbl
 

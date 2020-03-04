@@ -26,12 +26,16 @@ class SamplesGenerator():
         return self._X, self._y
 
     def return_X_y(self):
-        return self._X, self._y
+        if self._X is not None and self._y is not None:
+            return self._X, self._y
+        else:
+            return pd.DataFrame(), pd.DataFrame()
 
     def update(self, X, y):
         if len(X) != len(y):
             raise Exception(
                 'Broken data! Lengths X and y should be equal')
+                
         X_new = pd.DataFrame(X)
         X_new.columns = ['x{}'.format(i+1) for i in range(len(self._bounds))]
 
@@ -41,10 +45,6 @@ class SamplesGenerator():
         if self._X is not None and self._y is not None:
             old_df = pd.concat([self._X, self._y], axis=1)
             upd_data = pd.concat([X_new, y_new], axis=1)
-
-            # if old_df.columns != upd_data.columns:
-            #     raise Exception(
-            #         'A new data frame has broken. Mismatches in columns.')
 
             dataset = pd.concat([old_df, upd_data]).drop_duplicates(
                 subset=old_df.columns, keep='last')

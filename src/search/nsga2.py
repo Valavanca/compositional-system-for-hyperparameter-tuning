@@ -130,6 +130,10 @@ class Nsga2(Solver):
         return "NSGA2: " + self._problem.get_name() if self._problem else 'None'
 
     def score(self, X=None, y=None, sample_weight=None):
-        ref_point = pg.nadir(self._population.get_f())
-        hv = pg.hypervolume(self._population.get_f())
-        return hv.compute(ref_point)
+        try:
+            ref_point = pg.nadir(self._population.get_f())
+            hv = pg.hypervolume(self._population.get_f()).compute(ref_point)
+        except ValueError as err:
+            # print("Error: Negativ surrogate objectives")
+            hv = None
+        return hv
