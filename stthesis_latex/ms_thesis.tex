@@ -4,7 +4,13 @@
 \usepackage{graphicx}
 \usepackage{epigraph}
 \usepackage{cite}
+\usepackage[most]{tcolorbox}
 
+\newcommand{\todor}[1]{\todo[color=green,inline,size=\small]{Reviewer: #1}}
+\newcommand{\todoy}[1]{\todo[color=yellow,size=\small]{Oleksandr: #1}}
+
+\definecolor{block-gray}{gray}{0.85}
+\newtcolorbox{blockquote}{colback=block-gray,grow to right by=-1mm,grow to left by=-1mm,boxrule=0pt,boxsep=0pt,breakable}
 
 \title{Compositional multi-objective parameter tuning}
 \author{Oleksandr Husak}
@@ -18,7 +24,8 @@
   
     \tableofcontents
   
-    \input{content/01.abstract.tex}
+    \input{content/00.abstract.tex}
+    \input{content/01.intro.tex}
     \input{content/02.background.tex}
     \input{content/03.concept.tex}
     \input{content/04.implementation.tex}

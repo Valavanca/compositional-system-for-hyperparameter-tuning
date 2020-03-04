@@ -50,19 +50,7 @@
     % --------------------------------------------------------------------------------------------
     \section{Compositional Surrogate Model}
 
-        The potential for applying surrogate is laid in the fast evaluation of the surrogate model. This advantage should outperform disadvantage in time required to build this surrogate model. In classical model-based optimization is used single surrogate-model that provide a hypothesis on the relation between parameter and objective space. There is a lot type of models that can do it but out and away fewer models that can manage multidimensionality objective space. The perspective way to create multi-objective surrogate is stacking multiple simple models into one that describes complex objective space. Notwithstanding that those models could be completely different and build in parallel, they still related because fitted on intersection features.
-        Splitting optimization problem to multiple stages improves the reusability of code and makes approach scalable. Nevertheless, we can switch from single-obj to multi obj and change optimization technic on the fly.
 
-
-        \begin{figure}
-            \centering
-            \includegraphics[width=\textwidth]{content/images/mbmo.png}
-            \caption[Generalized MBMO algorithm]{Generalized MBMO algorithm}
-            \label{fig:generalMBMO}
-        \end{figure}
-
-
-        A surrogate model is either selected randomly or due to its popularity in the area with which the problem is associated.  However, there are still some open challenges related to the ensemble of meta- models such as what should be the criterion for choosing different metamodels or how different metamodels can be used simultaneously? In addition, there are no guidelines for using different models for different objective functions \cite{SoftSurvey}.
 
     % --------------------------------------------------------------------------------------------
     % ------------------------------------------------     Domain-specific Surrogate model      
