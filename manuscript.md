@@ -1,7 +1,7 @@
 ---
 author-meta:
 - Oleksandr Husak
-date-meta: '2020-03-02'
+date-meta: '2020-03-04'
 header-includes: '<!--
 
   Manubot generated metadata rendered from header-includes-template.html.
@@ -20,9 +20,9 @@ header-includes: '<!--
 
   <meta property="twitter:title" content="Compositional Multi-objective Parameter tuning" />
 
-  <meta name="dc.date" content="2020-03-02" />
+  <meta name="dc.date" content="2020-03-04" />
 
-  <meta name="citation_publication_date" content="2020-03-02" />
+  <meta name="citation_publication_date" content="2020-03-04" />
 
   <meta name="dc.language" content="en-US" />
 
@@ -54,11 +54,11 @@ header-includes: '<!--
 
   <link rel="alternate" type="application/pdf" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
 
-  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/" />
+  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/54e4f1df1fbe564d16452e615af7f68b7230a907/" />
 
-  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/" />
+  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/54e4f1df1fbe564d16452e615af7f68b7230a907/" />
 
-  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/manuscript.pdf" />
+  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/54e4f1df1fbe564d16452e615af7f68b7230a907/manuscript.pdf" />
 
   <meta property="og:type" content="article" />
 
@@ -80,6 +80,12 @@ lang: en-US
 title: Compositional Multi-objective Parameter tuning
 ...
 
+Abstract
+========
+
+Please stand by
+
+
 
 
 
@@ -87,10 +93,10 @@ title: Compositional Multi-objective Parameter tuning
 
 <small><em>
 This manuscript
-([permalink](https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/))
+([permalink](https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/54e4f1df1fbe564d16452e615af7f68b7230a907/))
 was automatically generated
-from [Valavanca/compositional-system-for-hyperparameter-tuning@cb56ee7](https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/cb56ee707b172ae96d8f2f586a035972a38a91c3)
-on March 2, 2020.
+from [Valavanca/compositional-system-for-hyperparameter-tuning@54e4f1d](https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/54e4f1df1fbe564d16452e615af7f68b7230a907)
+on March 4, 2020.
 </em></small>
 
 ## Authors
@@ -194,8 +200,187 @@ considerably fewer evaluations (300 vs 5000). Surrogate-based
 optimization is recommended when a model is expensive to evaluate.
 
 
+Introduction {#intro}
+============
+
+##### Intent:
+
+A short version of thesis and a description of done work. Challenges and
+Problems.
+
+1. Motivation
+
+:   Surrogate model for multi-objective expensive black-box problem
+    $\rightarrow$ Research gap: Portfolio/Compositional system/Sampling
+    plan. Definition and motivation of the goal. Goal: MO solution
+    $\rightarrow$ Problem: Expensive black-box $\rightarrow$ Solution:
+    Answer research questions
+
+2. Objectives of work
+
+:   ?
+
+3. Research Questions
+
+:   Question from research gap. The answer to this questions is the
+    purpose of the thesis
+
+4. Results overview
+
+:   A short overview of done work
+
+Motivation
+----------
+
+The central purpose of this thesis is to investigate portfolio of
+surrogate models that can be used to improve applicability model-based
+optimization methods to a verity of problems such as parameter tuning.
+Surrogate model or models based optimization is a common approach for a
+deal with expensive black-box function, but as far as the author is
+aware, there is no published research where the influence of
+heterogeneous portfolio of surrogate models was studied. The main target
+problem is an expensive multi-objective problem but the developed
+approach is also suitable for expensive single-objective optimization.
+As black-box, we can not say what type of surface does the problem have.
+That is why it should be customized in the optimization process. The
+goal is to determine if the variability in extrapolation worth it.
+Introduce new surrogate-design-criteria for multi-objective
+hyperparameter optimization software.
+
+It also provides backward compatibility for a single-objective problem.
+This optimization approach can significantly reduce expensive
+evaluations counts but torment from problems such as sampling size, type
+of surface and optimization techniques. We developed and adopted new
+technic in MBO such as portfolio surrogates, compositional model and
+surrogate validation.
+
+Multi-objective optimisation is an established parameter tuning
+technique. It is especially suited to solve complex, multidisciplinary
+design problems with an accent on system design.
+
+When we talk about several objectives, the intention is to find good
+compromises rather than a single solution as in global optimization.
+Since the solution for multi-objective optimization problems gives the
+appearance to a set of Pareto-optimal points, evolutionary optimization
+algorithms are ideal for handling multi-objective optimization problems.
+
+General optimization methods could be classified into derivative and
+non-derivative methods. In this thesis focuses on non-derivative
+methods, as they are more suitable for parameter tuning. Therefore, they
+are also known as black-box methods and do not require any derivatives
+of the objective function to calculate the optimum. Other benefits of
+these methods are that they are more likely to find a global optimum.
+
+Objectives
+----------
+
+Black-box multi-objective problems given a finite number of function
+evaluations
+
+Research Questions
+------------------
+
+RQ1(Surrogate portfolio):
+
+:   \[RQ1\] How a surrogate portfolio influence on the optimization
+    process?
+
+RQ2(Composition model):
+
+:   \[RQ2\] How a compositional heterogeneous surrogate model influence
+    on the optimization process?
+
+RQ3(Sampling plan):
+
+:   \[RQ3\] Dynamic sampling plan on arbitrary problem
+
+Addition:
+
+1.  RQ1: Heterogeneous surrogate models for multiobjective optimization
+
+2.  RQ2: Domain independent sampling strategies
+
+3.  RQ3: Scalable surrogate-based optimization
+
+Results overview
+----------------
+
+In numerous test problems, compositional-surrogate finds comparable
+solutions to standard MOEA (NSGA-II, MOEAD, MACO, NSPSO) doing
+considerably fewer evaluations (300 vs 5000). Surrogate-based
+optimization is recommended when a model is expensive to evaluate.
+
+
 Foundation
 ==========
+
+##### Intent:
+
+General background information needed to follow the terms and methods
+used in this thesis.
+
+Structure:
+
+1. Parameter tuning
+
+:   Parameter tuning of a black-box
+
+    1.  $f(Parameter) = Objective$
+
+    2.  Goal is optimize $f$
+
+    3.  Problem: Optimization of multiple objectives
+
+2. Multi-objective optimization
+
+:   General definition. Pareto front and None-dominated solution
+
+    1.  What is a multi-objective solution?
+
+    2.  How to compare solutions? $\rightarrow$ Types of metrics
+
+    3.  How to solve? $\rightarrow$ Scalarizing, MOEA, Random
+
+    4.  Problem: Reduce evaluations $\rightarrow$ Surrogate
+        optimization, MBMO
+
+3. Surrogate optimization
+
+:   Approach for reducing evaluation count
+
+    1.  Intro. Cons and Pons
+
+    2.  Types of a surrogate model in a MO-problem (Model of
+        scalarization, MO-model, Replicated MO-model, Compositional
+        MO-model). Taxonomy
+
+    3.  Surrogate assistance for MO parameter tuning $\rightarrow$
+        Reusable/scalable components for optimization $\rightarrow$
+        Problem: Scalability of a surrogate model. \[RQ2 \[RQ2\]\]
+
+    4.  Surrogate model is domain-specific $\rightarrow$ Analyze
+        multiple surrogates $\rightarrow$ Surrogate portfolio \[RQ1
+        \[RQ1\]\]
+
+    5.  Sampling plan. Build a surrogate model. Quality of prediction
+        depends on the accuracy of a surrogate model $\rightarrow$
+        Accuracy depends on a sample size $\rightarrow$ Sample size
+        depends on surface type $\rightarrow$ Problem: Sample size is
+        static. \[RQ3 \[RQ3\]\]
+
+4. Scope of work
+
+:   Starting point of thesis
+
+    1.  Problem: Expensive black-box with multiple objectives
+
+    2.  Constraint: Evaluation budget
+
+    3.  Goal: Set of MO solutions closed to Pareto-front $\rightarrow$
+        1.$Max$ Hypervolume, 2.$Min$ Points-Space, 3.$Max$ % of
+        None-Dominated points
+
+    4.  Solution approach: Surrogate model(s) with MOEA
 
 ##### Intro
 
@@ -219,23 +404,24 @@ their systems.
 
 In this article assume that parameter tuning is a subset problem of
 general, global optimizations. It’s also mean that we consider some
-fitness function ‘f‘ that converts the parameter vector to output
+fitness function $f$ that converts the parameter vector to output
 objectives. Note that the term “real evaluation” or “black-box
-evaluation” as a synonym for the fitness function ‘f‘. The goal of
-parameter tuning as an optimization task lay on fast iterative search
-with improvements in each objective dimension. The term “fast” means
-that the convergence to global optimum is achieved with the least real
-evaluations and shorter time frame.
+evaluation” as a synonym for the fitness function $f$.
 
-We consider fitness function ‘f‘ as black-box with parameter and
+The goal of parameter tuning as an optimization task lay on fast
+iterative search with improvements in each objective dimension. The term
+“fast” means that the convergence to global optimum is achieved with the
+least real evaluations and shorter time frame.
+
+We consider fitness function $f$ as black-box with parameter and
 objective space. Parameter space has structure and could consist from
 continues and categorical dimensions. Sometimes, some combinations of
-parameter settings are forbidden. Each pony from parameter space lead to
-some point in objective space. Configurations often yield qualitatively
-different behavior. Objective space also could be described as usual
-objectives as accuracy, runtime, latency, performance, error rate,
-energy, et.s. On each objective should gain the best possible value and
-rich system tradeoff.
+parameter settings are forbidden. Each point from parameter space lead
+to some point in objective space. Configurations often yield
+qualitatively different behavior. Objective space also could be
+described as usual objectives as accuracy, runtime, latency,
+performance, error rate, energy and so on. On each objective should gain
+the best possible value and rich system tradeoff.
 
 Optimization technics:
 
@@ -298,95 +484,7 @@ optimization (MOO) [@NTeA6uPp]”.
 For a multi-objective problem, we consider “solution” as points from
 parameter space that lead to non-dominated results in objective space.
 This set of points approximate real Pareto-front. Improving “solution”
-means that sets of points coincide better with real Pareto-front. How to
-search for an optimal solution to the multi-objective optimization
-problem?
-
-### Scalarizing. Weighted sum methods
-
-Scalarizing approach is built on the traditional techniques to creating
-an alternative problem with a single, composite objective function.
-Single objective optimization techniques are then applied to this
-composite function to obtain a single optimal solution. The weighted-sum
-methods it’s a well known type of scalarizing technic is applied to
-simplify a multiobjective problem. Concatenate the objectives into one
-criterion by using magic weighted sum factors. The merged objective is
-used to evaluate and define the optimal solution. Weighted sum methods
-have difficulties in selecting proper weight especially when there is no
-connected a priori knowledge among objectives. Furthermore, Uniform
-distribution points in parameters space don’t generate uniform
-distribution points on objective space. This means that we can’t
-approximate Pareto-front completely even with multiple optimization
-rounds. Some scalarizing technics try to improve exploration of
-parameter space by assigning more “intelligence” aggregation to the
-objectives. Such solutions may be fragile. They change dramatically if
-we modify algorithm parameters.
-
-Moreover, the weighting method can not provide a solution among
-underparts of the Pareto surface due to “duality gap” for not convex
-cases. Even for convex cases, for example, in linear cases, even if we
-want to get a point in the middle of a line segment between two points,
-we hardly get a peak of Pareto surface, as long as the well-known
-simplex method is used. This implies that depending on the structure of
-the problem, the linearly weighted sum can not necessarily provide a
-solution as DM desires. [@15iylVSF0]
-
-### Multi-Objective Evolutionary Algorithms
-
-Generating the Pareto set can be computationally expensive and is often
-infeasible because the complexity of the underlying volume limits exact
-techniques from being applicable. For this reason, a number of
-stochastic search strategies such as evolutionary algorithms, tabu
-search, simulated annealing, and ant colony optimization have been
-developed: they usually do not guarantee to identify optimal trade-offs
-but try to find a good approximation, i.e., a set of solutions whose
-objective vectors are (hopefully) not too far away from the optimal
-objective vectors [@1HUtCWxMH].
-
-The evolutionary algorithm (EA) form a class of heuristic search methods
-that simulate the process of natural evolution. Using simplifications,
-this EA is subsequently determined by the two basic principles:
-selection and variation. While selection imitates the competition for
-reproduction and resources among living beings, the other principle,
-variation, imitates the natural ability to create ”new” living beings
-through recombination and mutation. Evolutionary algorithm possesses
-several characteristics that are desirable for problems including
-multiple conflicting objectives, and large and complicated search
-spaces. However, EA still need many evaluations of the “black box”
-system to solve a common multi-objective problem. This is further
-complicated by the fact that many such problems are very expensive.
-Consolidated, this makes EAs unfeasible for costly and Multy-objective
-problem. A good solution is the integration of the surrogate model which
-extrapolate and approximate the fitness landscape from samples.
-Multi-objective Evolutionary Algorithms (MOEAs) use this surrogate model
-as a target for optimization. Assumed that solution from surrogate
-nearby to a global optimum. The goal of this thesis is to understand if
-the performance of MOEAs approach can be improved by using compositional
-surrogates. The key idea of compositional surrogates is the splitting
-objective space to multiple surrogates that extrapolate it
-independently.Combination of multiple hypotheses should give them the
-potential to approximate more complicated problems. This approach avoids
-the idea of a single surrogate model, preferring instead to use the
-composition hypothesis to split out the terrain of objective space.
-
-The multiple surrogates are analysed on objectives with various
-complexity, beside the simple and complicated unimodal structure.
-Generating a cloud of candidates is computationally expensive.
-
-Evolutionary optimizers explore populations of candidate solutions in
-each generation, some mutator can make changes to the current
-population. A select operator then picks the best mutants which are then
-combined in some way to become generation i+1. This century, there has
-been much new work on multi-objective evolutionary algorithms with two
-or three objectives (as well as many-objective optimization, with many
-more objectives). Multi-objective Evolutionary Algorithms (MOEAs) are
-popular tools to solve optimization problems, because of their
-applicability to complex fitness landscapes and solid performance on
-problems with large design spaces. While other methods also exist, in
-this thesis we will focus on improving approaches with Evolutionary
-Algorithms for the Multy-objective optimizations. This search-based
-software engineering is a rapidly expanding area of research and a full
-survey of that work is beyond the scope of this thesis.
+means that sets of points coincide better with real Pareto-front.
 
 ### Metrics for multi-objective solution
 
@@ -478,13 +576,106 @@ performance of the algorithms.
     points. Fewer space metrics means better coverage of objectives
     values range.
 
+### Solving methods
+
+How to search for an optimal solution to the multi-objective
+optimization problem?
+
+#### Scalarizing
+
+Scalarizing approach is built on the traditional techniques to creating
+an alternative problem with a single, composite objective function.
+Single objective optimization techniques are then applied to this
+composite function to obtain a single optimal solution. The weighted-sum
+methods it’s a well known type of scalarizing technic is applied to
+simplify a multiobjective problem. Concatenate the objectives into one
+criterion by using magic weighted sum factors. The merged objective is
+used to evaluate and define the optimal solution. Weighted sum methods
+have difficulties in selecting proper weight especially when there is no
+connected a priori knowledge among objectives. Furthermore, Uniform
+distribution points in parameters space don’t generate uniform
+distribution points on objective space. This means that we can’t
+approximate Pareto-front completely even with multiple optimization
+rounds. Some scalarizing technics try to improve exploration of
+parameter space by assigning more “intelligence” aggregation to the
+objectives. Such solutions may be fragile. They change dramatically if
+we modify algorithm parameters.
+
+Moreover, the weighting method can not provide a solution among
+underparts of the Pareto surface due to “duality gap” for not convex
+cases. Even for convex cases, for example, in linear cases, even if we
+want to get a point in the middle of a line segment between two points,
+we hardly get a peak of Pareto surface, as long as the well-known
+simplex method is used. This implies that depending on the structure of
+the problem, the linearly weighted sum can not necessarily provide a
+solution as DM desires. [@15iylVSF0]
+
+#### Multi-Objective Evolutionary Algorithms
+
+Generating the Pareto set can be computationally expensive and is often
+infeasible because the complexity of the underlying volume limits exact
+techniques from being applicable. For this reason, a number of
+stochastic search strategies such as evolutionary algorithms, tabu
+search, simulated annealing, and ant colony optimization have been
+developed: they usually do not guarantee to identify optimal trade-offs
+but try to find a good approximation, i.e., a set of solutions whose
+objective vectors are (hopefully) not too far away from the optimal
+objective vectors [@1HUtCWxMH].
+
+The evolutionary algorithm (EA) form a class of heuristic search methods
+that simulate the process of natural evolution. Using simplifications,
+this EA is subsequently determined by the two basic principles:
+selection and variation. While selection imitates the competition for
+reproduction and resources among living beings, the other principle,
+variation, imitates the natural ability to create ”new” living beings
+through recombination and mutation. Evolutionary algorithm possesses
+several characteristics that are desirable for problems including
+multiple conflicting objectives, and large and complicated search
+spaces. However, EA still need many evaluations of the “black box”
+system to solve a common multi-objective problem. This is further
+complicated by the fact that many such problems are very expensive.
+Consolidated, this makes EAs unfeasible for costly and Multy-objective
+problem. A good solution is the integration of the surrogate model which
+extrapolate and approximate the fitness landscape from samples.
+Multi-objective Evolutionary Algorithms (MOEAs) use this surrogate model
+as a target for optimization. Assumed that solution from surrogate
+nearby to a global optimum. The goal of this thesis is to understand if
+the performance of MOEAs approach can be improved by using compositional
+surrogates. The key idea of compositional surrogates is the splitting
+objective space to multiple surrogates that extrapolate it
+independently.Combination of multiple hypotheses should give them the
+potential to approximate more complicated problems. This approach avoids
+the idea of a single surrogate model, preferring instead to use the
+composition hypothesis to split out the terrain of objective space.
+
+The multiple surrogates are analysed on objectives with various
+complexity, beside the simple and complicated unimodal structure.
+Generating a cloud of candidates is computationally expensive.
+
+Evolutionary optimizers explore populations of candidate solutions in
+each generation, some mutator can make changes to the current
+population. A select operator then picks the best mutants which are then
+combined in some way to become generation i+1. This century, there has
+been much new work on multi-objective evolutionary algorithms with two
+or three objectives (as well as many-objective optimization, with many
+more objectives). Multi-objective Evolutionary Algorithms (MOEAs) are
+popular tools to solve optimization problems, because of their
+applicability to complex fitness landscapes and solid performance on
+problems with large design spaces. While other methods also exist, in
+this thesis we will focus on improving approaches with Evolutionary
+Algorithms for the Multy-objective optimizations. This search-based
+software engineering is a rapidly expanding area of research and a full
+survey of that work is beyond the scope of this thesis.
+
 ##### Conclusion
+
+Motivation for Surrogates
 
 For optimization expensive black-box:
 
 -   Scalable algorithms that convert multi-objective to single objective
     problem produce solution that not accurate enough(Scalarizing). Also
-    this approach suitable for a limited type of problem. Also&lt; there
+    this approach suitable for a limited type of problem. Also, there
     are a lot important parameters that significant influence on
     algorithm performance.
 
@@ -497,6 +688,32 @@ derivative-free. Reference to surrogate optimization.
 
 Surrogate optimization
 ----------------------
+
+The potential for applying surrogate is laid in the fast evaluation of
+the surrogate model. This advantage should outperform disadvantage in
+time required to build this surrogate model. In classical model-based
+optimization is used single surrogate-model that provide a hypothesis on
+the relation between parameter and objective space. There is a lot type
+of models that can do it but out and away fewer models that can manage
+multidimensionality objective space. The perspective way to create
+multi-objective surrogate is stacking multiple simple models into one
+that describes complex objective space. Notwithstanding that those
+models could be completely different and build in parallel, they still
+related because fitted on intersection features. Splitting optimization
+problem to multiple stages improves the reusability of code and makes
+approach scalable. Nevertheless, we can switch from single-obj to multi
+obj and change optimization technic on the fly.
+
+![Generalized MBMO
+algorithm[]{data-label="fig:generalMBMO"}](/images/mbmo.png){width="\textwidth"}
+
+A surrogate model is either selected randomly or due to its popularity
+in the area with which the problem is associated. However, there are
+still some open challenges related to the ensemble of meta- models such
+as what should be the criterion for choosing different metamodels or how
+different metamodels can be used simultaneously? In addition, there are
+no guidelines for using different models for different objective
+functions [@CrJQ8Xau].
 
 [@yGyc3usi]
 
@@ -552,6 +769,8 @@ address the issue by focusing on the well- behaved structure informative
 for search while ignoring detrimental structure that is challenging to
 model data efficiently.
 
+#### Multi-objective parameter tuning
+
 ##### Surrogate-model-based MOEA
 
 In [@15iqjq0XF] proposed approaches that apply kind of surrogate
@@ -596,20 +815,7 @@ over-optimistic approximations. This can slow the optimization process
 or even prevent the algorithm from finding the best solutions
 [@mu8IFeYo].
 
-##### Discussion
-
-Example of each type of optimization. Justification solution.
-Conclusion: Design gap in optimization/parameter tuning. Need to
-indicate optimization workflow for expensive process/experiments. The
-argument(s) why we need a new architecture. Reference to composition
-architecture.
-
-Surrogate based optimization has proven effective in many aspects of
-engineering and in applications where data is “expensive”, or difficult,
-to evaluate.
-
-Compositional architecture
---------------------------
+##### Compositional architecture
 
 We could describe compositional-based surrogate optimization as compound
 grey-box system whit a lot of open research areas where surrogate should
@@ -646,6 +852,35 @@ and improve prediction in the next round. For example, OEGADO
 The best solutions in every objective get also approximated on other
 objectives, which helps with finding trade-off individuals. The best
 individuals are then exactly evaluated and used to update the models.
+
+### Domain-specific problem
+
+With gain to find the best solution with less effort surrogate models is
+domain-specific. It’s mean that from two surrogate models in two
+different problems the best surrogate is changing. It could interpreter
+as Non-free lunch theorem in model-based optimization. If we extend this
+argument then the same optimization problem in different parameter
+tuning iteration could be interpreted as another optimization problem.
+This means that to reduce effort and increase the convergence of an
+algorithm we should change the surrogate model depend on how much
+samples do we have. As one would expect, no approximation method is
+universal. This leads us to use a portfolio with surrogate models. As a
+negative consequence, the model fitting additional introduces an
+additional overhead into the optimization.
+
+### Build the surrogate model(s). Sampling plan
+
+##### Discussion
+
+Example of each type of optimization. Justification solution.
+Conclusion: Design gap in optimization/parameter tuning. Need to
+indicate optimization workflow for expensive process/experiments. The
+argument(s) why we need a new architecture. Reference to composition
+architecture.
+
+Surrogate based optimization has proven effective in many aspects of
+engineering and in applications where data is “expensive”, or difficult,
+to evaluate.
 
 Scope of work
 -------------
@@ -786,32 +1021,6 @@ usually problem-specific. [@BvoEknRH]
 
 Compositional Surrogate Model
 -----------------------------
-
-The potential for applying surrogate is laid in the fast evaluation of
-the surrogate model. This advantage should outperform disadvantage in
-time required to build this surrogate model. In classical model-based
-optimization is used single surrogate-model that provide a hypothesis on
-the relation between parameter and objective space. There is a lot type
-of models that can do it but out and away fewer models that can manage
-multidimensionality objective space. The perspective way to create
-multi-objective surrogate is stacking multiple simple models into one
-that describes complex objective space. Notwithstanding that those
-models could be completely different and build in parallel, they still
-related because fitted on intersection features. Splitting optimization
-problem to multiple stages improves the reusability of code and makes
-approach scalable. Nevertheless, we can switch from single-obj to multi
-obj and change optimization technic on the fly.
-
-![Generalized MBMO
-algorithm[]{data-label="fig:generalMBMO"}](content/images/mbmo.png){width="\textwidth"}
-
-A surrogate model is either selected randomly or due to its popularity
-in the area with which the problem is associated. However, there are
-still some open challenges related to the ensemble of meta- models such
-as what should be the criterion for choosing different metamodels or how
-different metamodels can be used simultaneously? In addition, there are
-no guidelines for using different models for different objective
-functions [@CrJQ8Xau].
 
 Domain-specific problem
 -----------------------

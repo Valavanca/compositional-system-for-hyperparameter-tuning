@@ -5,7 +5,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Oleksandr Husak" />
-  <meta name="dcterms.date" content="2020-03-02" />
+  <meta name="dcterms.date" content="2020-03-04" />
   <meta name="keywords" content="multi-objective, surrogate optimization, software design, sequential parameter optimization" />
   <title>Compositional Multi-objective Parameter tuning</title>
   <style>
@@ -28,8 +28,8 @@
   <meta name="citation_title" content="Compositional Multi-objective Parameter tuning" />
   <meta property="og:title" content="Compositional Multi-objective Parameter tuning" />
   <meta property="twitter:title" content="Compositional Multi-objective Parameter tuning" />
-  <meta name="dc.date" content="2020-03-02" />
-  <meta name="citation_publication_date" content="2020-03-02" />
+  <meta name="dc.date" content="2020-03-04" />
+  <meta name="citation_publication_date" content="2020-03-04" />
   <meta name="dc.language" content="en-US" />
   <meta name="citation_language" content="en-US" />
   <meta name="dc.relation.ispartof" content="Manubot" />
@@ -45,9 +45,9 @@
   <meta name="citation_fulltext_html_url" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/" />
   <meta name="citation_pdf_url" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
   <link rel="alternate" type="application/pdf" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
-  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/" />
-  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/" />
-  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/manuscript.pdf" />
+  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/54e4f1df1fbe564d16452e615af7f68b7230a907/" />
+  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/54e4f1df1fbe564d16452e615af7f68b7230a907/" />
+  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/54e4f1df1fbe564d16452e615af7f68b7230a907/manuscript.pdf" />
   <meta property="og:type" content="article" />
   <meta property="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/png" sizes="192x192" href="https://manubot.org/favicon-192x192.png" />
@@ -59,12 +59,14 @@
 <header id="title-block-header">
 <h1 class="title">Compositional Multi-objective Parameter tuning</h1>
 </header>
+<h1 id="abstract">Abstract</h1>
+<p>Please stand by</p>
 <p><small><em>
 This manuscript
-(<a href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/cb56ee707b172ae96d8f2f586a035972a38a91c3/">permalink</a>)
+(<a href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/54e4f1df1fbe564d16452e615af7f68b7230a907/">permalink</a>)
 was automatically generated
-from <a href="https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/cb56ee707b172ae96d8f2f586a035972a38a91c3">Valavanca/compositional-system-for-hyperparameter-tuning@cb56ee7</a>
-on March 2, 2020.
+from <a href="https://github.com/Valavanca/compositional-system-for-hyperparameter-tuning/tree/54e4f1df1fbe564d16452e615af7f68b7230a907">Valavanca/compositional-system-for-hyperparameter-tuning@54e4f1d</a>
+on March 4, 2020.
 </em></small></p>
 <h2 id="authors">Authors</h2>
 <ul>
@@ -140,8 +142,157 @@ on the optimization process?</p></li>
 solutions to standard MOEA (NSGA-II, MOEAD, MACO, NSPSO) doing
 considerably fewer evaluations (300 vs 5000). Surrogate-based
 optimization is recommended when a model is expensive to evaluate.</p>
+<h1 id="intro">Introduction</h1>
+<h5 id="intent">Intent:</h5>
+<p>A short version of thesis and a description of done work. Challenges and
+Problems.</p>
+<ol type="1">
+<li>Motivation</li>
+</ol>
+<p>: Surrogate model for multi-objective expensive black-box problem
+<span class="math inline">\(\rightarrow\)</span> Research gap: Portfolio/Compositional system/Sampling
+plan. Definition and motivation of the goal. Goal: MO solution
+<span class="math inline">\(\rightarrow\)</span> Problem: Expensive black-box <span class="math inline">\(\rightarrow\)</span> Solution:
+Answer research questions</p>
+<ol start="2" type="1">
+<li>Objectives of work</li>
+</ol>
+<p>: ?</p>
+<ol start="3" type="1">
+<li>Research Questions</li>
+</ol>
+<p>: Question from research gap. The answer to this questions is the
+purpose of the thesis</p>
+<ol start="4" type="1">
+<li>Results overview</li>
+</ol>
+<p>: A short overview of done work</p>
+<h2 id="motivation-1">Motivation</h2>
+<p>The central purpose of this thesis is to investigate portfolio of
+surrogate models that can be used to improve applicability model-based
+optimization methods to a verity of problems such as parameter tuning.
+Surrogate model or models based optimization is a common approach for a
+deal with expensive black-box function, but as far as the author is
+aware, there is no published research where the influence of
+heterogeneous portfolio of surrogate models was studied. The main target
+problem is an expensive multi-objective problem but the developed
+approach is also suitable for expensive single-objective optimization.
+As black-box, we can not say what type of surface does the problem have.
+That is why it should be customized in the optimization process. The
+goal is to determine if the variability in extrapolation worth it.
+Introduce new surrogate-design-criteria for multi-objective
+hyperparameter optimization software.</p>
+<p>It also provides backward compatibility for a single-objective problem.
+This optimization approach can significantly reduce expensive
+evaluations counts but torment from problems such as sampling size, type
+of surface and optimization techniques. We developed and adopted new
+technic in MBO such as portfolio surrogates, compositional model and
+surrogate validation.</p>
+<p>Multi-objective optimisation is an established parameter tuning
+technique. It is especially suited to solve complex, multidisciplinary
+design problems with an accent on system design.</p>
+<p>When we talk about several objectives, the intention is to find good
+compromises rather than a single solution as in global optimization.
+Since the solution for multi-objective optimization problems gives the
+appearance to a set of Pareto-optimal points, evolutionary optimization
+algorithms are ideal for handling multi-objective optimization problems.</p>
+<p>General optimization methods could be classified into derivative and
+non-derivative methods. In this thesis focuses on non-derivative
+methods, as they are more suitable for parameter tuning. Therefore, they
+are also known as black-box methods and do not require any derivatives
+of the objective function to calculate the optimum. Other benefits of
+these methods are that they are more likely to find a global optimum.</p>
+<h2 id="objectives-1">Objectives</h2>
+<p>Black-box multi-objective problems given a finite number of function
+evaluations</p>
+<h2 id="research-questions-1">Research Questions</h2>
+<dl>
+<dt>RQ1(Surrogate portfolio):</dt>
+<dd><p>[RQ1] How a surrogate portfolio influence on the optimization
+process?</p>
+</dd>
+<dt>RQ2(Composition model):</dt>
+<dd><p>[RQ2] How a compositional heterogeneous surrogate model influence
+on the optimization process?</p>
+</dd>
+<dt>RQ3(Sampling plan):</dt>
+<dd><p>[RQ3] Dynamic sampling plan on arbitrary problem</p>
+</dd>
+</dl>
+<p>Addition:</p>
+<ol type="1">
+<li><p>RQ1: Heterogeneous surrogate models for multiobjective optimization</p></li>
+<li><p>RQ2: Domain independent sampling strategies</p></li>
+<li><p>RQ3: Scalable surrogate-based optimization</p></li>
+</ol>
+<h2 id="results-overview">Results overview</h2>
+<p>In numerous test problems, compositional-surrogate finds comparable
+solutions to standard MOEA (NSGA-II, MOEAD, MACO, NSPSO) doing
+considerably fewer evaluations (300 vs 5000). Surrogate-based
+optimization is recommended when a model is expensive to evaluate.</p>
 <h1 id="foundation">Foundation</h1>
-<h5 id="intro">Intro</h5>
+<h5 id="intent-1">Intent:</h5>
+<p>General background information needed to follow the terms and methods
+used in this thesis.</p>
+<p>Structure:</p>
+<ol type="1">
+<li>Parameter tuning</li>
+</ol>
+<p>: Parameter tuning of a black-box</p>
+<pre><code>1.  $f(Parameter) = Objective$
+
+2.  Goal is optimize $f$
+
+3.  Problem: Optimization of multiple objectives</code></pre>
+<ol start="2" type="1">
+<li>Multi-objective optimization</li>
+</ol>
+<p>: General definition. Pareto front and None-dominated solution</p>
+<pre><code>1.  What is a multi-objective solution?
+
+2.  How to compare solutions? $\rightarrow$ Types of metrics
+
+3.  How to solve? $\rightarrow$ Scalarizing, MOEA, Random
+
+4.  Problem: Reduce evaluations $\rightarrow$ Surrogate
+    optimization, MBMO</code></pre>
+<ol start="3" type="1">
+<li>Surrogate optimization</li>
+</ol>
+<p>: Approach for reducing evaluation count</p>
+<pre><code>1.  Intro. Cons and Pons
+
+2.  Types of a surrogate model in a MO-problem (Model of
+    scalarization, MO-model, Replicated MO-model, Compositional
+    MO-model). Taxonomy
+
+3.  Surrogate assistance for MO parameter tuning $\rightarrow$
+    Reusable/scalable components for optimization $\rightarrow$
+    Problem: Scalability of a surrogate model. \[RQ2 \[RQ2\]\]
+
+4.  Surrogate model is domain-specific $\rightarrow$ Analyze
+    multiple surrogates $\rightarrow$ Surrogate portfolio \[RQ1
+    \[RQ1\]\]
+
+5.  Sampling plan. Build a surrogate model. Quality of prediction
+    depends on the accuracy of a surrogate model $\rightarrow$
+    Accuracy depends on a sample size $\rightarrow$ Sample size
+    depends on surface type $\rightarrow$ Problem: Sample size is
+    static. \[RQ3 \[RQ3\]\]</code></pre>
+<ol start="4" type="1">
+<li>Scope of work</li>
+</ol>
+<p>: Starting point of thesis</p>
+<pre><code>1.  Problem: Expensive black-box with multiple objectives
+
+2.  Constraint: Evaluation budget
+
+3.  Goal: Set of MO solutions closed to Pareto-front $\rightarrow$
+    1.$Max$ Hypervolume, 2.$Min$ Points-Space, 3.$Max$ % of
+    None-Dominated points
+
+4.  Solution approach: Surrogate model(s) with MOEA</code></pre>
+<h5 id="intro-1">Intro</h5>
 <p>In this chapter present general background information needed to follow
 the terms and methods used in this thesis. What is parameter tuning? Why
 multi-objective is important? Why we can’t use the standard
@@ -157,22 +308,22 @@ parameter tuning tools to explore thousands to millions of inputs for
 their systems.</p>
 <p>In this article assume that parameter tuning is a subset problem of
 general, global optimizations. It’s also mean that we consider some
-fitness function ‘f‘ that converts the parameter vector to output
+fitness function <span class="math inline">\(f\)</span> that converts the parameter vector to output
 objectives. Note that the term “real evaluation” or “black-box
-evaluation” as a synonym for the fitness function ‘f‘. The goal of
-parameter tuning as an optimization task lay on fast iterative search
-with improvements in each objective dimension. The term “fast” means
-that the convergence to global optimum is achieved with the least real
-evaluations and shorter time frame.</p>
-<p>We consider fitness function ‘f‘ as black-box with parameter and
+evaluation” as a synonym for the fitness function <span class="math inline">\(f\)</span>.</p>
+<p>The goal of parameter tuning as an optimization task lay on fast
+iterative search with improvements in each objective dimension. The term
+“fast” means that the convergence to global optimum is achieved with the
+least real evaluations and shorter time frame.</p>
+<p>We consider fitness function <span class="math inline">\(f\)</span> as black-box with parameter and
 objective space. Parameter space has structure and could consist from
 continues and categorical dimensions. Sometimes, some combinations of
-parameter settings are forbidden. Each pony from parameter space lead to
-some point in objective space. Configurations often yield qualitatively
-different behavior. Objective space also could be described as usual
-objectives as accuracy, runtime, latency, performance, error rate,
-energy, et.s. On each objective should gain the best possible value and
-rich system tradeoff.</p>
+parameter settings are forbidden. Each point from parameter space lead
+to some point in objective space. Configurations often yield
+qualitatively different behavior. Objective space also could be
+described as usual objectives as accuracy, runtime, latency,
+performance, error rate, energy and so on. On each objective should gain
+the best possible value and rich system tradeoff.</p>
 <p>Optimization technics:</p>
 <ul>
 <li><p>Grid search vs Random search</p></li>
@@ -223,10 +374,87 @@ optimization (MOO) <span class="citation" data-cites="NTeA6uPp">[<a href="#ref-N
 <p>For a multi-objective problem, we consider “solution” as points from
 parameter space that lead to non-dominated results in objective space.
 This set of points approximate real Pareto-front. Improving “solution”
-means that sets of points coincide better with real Pareto-front. How to
-search for an optimal solution to the multi-objective optimization
-problem?</p>
-<h3 id="scalarizing.-weighted-sum-methods">Scalarizing. Weighted sum methods</h3>
+means that sets of points coincide better with real Pareto-front.</p>
+<h3 id="metrics-for-multi-objective-solution">Metrics for multi-objective solution</h3>
+<p>In single-objective minimization, the quality of a given solution is
+trivial to quantify: the smaller the objective function value, the
+better. However, evaluating the quality of an approximation of a Pareto
+set is non trivial. The question is important for the comparison of
+algorithms or prediction next configuration.</p>
+<p>According to <span class="citation" data-cites="cgOPGY3M">[<a href="#ref-cgOPGY3M" role="doc-biblioref">2</a>]</span>, a Pareto front approximation should satisfy
+the following:</p>
+<ul>
+<li><p>The distance between the Pareto front and its approximation should
+be minimized.</p></li>
+<li><p>A heigh distribution of the non-dominated points is desirable.</p></li>
+<li><p>The range of the approximated front should be maximized, i.e., for
+each objective, a wide range of values should be covered by the
+non-dominated points.</p></li>
+</ul>
+<p>Metrics for performance indicators partitioned into four groups
+according to their properties <span class="citation" data-cites="vbJ1WiNp">[<a href="#ref-vbJ1WiNp" role="doc-biblioref">3</a>]</span>:</p>
+<ul>
+<li><p>cardinality</p></li>
+<li><p>convergence</p></li>
+<li><p>distribution</p></li>
+<li><p>spread</p></li>
+</ul>
+<p>Base on the right metrics general multi-objective algorithm keep making
+progress toward the Pareto front in the objective function space. The
+goal of optimizing a multi-objective problem is to obtain an
+approximation solution set to the reference Pareto front, including the
+following subgoals:</p>
+<ul>
+<li><p>All solution set are as close as possible to the Pareto front</p></li>
+<li><p>All solution set are as diverse as possible in the objective space</p></li>
+<li><p>Evaluate as few solution as possible</p></li>
+</ul>
+<p>Straightforward applying of the simple coefficient of determination (R2)
+is the wrong indicator of success. Evaluations of different sets of
+Pareto optimal points is multi-objective task. The necessary objectives
+follow for improving solutions:</p>
+<ul>
+<li><p>Keep hypervolume low. Reference point is 0 for all objectives.</p></li>
+<li><p>Maximize sparsity of points. Average distance. Crowding Distance.
+Spacing metrics.</p></li>
+<li><p>Maximize non-dominant decisions in the total population</p></li>
+</ul>
+<p>Also distribution and spread indicators is consider in this work.
+According to <span class="citation" data-cites="DCdONjBz">[<a href="#ref-DCdONjBz" role="doc-biblioref">4</a>]</span>, “the spread metrics try to measure the
+extents of the spread achieved in a computed Pareto front
+approximation”. They are not useful to evaluate the convergence of an
+algorithm, or at comparing algorithms. They only make sense when the
+Pareto set is composed of several solutions.</p>
+<p>For multi-objective optimization (MOO), an algorithm should provide a
+set of solutions that realize the optimal trade-offs between the
+considered optimization objectives, i.e., Pareto set. Therefore, the
+performance comparison of MOO algorithms is based on their Pareto sets.
+In this study, three popular metrics are used to quantify the
+performance of the algorithms.</p>
+<ul>
+<li><p>Hypervolume (HV)<span class="citation" data-cites="17FLBEzc1">[<a href="#ref-17FLBEzc1" role="doc-biblioref">5</a>]</span>. This metric represents
+the volume of the objective space that is covered by the individuals
+of a non-dominated solutions set (solutions that belong to a Pareto
+front). The volume is delimited by two points: one point that is
+called the anti-optimal point (A) that is defined as the worst
+solution inside the objective space, and a second optimal point
+(pseudo-optimal) that is calculated by the proposed solution method.
+Determining the hypervolume indicator is a computationally expensive
+task. Even in case of a reasonably small dimension and low number of
+points (e.g. 100 points in 10 dimensions), there are currently no
+known algorithms that can yield the results fast enough for use in
+most multiple-objective optimizers</p></li>
+<li><p>Non-dominated Ratio (NDR). This metric employs the non-dominated
+count of a solution set divided by the total size of solution set.
+Higher values are preferred to lower ones.</p></li>
+<li><p>Spacing <span class="citation" data-cites="1AKoZUHA4">[<a href="#ref-1AKoZUHA4" role="doc-biblioref">6</a>]</span>. Describe the distribution of Pareto
+points. Fewer space metrics means better coverage of objectives
+values range.</p></li>
+</ul>
+<h3 id="solving-methods">Solving methods</h3>
+<p>How to search for an optimal solution to the multi-objective
+optimization problem?</p>
+<h4 id="scalarizing">Scalarizing</h4>
 <p>Scalarizing approach is built on the traditional techniques to creating
 an alternative problem with a single, composite objective function.
 Single objective optimization techniques are then applied to this
@@ -251,8 +479,8 @@ want to get a point in the middle of a line segment between two points,
 we hardly get a peak of Pareto surface, as long as the well-known
 simplex method is used. This implies that depending on the structure of
 the problem, the linearly weighted sum can not necessarily provide a
-solution as DM desires. <span class="citation" data-cites="15iylVSF0">[<a href="#ref-15iylVSF0" role="doc-biblioref">2</a>]</span></p>
-<h3 id="multi-objective-evolutionary-algorithms">Multi-Objective Evolutionary Algorithms</h3>
+solution as DM desires. <span class="citation" data-cites="15iylVSF0">[<a href="#ref-15iylVSF0" role="doc-biblioref">7</a>]</span></p>
+<h4 id="multi-objective-evolutionary-algorithms">Multi-Objective Evolutionary Algorithms</h4>
 <p>Generating the Pareto set can be computationally expensive and is often
 infeasible because the complexity of the underlying volume limits exact
 techniques from being applicable. For this reason, a number of
@@ -261,7 +489,7 @@ search, simulated annealing, and ant colony optimization have been
 developed: they usually do not guarantee to identify optimal trade-offs
 but try to find a good approximation, i.e., a set of solutions whose
 objective vectors are (hopefully) not too far away from the optimal
-objective vectors <span class="citation" data-cites="1HUtCWxMH">[<a href="#ref-1HUtCWxMH" role="doc-biblioref">3</a>]</span>.</p>
+objective vectors <span class="citation" data-cites="1HUtCWxMH">[<a href="#ref-1HUtCWxMH" role="doc-biblioref">8</a>]</span>.</p>
 <p>The evolutionary algorithm (EA) form a class of heuristic search methods
 that simulate the process of natural evolution. Using simplifications,
 this EA is subsequently determined by the two basic principles:
@@ -304,88 +532,13 @@ this thesis we will focus on improving approaches with Evolutionary
 Algorithms for the Multy-objective optimizations. This search-based
 software engineering is a rapidly expanding area of research and a full
 survey of that work is beyond the scope of this thesis.</p>
-<h3 id="metrics-for-multi-objective-solution">Metrics for multi-objective solution</h3>
-<p>In single-objective minimization, the quality of a given solution is
-trivial to quantify: the smaller the objective function value, the
-better. However, evaluating the quality of an approximation of a Pareto
-set is non trivial. The question is important for the comparison of
-algorithms or prediction next configuration.</p>
-<p>According to <span class="citation" data-cites="cgOPGY3M">[<a href="#ref-cgOPGY3M" role="doc-biblioref">4</a>]</span>, a Pareto front approximation should satisfy
-the following:</p>
-<ul>
-<li><p>The distance between the Pareto front and its approximation should
-be minimized.</p></li>
-<li><p>A heigh distribution of the non-dominated points is desirable.</p></li>
-<li><p>The range of the approximated front should be maximized, i.e., for
-each objective, a wide range of values should be covered by the
-non-dominated points.</p></li>
-</ul>
-<p>Metrics for performance indicators partitioned into four groups
-according to their properties <span class="citation" data-cites="vbJ1WiNp">[<a href="#ref-vbJ1WiNp" role="doc-biblioref">5</a>]</span>:</p>
-<ul>
-<li><p>cardinality</p></li>
-<li><p>convergence</p></li>
-<li><p>distribution</p></li>
-<li><p>spread</p></li>
-</ul>
-<p>Base on the right metrics general multi-objective algorithm keep making
-progress toward the Pareto front in the objective function space. The
-goal of optimizing a multi-objective problem is to obtain an
-approximation solution set to the reference Pareto front, including the
-following subgoals:</p>
-<ul>
-<li><p>All solution set are as close as possible to the Pareto front</p></li>
-<li><p>All solution set are as diverse as possible in the objective space</p></li>
-<li><p>Evaluate as few solution as possible</p></li>
-</ul>
-<p>Straightforward applying of the simple coefficient of determination (R2)
-is the wrong indicator of success. Evaluations of different sets of
-Pareto optimal points is multi-objective task. The necessary objectives
-follow for improving solutions:</p>
-<ul>
-<li><p>Keep hypervolume low. Reference point is 0 for all objectives.</p></li>
-<li><p>Maximize sparsity of points. Average distance. Crowding Distance.
-Spacing metrics.</p></li>
-<li><p>Maximize non-dominant decisions in the total population</p></li>
-</ul>
-<p>Also distribution and spread indicators is consider in this work.
-According to <span class="citation" data-cites="DCdONjBz">[<a href="#ref-DCdONjBz" role="doc-biblioref">6</a>]</span>, “the spread metrics try to measure the
-extents of the spread achieved in a computed Pareto front
-approximation”. They are not useful to evaluate the convergence of an
-algorithm, or at comparing algorithms. They only make sense when the
-Pareto set is composed of several solutions.</p>
-<p>For multi-objective optimization (MOO), an algorithm should provide a
-set of solutions that realize the optimal trade-offs between the
-considered optimization objectives, i.e., Pareto set. Therefore, the
-performance comparison of MOO algorithms is based on their Pareto sets.
-In this study, three popular metrics are used to quantify the
-performance of the algorithms.</p>
-<ul>
-<li><p>Hypervolume (HV)<span class="citation" data-cites="17FLBEzc1">[<a href="#ref-17FLBEzc1" role="doc-biblioref">7</a>]</span>. This metric represents
-the volume of the objective space that is covered by the individuals
-of a non-dominated solutions set (solutions that belong to a Pareto
-front). The volume is delimited by two points: one point that is
-called the anti-optimal point (A) that is defined as the worst
-solution inside the objective space, and a second optimal point
-(pseudo-optimal) that is calculated by the proposed solution method.
-Determining the hypervolume indicator is a computationally expensive
-task. Even in case of a reasonably small dimension and low number of
-points (e.g. 100 points in 10 dimensions), there are currently no
-known algorithms that can yield the results fast enough for use in
-most multiple-objective optimizers</p></li>
-<li><p>Non-dominated Ratio (NDR). This metric employs the non-dominated
-count of a solution set divided by the total size of solution set.
-Higher values are preferred to lower ones.</p></li>
-<li><p>Spacing <span class="citation" data-cites="1AKoZUHA4">[<a href="#ref-1AKoZUHA4" role="doc-biblioref">8</a>]</span>. Describe the distribution of Pareto
-points. Fewer space metrics means better coverage of objectives
-values range.</p></li>
-</ul>
 <h5 id="conclusion">Conclusion</h5>
+<p>Motivation for Surrogates</p>
 <p>For optimization expensive black-box:</p>
 <ul>
 <li><p>Scalable algorithms that convert multi-objective to single objective
 problem produce solution that not accurate enough(Scalarizing). Also
-this approach suitable for a limited type of problem. Also&lt; there
+this approach suitable for a limited type of problem. Also, there
 are a lot important parameters that significant influence on
 algorithm performance.</p></li>
 <li><p>Genetic algorithms. This approach is costly to perform and not
@@ -395,7 +548,32 @@ appropriate for expensive problems.</p></li>
 in expensive to evaluate experiments. Experiments as a black box,
 derivative-free. Reference to surrogate optimization.</p>
 <h2 id="surrogate-optimization">Surrogate optimization</h2>
-<p><span class="citation" data-cites="yGyc3usi">[<a href="#ref-yGyc3usi" role="doc-biblioref">9</a>]</span></p>
+<p>The potential for applying surrogate is laid in the fast evaluation of
+the surrogate model. This advantage should outperform disadvantage in
+time required to build this surrogate model. In classical model-based
+optimization is used single surrogate-model that provide a hypothesis on
+the relation between parameter and objective space. There is a lot type
+of models that can do it but out and away fewer models that can manage
+multidimensionality objective space. The perspective way to create
+multi-objective surrogate is stacking multiple simple models into one
+that describes complex objective space. Notwithstanding that those
+models could be completely different and build in parallel, they still
+related because fitted on intersection features. Splitting optimization
+problem to multiple stages improves the reusability of code and makes
+approach scalable. Nevertheless, we can switch from single-obj to multi
+obj and change optimization technic on the fly.</p>
+<figure>
+<img src="/images/mbmo.png" alt="" /><figcaption>Generalized MBMO
+algorithm<span data-label="fig:generalMBMO"></span></figcaption>
+</figure>
+<p>A surrogate model is either selected randomly or due to its popularity
+in the area with which the problem is associated. However, there are
+still some open challenges related to the ensemble of meta- models such
+as what should be the criterion for choosing different metamodels or how
+different metamodels can be used simultaneously? In addition, there are
+no guidelines for using different models for different objective
+functions <span class="citation" data-cites="CrJQ8Xau">[<a href="#ref-CrJQ8Xau" role="doc-biblioref">9</a>]</span>.</p>
+<p><span class="citation" data-cites="yGyc3usi">[<a href="#ref-yGyc3usi" role="doc-biblioref">10</a>]</span></p>
 <p>To dealing with expensive optimization problem more quickly, we can use
 surrogate models in the optimization process to approximate the
 objective functions of the problem. Approximation of solution is faster
@@ -414,37 +592,38 @@ similar methods are used. These techniques typically return only one
 approximated value, which is why in multiobjective problems several
 models have to be used, so that each model approximates one objective.
 Some of the most commonly used methods are the Response Surface Method
-<span class="citation" data-cites="WHqOntch">[<a href="#ref-WHqOntch" role="doc-biblioref">10</a>]</span>, Radial Basis Function <span class="citation" data-cites="1FOgcJYL9">[<a href="#ref-1FOgcJYL9" role="doc-biblioref">11</a>]</span>, Neural
-Network, Kriging <span class="citation" data-cites="1Y1nHvc2">[<a href="#ref-1Y1nHvc2" role="doc-biblioref">12</a>]</span> and Gaussian Process Modeling
-<span class="citation" data-cites="1FXlw7TX2 4nfjnHfv">[<a href="#ref-1FXlw7TX2" role="doc-biblioref">13</a>,<a href="#ref-4nfjnHfv" role="doc-biblioref">14</a>]</span>.</p>
-<p>General classification <span class="citation" data-cites="mu8IFeYo">[<a href="#ref-mu8IFeYo" role="doc-biblioref">15</a>]</span>: Within surrogate-model-based
+<span class="citation" data-cites="WHqOntch">[<a href="#ref-WHqOntch" role="doc-biblioref">11</a>]</span>, Radial Basis Function <span class="citation" data-cites="1FOgcJYL9">[<a href="#ref-1FOgcJYL9" role="doc-biblioref">12</a>]</span>, Neural
+Network, Kriging <span class="citation" data-cites="1Y1nHvc2">[<a href="#ref-1Y1nHvc2" role="doc-biblioref">13</a>]</span> and Gaussian Process Modeling
+<span class="citation" data-cites="1FXlw7TX2 4nfjnHfv">[<a href="#ref-1FXlw7TX2" role="doc-biblioref">14</a>,<a href="#ref-4nfjnHfv" role="doc-biblioref">15</a>]</span>.</p>
+<p>General classification <span class="citation" data-cites="mu8IFeYo">[<a href="#ref-mu8IFeYo" role="doc-biblioref">16</a>]</span>: Within surrogate-model-based
 optimization algorithms, a mechanism is needed to find a balance between
 the exact and approximate evaluations. In evolutionary algorithms, this
-mechanism is called evolution control <span class="citation" data-cites="112CjFl6F">[<a href="#ref-112CjFl6F" role="doc-biblioref">16</a>]</span> and can be either fixed
+mechanism is called evolution control <span class="citation" data-cites="112CjFl6F">[<a href="#ref-112CjFl6F" role="doc-biblioref">17</a>]</span> and can be either fixed
 or adaptive. In fixed evolution control the number of exact function
 evaluations that will be performed during the optimization is known in
 advance. Fixed evolution control can be further divided into
 generation-based control, where in some generations all solutions are
-approximated and in the others, they are exactly evaluated <span class="citation" data-cites="4bMRxtHA">[<a href="#ref-4bMRxtHA" role="doc-biblioref">17</a>]</span>,
+approximated and in the others, they are exactly evaluated <span class="citation" data-cites="4bMRxtHA">[<a href="#ref-4bMRxtHA" role="doc-biblioref">18</a>]</span>,
 and individual based control, where in every generation some (usually
 the best) solutions are exactly evaluated and others approximated
-<span class="citation" data-cites="1AF8tzsvd">[<a href="#ref-1AF8tzsvd" role="doc-biblioref">18</a>]</span>. In adaptive evolution control, the number of exactly
+<span class="citation" data-cites="1AF8tzsvd">[<a href="#ref-1AF8tzsvd" role="doc-biblioref">19</a>]</span>. In adaptive evolution control, the number of exactly
 evaluated solutions is not known in advance but depends on the accuracy
 of the model for the given problem. Adaptive evolution control can be
 used in one of two ways: as a part of a memetic search or to pre-select
-the promising individuals which are then exactly evaluated <span class="citation" data-cites="MlTHme7o">[<a href="#ref-MlTHme7o" role="doc-biblioref">19</a>]</span>.</p>
+the promising individuals which are then exactly evaluated <span class="citation" data-cites="MlTHme7o">[<a href="#ref-MlTHme7o" role="doc-biblioref">20</a>]</span>.</p>
 <p>Surrogate used to expedite search for global optimum. Global accuracy of
 surrogate not a priority. Surrogate model is cheaper to evaluate than
 the objective.</p>
 <p>Bayesian optimization (BO) methods often rely on the assumption that the
 objective function is well-behaved, but in practice, the objective
 functions are seldom well-behaved even if noise-free observations can be
-collected. In <span class="citation" data-cites="wTIHyFe9">[<a href="#ref-wTIHyFe9" role="doc-biblioref">20</a>]</span> propose robust surrogate models to
+collected. In <span class="citation" data-cites="wTIHyFe9">[<a href="#ref-wTIHyFe9" role="doc-biblioref">21</a>]</span> propose robust surrogate models to
 address the issue by focusing on the well- behaved structure informative
 for search while ignoring detrimental structure that is challenging to
 model data efficiently.</p>
+<h4 id="multi-objective-parameter-tuning">Multi-objective parameter tuning</h4>
 <h5 id="surrogate-model-based-moea">Surrogate-model-based MOEA</h5>
-<p>In <span class="citation" data-cites="15iqjq0XF">[<a href="#ref-15iqjq0XF" role="doc-biblioref">21</a>]</span> proposed approaches that apply kind of surrogate
+<p>In <span class="citation" data-cites="15iqjq0XF">[<a href="#ref-15iqjq0XF" role="doc-biblioref">22</a>]</span> proposed approaches that apply kind of surrogate
 assistant to evaluations and ranging new population. It allows detecting
 the most informative examples in population and evaluates them.
 Identifies and evaluates just those most informative examples at the end
@@ -452,15 +631,15 @@ done fewer evaluations of the real system. Another way to explore
 solutions is to apply some heuristic to decompose the total space into
 many smaller problems, and then use a simpler optimizer for each region.</p>
 <p>Surrogates are also used to rank and filter out offspring according to
-Pareto-related indicators like the hypervolume <span class="citation" data-cites="iL724s1s">[<a href="#ref-iL724s1s" role="doc-biblioref">22</a>]</span>, or a
-weighted sum of the objectives <span class="citation" data-cites="890MGfiJ">[<a href="#ref-890MGfiJ" role="doc-biblioref">23</a>]</span>. The problem with the
+Pareto-related indicators like the hypervolume <span class="citation" data-cites="iL724s1s">[<a href="#ref-iL724s1s" role="doc-biblioref">23</a>]</span>, or a
+weighted sum of the objectives <span class="citation" data-cites="890MGfiJ">[<a href="#ref-890MGfiJ" role="doc-biblioref">24</a>]</span>. The problem with the
 methods that use hypervolume as a way of finding promising solutions is
 the calculation time needed to calculate the hypervolume, especially on
-many objectives. Another possibility is described in <span class="citation" data-cites="16Jfe9RjR">[<a href="#ref-16Jfe9RjR" role="doc-biblioref">24</a>]</span>, where
+many objectives. Another possibility is described in <span class="citation" data-cites="16Jfe9RjR">[<a href="#ref-16Jfe9RjR" role="doc-biblioref">25</a>]</span>, where
 the authors present an algorithm that calculates only non-dominated
 solutions or solutions that can, because of variance, become
 non-dominated.</p>
-<p>GP-DEMO <span class="citation" data-cites="mu8IFeYo">[<a href="#ref-mu8IFeYo" role="doc-biblioref">15</a>]</span> The algorithm is based on the newly defined
+<p>GP-DEMO <span class="citation" data-cites="mu8IFeYo">[<a href="#ref-mu8IFeYo" role="doc-biblioref">16</a>]</span> The algorithm is based on the newly defined
 relations for comparing solutions under uncertainty. These relations
 minimize the possibility of wrongly performed comparisons of solutions
 due to inaccurate surrogate model approximations. Using this confidence
@@ -479,17 +658,8 @@ consequence, exactly evaluated good solutions can be discarded from the
 population because they appear to be dominated by the inaccurate and
 over-optimistic approximations. This can slow the optimization process
 or even prevent the algorithm from finding the best solutions
-<span class="citation" data-cites="mu8IFeYo">[<a href="#ref-mu8IFeYo" role="doc-biblioref">15</a>]</span>.</p>
-<h5 id="discussion">Discussion</h5>
-<p>Example of each type of optimization. Justification solution.
-Conclusion: Design gap in optimization/parameter tuning. Need to
-indicate optimization workflow for expensive process/experiments. The
-argument(s) why we need a new architecture. Reference to composition
-architecture.</p>
-<p>Surrogate based optimization has proven effective in many aspects of
-engineering and in applications where data is “expensive”, or difficult,
-to evaluate.</p>
-<h2 id="compositional-architecture">Compositional architecture</h2>
+<span class="citation" data-cites="mu8IFeYo">[<a href="#ref-mu8IFeYo" role="doc-biblioref">16</a>]</span>.</p>
+<h5 id="compositional-architecture">Compositional architecture</h5>
 <p>We could describe compositional-based surrogate optimization as compound
 grey-box system whit a lot of open research areas where surrogate should
 improve, managing portfolio, compare of predictions Pareto fronts. As a
@@ -506,7 +676,7 @@ solutions with MOEA. Nevertheless, the output values correlated, but an
 often naive way to build multiple models that able to extrapolate
 complex objective space is often given good results.</p>
 <p>Later research generalized this approach. MOEA/D (multiobjective
-evolutionary algorithm based on decomposition <span class="citation" data-cites="Dk9KXQBq">[<a href="#ref-Dk9KXQBq" role="doc-biblioref">25</a>]</span>) is a generic
+evolutionary algorithm based on decomposition <span class="citation" data-cites="Dk9KXQBq">[<a href="#ref-Dk9KXQBq" role="doc-biblioref">26</a>]</span>) is a generic
 framework that decomposes a multi-objective optimization problem into
 many smaller single problems, then applies a second optimizer to each
 smaller subproblem, simultaneously.</p>
@@ -517,10 +687,33 @@ instead of the global optimum. But in terms of parameter tuning, this
 point should be better than a predefined sampling plan. Evaluation of
 this prediction improve surrogate model quality in the near-optimal area
 and improve prediction in the next round. For example, OEGADO
-<span class="citation" data-cites="1C0JI6fEI">[<a href="#ref-1C0JI6fEI" role="doc-biblioref">26</a>]</span> creates a surrogate model for each of the objectives.
+<span class="citation" data-cites="1C0JI6fEI">[<a href="#ref-1C0JI6fEI" role="doc-biblioref">27</a>]</span> creates a surrogate model for each of the objectives.
 The best solutions in every objective get also approximated on other
 objectives, which helps with finding trade-off individuals. The best
 individuals are then exactly evaluated and used to update the models.</p>
+<h3 id="domain-specific-problem">Domain-specific problem</h3>
+<p>With gain to find the best solution with less effort surrogate models is
+domain-specific. It’s mean that from two surrogate models in two
+different problems the best surrogate is changing. It could interpreter
+as Non-free lunch theorem in model-based optimization. If we extend this
+argument then the same optimization problem in different parameter
+tuning iteration could be interpreted as another optimization problem.
+This means that to reduce effort and increase the convergence of an
+algorithm we should change the surrogate model depend on how much
+samples do we have. As one would expect, no approximation method is
+universal. This leads us to use a portfolio with surrogate models. As a
+negative consequence, the model fitting additional introduces an
+additional overhead into the optimization.</p>
+<h3 id="build-the-surrogate-models.-sampling-plan">Build the surrogate model(s). Sampling plan</h3>
+<h5 id="discussion">Discussion</h5>
+<p>Example of each type of optimization. Justification solution.
+Conclusion: Design gap in optimization/parameter tuning. Need to
+indicate optimization workflow for expensive process/experiments. The
+argument(s) why we need a new architecture. Reference to composition
+architecture.</p>
+<p>Surrogate based optimization has proven effective in many aspects of
+engineering and in applications where data is “expensive”, or difficult,
+to evaluate.</p>
 <h2 id="scope-of-work">Scope of work</h2>
 <p>Describe and implement workflow for multi-objective parameter tuning of
 the derivative-free, black-box system. Parameter estimation is costly.
@@ -630,34 +823,9 @@ multi-objective parameter tuning with evolutionary algorithm(s)</p>
 questions.</p>
 <p>Multi-objective optimizations are frequently encountered in engineering
 practices. The solution techniques and parametric selections however are
-usually problem-specific. <span class="citation" data-cites="BvoEknRH">[<a href="#ref-BvoEknRH" role="doc-biblioref">27</a>]</span></p>
+usually problem-specific. <span class="citation" data-cites="BvoEknRH">[<a href="#ref-BvoEknRH" role="doc-biblioref">28</a>]</span></p>
 <h2 id="compositional-surrogate-model">Compositional Surrogate Model</h2>
-<p>The potential for applying surrogate is laid in the fast evaluation of
-the surrogate model. This advantage should outperform disadvantage in
-time required to build this surrogate model. In classical model-based
-optimization is used single surrogate-model that provide a hypothesis on
-the relation between parameter and objective space. There is a lot type
-of models that can do it but out and away fewer models that can manage
-multidimensionality objective space. The perspective way to create
-multi-objective surrogate is stacking multiple simple models into one
-that describes complex objective space. Notwithstanding that those
-models could be completely different and build in parallel, they still
-related because fitted on intersection features. Splitting optimization
-problem to multiple stages improves the reusability of code and makes
-approach scalable. Nevertheless, we can switch from single-obj to multi
-obj and change optimization technic on the fly.</p>
-<figure>
-<img src="content/images/mbmo.png" alt="" /><figcaption>Generalized MBMO
-algorithm<span data-label="fig:generalMBMO"></span></figcaption>
-</figure>
-<p>A surrogate model is either selected randomly or due to its popularity
-in the area with which the problem is associated. However, there are
-still some open challenges related to the ensemble of meta- models such
-as what should be the criterion for choosing different metamodels or how
-different metamodels can be used simultaneously? In addition, there are
-no guidelines for using different models for different objective
-functions <span class="citation" data-cites="CrJQ8Xau">[<a href="#ref-CrJQ8Xau" role="doc-biblioref">28</a>]</span>.</p>
-<h2 id="domain-specific-problem">Domain-specific problem</h2>
+<h2 id="domain-specific-problem-1">Domain-specific problem</h2>
 <p>With gain to find the best solution with less effort surrogate models is
 domain-specific. It’s mean that from two surrogate models in two
 different problems the best surrogate is changing. It could interpreter
@@ -733,7 +901,7 @@ problem at a particular stage of parameter tuning</p></li>
 <li><p>Samples size depends on model(s) validity</p></li>
 <li><p>Combination of different(orthogonal) solvers</p></li>
 </ul>
-<p>Some of the major findings were <span class="citation" data-cites="CrJQ8Xau">[<a href="#ref-CrJQ8Xau" role="doc-biblioref">28</a>]</span>:</p>
+<p>Some of the major findings were <span class="citation" data-cites="CrJQ8Xau">[<a href="#ref-CrJQ8Xau" role="doc-biblioref">9</a>]</span>:</p>
 <ol type="1">
 <li><p>Kriging and neural networks were the most commonly used surrogate
 models</p></li>
@@ -767,7 +935,7 @@ have also own metrics.</p>
 <h5 id="designing-a-sampling-plan">Designing a Sampling Plan</h5>
 <ul>
 <li>The most straightforward way of sampling a design space in a uniform
-fashion is by <span class="citation" data-cites="yGyc3usi">[<a href="#ref-yGyc3usi" role="doc-biblioref">9</a>]</span> means of a rectangular grid of points. This
+fashion is by <span class="citation" data-cites="yGyc3usi">[<a href="#ref-yGyc3usi" role="doc-biblioref">10</a>]</span> means of a rectangular grid of points. This
 is the full factorial sampling technique referred - Latin Squares</li>
 </ul>
 <p>Random sampling has the downside that for small sample sizes, there is
@@ -794,7 +962,7 @@ multi-objective solvers:</p>
 </ul>
 <p>Tests suits:</p>
 <ul>
-<li><p>ZDT <span class="citation" data-cites="cgOPGY3M">[<a href="#ref-cgOPGY3M" role="doc-biblioref">4</a>]</span> is 6 different two-objective scalable problems
+<li><p>ZDT <span class="citation" data-cites="cgOPGY3M">[<a href="#ref-cgOPGY3M" role="doc-biblioref">2</a>]</span> is 6 different two-objective scalable problems
 all beginning from a combination of functions allowing, to measure
 the distance of any point to the Pareto front while creating
 problems.</p></li>
@@ -857,7 +1025,7 @@ problems.</p></li>
 problems, where characteristics of the problems to be solved are not
 known a priori, one can measure the efficiency of an algorithm by its
 ability to provide meaning- ful solutions in a least number of function
-evaluations <span class="citation" data-cites="CrJQ8Xau">[<a href="#ref-CrJQ8Xau" role="doc-biblioref">28</a>]</span>.</p>
+evaluations <span class="citation" data-cites="CrJQ8Xau">[<a href="#ref-CrJQ8Xau" role="doc-biblioref">9</a>]</span>.</p>
 <p>A set of models is defined that can form a partial or complete
 hypothesis to describe the problem. Also during the increase of the
 experiments may change the model that best describes the existing
@@ -931,7 +1099,7 @@ objective space also. They simulate real life problem and have main
 related challenges such as multi-modality, different surface type, not
 uniform search space, etc.</p>
 <h5 id="zdt">ZDT</h5>
-<p>This widespread test suite<span class="citation" data-cites="cgOPGY3M">[<a href="#ref-cgOPGY3M" role="doc-biblioref">4</a>]</span> was conceived for two-objective
+<p>This widespread test suite<span class="citation" data-cites="cgOPGY3M">[<a href="#ref-cgOPGY3M" role="doc-biblioref">2</a>]</span> was conceived for two-objective
 problems and takes its name from its authors Zitzler, Deb and Thiele.
 Each test function involves a particular feature that is known to cause
 difficulty in the evolutionary optimization process, mainly in
@@ -1158,160 +1326,160 @@ Godwin Odu<br />
 <em>IOSR Journal of Engineering</em> (2013-10)<br />
 DOI: <a href="https://doi.org/10.9790/3021-031020114">10.9790/3021-031020114</a></p>
 </div>
-<div id="ref-15iylVSF0">
-<p>2. <strong>Multi-objective optimization and its engineering applications</strong><br />
-Hirotaka Nakayama<br />
-<em>Practical approaches to multi-objective optimization, 7.-12. november 2004</em> (2005) <a href="http://drops.dagstuhl.de/opus/volltexte/2005/234">http://drops.dagstuhl.de/opus/volltexte/2005/234</a></p>
-</div>
-<div id="ref-1HUtCWxMH">
-<p>3. <strong>A tutorial on multiobjective optimization: Fundamentals and evolutionary methods</strong><br />
-Michael T. M. Emmerich, André H. Deutz<br />
-<em>Natural Computing</em> (2018) <a href="https://doi.org/10.1007/s11047-018-9685-y">https://doi.org/10.1007/s11047-018-9685-y</a><br />
-DOI: <a href="https://doi.org/10.1007/s11047-018-9685-y">10.1007/s11047-018-9685-y</a></p>
-</div>
 <div id="ref-cgOPGY3M">
-<p>4. <strong>Comparison of multiobjective evolutionary algorithms: Empirical results</strong><br />
+<p>2. <strong>Comparison of multiobjective evolutionary algorithms: Empirical results</strong><br />
 Eckart Zitzler, Kalyanmoy Deb, Lothar Thiele<br />
 <em>Evolutionary Computation</em> (2000) <a href="https://doi.org/10.1162/106365600568202">https://doi.org/10.1162/106365600568202</a><br />
 DOI: <a href="https://doi.org/10.1162/106365600568202">10.1162/106365600568202</a></p>
 </div>
 <div id="ref-vbJ1WiNp">
-<p>5. <strong>Performance indicators in multiobjective optimization</strong><br />
+<p>3. <strong>Performance indicators in multiobjective optimization</strong><br />
 Charles Audet, Sébastien Le Digabel, Dominique Cartier, Jean Bigeon, Ludovic Salomon<br />
 (2018)</p>
 </div>
 <div id="ref-DCdONjBz">
-<p>6. <strong>Direct multisearch for multiobjective optimization</strong><br />
+<p>4. <strong>Direct multisearch for multiobjective optimization</strong><br />
 A. L. Custódio, J. F. Aguilar Madeira, A. Ismael F. Vaz, Luís Nunes Vicente<br />
 <em>SIAM Journal on Optimization</em> (2011) <a href="https://doi.org/10.1137/10079731X">https://doi.org/10.1137/10079731X</a><br />
 DOI: <a href="https://doi.org/10.1137/10079731X">10.1137/10079731x</a></p>
 </div>
 <div id="ref-17FLBEzc1">
-<p>7. <strong>Comparison of multiobjective evolutionary algorithms: Empirical results</strong><br />
+<p>5. <strong>Comparison of multiobjective evolutionary algorithms: Empirical results</strong><br />
 Eckart Zitzler, Kalyanmoy Deb, Lothar Thiele<br />
 <em>Evolutionary Computation</em> (2000)</p>
 </div>
 <div id="ref-1AKoZUHA4">
-<p>8. <strong>Fault tolerant design using single and multicriteria genetic algorithm optimization.</strong><br />
+<p>6. <strong>Fault tolerant design using single and multicriteria genetic algorithm optimization.</strong><br />
 Jason R. Schott<br />
 (1995)</p>
 </div>
+<div id="ref-15iylVSF0">
+<p>7. <strong>Multi-objective optimization and its engineering applications</strong><br />
+Hirotaka Nakayama<br />
+<em>Practical approaches to multi-objective optimization, 7.-12. november 2004</em> (2005) <a href="http://drops.dagstuhl.de/opus/volltexte/2005/234">http://drops.dagstuhl.de/opus/volltexte/2005/234</a></p>
+</div>
+<div id="ref-1HUtCWxMH">
+<p>8. <strong>A tutorial on multiobjective optimization: Fundamentals and evolutionary methods</strong><br />
+Michael T. M. Emmerich, André H. Deutz<br />
+<em>Natural Computing</em> (2018) <a href="https://doi.org/10.1007/s11047-018-9685-y">https://doi.org/10.1007/s11047-018-9685-y</a><br />
+DOI: <a href="https://doi.org/10.1007/s11047-018-9685-y">10.1007/s11047-018-9685-y</a></p>
+</div>
+<div id="ref-CrJQ8Xau">
+<p>9. <strong>A survey on handling computationally expensive multiobjective optimization problems with evolutionary algorithms</strong><br />
+Tinkle Chugh, Karthik Sindhya, Jussi Hakanen, Kaisa Miettinen<br />
+<em>Soft Computing</em> (2017-12)<br />
+DOI: <a href="https://doi.org/10.1007/s00500-017-2965-0">10.1007/s00500-017-2965-0</a></p>
+</div>
 <div id="ref-yGyc3usi">
-<p>9. <strong>Engineering design via surrogate modelling - a practical guide.</strong><br />
+<p>10. <strong>Engineering design via surrogate modelling - a practical guide.</strong><br />
 Alexander I. J. Forrester, Andras Sobester, Andy J. Keane<br />
 <em>Wiley</em> (2008)<br />
 ISBN: <a href="https://worldcat.org/isbn/978-0-470-06068-1">978-0-470-06068-1</a></p>
 </div>
 <div id="ref-WHqOntch">
-<p>10. <strong>Response surface methodology: Process and product in optimization using designed experiments</strong><br />
+<p>11. <strong>Response surface methodology: Process and product in optimization using designed experiments</strong><br />
 Raymond H. Myers, Douglas C. Montgomery<br />
 <em>John Wiley; Sons, Inc.</em> (1995)<br />
 ISBN: <a href="https://worldcat.org/isbn/0471581003">0471581003</a></p>
 </div>
 <div id="ref-1FOgcJYL9">
-<p>11. <strong>Gaussian processes in machine learning</strong><br />
+<p>12. <strong>Gaussian processes in machine learning</strong><br />
 Carl Edward Rasmussen<br />
 <em>Advanced lectures on machine learning: ML summer schools 2003, canberra, australia, february 2 - 14, 2003, tübingen, germany, august 4 - 16, 2003, revised lectures</em> (2004) <a href="https://doi.org/10.1007/978-3-540-28650-9_4">https://doi.org/10.1007/978-3-540-28650-9_4</a><br />
 DOI: <a href="https://doi.org/10.1007/978-3-540-28650-9_4">10.1007/978-3-540-28650-9_4</a> · ISBN: <a href="https://worldcat.org/isbn/978-3-540-28650-9">978-3-540-28650-9</a></p>
 </div>
 <div id="ref-1Y1nHvc2">
-<p>12. <strong>Interpolation of spatial data: Some theory for kriging</strong><br />
+<p>13. <strong>Interpolation of spatial data: Some theory for kriging</strong><br />
 Roger Woodard<br />
 <em>Technometrics</em> (2000) <a href="https://doi.org/10.1080/00401706.2000.10485731">https://doi.org/10.1080/00401706.2000.10485731</a><br />
 DOI: <a href="https://doi.org/10.1080/00401706.2000.10485731">10.1080/00401706.2000.10485731</a></p>
 </div>
 <div id="ref-1FXlw7TX2">
-<p>13. <strong>Gaussian processes for machine learning (GPML) toolbox</strong><br />
+<p>14. <strong>Gaussian processes for machine learning (GPML) toolbox</strong><br />
 Carl Edward Rasmussen, Hannes Nickisch<br />
 <em>J. Mach. Learn. Res.</em> (2010) <a href="http://portal.acm.org/citation.cfm?id=1953029">http://portal.acm.org/citation.cfm?id=1953029</a></p>
 </div>
 <div id="ref-4nfjnHfv">
-<p>14. <strong>Gaussian processes for machine learning</strong><br />
+<p>15. <strong>Gaussian processes for machine learning</strong><br />
 Carl Edward Rasmussen, Christopher K. I. Williams<br />
 <em>MIT Press</em> (2006) <a href="http://www.worldcat.org/oclc/61285753">http://www.worldcat.org/oclc/61285753</a><br />
 ISBN: <a href="https://worldcat.org/isbn/026218253X">026218253X</a></p>
 </div>
 <div id="ref-mu8IFeYo">
-<p>15. <strong>GP-DEMO: differential evolution for multiobjective optimization based on gaussian process models</strong><br />
+<p>16. <strong>GP-DEMO: differential evolution for multiobjective optimization based on gaussian process models</strong><br />
 Miha Mlakar, Dejan Petelin, Tea Tusar, Bogdan Filipic<br />
 <em>European Journal of Operational Research</em> (2015) <a href="https://doi.org/10.1016/j.ejor.2014.04.011">https://doi.org/10.1016/j.ejor.2014.04.011</a><br />
 DOI: <a href="https://doi.org/10.1016/j.ejor.2014.04.011">10.1016/j.ejor.2014.04.011</a></p>
 </div>
 <div id="ref-112CjFl6F">
-<p>16. <strong>A comprehensive survey of fitness approximation in evolutionary computation</strong><br />
+<p>17. <strong>A comprehensive survey of fitness approximation in evolutionary computation</strong><br />
 Yaochu Jin<br />
 <em>Soft Comput.</em> (2005) <a href="https://doi.org/10.1007/s00500-003-0328-5">https://doi.org/10.1007/s00500-003-0328-5</a><br />
 DOI: <a href="https://doi.org/10.1007/s00500-003-0328-5">10.1007/s00500-003-0328-5</a></p>
 </div>
 <div id="ref-4bMRxtHA">
-<p>17. <strong>An evolutionary multi-objective adaptive meta-modeling procedure using artificial neural networks</strong><br />
+<p>18. <strong>An evolutionary multi-objective adaptive meta-modeling procedure using artificial neural networks</strong><br />
 Kalyanmoy Deb, Pawan K. S. Nain<br />
 <em>Evolutionary computation in dynamic and uncertain environments</em> (2007) <a href="https://doi.org/10.1007/978-3-540-49774-5\_13">https://doi.org/10.1007/978-3-540-49774-5\_13</a><br />
 DOI: <a href="https://doi.org/10.1007/978-3-540-49774-5\_13">10.1007/978-3-540-49774-5\_13</a></p>
 </div>
 <div id="ref-1AF8tzsvd">
-<p>18. <strong>Optimal sizing, geometrical and topological design using a genetic algorithm</strong><br />
+<p>19. <strong>Optimal sizing, geometrical and topological design using a genetic algorithm</strong><br />
 D. E. Grierson, W. H. Pak<br />
 <em>Structural optimization</em> (1993-09-01) <a href="https://doi.org/10.1007/BF01743506">https://doi.org/10.1007/BF01743506</a><br />
 DOI: <a href="https://doi.org/10.1007/BF01743506">10.1007/bf01743506</a></p>
 </div>
 <div id="ref-MlTHme7o">
-<p>19. <strong>An evolutionary strategy for surrogate-based multiobjective optimization</strong><br />
+<p>20. <strong>An evolutionary strategy for surrogate-based multiobjective optimization</strong><br />
 Martin Pilát, Roman Neruda<br />
 <em>Proceedings of the IEEE congress on evolutionary computation, CEC 2012, brisbane, australia, june 10-15, 2012</em> (2012) <a href="https://doi.org/10.1109/CEC.2012.6256450">https://doi.org/10.1109/CEC.2012.6256450</a><br />
 DOI: <a href="https://doi.org/10.1109/CEC.2012.6256450">10.1109/cec.2012.6256450</a></p>
 </div>
 <div id="ref-wTIHyFe9">
-<p>20. <strong>Modulating surrogates for bayesian optimization</strong><br />
+<p>21. <strong>Modulating surrogates for bayesian optimization</strong><br />
 Erik Bodin, Markus Kaiser, Ieva Kazlauskaite, Zhenwen Dai, Neill D. F. Campbell, Carl Henrik Ek<br />
 (2019)</p>
 </div>
 <div id="ref-15iqjq0XF">
-<p>21. <strong>GALE: geometric active learning for search-based software engineering</strong><br />
+<p>22. <strong>GALE: geometric active learning for search-based software engineering</strong><br />
 Joseph Krall, Tim Menzies, Misty Davies<br />
 <em>IEEE Trans. Software Eng.</em> (2015) <a href="https://doi.org/10.1109/TSE.2015.2432024">https://doi.org/10.1109/TSE.2015.2432024</a><br />
 DOI: <a href="https://doi.org/10.1109/TSE.2015.2432024">10.1109/tse.2015.2432024</a></p>
 </div>
 <div id="ref-iL724s1s">
-<p>22. <strong>Single- and multiobjective evolutionary optimization assisted by gaussian random field metamodels</strong><br />
+<p>23. <strong>Single- and multiobjective evolutionary optimization assisted by gaussian random field metamodels</strong><br />
 Michael T. M. Emmerich, Kyriakos C. Giannakoglou, Boris Naujoks<br />
 <em>IEEE Trans. Evolutionary Computation</em> (2006) <a href="https://doi.org/10.1109/TEVC.2005.859463">https://doi.org/10.1109/TEVC.2005.859463</a><br />
 DOI: <a href="https://doi.org/10.1109/TEVC.2005.859463">10.1109/tevc.2005.859463</a></p>
 </div>
 <div id="ref-890MGfiJ">
-<p>23. <strong>Practical solutions for multi-objective optimization: An application to system reliability design problems</strong><br />
+<p>24. <strong>Practical solutions for multi-objective optimization: An application to system reliability design problems</strong><br />
 Heidi A. Taboada, Fatema Baheranwala, David W. Coit, Naruemon Wattanapongsakorn<br />
 <em>Rel. Eng. and Sys. Safety</em> (2007) <a href="https://doi.org/10.1016/j.ress.2006.04.014">https://doi.org/10.1016/j.ress.2006.04.014</a><br />
 DOI: <a href="https://doi.org/10.1016/j.ress.2006.04.014">10.1016/j.ress.2006.04.014</a></p>
 </div>
 <div id="ref-16Jfe9RjR">
-<p>24. <strong>Improving multi-objective genetic algorithms with adaptive design of experiments and online metamodeling</strong><br />
+<p>25. <strong>Improving multi-objective genetic algorithms with adaptive design of experiments and online metamodeling</strong><br />
 G. Li, M. Li, S. Azarm, S. Al Hashimi, T. Al Ameri, N. Al Qasas<br />
 <em>Structural and Multidisciplinary Optimization</em> (2009-02-01) <a href="https://doi.org/10.1007/s00158-008-0251-6">https://doi.org/10.1007/s00158-008-0251-6</a><br />
 DOI: <a href="https://doi.org/10.1007/s00158-008-0251-6">10.1007/s00158-008-0251-6</a></p>
 </div>
 <div id="ref-Dk9KXQBq">
-<p>25. <strong>MOEA/D: A multiobjective evolutionary algorithm based on decomposition</strong><br />
+<p>26. <strong>MOEA/D: A multiobjective evolutionary algorithm based on decomposition</strong><br />
 Qingfu Zhang, Hui Li<br />
 <em>IEEE Trans. Evolutionary Computation</em> (2007) <a href="https://doi.org/10.1109/TEVC.2007.892759">https://doi.org/10.1109/TEVC.2007.892759</a><br />
 DOI: <a href="https://doi.org/10.1109/TEVC.2007.892759">10.1109/tevc.2007.892759</a></p>
 </div>
 <div id="ref-1C0JI6fEI">
-<p>26. <strong>Multiobjective GA optimization using reduced models</strong><br />
+<p>27. <strong>Multiobjective GA optimization using reduced models</strong><br />
 Deepti Chafekar, Liang Shi, Khaled Rasheed, Jiang Xuan<br />
 <em>IEEE Trans. Systems, Man, and Cybernetics, Part C</em> (2005) <a href="https://doi.org/10.1109/TSMCC.2004.841905">https://doi.org/10.1109/TSMCC.2004.841905</a><br />
 DOI: <a href="https://doi.org/10.1109/TSMCC.2004.841905">10.1109/tsmcc.2004.841905</a></p>
 </div>
 <div id="ref-BvoEknRH">
-<p>27. <strong>A reinforcement learning hyper-heuristic in multi-objective single point search with application to structural fault identification</strong><br />
+<p>28. <strong>A reinforcement learning hyper-heuristic in multi-objective single point search with application to structural fault identification</strong><br />
 Jiong Tang Pei Cao<br />
 <em>CoRR</em> (2018) <a href="http://arxiv.org/abs/1812.07958">http://arxiv.org/abs/1812.07958</a></p>
-</div>
-<div id="ref-CrJQ8Xau">
-<p>28. <strong>A survey on handling computationally expensive multiobjective optimization problems with evolutionary algorithms</strong><br />
-Tinkle Chugh, Karthik Sindhya, Jussi Hakanen, Kaisa Miettinen<br />
-<em>Soft Computing</em> (2017-12)<br />
-DOI: <a href="https://doi.org/10.1007/s00500-017-2965-0">10.1007/s00500-017-2965-0</a></p>
 </div>
 <div id="ref-14vOEgTO2">
 <p>29. <strong>Esa/pagmo2: Pagmo 2.12.0</strong><br />
