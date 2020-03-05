@@ -1,4 +1,37 @@
-\chapter{Evaluation. Experimental Results} 
+\chapter{Evaluation}\label{sec:evaluation}
+
+
+\begin{blockquote}
+    \paragraph{Intent:} Performance evaluation 
+    Structure:
+    \begin{description}
+
+        \item[Experimental setup] Optimization problems types, evaluation assumption and budget, repetition
+
+        \item[Benhmark 1] Default Tutor-model(portfolio, thresholds) on plethora types of multiobjective problems
+        \begin{enumerate}
+            \item default Tutor-model parameters
+            \item surrogate portfolio items
+            \item Baseline: MOEA
+        \end{enumerate}
+
+        \item[Benhmark 2] Parameter selection of Tutor-model with the dynamic sampling plan
+        \begin{enumerate}
+            \item Parameters: prediction count, train/test split, stacking solutions. thresholds(x2), solver
+            \item Subset of problems
+            \item Baseline: Static vs Dynamic. Parameters tune
+        \end{enumerate} 
+
+        \item[Benhmark 3] Many-objective optimization. Objectives>10
+        \begin{enumerate}
+            \item Static Heterogeneous compositional surrogate vs. Homogeneous compositional surrogate
+            \item Base line: MOEA or Random
+        \end{enumerate}
+
+        \item[Discussion] Results interpretation
+    \end{description}
+\end{blockquote}
+
 
 In this section, we present the results obtained for proposed methods on test problems with diverse objective landscape and with a various number of search variables.
 
@@ -13,15 +46,21 @@ Questions to find out:
     \item Efficacy in handling problems having more than two objectives
 \end{itemize}
 
+
+
 \cite{kouwe2018benchmarking}
 
 % --------------------------------------------------------------------------------------------
-% ------------------------------------------------     Benchmark problems      
+% ------------------------------------------------     Experimental setup     
 % --------------------------------------------------------------------------------------------
-\section{Benchmark problems}
+\section{Experimental setup}
+The measurements were performed on an Intel Core i7-8700CPU machine with 64G of memory using Fedora Server 29.
+
+% ---------------------------------     Optimization problems
+\subsection{Optimization problems}
 For comparison was selected several widespread synthetic benchmark suites. All of them are scalable in parameters space and some in objective space also. They simulate real life problem and have main related challenges such as multi-modality, different surface type, not uniform search space, etc.
 
-    % ------------------------------------------------  ZDT      
+    % -----------------------------  ZDT      
     \paragraph{ZDT}
     This widespread test suite\cite{ZitzlerDT00} was conceived for two-objective problems and takes its name from its authors Zitzler, Deb and Thiele. Each test function involves a particular feature that is known to cause difficulty in the evolutionary optimization process, mainly in converging to the Pareto-optimal front (e.g., multimodality and deception).
 
@@ -36,7 +75,7 @@ For comparison was selected several widespread synthetic benchmark suites. All o
 
     In their paper the authors propose a set of 6 different scalable problems all originating from a well thought combination of functions allowing, by construction, to measure the distance of any point to the Pareto front
 
-    % ------------------------------------------------  DTLZ
+    % -----------------------------   DTLZ
     \paragraph{DTLZ}
     This benchmark suite\cite{DebTLZ05} was conceived for multiobjective problems with scalable fitness and objective dimensions and takes its name from its authors Deb, Thiele, Laumanns and Zitzler. All problems in this test suite are box-constrained continuous n-dimensional multi-objective problems, scalable in fitness dimension.
 
@@ -51,7 +90,7 @@ For comparison was selected several widespread synthetic benchmark suites. All o
     \end{itemize}
 
 
-    % ------------------------------------------------  WFG
+    % ------------------------------    WFG
     \paragraph{WFG}
     This test suite \cite{WFGref} was conceived to exceed the functionalities of previously implemented test suites. In particular, non-separable problems, deceptive problems, truly degenerative problems and mixed shape Pareto front problems are thoroughly covered, as well as scalable problems in both the number of objectives and variables. Also, problems with dependencies between position and distance related parameters are covered. The WFG test suite was introduced by Simon Huband, Luigi Barone, Lyndon While, and Phil Hingston. All these problems, were developed satisfying the following guidelines:
         \begin{enumerate}
@@ -74,31 +113,54 @@ For comparison was selected several widespread synthetic benchmark suites. All o
             \item WFG9: This is a multimodal, deceptive and non-separable problem with a concave Pareto optimal geometry. Similar to WFG6, the non-separable reduction of this problem makes it more difficult than that of WFG2 and WFG3. Also, this problem is only deceptive on its position parameters.
         \end{itemize}
 
-\subsection{Model-tutor parameters}
 
-\begin{itemize}
-    \item Surrogate models
-        \begin{itemize}
-            \item Surrogate portfolio
-            \item Surrogates configurations
-            \item Validation threshold
-            \item Train/test split. Smallest dataset size
-        \end{itemize}
-    \item Solver
-        \begin{itemize}
-            \item MOEA (Population/Generation, Parameter control)
-            \item Scalarization with single-optimization algorithms
-            \item Random 
-        \end{itemize}
-    \item Sampling strategies
-    \item Pareto front infill criteria (Prior/Posterior)
-    \item Solutions combination
-    \item Prediction count
-\end{itemize}
+
+% --------------------------------------------------------------------------------------------
+% ---------------------       Benchmark 1: Model-tutor: Portfolio with compositional surrogates 
+% --------------------------------------------------------------------------------------------
+\section{Benchmark 1: Portfoli with compositional surogates. RQ1}
+    % ---------------------------------    Portfolio
+    \subsection{Surrogate portfolio}
 
 
 
-\section{Conclusion}
+% --------------------------------------------------------------------------------------------
+% ---------------------       Benchmark 2: Dynamic sampling plan and parameter selection
+% --------------------------------------------------------------------------------------------
+\section{Benchmark 2: Dynamic sampling plan. RQ1}
+    \subsection{Model-tutor parameters}
+    \begin{itemize}
+        \item Surrogate models
+            \begin{itemize}
+                \item Surrogate portfolio
+                \item Surrogates configurations
+                \item Validation threshold
+                \item Train/test split. Smallest dataset size
+            \end{itemize}
+        \item Solver
+            \begin{itemize}
+                \item MOEA (Population/Generation, Parameter control)
+                \item Scalarization with single-optimization algorithms
+                \item Random 
+            \end{itemize}
+        \item Sampling strategies
+        \item Pareto front infill criteria (Prior/Posterior)
+        \item Solutions combination
+        \item Prediction count
+    \end{itemize}
+
+
+% --------------------------------------------------------------------------------------------
+% ---------------------       Benchmark 3: Many-objective optimization, scaling
+% --------------------------------------------------------------------------------------------
+\section{Benchmark 3: Many-objective optimization. Scaling. RQ3}
+    Compositional surrogates
+
+
+% --------------------------------------------------------------------------------------------
+% ------------------------------------------------     Discussion 
+% --------------------------------------------------------------------------------------------
+\section{Discussion}
 
 Up to now, most papers used the
 The quality of the results obtained with X was similar to the results obtained with Y, but with significantly fewer exactly evaluated solutions during the optimization process. 

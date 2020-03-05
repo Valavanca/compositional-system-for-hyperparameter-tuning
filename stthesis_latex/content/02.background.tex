@@ -1,4 +1,4 @@
-\chapter{Foundation}
+\chapter{Foundation}\label{sec:foundation}
 
     \begin{blockquote}
         \paragraph{Intent:} General background information needed to follow the terms and methods used in this thesis.
@@ -22,9 +22,10 @@
                 \begin{enumerate}
                     \item Intro. Cons and Pons
                     \item Types of a surrogate model in a MO-problem (Model of scalarization, MO-model, Replicated MO-model, Compositional MO-model). Taxonomy
-                    \item Surrogate assistance for MO parameter tuning $\rightarrow$ Reusable/scalable components for optimization $\rightarrow$ Problem: Scalability of a surrogate model. [RQ2 \ref{RQ2}]                   
+                    \item Surrogate assistance for MO parameter tuning $\rightarrow$ Reusable/scalable components for optimization $\rightarrow$ Problem: Scalability of a surrogate model. [RQ2 \ref{RQ1}]                   
                     \item Surrogate model is domain-specific $\rightarrow$ Analyze multiple surrogates $\rightarrow$ Surrogate portfolio [RQ1 \ref{RQ1}]
-                    \item Sampling plan. Build a surrogate model. Quality of prediction depends on the accuracy of a surrogate model  $\rightarrow$ Accuracy depends on a sample size $\rightarrow$ Sample size depends on surface type $\rightarrow$ Problem: Sample size is static. [RQ3 \ref{RQ3}]
+                    \item Sampling plan. Build a surrogate model. Quality of prediction depends on the accuracy of a surrogate model  $\rightarrow$ Accuracy depends on a sample size $\rightarrow$ Sample size depends on surface type $\rightarrow$ Problem: Sample size is static. [RQ2 \ref{RQ2}]
+                    \item Surrogates and MOEA are hard scalable [RQ3 \ref{RQ2}]
                 \end{enumerate}
             \item[4. Scope of work] Starting point of thesis
                 \begin{enumerate}
@@ -90,6 +91,12 @@
         are called multi-objective optimization (MOO) \cite{odugod2013}".
 
         For a multi-objective problem, we consider "solution" as points from parameter space that lead to non-dominated results in objective space. This set of points approximate real Pareto-front. Improving "solution" means that sets of points coincide better with real Pareto-front.
+
+        What does it mean, solving a multi-obj problem?
+        \begin{itemize}
+            \item Single-point, that is Pareto optimal solution
+            \item Multi-point solutions that all is Pareto optimal
+        \end{itemize}
 
     % ------------------------------------------------        Metrics       -------------
         \subsection{Metrics for multi-objective solution}
@@ -242,7 +249,8 @@
 
 
             % ------------------        Surrogate-model with MOEA       
-            \paragraph{Surrogate with MOEA}
+            \paragraph{Integration of the Surrogate Model}
+            Direct fitness replacement and indirect fitness replacement
             Kind of extending the search stage of MOEA with surrogate to simulate evaluation of population. It transform the problem of searching a new better population to improving general hypothesis of how and where Pareto set presented.  
 
             In surrogate-model-based multiobjective optimization, approximated values are often mistakenly used in the solution comparison. As a consequence, exactly evaluated good solutions can be discarded from the population because they appear to be dominated by the inaccurate and over-optimistic approximations. This can slow the optimization process or even prevent the algorithm from finding the best solutions \cite{MlakarPTF15}. 
@@ -273,6 +281,11 @@
         % ------------------------------------------------     Build surrogate model     
         \subsection{Build the surrogate model(s). Sampling plan}
 
+
+        % --------------------------------------------------------------------------------------------
+        % ------------------------------------------------     Scalability    
+        \subsection{Scalability of surrogates and MO algorithms}
+        Scalability problem for MOEA and Surrogates 
 
 
         % --------------------------------------------------------------------------------------------
