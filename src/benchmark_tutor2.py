@@ -277,34 +277,36 @@ if __name__ == "__main__":
 
 
     test_set = [
+        # { DONE! 6.3.20
+        #     'problem_name': ['zdt'],
+        #     'prob_id': [1, 2, 3, 4, 5, 6],
+        #     'prob_dim': [2],
+        #     'obj': [2],
+        #     'eval_budget': [1000],
+        #     'pred_count': [10, 25, 50],
+        #     'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
+        #     'seed': [42]
+        # }
         {
-            'problem_name': ['zdt'],
-            'prob_id': [1, 2, 3, 4, 5, 6],
+            'problem_name': ['wfg'],
+            'prob_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
             'prob_dim': [2],
             'obj': [2],
             'eval_budget': [1000],
             'pred_count': [10, 25, 50],
             'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
             'seed': [42]
+        },
+        {
+            'problem_name': ['dtlz'],
+            'prob_id': [1, 2, 3, 4, 5, 6, 7],
+            'prob_dim': [3],
+            'obj': [2],
+            'eval_budget': [1000],
+            'pred_count': [10, 25, 50],
+            'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
+            'seed': [42]
         }
-        # {
-        #     'problem_name': ['wfg'],
-        #     'prob_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
-        #     'prob_dim': [2],
-        #     'obj': [2],
-        #     'eval_budget': [300],
-        #     'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
-        #     'seed': [42]
-        # },
-        # {
-        #     'problem_name': ['dtlz'],
-        #     'prob_id': [1, 2, 3, 4, 5, 6, 7],
-        #     'prob_dim': [2, 4, 6, 8, 10],
-        #     'obj': [2, 4, 6, 8, 10],
-        #     'eval_budget': [300],
-        #     'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
-        #     'seed': [42]
-        # }
     ]
 
     logging.info(pformat(test_set))

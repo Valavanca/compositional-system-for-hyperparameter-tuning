@@ -1311,5 +1311,279 @@
     },
     "title": "A survey on handling computationally expensive multiobjective optimization problems with evolutionary algorithms",
     "type": "article-journal"
+  },
+  {
+    "ISBN": "978-3-540-76931-6",
+    "abstract": "In this paper, an evolutionary algorithm with spatially distributed surrogates (EASDS) for multiobjective optimization is presented. The algorithm performs actual analysis for the initial population and periodically every few generations. An external archive of the unique solutions evaluated using the actual analysis is maintained to train the surrogate models. The data points in the archive are split into multiple partitions using k-Means clustering. A Radial Basis Function (RBF) network surrogate model is built for each partition using a fraction of the points in that partition. The rest of the points in the partition are used as a validation data to decide the prediction accuracy of the surrogate model. Prediction of a new candidate solution is done by the surrogate model with the least prediction error in the neighborhood of that point. Five multiobjective test problems are presented in this study and a comparison with Nondominated Sorting Genetic Algorithm II (NSGA-II) is included to highlight the benefits offered by our approach. EASDS algorithm consistently reported better nondominated solutions for all the test cases for the same number of actual evaluations as compared to a single global surrogate model and NSGA-II.",
+    "author": [
+      {
+        "family": "Isaacs",
+        "given": "Amitay"
+      },
+      {
+        "family": "Ray",
+        "given": "Tapabrata"
+      },
+      {
+        "family": "Smith",
+        "given": "Warren"
+      }
+    ],
+    "container-title": "Progress in artificial life",
+    "editor": [
+      {
+        "family": "Randall",
+        "given": "Marcus"
+      },
+      {
+        "family": "Abbass",
+        "given": "Hussein A."
+      },
+      {
+        "family": "Wiles",
+        "given": "Janet"
+      }
+    ],
+    "id": "raw:DistrSurr",
+    "issued": {
+      "date-parts": [
+        [
+          2007
+        ]
+      ]
+    },
+    "page": "257-268",
+    "publisher": "Springer Berlin Heidelberg",
+    "publisher-place": "Berlin, Heidelberg",
+    "title": "An evolutionary algorithm with spatially distributed surrogates for multiobjective optimization",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.1109/CEC.2013.6557876",
+    "ISSN": "1941-0026",
+    "author": [
+      {
+        "family": "Rosales-Pérez",
+        "given": "A."
+      },
+      {
+        "family": "Coello",
+        "given": "C. A. C."
+      },
+      {
+        "family": "Gonzalez",
+        "given": "J. A."
+      },
+      {
+        "family": "Reyes-Garcia",
+        "given": "C. A."
+      },
+      {
+        "family": "Escalante",
+        "given": "H. J."
+      }
+    ],
+    "container-title": "2013 ieee congress on evolutionary computation",
+    "id": "raw:HybridSurrRCG",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "keyword": "benchmark testing;evolutionary computation;Pareto optimisation;support vector machines;hybrid surrogate-based approach;evolutionary multiobjective optimization problems;evolutionary algorithms;fitness function evaluations;Pareto front approximation;evolutionary algorithm;surrogate models;support vector machines;SVM;model selection process;hyperparameter values;evolutionary process;surrogate fidelity;NSGA-II;Support vector machines;Sociology;Statistics;Optimization;Linear programming;Computational modeling;Evolutionary computation",
+    "page": "2548-2555",
+    "title": "A hybrid surrogate-based approach for evolutionary multi-objective optimization",
+    "type": "paper-conference"
+  },
+  {
+    "author": [
+      {
+        "family": "Akhtar",
+        "given": "Taimoor"
+      },
+      {
+        "family": "Shoemaker",
+        "given": "Christine A."
+      }
+    ],
+    "id": "raw:akhtar2019efficient",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "title": "Efficient multi-objective optimization through population-based parallel surrogate search",
+    "type": "no-type"
+  },
+  {
+    "DOI": "10.1016/j.swevo.2019.03.005",
+    "URL": "https://doi.org/10.1016/j.swevo.2019.03.005",
+    "author": [
+      {
+        "family": "Lu",
+        "given": "Xiaofen"
+      },
+      {
+        "family": "Sun",
+        "given": "Tao"
+      },
+      {
+        "family": "Tang",
+        "given": "Ke"
+      }
+    ],
+    "container-title": "Swarm Evol. Comput.",
+    "id": "raw:LuST19",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "page": "21-32",
+    "title": "Evolutionary optimization with hierarchical surrogates",
+    "type": "article-journal",
+    "volume": "47"
+  },
+  {
+    "author": [
+      {
+        "family": "Nardi",
+        "given": "Luigi"
+      },
+      {
+        "family": "Koeplinger",
+        "given": "David"
+      },
+      {
+        "family": "Olukotun",
+        "given": "Kunle"
+      }
+    ],
+    "container-title": "2019 ieee 27th international symposium on modeling, analysis, and simulation of computer and telecommunication systems (mascots)",
+    "id": "raw:nardi2019practical",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "page": "347-358",
+    "publisher": "IEEE",
+    "title": "Practical design space exploration",
+    "type": "paper-conference"
+  },
+  {
+    "author": [
+      {
+        "family": "Lindauer",
+        "given": "Marius"
+      },
+      {
+        "family": "Eggensperger",
+        "given": "Katharina"
+      },
+      {
+        "family": "Feurer",
+        "given": "Matthias"
+      },
+      {
+        "family": "Falkner",
+        "given": "Stefan"
+      },
+      {
+        "family": "Biedenkapp",
+        "given": "André"
+      },
+      {
+        "family": "Hutter",
+        "given": "Frank"
+      }
+    ],
+    "id": "raw:smac-2017",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "publisher": "<https://github.com/automl/SMAC3>; GitHub",
+    "title": "SMAC v3: Algorithm configuration in python",
+    "title-short": "SMAC v3",
+    "type": "no-type"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1703.03373",
+    "author": [
+      {
+        "family": "Bischl",
+        "given": "Bernd"
+      },
+      {
+        "family": "Richter",
+        "given": "Jakob"
+      },
+      {
+        "family": "Bossek",
+        "given": "Jakob"
+      },
+      {
+        "family": "Horn",
+        "given": "Daniel"
+      },
+      {
+        "family": "Thomas",
+        "given": "Janek"
+      },
+      {
+        "family": "Lang",
+        "given": "Michel"
+      }
+    ],
+    "id": "raw:mlrMBO",
+    "issued": {
+      "date-parts": [
+        [
+          2017,
+          3,
+          9
+        ]
+      ]
+    },
+    "title": "raw:mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions",
+    "title-short": "raw:mlrMBO",
+    "type": "article-journal"
+  },
+  {
+    "DOI": "10.1109/TEVC.2005.851274",
+    "URL": "https://doi.org/10.1109/TEVC.2005.851274",
+    "author": [
+      {
+        "family": "Knowles",
+        "given": "J."
+      }
+    ],
+    "container-title": "IEEE Trans. Evolutionary Computation",
+    "id": "raw:Knowles06",
+    "issue": "1",
+    "issued": {
+      "date-parts": [
+        [
+          2006
+        ]
+      ]
+    },
+    "page": "50-66",
+    "title": "ParEGO: A hybrid algorithm with on-line landscape approximation for expensive multiobjective optimization problems",
+    "title-short": "ParEGO",
+    "type": "article-journal",
+    "volume": "10"
   }
 ]

@@ -23,13 +23,13 @@ import sklearn.gaussian_process as gp
 from joblib import Parallel, delayed
 
 # from .search import Gaco, Nsga2
-from search import Gaco, Nsga2
+from search import Gaco, Nsga2, RandS, MOEActr
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 # np.random.seed(1)
 
-TRAIN_TEST_SPLIT = 0.25
+# TRAIN_TEST_SPLIT = 0.25
 
 
 class HypothesisTransformer(TransformerMixin, MetaEstimatorMixin, BaseEstimator):
@@ -289,7 +289,7 @@ class PredictTutor(BaseEstimator):
 
     """
 
-    def __init__(self, bounds, portfolio: List[BaseEstimator] = None):
+    def __init__(self, bounds, portfolio: List[BaseEstimator] = None, train_test_sp=0.25, solver='nsga2', cv_threshold='', test_threshold=''):
         """        
         Args:
             bounds (Tuple): Tuple with lower and higher bound for each feature in objective space.
@@ -310,6 +310,11 @@ class PredictTutor(BaseEstimator):
         self.surr_valid = pd.DataFrame()  # surrogates that pass cv validation and aggregation
         self._solutions = None  # predict solutions from valid surrogates
         self._is_single: bool = False
+
+        self._solver: str = solver
+        self._train_test_sp: float = train_test_sp
+        self._cv_threshold: str = cv_threshold
+        self._test_threshold: str = test_threshold
 
         # dimensions mask
         # self._mask_col = mask_col,
@@ -344,9 +349,12 @@ class PredictTutor(BaseEstimator):
 
         self._init_dataset = (X, y)
 
-        # There is no validation for set smaller than 8.
-        # 25% of the data set is less than 2 test values for proper scoring.
-        if len(X) >= 12:
+        cv = cv_params['cv'] if 'cv' in cv_params else 5 # 5 folds default for sklearn
+        MIN_TEST = 2  # min 2 test values for proper score
+        x = MIN_TEST*cv/(1-self._train_test_sp)
+        self._DATA_SET_MIN = x + ((MIN_TEST - x % MIN_TEST) if x % MIN_TEST else 0)
+
+        if len(X) >= self._DATA_SET_MIN:
             # rewrite the previous dataset
             self._train = None
             self._test = None
@@ -358,14 +366,14 @@ class PredictTutor(BaseEstimator):
             self._is_single = y.shape[1] == 1
 
             logging.info(
-                "Split dataset. Validation set is {}%".format(TRAIN_TEST_SPLIT))
+                "Split dataset. Validation set is {}%".format(self._train_test_sp))
             X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=TRAIN_TEST_SPLIT)
+                X, y, test_size=self._train_test_sp)
             self._train = (X_train, y_train)
             self._test = (X_test, y_test)
         else:
             logging.info(
-                "Available {}. At least 12 samples are required".format(len(X)))
+                "Available {}. At least {} samples are required".format(len(X), self._DATA_SET_MIN))
             return None
 
         # --- STAGE 1: Cross-validation surrogates
@@ -383,7 +391,9 @@ class PredictTutor(BaseEstimator):
             # --- STAGE 3: Score the aggregated surrogates with a test set.
             #              Sorting tham based on results
             self.surr_score(*self._test)
-            self.surr_valid.query('ndf_surr_score > 0.6', inplace=True)
+            if self._test_threshold:
+                self.surr_valid.query(self._test_threshold, inplace=True)
+
             logging.info("Stage-3: {} surrogate(s) pass surr score".format(len(self.surr_valid)))
 
             # --- STAGE 4: Generate solution from each valid hypothesis.
@@ -440,11 +450,15 @@ class PredictTutor(BaseEstimator):
 
     def _thresholding(self, cv_result: pd.DataFrame) -> pd.DataFrame:
         # Reise Error in case of custom score metrics
-        if len(self._init_dataset[0]) < 12:
+        df = cv_result.copy()
+        if len(self._init_dataset[0]) < 8:
             q = '(test_r2 > 0.97) & (test_neg_mean_absolute_error > -2.3) & (test_explained_variance > 0.6)'
-        else:
-            q = '(test_r2 > 0.65) & (test_neg_mean_absolute_error > -2.3) & (test_explained_variance > 0.6)'
-        return cv_result.query(q)
+            df.query(q, inplace=True)
+        elif self._cv_threshold:
+            # q = '(test_r2 > 0.65) & (test_neg_mean_absolute_error > -2.3) & (test_explained_variance > 0.6)'
+            df.query(self._cv_threshold, inplace=True)
+
+        return df
 
     def _results_aggregation(self, cv_result: pd.DataFrame) -> pd.DataFrame:
 
@@ -554,11 +568,20 @@ class PredictTutor(BaseEstimator):
         solver = None
         if self._is_single is True:
             solver = Gaco(bounds=self.__bounds).fit(models)
-        else:
+        elif self._solver == 'nsga2':
             solver = Nsga2(bounds=self.__bounds).fit(models)
+        elif self._solver == 'moea_control':
+            solver = MOEActr(bounds=self.__bounds).fit(models)
+        elif self._solver == 'random':
+            solver = RandS(bounds=self.__bounds, n=1000).fit(models)
+        else:
+            raise ValueError(
+                "There is no exist solver {} ".format(self._solver))
+
+        
         return solver
 
-    def predict(self, X=None, y=None, n=1, **predict_params):
+    def predict(self, X=None, y=None, n=1, kind='ndf_score', **predict_params):
         """ Prediction from the best solution.
         Solution get from solver, apply to the hypothesis """
 
@@ -576,7 +599,15 @@ class PredictTutor(BaseEstimator):
                     " A solution does not exist: {} \n\
                         Сheck that the surrogate models are fit appropriately".format(self._solutions))
             else:
-                # -- 3. There is solution from valid surogates. Return `n` predictions
+                # -- 3. There is solution from valid surogates
+                if kind == 'ndf_score':
+                    sol_pool = self._sol_ndf_surr()
+                elif kind == 'stack':
+                    sol_pool = self._sol_stack_valid_surr()
+                else: # default
+                   sol_pool = self._sol_ndf_surr()
+
+                # Return `n` predictions
                 if n is None:
                     return self._solutions['prediction'].values[0]
                 else:
@@ -590,6 +621,23 @@ class PredictTutor(BaseEstimator):
             "prediction": self._sobol(n=n)
         }])
         return self._solutions["prediction"][0].tolist()
+
+    def _sol_ndf_surr(self):
+        try:
+            # get a predictions from best surrogate on none-dominated values
+            pred = self._solutions.sort_values(
+                by=['ndf_surr_score', 'surr_score'], ascending=False)['prediction'].values[0]
+        except KeyError as err:
+            # get the first predictions
+            pred = self._solutions['prediction'].values[0]
+            logging.info(
+                " Sorting failed: {} \n{}".format(err, self._solutions))
+            pass
+        return pred
+
+    def _sol_stack_valid_surr(self):
+        pred_pools = self._solutions['prediction'].values
+        return np.concatenate(pred_pools, axis=0)
 
     def predict_proba(self, X=None, **predict_params):
         """ Return all metrics of the best solution """

@@ -1,44 +1,176 @@
 \chapter{Related work}\label{sec:related}
 
     \begin{blockquote}
-        \paragraph{Intent:} Related work. The gaps of the others should be clearly
+        \paragraph{Intent:} This section overview other studies in the area of surrogate-based multi-objective optimization or related approach from other types of optimization. The gaps of the others should be clearly. 
         Structure:
         \begin{description}
-
             \item[Comparison criteria] Surrogate type, Surrogate portfolio, Solver type, Sampling size, Many-objective optimization
-            \item[Table] 
+            \item[Short description] 
+            \item[Comparable table] 
         \end{description}
     \end{blockquote}
 
 
+    % --------------------------------------------------------------------------------------------
+    % ------------------------------------------------          Criteria
+    % --------------------------------------------------------------------------------------------
 
-    Many existing approaches can be categorized as multi-objective optimization. That is why
-    introduce comparison criteria for a clear and concise demarcation of the approach presented in this thesis:
-
-    Comparison Criteria for Related Work. 
-    \begin{itemize}
-        \item Variability. Exchange surrogate, solver and sampling algorithms as components. Variants on each optimization workflow step.
-        \item Scalability. Extend single-objective problem on the fly to multi-objective.
-        \item Adaptation. Surrogate portfolio.
-        \item From 0 to hero. Sampling plan depends on surrogate validity. The Sobol sequence (and Latin hypercube).                
-    \end{itemize}
+    Many existing approaches can be categorized as multi-objective optimization. That is why introduce comparison criteria for a clear and concise demarcation of the approach presented in this thesis:
+    \section{Comparison criteria for related work:}
+    \begin{description}
+        \item[Surrogate type] Extrapolation technique for a surrogate model. Surrogate combination
+        \item[Sampling plan] Collecting sampling points for building a surrogate model
+        \item[Optimization] Algorithm to find a multi-objective solution(s)
+        \item[Scalability] Many-objectivity. Problems with high dimensionality in objective and parameter spaces                
+    \end{description}
     Important Features: Categorical variables, prior knowledge, multi-objective, feasibility constraints.
 
-    \paragraph{AUTO-SKLEARN} \cite{autosklearn:feurer2015efficient}
-    - CASH (Combined Algorithm Selection and Hyperparameter optimization) problem
+    Hear presented related works that answer questions related to the motivation of the thesis, viz the Pareto front approximation objectives for an expensive black-box function evaluation
 
-    \paragraph{TPOT} \cite{OlsonGECCO2016}
-    Already implemented TPOT automodel as hypothesis candidate
+    Sequential model-based optimization (SMBO) [3] has become the state-of-the-art optimization strategy in recent years.
+    The generic SMBO procedure starts with an initial design of evaluation
+    points, and then iterates the following steps: 1. Fit a regression model to the outcomes and design points obtained so far,
+    2. query the model to propose a new, promising point, often by optimizing a so-called infill criterion or acquisition function,
+    3. evaluate the new point with the black-box function and add it to the design.
+    Several adaptations and extensions, e.g., multi-objective optimization [4], multi- point proposal [5, 6], more flexible regression models [7] or alternative ways to calculate the infill criterion [8] have been investigated recently.
 
-    \paragraph{jMetalpy} \cite{benitezhidalgo2019jmetalpy}
-    Partially implemented some solvers.
 
-    \paragraph{Hyperopt}
 
-    \paragraph{PlatEMO} \cite{PlatEMO}
-    PlatEMO: A MATLAB Platform for Evolutionary Multi-Objective Optimization
+    We will briefly present an overview of available software for model-based optimization, starting with implementations based on the Efficient Global Op- timization algorithm (EGO), i.e., the SMBO algorithm proposed by Jones et al. [3] using Gaussian processes (GPs), and continue with extensions and alterna- tive approaches.
 
-    \paragraph{mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions}
+    We will argue that the proposed concept from this thesis is the preferred choice for functional optimization when the evaluation cost is large.
 
-    \paragraph{ParEGO}
-    ParEGO was enhanced to a multi-point proposal by increasing the number of weight vectors randomly drawn in each iteration. If N points are desired, cN (c > 1) weight vectors are selected. 
+    % Note that this approach means that
+
+    % --------------------------------------------------------------------------------------------
+    % ------------------------------------------------          Approaches
+    % --------------------------------------------------------------------------------------------
+
+    % ------------------------------------------------          Frameworks / Platforms
+    \subsection{Platforms and frameworks}
+        There are a lot of different projects that can handle multi-objective solutions.
+
+        General characteristics are that they have multiple algorithms on each type of optimization and additional features that they provide. Usually, a surrogate model is predefine and injected into some algorithm for decision making.
+
+        \paragraph{PlatEMO} \cite{PlatEMO} PlatEMO: A MATLAB Platform for Evolutionary Multi-Objective Optimization. The platform provides a plethora of optimization algorithms for multi-/many objective problems.
+
+        % ------------------------------------------------          Algorithms
+        \subsection{Algorithms. Related Software}
+
+
+        \paragraph{SigOpt} build on top of cross-validation
+
+
+        % ----------------         SMAC
+        \paragraph{Sequential Model-based Algorithm Configuration (SMAC)} SMAC\cite{smac-2017} adopted a random forests model and Expected Improvement (EI) to model a conditional probability. It applies a local search with several starting points and picks configurations with maximal EI. The exploration property of SMAC is improved by EI on points with large uncertainty and optimal value of objective mean. However, SMAC is limited to single-criteria optimization and use predefine sampling plan.
+
+        % ----------------         mlrMBO
+        \paragraph{mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions} Bischl et al.,\cite{mlrMBO} provide a framework with a focus on multi-criteria parameters optimization. MlrBO extends the MBMO procedure for mixed and hierarchical parameter spaces. For the surrogate, that project allows any regression learner from $mlr$ library. That is why a bagging method can be applied to regression models to retrieve model error in $mlr$. This framework enables proposing several points for evaluation. However, it doesn't provide a combination of different surrogates into one model. Example of provided algorithm: ParEGO
+            % ----------------         ParEGO
+            \paragraph{ParEGO} scalarization based multi-objective algorithm \cite{Knowles06}. Classical single-objective algorithm of Jones et al. EGO was extended to a multi-point proposal by repeat algorithm several times with randomly change scalarizations weights in each iteration. The idea of algorithm based on Kriging/Gaussian process regression model and multiple single objective optimization processes on scalarized objectives guaranteeing that multiple points on the Pareto-optimal front are found.
+
+
+        % ----------------         Distributed Surrogates
+        \paragraph{An Evolutionary Algorithm with Spatially Distributed Surrogates for Multiobjective Optimization} Amitay et al.,\cite{DistrSurr}presented in their paper an evolutionary algorithm with spatially distributed surrogates (EASDS). Surrogates periodicaly validated and updated. Radial Basis Function Networks were used as the surrogate model for each partition from samplings points. Spatially Distributed Surrogate models are created for all the objectives and than evaluated by NSGA-II. The authors describe that their approach achieves better results than single global surrogate models showing an advantage from using multiple surrogates. However, authors evaluated there algorithm only on bi-objective problems
+ 
+        % ----------------         Hybrid surrogate
+        \paragraph{A hybrid surrogate-based approach for evolutionary multi-objective optimization} Rosales-Pérez et al.,\cite{HybridSurrRCG} proposed an approach based on an ensemble of Support Vector Machines. Authors describe a model selection process or hyperparameters selection of SVM based on cross-validation technique and fother injection to the surrogate ensemble. 
+        Incremental development of the ensemble, that includes new information obtained during the optimization and stores previous models. The training of a new model carries the grid search of SVM Kernel types to find one with the least expected generalization error. This paper presents a model selection process for determining the hyperparameters for each SVM in the ensemble.
+
+        % ----------------         Surrogate Search
+        \paragraph{Efficient Multi-Objective Optimization through Population-based Parallel Surrogate Search} Akhtar et al.,\cite{akhtar2019efficient} introduce a multi-objective optimization algorithm for expensive functions that connect iteratively updated several surrogates of the objective functions. Feature of this algorithm is high optimization for parallel computation. An algorithm combines Radial Basis Function (RBF) approximation, Tabu and local search around multiple points. Authors present an algorithm that can theoretically be applicable for hight dimensional space and many-objective problems.
+
+        % ----------------         GALE
+        \paragraph{GALE: Geometric Active Learning for Search-Based Software Engineering} Krall et al.,\cite{KrallMD15} developed algorithm that uses PCA and active learning techniques to step-by-step approximation and evaluating the most informative solutions. The main features of GALE are active learning in geometrically analysis perspective regions in search space to select most prospective candidates.
+
+        % ----------------         Hypermapper
+        \paragraph{Hypermapper} Luigi Nardi et al. \cite{nardi2019practical} presented multi-objective black-box optimization tool. Some features of their approach are prior knowledge, categorical variables, feasibility and good adaptation to embedded devices. They train separate models, one for each objective and constarints. Then merge it with random scalarizations (Tchebyshev/ Linear scalarization). Next, the Bayesian model leads local search algorithm to explore Pareto optimal points.  
+
+        % ----------------         Hierarchical surrogates
+        \paragraph{Evolutionary optimization with hierarchical surrogates} Xiaofen Lu et al. \cite{LuST19} apply different surrogate modelling techniques based on motivation on optimization expensive black-box function without any prior knowledge on a problem. They used a pre-specified set of models to construct hierarchical surrogate during optimization. Also, for verification of surrogate used general accuracy of the high-level model. The whole process of the proposed method split to accumulate training samples and model-based optimization, that means that the sample plan is static and require prior information about the problem.
+
+        %! A mathematic analysis was given in this paper to show that the hierarchical surrogate structure can be beneficial when the accuracy of the high-level model is larger than 0.5.
+        % !However, one modeling technique might perform differently on different problem landscapes.
+
+
+        \begin{table}
+            \centering
+            \caption{Related work}
+            \begin{tabular}{|l|l|l|l|l|l|}
+            \hline
+            
+             & Surrogate & Optimization Algorithm & Sampling plan & Scaling of test problems & Year \\ \hline
+            Distributed Surrogates (EASDS) & Radial Basis Function Networks, clustering & NSGA-II & Static: Random samples & 2 obj & 2007 \\ \hline
+            Hybrid surrogate-based approach & Ensemble of Support Vector Machines & NSGA-II & Static: Latin-hypercube samples & 2 obj & 2013 \\ \hline
+            mlrMBO & Regression model(s) & Single-/Multi-opt algorithm & Static & ? & 2017 \\ \hline
+            SMAC & Eandom forests + Expected Improvement & Local search & Static & 1 obj & 2017 \\ \hline
+            Parallel Surrogate Search (MOPLS-N) & Radial Basis Function & Tabu and local search & Static & 2 obj & 2019 \\ \hline
+            GALE & PCA-approximation + linear models & MOEA/D & Static & 2-8 obj & 2015 \\ \hline
+            Hypermapper & Randomized decision forests & Scalarizations + Gaussian Processes + Local search & Static & 2 obj & 2019 \\ \hline
+            ParEGO & Kriging/Gaussian process regression & scalarizations + EGO & Static: Latin hypercube samples &  & 2006 \\ \hline
+            Hierarchical surrogates & Dinamic hierarchical surrogate & EA & Static & 1 obj & 2019 \\ \hline
+            
+            \end{tabular}
+        \end{table}
+
+    % --------------------------------------------------------------------------------------------
+    % ------------------------------------------------          Approaches
+    % --------------------------------------------------------------------------------------------
+    \subsection{Conclusions}
+
+
+        \begin{enumerate}
+            \item One modeling technique might perform differently on different problem landscapes. \cite{LuST19}
+            \item Surrogate model can be useful when the accuracy is larger than 0.5. \cite{LuST19}
+        \end{enumerate}
+
+
+
+
+
+        % However, it lacks fundamental features that makes it ineffective in the presence of applications with non-feasible designs and prior knowledge.
+
+
+        % Our work is similar in nature to the approaches adopted in the Bayesian optimization literature [27]. Example of widely used mono-objective Bayesian DFO software are SMAC [15], SpearMint [30], [31] and the work on tree-structured Parzen estimator (TPE) [6]. In particular, the use of a full Bayesian ap- proach will help to leverage the prior knowledge by computing a posterior distribution. Exploration of additional methods to warm-up the search from the design of experiments literature
+
+        % \paragraph{Hyperopt}
+
+
+
+
+        % Based on a survey\cite{SoftSurvey} there still exist such as:
+        % \begin{itemize}
+        %     \item 
+        % \end{itemize}
+
+
+        % Some features of their approach are 
+
+
+        % We extend the idea of stochastic RBF to be suitable for the algorithm con- figuration task. It is a model-based algorithm that cycles from emphasis on the objective to emphasis on the distance using a weighting strategy. 
+        
+        % The main advantage of LHS is that it does not require an increased initial population size for more dimensions.
+
+
+        % exploration, exploitation and diversification during each algorithm iteration.
+
+
+
+        % To our knowledge, there exists no research that investigates how deep networks affect the performance of surrogate-assisted multi-objective evolutionary algorithms. If neural networks were used, the approaches usually adopted only one hidden layer. Additionally, we can also see that there exists a multitude of ways a surrogate model can be integrated into an evolutionary algorithm
+
+        % Previous studies have shown that the choice of modeling technique can highly affect the performance of the surrogate model-assisted evolutionary search.
+
+        % However, one modeling technique might perform differently on different problem landscapes. Without
+
+
+        % OpenTuner is different from our work in a number of ways. First, our work supports multi-objective optimization. Second, our white-box model-based approach enables the user to understand the results while learning from them. Third, our approach is able to consider unknown feasibility constraints. Lastly, our framework has the ability to inject prior knowledge into the search. The first point in particular does not allow a direct performance comparison of the two tools.
+
+        % over the entire space would result in a waste of samples.
+
+
+        % This is especially the case for a SMBO
+
+        % The black-box function can be more complex, for example a machine learning pipeline which includes preprocessing, feature selection and model selection.
+
+
+        % Consequently, the advantage of the multi-objective candidate generation to produce a set instead of single points is not only used for improving the exploration of the decision space, but also for obtaining a well-spread batch of solutions.

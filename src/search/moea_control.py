@@ -13,24 +13,26 @@ DEFAULT_POP_SIZE = 100
 DEFAULT_GENERATION = 100
 
 
-class Nsga2(Solver):
-    """ pygmo2 solver
+class MOEActr(Solver):
+    """ MOEA parameter control solver
     """
 
     def __init__(self,
                  models: List[BaseEstimator] = None,
                  bounds: Tuple[List] = None,
+                 moea_list: List[str] = ['moead', 'nsga2'],
                  mask_col: List[int] = None,
                  mask_val: List[int] = None,
                  pop_size=DEFAULT_POP_SIZE,
                  gen=DEFAULT_GENERATION):
-        super(Nsga2, self).__init__(models)
+        super(MOEActr, self).__init__(models)
         self._estimators = models
         self._bounds = bounds
         self._problem = None
         self._pop_size = pop_size
         self._gen = gen
         self._population = None
+        self._moea_list = moea_list
         # dimensions mask
         self._mask_col = mask_col,
         self._mask_value = mask_val
@@ -89,25 +91,25 @@ class Nsga2(Solver):
 
     def __evolve(self):
         self._problem = self.__def_problem(is_mask=True)
-        algo = pg.algorithm(pg.nsga2(gen=self._gen))
-        isl = pg.island(algo=algo, prob=self._problem, size=self._pop_size)
-        isl.evolve()
-        isl.wait()
-        e_pop = isl.get_population()
+        pop = pg.population(self._problem, size=self._pop_size)
+        for algo_name in self._moea_list:
+            algo = pg.algorithm(getattr(pg, algo_name)(gen=self._gen))
+            pop = algo.evolve(pop)
+            algo = pg.algorithm(pg.nsga2(gen=self._gen))
 
         if None not in (self._mask_col, self._mask_value):
             t_pop = pg.population(self.__def_problem(is_mask=False))
-            evolve_x = e_pop.get_x()
-            evolve_y = e_pop.get_f()
+            evolve_x = pop.get_x()
+            evolve_y = pop.get_f()
             for i, x_vector in enumerate(evolve_x):
                 for c, v in zip(self._mask_col, self._mask_value):
                     x_vector = np.insert(x_vector, c, v, 0)
                 t_pop.push_back(x=x_vector, f=evolve_y[i])
             self._population = t_pop
         else:
-            self._population = e_pop
+            self._population = pop
 
-        print("NSGA2: Evolve {} by {} population size in {} generation".format(
+        print("MOEA-Ctrl: Evolve {} by {} population size in {} generation".format(
             self._problem.get_name(), self._pop_size, self._gen))
 
     def transform(self, X, *arg, y=None, **kwargs):
@@ -122,7 +124,7 @@ class Nsga2(Solver):
         idx_ndf_front = pg.fast_non_dominated_sorting(
             self._population.get_f())[0][0]
         ndf_pop_x = self._population.get_x()[idx_ndf_front]
-        
+
         if count > self._pop_size or count == -1:
             return ndf_pop_x
         elif count <= self._pop_size:
@@ -131,13 +133,12 @@ class Nsga2(Solver):
             return "Invalid request solution"
 
     def get_name(self):
-        return "NSGA2: " + self._problem.get_name() if self._problem else 'None'
+        return "MOEA-Ctrl: " + self._problem.get_name() if self._problem else 'None'
 
     def score(self, X=None, y=None, sample_weight=None):
         try:
             ref_point = pg.nadir(self._population.get_f())
             hv = pg.hypervolume(self._population.get_f()).compute(ref_point)
         except ValueError as err:
-            # print("Error: Negativ surrogate objectives")
             hv = None
         return hv

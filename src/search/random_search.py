@@ -6,31 +6,27 @@ import pygmo as pg
 import numpy as np
 
 from .abs_solver import Solver
-from .share import Pagmo_problem
+from .share import Pagmo_problem, make_nd_pop
 # from solid.tools import samples
 
-DEFAULT_POP_SIZE = 100
-DEFAULT_GENERATION = 100
 
-
-class Nsga2(Solver):
+class RandS(Solver):
     """ pygmo2 solver
     """
 
     def __init__(self,
                  models: List[BaseEstimator] = None,
                  bounds: Tuple[List] = None,
+                 n: int = 100,
+                 kind: str = 'lhs',
                  mask_col: List[int] = None,
-                 mask_val: List[int] = None,
-                 pop_size=DEFAULT_POP_SIZE,
-                 gen=DEFAULT_GENERATION):
-        super(Nsga2, self).__init__(models)
+                 mask_val: List[int] = None):
+        super(RandS, self).__init__(models)
         self._estimators = models
         self._bounds = bounds
         self._problem = None
-        self._pop_size = pop_size
-        self._gen = gen
-        self._population = None
+        self._n = n
+        self._kind = kind
         # dimensions mask
         self._mask_col = mask_col,
         self._mask_value = mask_val
@@ -38,22 +34,6 @@ class Nsga2(Solver):
     @property
     def problem(self):
         return self._problem
-
-    @property
-    def pop_size(self):
-        return self._pop_size
-
-    @pop_size.setter
-    def pop_size(self, count: int):
-        self._pop_size = count if count > 0 else None
-
-    @property
-    def gen(self):
-        return self._gen
-
-    @gen.setter
-    def gen(self, gen_number: int):
-        self._gen = gen_number if gen_number > 0 else None
 
     @property
     def population(self):
@@ -89,26 +69,33 @@ class Nsga2(Solver):
 
     def __evolve(self):
         self._problem = self.__def_problem(is_mask=True)
-        algo = pg.algorithm(pg.nsga2(gen=self._gen))
-        isl = pg.island(algo=algo, prob=self._problem, size=self._pop_size)
-        isl.evolve()
-        isl.wait()
-        e_pop = isl.get_population()
+        pop = self.generate_rand_pop()
 
         if None not in (self._mask_col, self._mask_value):
             t_pop = pg.population(self.__def_problem(is_mask=False))
-            evolve_x = e_pop.get_x()
-            evolve_y = e_pop.get_f()
+            evolve_x = pop.get_x()
+            evolve_y = pop.get_f()
             for i, x_vector in enumerate(evolve_x):
                 for c, v in zip(self._mask_col, self._mask_value):
                     x_vector = np.insert(x_vector, c, v, 0)
                 t_pop.push_back(x=x_vector, f=evolve_y[i])
             self._population = t_pop
         else:
-            self._population = e_pop
+            self._population = pop
 
-        print("NSGA2: Evolve {} by {} population size in {} generation".format(
-            self._problem.get_name(), self._pop_size, self._gen))
+        print("Random evolve {} samples on a {} plan. None-dominated is {}".format(
+            self._n, self._kind, len(self._population)))
+
+    def generate_rand_pop(self):
+        if self._kind == 'rand':
+            rand_pop = pg.population(self._problem, size=self._n)
+            pop = make_nd_pop(
+                self._problem, rand_pop.get_x(), rand_pop.get_f())
+        elif self._kind == 'lhs':
+            pop_x = lh_sample(self._bounds, self._n)
+            pop_f = [self._problem.fitness(x).tolist() for x in pop_x]
+            pop = make_nd_pop(self._problem, pop_x, pop_f)
+        return pop
 
     def transform(self, X, *arg, y=None, **kwargs):
         return X
@@ -122,16 +109,16 @@ class Nsga2(Solver):
         idx_ndf_front = pg.fast_non_dominated_sorting(
             self._population.get_f())[0][0]
         ndf_pop_x = self._population.get_x()[idx_ndf_front]
-        
-        if count > self._pop_size or count == -1:
+
+        if count > len(self._population) or count == -1:
             return ndf_pop_x
-        elif count <= self._pop_size:
+        elif count <= len(self._population):
             return random.choices(ndf_pop_x, k=count)
         else:
             return "Invalid request solution"
 
     def get_name(self):
-        return "NSGA2: " + self._problem.get_name() if self._problem else 'None'
+        return "Random search: " + self._problem.get_name() if self._problem else 'None'
 
     def score(self, X=None, y=None, sample_weight=None):
         try:
@@ -141,3 +128,23 @@ class Nsga2(Solver):
             # print("Error: Negativ surrogate objectives")
             hv = None
         return hv
+
+
+def lh_sample(bounds, n=1):
+    """ Latin Hypercube sampling
+
+    Args:
+        bounds (Tuple):  Tuple with lower and higher bound for each feature in objective space.
+        Example: (([0., 0.]), ([2., 4.]))
+        n (int, optional): Sample count. Defaults to 1.
+
+    Returns:
+        List: Point from search space
+    """
+    n_dim = len(bounds[0])
+    h_cube = np.random.uniform(size=[n, n_dim])
+    for i in range(0, n_dim):
+        h_cube[:, i] = (np.argsort(h_cube[:, i])+0.5)/n
+    diff = [r-l for l, r in zip(*bounds)]
+    left = [l for l, _ in zip(*bounds)]
+    return h_cube*diff+left

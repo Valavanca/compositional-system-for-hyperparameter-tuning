@@ -1,6 +1,7 @@
 from random import uniform
 import logging
 import pandas as pd
+import numpy as np
 
 
 logger = logging.getLogger()
@@ -8,12 +9,12 @@ logger.setLevel(logging.INFO)
 
 class SamplesGenerator():
 
-    def __init__(self, problem):
+    def __init__(self, problem, X=pd.DataFrame(), y=pd.DataFrame()):
         self._problem = problem
         self._bounds = [d for d in zip(*problem.get_bounds())]
         self._nobj = problem.get_nobj()
-        self._X = None
-        self._y = None
+        self._X = X
+        self._y = y
 
     def random_sample(self, n=100):
         self._X = pd.DataFrame([[uniform(dim[0], dim[1]) for dim in self._bounds]
@@ -26,7 +27,7 @@ class SamplesGenerator():
         return self._X, self._y
 
     def return_X_y(self):
-        if self._X is not None and self._y is not None:
+        if 0 not in (np.array(self._X).size, np.array(self._y).size):
             return self._X, self._y
         else:
             return pd.DataFrame(), pd.DataFrame()
@@ -42,7 +43,11 @@ class SamplesGenerator():
         y_new = pd.DataFrame(y)
         y_new.columns = ['f{}'.format(i+1) for i in range(self._nobj)]
 
-        if self._X is not None and self._y is not None:
+        if self._X.empty and self._y.empty:
+            logging.info("Initialization data generator")
+            self._X = X_new
+            self._y = y_new
+        else:
             old_df = pd.concat([self._X, self._y], axis=1)
             upd_data = pd.concat([X_new, y_new], axis=1)
 
@@ -57,9 +62,6 @@ class SamplesGenerator():
 
             logging.info("In dataset add {} new results".format(
                 len(self._X.index)-len(old_df.index)))
-        else:
-            logging.info("Initialization data generator")
-            self._X = X_new
-            self._y = y_new
+
 
         return self
