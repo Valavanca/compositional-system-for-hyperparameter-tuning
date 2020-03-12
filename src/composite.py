@@ -653,7 +653,7 @@ class PredictTutor(BaseEstimator):
         available = 0 if self._init_dataset is None else len(
             self._init_dataset[0])
         sbl = sobol_sample(self.__bounds, n=available+n)[available:]
-        return sbl
+        return np.array(sbl)
 
     def _latin(self, n=1):
         """ Pseudorandom sampling from the search space """

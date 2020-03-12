@@ -88,17 +88,21 @@ def tuning_loop(pro, surr_portfolio, eval_budget, n_pred=1):
 
         pred = json.loads(tutor.predict_proba(
             None).to_json(orient='records'))[0]
-        pred['prediction'] = propos
+        pred['prediction'] = propos.tolist()
         pred['iteration'] = i
         pred['problem'] = pro.get_name()
         pred['objectives'] = pro.get_nobj()
         pred['feature_dim'] = pro.get_nx()
+        pred['samples_x'] = ''
+        pred['samples_y'] = ''
 
         # Update dataset
         gen.update(list(propos), [pro.fitness(p).tolist() for p in propos])
 
         # ----------------------                                                             Hypervolume
         samples_x, samples_y = gen.return_X_y()
+        pred['samples_x'] = samples_x
+        pred['samples_y'] = samples_y
         if 0 in (np.array(samples_x).size, np.array(samples_y).size):
             continue
 

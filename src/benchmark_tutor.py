@@ -120,7 +120,7 @@ def tuning_loop(pro,
 
         pred = json.loads(tutor.predict_proba(
             None).to_json(orient='records'))[0]
-        pred['prediction'] = propos
+        pred['prediction'] = propos.tolist()
         pred['iteration'] = i
         pred['problem'] = pro.get_name()
         pred['objectives'] = pro.get_nobj()
@@ -130,6 +130,8 @@ def tuning_loop(pro,
         pred['n_pred'] = n_pred
 
         pred['solver'] = solver
+        pred['samples_x'] = ''
+        pred['samples_y'] = ''
         pred['solution_comb'] = solution_comb
         pred['train_test_sp'] = train_test_sp
         pred['cv_threshold'] = cv_threshold
@@ -141,6 +143,8 @@ def tuning_loop(pro,
 
         # ----------------------                                                             Hypervolume
         samples_x, samples_y = gen.return_X_y()
+        pred['samples_x'] = samples_x
+        pred['samples_y'] = samples_y
         if 0 in (np.array(samples_x).size, np.array(samples_y).size):
             continue
 
