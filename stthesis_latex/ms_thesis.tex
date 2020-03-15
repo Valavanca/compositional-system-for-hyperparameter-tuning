@@ -2,9 +2,12 @@
 \usepackage{lipsum}
 \usepackage[color=green]{todonotes}
 \usepackage{graphicx}
+\usepackage{booktabs}
 \usepackage{epigraph}
 \usepackage{cite}
+\usepackage[acronym]{glossaries}
 \usepackage[most]{tcolorbox}
+% \usepackage{svg}
 
 \newcommand{\todor}[1]{\todo[color=green,inline,size=\small]{Reviewer: #1}}
 \newcommand{\todoy}[1]{\todo[color=yellow,size=\small]{Oleksandr: #1}}
@@ -19,11 +22,12 @@
 \birthplace{Ukraine}
 \supervisor{MSc. Dmytro Pukhkaiev \newline Dr.-Ing. Sebastian Götz}
 
+
 \begin{document}
     \maketitle % This sets the title page
   
     \tableofcontents
-  
+
     \input{content/00.abstract.tex}
     \input{content/01.intro.tex}
     \input{content/02.background.tex}
@@ -32,7 +36,7 @@
     \input{content/05.implementation.tex}
     \input{content/06.evaluation.tex}
     \input{content/07.conclusion.tex}
-
+    
     \bibliographystyle{alpha}
     \bibliography{content/bibliography.bib}
     % must be invoked for correct page numbering in the appendix and all lists
@@ -42,9 +46,35 @@
     
     \chapter{Appendix}
     \section{Additional Information}
-    \lipsum[1]
-    
+        % ==== Figure
+        \begin{figure}
+            \centering
+            \includegraphics[width=\textwidth]{content/images/activity_workflow}
+            \caption[Workflow 1]{Dynamic sampling plan with the surrogate model portfolio}
+            \label{fig:workflow_1}
+        \end{figure}
+
+        % ==== Figure
+        \begin{figure}
+            \centering
+            \includegraphics[width=\textwidth]{content/images/simplify_activity_workflow}
+            \caption[Workflow 2]{Dynamic sampling plan with the surrogate model portfolio}
+            \label{fig:workflow_2}
+        \end{figure}
+
+        % ==== Figure
+        \begin{figure}
+            \centering
+            \includegraphics[width=\textwidth]{content/images/simsim_activity_workflow}
+            \caption[Workflow 3]{Dynamic sampling plan with the surrogate model portfolio}
+            \label{fig:workflow_3}
+        \end{figure}
+
     \section{More Important Information}
-    \lipsum[1]
-  
+    \lipsum[1] 
+    
+
+    % \printglossary[title=Special Terms, toctitle=List of terms]
+    %\printglossary[type=\acronymtype,style=long]
+
 \end{document}

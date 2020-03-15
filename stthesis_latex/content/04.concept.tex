@@ -30,107 +30,128 @@
 
     \epigraph{``All models are wrong but some are useful``}{\textit{– George Box}}
 
-     In this section general applicability of surrogate model presented. With different applicability use cases, there are some obstacles occurred that have a place to be in all circumstances.
+    This section presented a general idea of the improvement in the surrogate-based optimization for black-box function. 
 
-    General problem trade-off is producing the best possible multi-objective solution with less effort. Because we consider expensive to the evaluation system, an effort first of all means really evaluated examples. Each of this evaluation can require a lot of time, energy or other resources. That is why the main comparison criteria for approach in solving the multi-objective problem is reducing the count of experiments. Moving further is a question: 
+    % Mainly two groups are affected by this problem:
+    % \begin{itemize}
+    %     \item Application engineers who need to choose, implement, and apply state-of-the-art algorithms without in-depth programming knowledge and expertise in the optimization domain
+    %     \item Developers of optimization methods who want to evaluate algorithms on different test problems and compare a variety of competing methods
+    % \end{itemize}
 
-    In this work under solving a multi-objective problem, we intend to find a set of none-dominated points that cover a wide range of objectives values and close to true Pareto front as possible. For reach, this goal multiple algorithms could be applied but MOEA is favoured choice. The advantage of evolutionary algorithms is that it could be easily modified. It operate on a set of solution candidates, that are well-fitted to approximate Pareto-front. Finally, it has been demonstrated in various usecases that evolutionary algorithms can estimate highly complex problems. With constrains as expensive evaluations, the real count of experiments could be reduced throw applying a multi-objective algorithm on a surrogate model. This technique is the preferred choice for functional optimization when the evaluation cost is large.
+    The usual problem is a trade-off in producing the best possible multi-objective solution with less effort. Because we consider system expensive to evaluate, an effort first of all means evaluated examples. Each of these evaluations can require much time, energy, or other resources. That is why the main comparison criteria for the approach is solving the multi-objective problem with a limited evaluation budget. %! change quality to count 
 
-    As shown before for a black-box expensive problem suited surrogate or model-based optimization. But this approach also has open questions and limitations:
+    In this work, under solving a multi-objective problem, we intend to find a set of none-dominated points that cover a wide range of objectives values and close as possible to real Pareto front. Multiple algorithms could be applied, but MOEA is the favored choice. The advantage of evolutionary algorithms is that it could be easily modified. It operates on a set of solutions candidates, that are well-fitted to approximate Pareto-front. Finally, evolutionary algorithms can estimate highly complex problems in various use-cases. 
+
+    If evaluations of the problem are expensive, the real count of experiments could be reduced throw applying a multi-objective algorithm on a surrogate model. This technique is the preferred choice for functional optimization when the evaluation cost is high.
+
+    As shown before, surrogate or model-based optimization suited for an expensive black-box problem. Nevertheless, this approach also has open questions and limitations:
     \begin{itemize}
-        \item Multi-objectivity. They are not too many surrogate models that can handle multi-dimensional objective space. Also scaling existing multi-output surrogate model is an open research question
-        \item Surrogate is domain-specific. For improving and reach the best of the best prediction we should know in cross-grain basic objective surface to apply certain surrogate. Universal surrogates can gain optimal results but not the best possible
-        \item Quality of prediction depends on how much samples do we have for a specific type of surrogate. There is additionally trade-off between reducing samples size and maximize the quality of prediction.
-        \item Categorical features. A lot of real-world problems depends on the categorical feature. Parameter tuning with that type of space is not trivial
-        \item Often Optimization algorithm and surrogate model are very tightly coupled. Highly united implementation can reduce the search possibility of algorithm and suitable for a specific type of problem. Reimplementing these algorithms for each usage scenario becomes timeconsuming and error-prone.
+        \item \emph{Surrogate is domain-specific.} For improving and reach the best of the best prediction, we should know in cross-grain underlying objective surface to apply specific surrogate. Universal surrogates can gain optimal results but not the most reliable possible \cite{abs181207958, LuST19}.
+        \item Multi-objective hypothesis. A \emph{limited amount} of surrogate models can handle multi-dimensional parameter space. Also, scaling is an open research question for existing multi-output surrogate models.
+        \item Quality of prediction depends on \emph{how much samples} do we have for a specific type of surrogate. There is a trade-off between reducing sample size and maximize the quality of prediction. Overfitting, as well as Underfitting, can guide optimization in the wrong direction.
+        \item Multi-objective optimizations with \emph{categorical features} are standard in engineering practices. Parameter tuning with that type of space is not trivial.
+        \item Often Optimization algorithm and surrogate model are very \emph{tightly coupled}. Profoundly connected implementation suitable for a specific type of problem and require prior knowledge about a problem. Reimplementing these algorithms for each usage scenario becomes timeconsuming and error-prone.
     \end{itemize}
 
-    Mainly two groups are affected by this problem:
-    \begin{itemize}
-        \item Application engineers who need to choose, implement, and apply state-of-the-art algorithms without in-depth programming knowledge and expertise in the optimization domain
-        \item Developers of optimization methods who want to evaluate algorithms on different test problems and compare a variety of competing methods
-    \end{itemize}
-
-    For slow computational problems, it would be useful to modulate a problem using a quite small number of most informative examples. This general topic introduces compositional surrogate, as a proxy model that approximate objectives surfaces and support MOEA to evaluates near a multi-objective solution and predict better multi-objective samples on each iteration.
+    
+    %? The main objective of this part is to provide a thorough treatment of multi-objective parameter tuning with evolutionary algorithm(s)
 
 
-    There is a clear need for a method to provide and distribute ready-to-use implementations of optimization methods and ready-to-use benchmark and real-world problems. 
-    These modules should be freely combinable. Since the above- mentioned issues are not constrained to evolutionary optimization a candidate surrogates solution should be applicable to a broader range of search algorithms.
-
-    The main objective of this part is to provide a thorough treatment of multi-objective parameter tuning with evolutionary algorithm(s)
-
-    Key description how to improve solutions for problems in research questions.
-
-    Multi-objective optimizations are frequently encountered in engineering practices. The solution techniques and parametric selections however are usually problem-specific. \cite{abs181207958}
-
+    % The solution techniques and parametric selections however are usually problem-specific. \cite{abs181207958}
     % --------------------------------------------------------------------------------------------
     % ------------------------------------------------     RG1: Models combinations     
     % --------------------------------------------------------------------------------------------
 
-    \section{Surrogates models combinations}
-        \paragraph{Domain-specific problem} With gain to find the best solution with less effort surrogate models is domain-specific. It's mean that from two surrogate models in two different problems the best surrogate is changing. It could interpreter as Non-free lunch theorem in model-based optimization. If we extend this argument then the same optimization problem in different parameter tuning iteration could be interpreted as another optimization problem. This means that to reduce effort and increase the convergence of an algorithm we should change the surrogate model depend on how much samples do we have. As one would expect, no approximation method is universal. This leads us to use a portfolio with surrogate models. As a negative consequence, the model fitting additional introduces an additional overhead into the optimization
+    \section{Surrogates models combinations \ref{RQ1}}
+
+        This general topic introduces compositional surrogate as a proxy model that approximates objectives surface and supports MOEA to evaluates near a multi-objective solution and predict better multi-objective samples on each iteration.
+
+        % ------------------------------------------------     Compositional model       
+        \subsection{Compositional Surrogate Model}
+            There is a typical strategy to combine several instances of surrogate models to create a complex hypothesis (surrogate). Usually, authors present a sophisticated design that uses one type of model for each objective or subproblems. Nonetheless, the surrogate model is not universal to describe objectives independently. 
+
+            The perspective way to create multi-objective surrogate is stacking multiple simple models into one that describes complex objective space. Notwithstanding that those models could be completely different and build in parallel, they still related because fitted on intersection features.
+            Splitting optimization problem to multiple stages improves the reusability of code and makes approach scalable. Nevertheless, we can switch from single-obj to multi obj and change optimization technic on the fly.
+
+            The concept of the compositional model means a combination of a heterogeneous surrogate model that looks uniformly for the optimization algorithm. So it is possible to extend single-criteria models for multi-criteria tasks and dynamically reconstruct problem representation from mixed model parts. In this thesis, the compositional model means a surrogate model that combines various surrogates models for each optimization objective.
+
+            The concept of the compositional model means a combination of a heterogeneous surrogate model that looks uniformly for the optimization algorithm. So it is possible to extend single-criteria models for multi-criteria tasks and dynamically reconstruct problem representation from mixed model parts. In this thesis, the compositional model means a surrogate model that combines various surrogates models for each optimization objective: horizontal variability, flat surrogate combination. 
+            That approach should be capable, outperform other algorithms with static models on a real black-box problem with the unknown objective surface. On the other hand, the user could inject his domain knowledge as a combination of surrogate models. 
+
+
+
         
         % ------------------------------------------------     Portfolio      
         \subsection{Surrogate model portfolio}
 
+            \paragraph{Domain-specific problem} With gain to find the best solution with less effort surrogate models is domain-specific. It's mean that from two surrogate models in two different problems the best surrogate is changing. It could interpreter as Non-free lunch theorem in model-based optimization. If we extend this argument then the same optimization problem in different parameter tuning iteration could be interpreted as another optimization problem. This means that to reduce effort and increase the convergence of an algorithm we should change the surrogate model depend on how much samples do we have. As one would expect, no approximation method is universal. This leads us to use a portfolio with surrogate models. As a negative consequence, the model fitting additional introduces an additional overhead into the optimization
 
-        % ------------------------------------------------     Compositional model       
-        \subsection{Compositional Surrogate Model}
+            With the flexibility that provides a compositional system to combine several models, that is valuable to produce several variants of compositions from available surrogates. This functionality requires validation criteria to discard those that are not valid and comparison metrics to range and combine the best ones. Many hooks are created to combine and solve surrogates models. This gives flexibility to the combination of hypotheses, testing, and solving/optimization. Bagging or ensemble technique can be applied to both: the surrogate models and the optimization algorithms.
+
+            Besides, it grates motivation to use the latest state-of-the-art algorithms together because the modular structure of the compositional model and portfolio it is a skeleton for optimization. 
+
+
+        % ------------------------------------------------     RG1.1: Scalability     
+        \subsection{Scalability \ref{RQ1.1}}
+            Besides the surrogate composition, there is an open sub-question of how to scale this approach. Surrogate model and optimization algorithm suffer from this.
+
+            % -------------------------     Many-objective      
+            \paragraph{Many-objective compositional surrogates}
+            Problem: Random solver on high dimensional space $\rightarrow$ Solution: Light surrogates 
+
+
+            \paragraph{Marginal sub-problem on high dimensions}
+            Solving problem in subset of dimensions
+
+            % -------------------------     Categorical parameters      
+        \subsection{Categorical parameters}
+
+        Feature encoding is used to support a categorical parameter for generic models. Coding features for a surrogate model can transform those in a meaningful form, understandable for a surrogate model. Encoding represents a feature in an alternative form that helps model instantiation relation and a correlation between features. Based on this inner interpretation model can predict the values of labels based on a parameter vector. The problem occurs in reverse interpretation of these optimal predictions in the context of parameter space. Often a found solution is not a feasible point from parameters space. As a possible solution, it partly transforms problems in multiple classification tasks and then considers there relation as optimization with continuous probability [TPE]. For the general surrogate model with mixed parameters, we can solve a problem orthogonally with multiple optimizers. All samples with the categorical feature are encoded and fitted to the surrogate models. Then we use this model as an optimization target.  We incrementally solve this optimization problem on a subset of dimensions. For example, we find optimal parameters in categorical dimensions with local search and then fix these values and optimize surrogate on the left subset of numerical dimensions where categories are fixed. 
+
 
 
 
     % --------------------------------------------------------------------------------------------
     % ------------------------------------------------     RG2: Sampling plan     
-    % --------------------------------------------------------------------------------------------
-    \section{Sampling plan}
+    \section{Sampling plan \ref{RQ2}}
+        For expensive optimization problems, it would be useful to modulate a problem using quite a small number of most informative examples. Nonetheless, almost sequential model-based approaches use a static sampling plan. If the oracle does not determine the required number of samples, it can be done dynamically based on the quality of the surrogates. 
 
         % -------------------------     Surrogate Validation      
         \subsection{Surrogate Validation}
-        It is necessary to sacrifice a small portion of the data experiments to check the quality of the surrogate model on it. Based on validation results we can discard inadequate models and in a complex manner evaluated quality of solutions from valid models. If neither model is valid, this means that the best solution right now is a random solution. This may be due to insufficiently count of samples for the model or incorrect surrogate model, which is unable to describe the hypothesis between the configuration and objective space. 
-        In the context of parameter tuning a common misconception is that we are interested in the accuracy of the model not in the entire space but in the optimal region. That is why evaluation surrogate validity based only on the coefficient of determination(R2) metrics is incorrect. Global R2 can be anyway used as a threshold in which if the models score becomes smaller of some threshold value it is not valid even without further estimations. 
+        It is necessary to sacrifice a small portion of the data experiments to check the quality of the surrogate model on it. Based on validation results, we can discard inadequate models and elaborate evaluate the solutions from valid models. If neither model is valid, this means that the best solution right now is a solution from the sampling plan. This process will be repeated until a complete, valid surrogate model is obtained.
+        In the context of parameter tuning, evaluation surrogate validity based only on the coefficient of determination(R2) metrics is incorrect. A common misconception lay in prefer global accuracy score over the score in the optimal region. That is why evaluation surrogate validity based only on the coefficient of determination(R2) metrics is incorrect\cite{nardi2019practical}. Global R2 can be anyway used as a threshold for exceeding which the model becomes not valid even with additional estimations.  
+
+                                            [-- Fig:1   decisions in model validation   --]
+
+        The central concept for surrogate validation lay in adaptation best practices from the machine-learning community for evaluation estimator performance.  
+        With the sequential selection of a model, there is a risk of overfitting on the test set because the instances can be calibrated until models perform optimally. It means that the test set 'leak' to train set and final metrics does not report on the generalization performance of surrogate. Deal with this problem, yet another portion of samples can handle as a so-called 'validation set.' In that set, surrogates passed validation on global metrics, and when the evidence seems to be successful, final evaluation performs on the test set. Final metrics show accuracy on the interested search space (none-dominated solution from test set).
+
+        The decision on which surrogate model is better made based on the metrics from all stages.  If the model does not have a sufficient threshold, it is rejected as not valid. If there is no valid model, the assumption of the next configuration is accepted from the sapling plan.
+
+        In order to generalize well, it is crucial that your training data be representative of the new cases you want to generalize to.
+
 
         % -------------------------     Metrics      
         \subsection{Metrics validity for optimization}
         Validation accuracy threshold for general search space and non-dominated region
 
-        overfit - underfit
+        Models are validated in two stages. The first stage estimates the overall surrogate accuracy. If it is more than a certain threshold, then the model goes to the next step. it evaluates the accuracy of the model already on a new set of data that characterize the area of interest in optimization.
+
+
+        % overfit - underfit
     
+        % metrics comparison
 
 
-
-    
     % --------------------------------------------------------------------------------------------
-    % ------------------------------------------------     RG3: Scalability     
-    % --------------------------------------------------------------------------------------------
-    \section{Scalability}
-
-        % -------------------------     Many-objective      
-        \subsection{Many-objective compositional surrogates}
-        Problem: Random solver on high dimensional space $\rightarrow$ Solution: Light surrogates 
-
-
-        \subsection{Marginal sub-problem on high dimensions}
-        Solving problem in subset of dimensions
-
-        % -------------------------     Categorical parameters      
-        \subsection{Categorical parameters}
-        Parameter tuning is not a trivial task. Coding features for a surrogate model can transform es in mining full form, understandable for a surrogate model. Encoding just represents a feature in another form that help model instanciation relation and a correlation between features. Based on this inner interpretation model can predict the values of labels based on a parameter vector. The problem occurs what we use the model as black-box to find a minimum of prediction and make reverse interpretation of this optimal predictions in the context of parameter space. Offen this prediction is not a feasible point from parameters space. As a possible solution, it partly transforms problem in multiple classification tasks and then considers there relation as a continuous problem for optimization [TPE]. For general surrogate model with mixed parameters, we can solve problem orthogonally with multiple optimizers. All categorical feature are encoded and with other numerical parameters were fitted to the surrogate model. Then we use this model as a source that describes the function of the mapping parameter to objective space.  We incrementally solve this optimization problem on a subset of dimension iteratively. For example, we find optimal parameters in categorical dimensions and then fix these values and optimize surrogate on the left sub set of numerical dimensions where categories are fixed.
-
-
-
-
-
-
-
-
-
-
 
 
     % --------------------------------------------------------------------------------------------
     % -----------------------------------------------------       Discussion      ----------------
     % --------------------------------------------------------------------------------------------
     \section{Discussion}
+
+        In this thesis, proposed approach for combination surrogates for multi-objective optimization and dynamic sampling plan based on surrogate validation.
 
         % -----------------------------------------------------       Infill criteria       ------
         \paragraph{}{Infill criteria}
@@ -147,19 +168,31 @@
         Also, to the best of our knowledge, has not been previously or stingy reported in the efficient multi-objective optimization.
         Contribution:
         \begin{itemize}
-            \item Surrogate combination/composition. Current approaches use the same model for each dimensionality
+            \item Surrogate combination/composition with heterogeneous models
+                \begin{itemize}
+                    \item Surrogate models portfolio
+                    \item Compositional surrogate model
+                    \item Combination of different(orthogonal) solvers
+                \end{itemize}
             \item Surrogate portfolio. Search a better hypothesis  for a specific problem at a particular stage of parameter tuning
             \item Metric combination for evaluation Pareto optimal points
             \item Samples size depends on model(s) validity
-            \item Combination of different(orthogonal) solvers
+            \item Concepts
+                \begin{itemize}
+                    \item Combination of different(orthogonal) solvers
+                    \item Infill criteria for prediction selection
+                \end{itemize}
         \end{itemize}
 
-        Some of the major findings were \cite{SoftSurvey}:
-        \begin{enumerate}
-            \item Kriging and neural networks were the most commonly used surrogate models
-            \item Most of the algorithms were based on dominance-based evolutionary algorithms
-            \item Most of the algorithms solved the problems with no more than three objectives
-            \item The number of decision variables was also limited especially when using Kriging
-            \item Only few algorithms used an ensemble of metamodels 
-            \item Many algorithms were tested only on benchmark problems which were not at all computationally expensive
-        \end{enumerate}
+        We argue that the proposed concept from this thesis is the preferred choice for functional optimization when the evaluation cost is large.
+
+
+        % structures include more than one possibility, as described above. Nevertheless, this level
+
+        % Finally, another aspect worth mentioning is the fact that GSM appears in more than one cell. Indeed, hybrid methods
+
+
+        % where the algorithms are allowed to query an oracle for additional data to infer better statistical models
+
+
+        % They also reported that a speedup of a factor of 10 can nevertheless be obtained.
