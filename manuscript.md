@@ -1,7 +1,7 @@
 ---
 author-meta:
 - Oleksandr Husak
-date-meta: '2020-03-09'
+date-meta: '2020-03-15'
 header-includes: '<!--
 
   Manubot generated metadata rendered from header-includes-template.html.
@@ -20,9 +20,9 @@ header-includes: '<!--
 
   <meta property="twitter:title" content="Compositional Multi-objective Parameter tuning" />
 
-  <meta name="dc.date" content="2020-03-09" />
+  <meta name="dc.date" content="2020-03-15" />
 
-  <meta name="citation_publication_date" content="2020-03-09" />
+  <meta name="citation_publication_date" content="2020-03-15" />
 
   <meta name="dc.language" content="en-US" />
 
@@ -54,11 +54,11 @@ header-includes: '<!--
 
   <link rel="alternate" type="application/pdf" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf" />
 
-  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/07ec65907e5300fd50413f9764a6dd2e70dc801e/" />
+  <link rel="alternate" type="text/html" href="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/35bcacb578f12cecb69418c1b09d4367c22ddb9d/" />
 
-  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/07ec65907e5300fd50413f9764a6dd2e70dc801e/" />
+  <meta name="manubot_html_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/35bcacb578f12cecb69418c1b09d4367c22ddb9d/" />
 
-  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/07ec65907e5300fd50413f9764a6dd2e70dc801e/manuscript.pdf" />
+  <meta name="manubot_pdf_url_versioned" content="https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/35bcacb578f12cecb69418c1b09d4367c22ddb9d/manuscript.pdf" />
 
   <meta property="og:type" content="article" />
 
