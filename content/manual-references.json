@@ -601,6 +601,87 @@
     "version": "v2.12.0"
   },
   {
+    "author": [
+      {
+        "family": "Pedregosa",
+        "given": "F."
+      },
+      {
+        "family": "Varoquaux",
+        "given": "G."
+      },
+      {
+        "family": "Gramfort",
+        "given": "A."
+      },
+      {
+        "family": "Michel",
+        "given": "V."
+      },
+      {
+        "family": "Thirion",
+        "given": "B."
+      },
+      {
+        "family": "Grisel",
+        "given": "O."
+      },
+      {
+        "family": "Blondel",
+        "given": "M."
+      },
+      {
+        "family": "Prettenhofer",
+        "given": "P."
+      },
+      {
+        "family": "Weiss",
+        "given": "R."
+      },
+      {
+        "family": "Dubourg",
+        "given": "V."
+      },
+      {
+        "family": "Vanderplas",
+        "given": "J."
+      },
+      {
+        "family": "Passos",
+        "given": "A."
+      },
+      {
+        "family": "Cournapeau",
+        "given": "D."
+      },
+      {
+        "family": "Brucher",
+        "given": "M."
+      },
+      {
+        "family": "Perrot",
+        "given": "M."
+      },
+      {
+        "family": "Duchesnay",
+        "given": "E."
+      }
+    ],
+    "container-title": "Journal of Machine Learning Research",
+    "id": "raw:art-scikit-learn",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "page": "2825-2830",
+    "title": "[Scikit-learn: Machine Learning in Python ]{.nocase}",
+    "type": "article-journal",
+    "volume": "12"
+  },
+  {
     "DOI": "10.1007/BF01743506",
     "ISSN": "1615-1488",
     "URL": "https://doi.org/10.1007/BF01743506",
@@ -935,7 +1016,7 @@
       }
     ],
     "container-title": "IEEE Computational Intelligence Magazine",
-    "id": "raw:PlatEMO",
+    "id": "raw:TianPlatEMO",
     "issue": "4",
     "issued": {
       "date-parts": [
@@ -945,8 +1026,8 @@
       ]
     },
     "page": "73-87",
-    "title": "raw:PlatEMO: A MATLAB platform for evolutionary multi-objective optimization",
-    "title-short": "raw:PlatEMO",
+    "title": "PlatEMO: A MATLAB platform for evolutionary multi-objective optimization",
+    "title-short": "PlatEMO",
     "type": "article-journal",
     "volume": "12"
   },
@@ -1547,7 +1628,7 @@
         "given": "Michel"
       }
     ],
-    "id": "raw:mlrMBO",
+    "id": "raw:BischlmlrMBO",
     "issued": {
       "date-parts": [
         [
@@ -1557,8 +1638,8 @@
         ]
       ]
     },
-    "title": "raw:mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions",
-    "title-short": "raw:mlrMBO",
+    "title": "mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions",
+    "title-short": "mlrMBO",
     "type": "article-journal"
   },
   {
@@ -1585,5 +1666,164 @@
     "title-short": "ParEGO",
     "type": "article-journal",
     "volume": "10"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1807.01774",
+    "author": [
+      {
+        "family": "Falkner",
+        "given": "Stefan"
+      },
+      {
+        "family": "Klein",
+        "given": "Aaron"
+      },
+      {
+        "family": "Hutter",
+        "given": "Frank"
+      }
+    ],
+    "container-title": "CoRR",
+    "id": "raw:FalknerBOHB",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "title": "BOHB: robust and efficient hyperparameter optimization at scale",
+    "type": "article-journal",
+    "volume": "abs/1807.01774"
+  },
+  {
+    "DOI": "10.1145/3194078.3194082",
+    "URL": "https://doi.org/10.1145/3194078.3194082",
+    "author": [
+      {
+        "family": "Pukhkaiev",
+        "given": "Dmytro"
+      },
+      {
+        "family": "Götz",
+        "given": "Sebastian"
+      }
+    ],
+    "container-title": "Proceedings of the 6th international workshop on green and sustainable software, greens icse 2018, gothenburg, sweden, may 27, 2018",
+    "id": "raw:PukhkaievG18",
+    "issued": {
+      "date-parts": [
+        [
+          2018
+        ]
+      ]
+    },
+    "page": "23-30",
+    "title": "BRISE: energy-efficient benchmark reduction",
+    "type": "paper-conference"
+  },
+  {
+    "author": [
+      {
+        "family": "Sobol",
+        "given": "I. M."
+      },
+      {
+        "family": "Levitan",
+        "given": "Yu. L."
+      }
+    ],
+    "container-title": "Computers and Mathematics with Applications",
+    "id": "raw:Sobol1999",
+    "issue": "4-5",
+    "issued": {
+      "date-parts": [
+        [
+          1999
+        ]
+      ]
+    },
+    "keyword": "Random numbers; Pseudo-random numbers; Monte Carlo methods; Randomness tests; Multiple criteria decision making",
+    "page": "33-40",
+    "title": "A pseudo-random number generator for personal computers",
+    "type": "article-journal",
+    "volume": "37"
+  },
+  {
+    "DOI": "10.1145/2739482.2756574",
+    "ISBN": "9781450334884",
+    "URL": "https://doi.org/10.1145/2739482.2756574",
+    "author": [
+      {
+        "family": "Brockhoff",
+        "given": "Dimo"
+      },
+      {
+        "family": "Wagner",
+        "given": "Tobias"
+      }
+    ],
+    "collection-title": "GECCO companion ’15",
+    "container-title": "Proceedings of the companion publication of the 2015 annual conference on genetic and evolutionary computation",
+    "id": "raw:TutMOEABrockhoff",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "page": "37-63",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Tutorial on evolutionary multiobjective optimization",
+    "type": "paper-conference"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1904.05760",
+    "author": [
+      {
+        "family": "Chugh",
+        "given": "Tinkle"
+      }
+    ],
+    "container-title": "CoRR",
+    "id": "raw:ChughScal2019",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "title": "Scalarizing functions in bayesian multiobjective optimization",
+    "type": "article-journal",
+    "volume": "abs/1904.05760"
+  },
+  {
+    "DOI": "10.1145/2463372.2463516",
+    "URL": "https://doi.org/10.1145/2463372.2463516",
+    "author": [
+      {
+        "family": "Märtens",
+        "given": "Marcus"
+      },
+      {
+        "family": "Izzo",
+        "given": "Dario"
+      }
+    ],
+    "container-title": "Genetic and evolutionary computation conference, GECCO ’13, amsterdam, the netherlands, july 6-10, 2013",
+    "id": "raw:Martens13",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "page": "1173-1180",
+    "title": "The asynchronous island model and NSGA-II: study of a new migration operator and its performance",
+    "type": "paper-conference"
   }
 ]

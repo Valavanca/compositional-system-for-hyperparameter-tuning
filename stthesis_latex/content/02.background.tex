@@ -112,15 +112,16 @@
         Also, distribution and spread indicators is considered in this work. According to \cite{CustodioMVV11}, “the spread metrics try to measure the extents of the spread achieved in a computed Pareto front approximation.” They are not useful to evaluate the convergence of an algorithm, or at comparing algorithms. They only make sense when the Pareto set is composed of several solutions.
         % ! spread indicators not for convergence
 
-        For multi-objective optimization, an algorithm should provide a set of solutions that realize the optimal trade-offs between the considered optimization objectives. Therefore, the performance comparison of MOO algorithms is based on their Pareto sets. In this study, three popular metrics are used to quantify the performance of the algorithms.
+        For multi-objective optimization, an algorithm should provide a set of solutions that realize the optimal trade-offs between the considered optimization objectives. Therefore, the performance comparison of MOO algorithms is based on their Pareto sets. In this study, four popular metrics are used to quantify the performance of the algorithms.
         \begin{itemize}
-            \item \textbf{Hypervolume (HV)\cite{Zitzler2000ComparisonOM}.} Convergence and distribution indicator.
+            \item \textbf{Hypervolume (HV).}\cite{Zitzler2000ComparisonOM} \textit{Convergence and distribution indicator.}
             This metric represents the volume of the objective space that is covered by the individuals of non-dominated solutions set solutions that belong to a Pareto front. Two points delimit the volume: one point is the reference point that is defined as the worst solution inside the objective space, and a second optimal point (pseudo-optimal) that is calculated by the proposed solution method. Determining the hypervolume indicator is a computationally expensive task. Even in case of a reasonably small dimension and low number of points, there are currently no known algorithms that can yield the results fast enough for use in most multiple-objective optimizers.
-            \item \textbf{Non-dominated Ratio (NDR).} This metric employs the non-dominated count of a solution set divided by the total size of solution set. Higher values are preferred to lower ones.
-            \item \textbf{Spacing \cite{Schott1995FaultTD}.} Distribution and spread. Describe the distribution of Pareto points. Fewer space metrics means better coverage of objectives values range. 
+            \item \textbf{Non-dominated Ratio (NDR).} \textit{Cardinality.} This metric employs the non-dominated count of a solution set divided by the total size of solution set. Higher values are preferred to lower ones.
+            \item \textbf{Spacing \cite{Schott1995FaultTD}.} \textit{Distribution and spread.} Describe the distribution of Pareto points. Fewer space metrics means better coverage of objectives values range. 
+            \item \textbf{$\Upsilon$-metric (p-distance)}\cite{Martens13} \textit{Convergence} This metric is the average distance of any set of points to the Pareto front. The lower the $\Upsilon (P)$, the closer the solutions of P are to solutions of the Pareto-front. $\Upsilon(P) = \frac{1}{|P|}\sum_{x\in P}g(x)-g(x^*)$
             
         \end{itemize}
-
+ 
     % ------------------------------------------------        Solving methods       -------------
         \subsection{Solving methods}
         In this thesis, under the Pareto-optimal front mean an ideal solution to the problem. None-dominated points it is a subset of some feasible points that is none dominated. All points from Pareto-frontier are none-dominated, but not all none-dominated points are Pareto-optimal.
@@ -135,35 +136,25 @@
         
             % ----------------      Scalarizing       
             \subsubsection{Scalarizing}
-                The Scalarizing approach is a popular technique for creating a single-objective problem with the composite criteria from multiple objectives. It folows then single-objective optimization techniques could be applied to this composite function to obtain a single optimal solution. The weighted-sum methods it is a well-known type of scalarizing technic. This approach concatenates the objectives into one criterion by using weighted sum factors. There are difficulties in selecting proper weights, especially when there is no correlation in prior knowledge among objectives.  
-                
-                
+                The Scalarizing approach is a popular technique for creating a single-objective \textit{parameterized} problem with the composite criteria from multiple objectives. It folows then single-objective optimization techniques could be applied to this composite function to obtain a single optimal solution. The weighted-sum methods it is a well-known type of scalarizing technic. This approach concatenates the objectives into one criterion by using weighted sum factors. There are difficulties in selecting proper weights, especially when there is no correlation in prior knowledge among objectives.  
+
                 Furthermore, uniform distribution points in parameter space do not generate uniform distribution points on objective space. This means that complete approximating of Pareto-front even with multiple optimization rounds, is exhausting.
-                Some scalarizing technics try to improve the exploration of parameter space by assigning more "intelligence" aggregation to the objectives. Such solutions may be fragile. They change dramatically in a modification of algorithm parameters.Moreover, the weighting method can not provide a solution among underparts of the Pareto surface due to the “duality gap” for not convex cases. 
+                Some scalarizing technics try to improve the exploration of parameter space by assigning more "intelligence" aggregation to the objectives. Such solutions may be fragile. They change dramatically in a modification of algorithm parameters.Moreover, the weighting method can not provide a solution among underparts of the Pareto surface due to the “duality gap” for not convex cases.                 Also, some of scalarizing algorithms are very sensitive to the number of objectives and an analysis of the objecive surface with different scalarizing techniques might be helpful in the optimization for solving expensive MOPs \cite{ChughScal2019}.
 
                 % For example, if we want to reach the point in the middle of two other points in Pareto frontier, we hardly get a peek of the Pareto surface, as long as the well-known simplex method is used. This implies that depending on the structure of the problem. The linearly weighted sum can not necessarily provide a solution as DM desires. \cite{Nakayama05}. Moreover, the weighting method can not provide a solution among underparts of the Pareto surface due to the “duality gap” for not convex cases. 
 
             % --------------------      MOEA
             \subsubsection{Multi-Objective Evolutionary Algorithms}
+                Generating the Pareto-optimal set often impracticable and can be computationally expensive. Accordingly, many stochastic search strategies have been developed, such as evolutionary algorithms, tabu search, simulated annealing, and ant colony optimization. That algorithms regularly do not ensure to find ideal trade-offs but try to gain a good approximation.
+ 
+                The evolutionary algorithm forms a class of heuristic search methods that simulate the process of natural evolution. Using simplifications,  EA is subsequently determined by the two basic principles: selection and variation \cite{TutMOEABrockhoff}. While selection reflects the competition for reproduction and resources among individuals, the other principle, variation, imitates the natural ability to produce new individuals through recombination and mutation. Evolutionary algorithm has several characteristics that are desirable for problems including multiple conflicting objectives, and large and complicated search spaces. Evolutionary optimizers explore populations of candidate solutions in each generation, some mutator can make changes to the current population. A select operator then picks the best mutants which are then combined in some way to become generation i+1. However, EA still need many evaluations of the "black box" system to solve a common multi-objective problem. This is further difficult by the fact that many such problems are very expensive. This makes EAs unfeasible for costly and Multy-objective problem. 
 
-                Generating the Pareto set can be computationally expensive and is often infeasible because the complexity of the underlying volume limits exact techniques from being applicable. For this reason, a number of stochastic search strategies such as evolutionary algorithms, tabu search, simulated annealing, and ant colony optimization have been developed: they usually do not guarantee to identify optimal trade-offs but try to find a good approximation, i.e., a set of solutions whose objective vectors are (hopefully) not too far away from the optimal objective vectors \cite{EmmerichD18}.
-
-                The evolutionary algorithm (EA) form a class of heuristic search methods that simulate the process of natural evolution.
-                Using simplifications, this EA is subsequently determined by the two basic principles: selection and variation.
-                While selection imitates the competition for reproduction and resources among living beings, the other principle, variation, imitates the natural ability to create ”new” living beings through recombination and mutation. Evolutionary algorithm possesses several characteristics that are desirable for problems including multiple conflicting objectives, and large and complicated search spaces. However, EA still need many evaluations of the "black box" system to solve a common multi-objective problem. This is further complicated by the fact that many such problems are very expensive. Consolidated, this makes EAs unfeasible for costly and Multy-objective problem.
-                A good solution is the integration of the surrogate model which extrapolate and approximate the fitness landscape from samples. Multi-objective Evolutionary Algorithms (MOEAs) use this surrogate model as a target for optimization. Assumed that solution from surrogate nearby to a global optimum.
-                The goal of this thesis is to understand if the performance of MOEAs approach can be improved by using compositional surrogates. The key idea of compositional surrogates is the splitting objective space to multiple surrogates that extrapolate it independently.Combination of multiple hypotheses should give them the potential to approximate more complicated problems. This approach avoids the idea of a single surrogate model, preferring instead to use the composition hypothesis to split out the terrain of objective space.
-
-                The multiple surrogates are analysed on objectives with various complexity, beside the simple and complicated unimodal structure. Generating a cloud of candidates is computationally expensive.
-
-                Evolutionary optimizers explore populations of candidate solutions in each generation, some mutator can make changes to the current population. A select operator then picks the best mutants which are then combined in some way to become generation i+1. 
-                This century, there has been much new work on multi-objective evolutionary algorithms with two or three objectives 
-                (as well as many-objective optimization, with many more objectives). Multi-objective Evolutionary Algorithms (MOEAs) are popular tools to solve optimization problems, because of their applicability to complex fitness landscapes and solid performance on problems with large design spaces. While other methods also exist, in this thesis we will focus on improving approaches with Evolutionary Algorithms for the Multy-objective optimizations.
-                This search-based software engineering is a rapidly expanding area of research and a full survey of that work is 
-                beyond the scope of this thesis.
 
         % ------------------------------------------------        Conclusion       -------------
-        \paragraph{Conclusion}
+        \paragraph{Conclusion on algorithms}
+
+            While other methods also exist, in this thesis we will focus on improving approaches with Evolutionary Algorithms for the Multy-objective optimizations. A good solution is the integration of the surrogate model which extrapolate and approximate the fitness landscape from samples. Multi-objective Evolutionary Algorithms (MOEAs) use this surrogate model as a target for optimization. Assumed that solution from surrogate nearby to a global optimum.
+
             Motivation for Surrogates
 
             For optimization expensive black-box:
@@ -180,131 +171,122 @@
     % --------------------------------------------------------------------------------------------
     \section{Surrogate optimization} 
 
-        The potential for applying surrogate is laid in the fast evaluation of the surrogate model. This advantage should outperform disadvantage in time required to build this surrogate model. In classical model-based optimization is used single surrogate-model that provide a hypothesis on the relation between parameter and objective space. There is a lot type of models that can do it but out and away fewer models that can manage multidimensionality objective space.
+        The potential for applying surrogate is laid in the fast evaluation of the surrogate model. This advantage should outperform disadvantage in time required to build this surrogate model. In classical model-based optimization, single surrogate-model is used that provides a hypothesis on the relation between parameter and objective space. There is a lot type of models that can do it but out and away fewer models that can manage multidimensionality objective space.
 
-
-        % \begin{figure}
-        %     \centering
-        %     \includegraphics[width=\textwidth]{content/images/mbmo.png}
-        %     \caption[Generalized MBMO algorithm]{Generalized MBMO algorithm}
-        %     \label{fig:generalMBMO}
-        % \end{figure}
-
-
-        A surrogate model is either selected randomly or due to its popularity in the area with which the problem is associated.  However, there are still some open challenges related to the ensemble of meta- models such as what should be the criterion for choosing different metamodels or how different metamodels can be used simultaneously? In addition, there are no guidelines for using different models for different objective functions \cite{SoftSurvey}.
+        A surrogate model is either selected randomly or due to its popularity in the associated domain area.  However, there are still some open challenges related to the combination of meta-models, such as the definition of a criterion for choosing several models or how to use simultaneously different surrogate models can. Besides, there are no guidelines for using heterogeneous compositional models for different objective functions \cite{SoftSurvey}.
 
         \cite{EngSurMod} 
 
-        To dealing with expensive optimization problem more quickly, we can use surrogate models in the optimization process to approximate the objective functions of the problem. Approximation of solution is faster than the whole optimization process can be accelerated. Nevertheless, the extra time needed to build and update the surrogate models during the optimization process. 
+        To dealing with expensive optimization problems more quickly, we can use surrogate models in the optimization process to approximate the objective functions. Approximation of the solution is faster than the whole optimization process can be accelerated. Although the extra time indeed needed to build and update the surrogate models during the optimization process. 
         In the case of pre-selecting the promising individuals, the surrogate model is used to find the likely or drop the low-quality individuals even before they are exactly evaluated, thus reducing the number of exact evaluations.
 
-        In the literature, the term surrogate or model-based optimization is used where, during the optimization processes, some solutions are not evaluated with the original objective function, but are approximated using a model of this function. Different approximation methods are used to build surrogate models. For single and multiobjective optimization similar methods are used. 
-        These techniques typically return only one approximated value, which is why in multiobjective problems several models have to be used, so that each model approximates one objective. Some of the most commonly used methods are the Response Surface Method \cite{ResponseSurface}, Radial Basis Function \cite{Rasmussen2004}, Neural Network, Kriging \cite{Woodard00} and Gaussian Process Modeling \cite{RasmussenN10, RasmussenW06}.
-
-        General classification \cite{MlakarPTF15}:
-        Within surrogate-model-based optimization algorithms, a mechanism is needed to find a balance between the exact and approximate evaluations. In evolutionary algorithms, this mechanism is called evolution control \cite{Jin05} and can be either fixed or adaptive. In fixed evolution control the number of exact function evaluations that will be performed during the optimization is known in advance. Fixed evolution control can be further divided into generation-based control, where in some generations all solutions are approximated and in the others, they are exactly evaluated \cite{DebN07}, and individual based control, where in every generation some (usually the best) solutions are exactly evaluated and others approximated \cite{Grierson1993}. In adaptive evolution control, the number of exactly evaluated solutions is not known in advance but depends on the accuracy of the model for the given problem. Adaptive evolution control can be used in one of two ways: as a part of a memetic search or to pre-select the promising individuals which are then exactly evaluated \cite{PilatN12}.
-
-        Surrogate used to expedite search for global optimum. Global accuracy of surrogate
-        not a priority. Surrogate model is cheaper to evaluate than the objective.
-
-        Bayesian optimization (BO) methods often rely on the assumption that the objective function is well-behaved, but in practice, the objective functions are seldom well-behaved even if noise-free observations can be collected. In \cite{bodin2019modulating} propose robust surrogate models to address the issue by focusing on the well- behaved structure informative for search while ignoring detrimental structure that is challenging to model data efficiently.
+        In the literature, the term surrogate or model-based optimization is used where, during the optimization processes, some solutions are not evaluated with the original function, but are approximated using a model of this function. Some of the most commonly used methods are the Response Surface Method \cite{ResponseSurface}, Radial Basis Function \cite{Rasmussen2004}, Neural Network, Kriging \cite{Woodard00}, and Gaussian Process Modeling \cite{RasmussenN10, RasmussenW06}. These methods usually approximate a single objective. As a result, for a multi-objective problem, a method is replicated on each criterion \cite{Knowles06, nardi2019practical}.
 
         % -------------------------------------------------------------------------------------------------
         % ------------------------------------------------        MO in Parameter tuning       -------------
         \subsubsection{Multi-objective parameter tuning}
-        
-            % -------------------       Surrogate-model in MOEA       
-            \paragraph{Surrogate-model-based MOEA}
-            In \cite{KrallMD15} proposed approaches that apply kind of surrogate assistant to evaluations and ranging new population. It allows detecting the most informative examples in population and evaluates them. 
-            Identifies and evaluates just those most informative examples at the end done fewer evaluations of the real system. Another way to explore solutions is to apply some heuristic to decompose the total space into many smaller problems, and then use a simpler optimizer for each region. 
 
-            Surrogates are also used to rank and filter out offspring according to Pareto-related indicators like the hypervolume \cite{EmmerichGN06}, or a weighted sum of the objectives \cite{TaboadaBCW07}. The problem with the methods that use hypervolume as a way of finding promising solutions is the calculation time needed to calculate the hypervolume, especially on many objectives. Another possibility is described in \cite{Li2009}, where the authors present an algorithm that calculates only non-dominated solutions or solutions that can, because of variance, become non-dominated. 
+            Classification of parameter tuning as MBMO approaches based on the workflow of sequential model-based optimization. First is the initial sampling plan with parameters that already evaluated. As an initial sampling plan or design-of-experimnet(DOE), can use technics as Latin Hypercube Sampling (LHS), Sobol sampling, or alternative is random sampling.
             
-            GP-DEMO \cite{MlakarPTF15} The algorithm is based on the newly defined relations for comparing solutions under uncertainty. These relations minimize the possibility of wrongly performed comparisons of solutions due to inaccurate 
-            surrogate model approximations. Using this confidence interval, we define new dominance relations that take into account 
-            this uncertainty and propose a new concept for comparing solutions under uncertainty that requires exact evaluations 
-            only in cases where more certainty is needed.
+            % ===  Phases and tasks in parameter tuning with surrogates model
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{content/images/tax_mb_tuning.png}
+                \caption[Phases and tasks within a generalized multi-objective parameter tuning]{Phases and tasks within a generalized multi-objective parameter tuning}
+                \label{fig:mo_param_tuning}
+            \end{figure}
 
-
-            % ------------------        Surrogate-model with MOEA       
-            \paragraph{Integration of the Surrogate Model}
-            Direct fitness replacement and indirect fitness replacement
-            Kind of extending the search stage of MOEA with surrogate to simulate evaluation of population. It transform the problem of searching a new better population to improving general hypothesis of how and where Pareto set presented.  
-
-            In surrogate-model-based multiobjective optimization, approximated values are often mistakenly used in the solution comparison. As a consequence, exactly evaluated good solutions can be discarded from the population because they appear to be dominated by the inaccurate and over-optimistic approximations. This can slow the optimization process or even prevent the algorithm from finding the best solutions \cite{MlakarPTF15}. 
-            
-            % ------------------        Compositional architecture       
-            \paragraph{Compositional architecture}
-            We could describe compositional-based surrogate optimization as compound grey-box system whit a lot of open research areas where surrogate should improve, managing portfolio, compare of predictions Pareto fronts. 
-            As a developer, you can be focused on a specific problem and don't know how to implement other components. This is one of the main advantages of the described approach.
+            For extrapolate samples, there are two approaches established. 1) Direct build surrogates on scalarize objectives and produce a surrogate model as aggregation. In this case, the multi-objective problem transforms into a single-objective one. 2) Keep original dimensionality of the problem, and apply one or several models to hold and infer in objective space.
+            The optimization search represents an exploration of the optimal point(s) with a surrogate model. This step produces candidates for a real evaluation. In the second stage, sorting and selection are carried out. The required number of points is allowed to estimate and update the sample set. The advantage of possible prediction several parameters instead of a single one is not only used for improving the exploration of the parameter space, but also for parallelizing evaluation.  Optimization iterations continue until the stop condition is satisfied.
+    
     
             \paragraph{Compositional surrogates}
-            Can the same single-objective models be equally applied to various types of problems in multi-/single-objective optimization?
-            When there is no correlation between the objectives, a very simple way to solve this kind of problem is to build independent models, i.e. one for each objective, and then to use those models to simultaneously extrapolate possible solutions with MOEA. Nevertheless, the output values correlated, but an often naive way to build multiple models that able to extrapolate complex objective space is often given good results.  
-    
-            Later research generalized this approach. MOEA/D (multiobjective evolutionary algorithm based on decomposition \cite{ZhangL07}) is a generic framework that decomposes a multi-objective optimization problem into many smaller single problems, then applies a second optimizer to each smaller subproblem, simultaneously.
-    
-            With multiple models, their flaws can combine, as well as the time required to build the models. In memetic algorithms, especially if the surrogate model is not very accurate, a local optimum can be found instead of the global optimum. But in terms of parameter tuning, this point should be better than a predefined sampling plan. Evaluation of this prediction improve surrogate model quality in the near-optimal area and improve prediction in the next round.
-            For example, OEGADO \cite{ChafekarSRX05} creates a surrogate model for each of the objectives. The best solutions in every objective get also approximated on other objectives, which helps with finding trade-off individuals. The best individuals are then exactly evaluated and used to update the models.
-        
+            The variability and extensibility are essential for configurable parameter tuning, such as a software product line. The optimization round is monolithic and context dependant. As shown in Figure \ref{fig:mo_param_tuning}, the potential to reuse components in a workflow is huge. The same single-objective models can be equally applied to various types of problems in multi-/single-objective optimization. The optimization algorithm weakly depends on the type of simulation. 
+            Consider improving parameter tuning to multiply criteria on the fly by dynamically duplicate surrogate model or even create several variants surrogate hypothesis.
 
         % --------------------------------------------------------------------------------------------
         % ------------------------------------------------     Domain-specific Surrogate model      
         \subsection{Domain-specific problem}
-        With gain to find the best solution with less effort surrogate models is domain-specific. It's mean that from two surrogate models in two different problems the best surrogate is changing. It could interpreter as Non-free lunch theorem in model-based optimization. If we extend this argument then the same optimization problem in different parameter tuning iteration could be interpreted as another optimization problem. This means that to reduce effort and increase the convergence of an algorithm we should change the surrogate model depend on how much samples do we have. As one would expect, no approximation method is universal.
-        This leads us to use a portfolio with surrogate models. As a negative consequence, the model fitting additional introduces an additional overhead into the optimization.
+        Intending to find the best solution with less effort, surrogate models are domain-specific. It could be an interpreter as a Non-free lunch theorem in model-based optimization. If we extend this argument, then the same optimization problem in different parameter tuning iteration could be interpreted as another optimization problem. This means that to reduce effort and increase the convergence of an algorithm, we should change the surrogate model depend on how much samples do we have. As one would expect, no approximation method is universal.
+        This leads us to use a portfolio with surrogate models. On each optimization, iteration tries several models and selects thous who have the best accuracy. As a negative consequence, the model fitting additional introduces an additional overhead into the optimization.
 
 
         % --------------------------------------------------------------------------------------------
         % ------------------------------------------------     Build surrogate model     
         \subsection{Build the surrogate model(s). Sampling plan}
+        Initial samples should provide maxim information to build a valuable model. With more samples, in case of proper fitting, the exact model is obtained, and in optimization, is reached better results. On the other hand, the initial sample size may be too big, and this is wasting samples. Furthermore, samples maybe not enough, and better select points from initial design than to be guided by an incorrect model.
 
-
-        % --------------------------------------------------------------------------------------------
-        % ------------------------------------------------     Scalability    
-        \subsection{Scalability of surrogates and MO algorithms}
-        Scalability problem for MOEA and Surrogates 
+        Given the type of objective surface, the expert can assume how much sample points are required to approximate the objective(s). For simple dependencies or more complex surfaces, the difference can be hundreds or thousands of points. In the case of the optimization black-box, this information is unknown. Therefore a dynamic sampling plan should be implemented to reduce the number of estimations and improve the convergence of the optimization algorithm.
 
 
         % --------------------------------------------------------------------------------------------
         % -------------------------------------------------------        Discussion       ------------
         \paragraph{Discussion}
+
+
         Example of each type of optimization. Justification solution.
         Conclusion: Design gap in optimization/parameter tuning. 
         Need to indicate optimization workflow for expensive process/experiments. 
         The argument(s) why we need a new architecture. Reference to composition architecture.
 
+
+
+
+    % --------------------------------------------------------------------------------------------
+    % ------------------------------                    Scope of work       
+    \section{Scope of work}
         Surrogate based optimization has proven effective in many aspects of engineering and in applications where data is "expensive", or difficult, to evaluate.
 
-    % --------------------------------------------------------------------------------------------
-    % ------------------------------      Compositional Surrogate optimization       -------------
-    % --------------------------------------------------------------------------------------------
-
-
-    \section{Scope of work}
-        \todo{make some nice tree-diagram}
-
-        Describe and implement workflow for multi-objective parameter tuning of the derivative-free, black-box system. Parameter estimation is costly. The proposed solutions are also suitable for single-criteria optimization. Problem Setting.
+        Describe and implement workflow for expensive multi-objective parameter tuning of the derivative-free, black-box system. The proposed solutions are backword compatable for single-criteria optimization. 
+        Thre are follows research scope in this thesis:
+        \begin{itemize}
+            \item Single and compositional surrogate models for objectives
+            \item The main optimization search technique selected a multi-objective evolutionary algorithm.
+            \item Consider metrics for solution: hypervolume, space, and non-dominated ratio.
+            \item Dynamic initial sampling
+        \end{itemize}
 
         Goal:
         \begin{enumerate}
-            \item Globally optimize an objective function(s) that is expensive to evaluate. Single/Multi-objective parameter tuning
-            \item Simultaneously optimization scalable objectives
+            \item Globally optimize an objective multi-objective function that is expensive to evaluate.
+            \item Scalable multi-objective optimization
             \item Components reuse. Extensibility with other frameworks
         \end{enumerate}
 
         Problem:
         \begin{enumerate}
             \item A large number of the target black-box evaluations
-            \item Interfaces not unify
+            \item Surrogate selection
             \item Code duplication
         \end{enumerate}
 
         Solution:
         \begin{enumerate}
-            \item Component-Based Architecture
-            \item Compositional-based surrogate optimization with MOEA
+            \item Surrogate portfolio
+            \item Compositional surrogate 
+            \item Adaptive sampling plan
         \end{enumerate}
 
 
-    The single criterion in parameter tuning may not be sufficient to characterize the behavior of the configuration space correctly; Therefore, multiple criteria have to be considered.
+    % The single criterion in parameter tuning may not be sufficient to characterize the behavior of the configuration space correctly; Therefore, multiple criteria have to be considered.
+
+
+    % This search-based software engineering is a rapidly expanding area of research and a full survey of that work is beyond the scope of this thesis.
+
+
+    % % -------------------       Surrogate-model in MOEA       
+    % \paragraph{Surrogate-model-based MOEA}
+
+    % Surrogates are also used to rank and filter out offspring according to Pareto-related indicators like the hypervolume \cite{EmmerichGN06}, or a weighted sum of the objectives \cite{TaboadaBCW07}. The problem with the methods that use hypervolume as a way of finding promising solutions is the calculation time needed to calculate the hypervolume, especially on many objectives. Another possibility is described in \cite{Li2009}, where the authors present an algorithm that calculates only non-dominated solutions or solutions that can, because of variance, become non-dominated. 
+
+
+    % % ------------------        Surrogate-model with MOEA       
+    % \paragraph{Integration of the Surrogate Model}
+    % Direct fitness replacement and indirect fitness replacement
+    % Kind of extending the search stage of MOEA with surrogate to simulate evaluation of population. It transform the problem of searching a new better population to improving general hypothesis of how and where Pareto set presented.  
+
+    % In surrogate-model-based multiobjective optimization, approximated values are often mistakenly used in the solution comparison. As a consequence, exactly evaluated good solutions can be discarded from the population because they appear to be dominated by the inaccurate and over-optimistic approximations. This can slow the optimization process or even prevent the algorithm from finding the best solutions \cite{MlakarPTF15}. 
+
+
+    % General classification \cite{MlakarPTF15}:
+    % Within surrogate-model-based optimization algorithms, a mechanism is needed to find a balance between the exact and approximate evaluations. In evolutionary algorithms, this mechanism is called evolution control \cite{Jin05} and can be either fixed or adaptive. In fixed evolution control the number of exact function evaluations that will be performed during the optimization is known in advance. Fixed evolution control can be further divided into generation-based control, where in some generations all solutions are approximated and in the others, they are exactly evaluated \cite{DebN07}, and individual based control, where in every generation some (usually the best) solutions are exactly evaluated and others approximated \cite{Grierson1993}. In adaptive evolution control, the number of exactly evaluated solutions is not known in advance but depends on the accuracy of the model for the given problem. Adaptive evolution control can be used in one of two ways: as a part of a memetic search or to pre-select the promising individuals which are then exactly evaluated \cite{PilatN12}.
