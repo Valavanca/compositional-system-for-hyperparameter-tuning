@@ -118,7 +118,9 @@
             This metric represents the volume of the objective space that is covered by the individuals of non-dominated solutions set solutions that belong to a Pareto front. Two points delimit the volume: one point is the reference point that is defined as the worst solution inside the objective space, and a second optimal point (pseudo-optimal) that is calculated by the proposed solution method. Determining the hypervolume indicator is a computationally expensive task. Even in case of a reasonably small dimension and low number of points, there are currently no known algorithms that can yield the results fast enough for use in most multiple-objective optimizers.
             \item \textbf{Non-dominated Ratio (NDR).} \textit{Cardinality.} This metric employs the non-dominated count of a solution set divided by the total size of solution set. Higher values are preferred to lower ones.
             \item \textbf{Spacing \cite{Schott1995FaultTD}.} \textit{Distribution and spread.} Describe the distribution of Pareto points. Fewer space metrics means better coverage of objectives values range. 
-            \item \textbf{$\Upsilon$-metric (p-distance)}\cite{Martens13} \textit{Convergence} This metric is the average distance of any set of points to the Pareto front. The lower the $\Upsilon (P)$, the closer the solutions of P are to solutions of the Pareto-front. $\Upsilon(P) = \frac{1}{|P|}\sum_{x\in P}g(x)-g(x^*)$
+            \item \textbf{$\Upsilon$-metric (p-distance)}\cite{Martens13} \textit{Convergence} This metric is the average distance of any set of points to the Pareto front. The lower the $\Upsilon (P)$, the closer the solutions of P are to solutions of the Pareto-front. $\Upsilon(P) = \frac{1}{|P|}\sum_{x\in P}g(x)-g(x^*)$ 
+            
+
             
         \end{itemize}
  
@@ -129,9 +131,9 @@
                 % ==== dominated
                 \begin{figure}
                     \centering
-                    \includegraphics{content/images/dominated}
-                    \caption[Pareto-optimal points vs. none dominated]{The Pareto-optimal solution is near-optimal to real Pareto frontier, while none-dominance is a subset of point in any group of points.}
-                    \label{fig:dominated}
+                    \includegraphics[width=10cm]{content/images/ndom}
+                    \caption[Non-dominated points]{Example of non-dominated points. Point A dominated on all points in the internal sector where B is presented. Concerning point A, point B is not dominant because it has better value in $f_1$} 
+                    \label{fig:dominated} 
                 \end{figure}
         
             % ----------------      Scalarizing       
@@ -240,31 +242,31 @@
         Describe and implement workflow for expensive multi-objective parameter tuning of the derivative-free, black-box system. The proposed solutions are backword compatable for single-criteria optimization. 
         Thre are follows research scope in this thesis:
         \begin{itemize}
-            \item Single and compositional surrogate models for objectives
+            \item Single and compositional surrogate models for objectives [RG1] 
             \item The main optimization search technique selected a multi-objective evolutionary algorithm.
-            \item Consider metrics for solution: hypervolume, space, and non-dominated ratio.
-            \item Dynamic initial sampling
+            \item Solution consider metrics: hypervolume, p-distance, space, and non-dominated ratio.
+            \item Dynamic initial sampling [RG2] 
         \end{itemize}
 
-        Goal:
+        \paragraph{Goal:}
         \begin{enumerate}
             \item Globally optimize an objective multi-objective function that is expensive to evaluate.
-            \item Scalable multi-objective optimization
-            \item Components reuse. Extensibility with other frameworks
+            \item Scalable multi-objective optimization [RG1.1]
+            \item Components reuse. Extensibility with other frameworks [RG1]
         \end{enumerate}
 
-        Problem:
+        \paragraph{Problem:}
         \begin{enumerate}
-            \item A large number of the target black-box evaluations
-            \item Surrogate selection
+            \item A large number of the target black-box evaluations [RG2]
+            \item Surrogate selection [RG1]
             \item Code duplication
         \end{enumerate}
 
-        Solution:
+        \paragraph{Solution:}
         \begin{enumerate}
             \item Surrogate portfolio
             \item Compositional surrogate 
-            \item Adaptive sampling plan
+            \item Adaptive sampling plan [RG2]
         \end{enumerate}
 
 
@@ -290,3 +292,10 @@
 
     % General classification \cite{MlakarPTF15}:
     % Within surrogate-model-based optimization algorithms, a mechanism is needed to find a balance between the exact and approximate evaluations. In evolutionary algorithms, this mechanism is called evolution control \cite{Jin05} and can be either fixed or adaptive. In fixed evolution control the number of exact function evaluations that will be performed during the optimization is known in advance. Fixed evolution control can be further divided into generation-based control, where in some generations all solutions are approximated and in the others, they are exactly evaluated \cite{DebN07}, and individual based control, where in every generation some (usually the best) solutions are exactly evaluated and others approximated \cite{Grierson1993}. In adaptive evolution control, the number of exactly evaluated solutions is not known in advance but depends on the accuracy of the model for the given problem. Adaptive evolution control can be used in one of two ways: as a part of a memetic search or to pre-select the promising individuals which are then exactly evaluated \cite{PilatN12}.
+
+
+        % Mainly two groups are affected by this problem:
+    % \begin{itemize}
+    %     \item Application engineers who need to choose, implement, and apply state-of-the-art algorithms without in-depth programming knowledge and expertise in the optimization domain
+    %     \item Developers of optimization methods who want to evaluate algorithms on different test problems and compare a variety of competing methods
+    % \end{itemize}

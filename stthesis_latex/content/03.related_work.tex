@@ -2,6 +2,7 @@
 
     \begin{blockquote}
         \paragraph{Intent:} This section overview other studies in the area of surrogate-based multi-objective optimization or related approach from other types of optimization. The gaps of the others should be clearly. 
+        \todor{Add many objective related work}
         Structure:
         \begin{description}
             \item[Comparison criteria] Surrogate type, Surrogate portfolio, Solver type, Sampling size, Many-objective optimization
@@ -67,7 +68,7 @@
 
 
         % ----------------         ParEGO
-        \paragraph{ParEGO} scalarization based multi-objective algorithm \cite{Knowles06}. The classical single-objective algorithm $EGO$ of Jones et al.  was extended to a multi-point proposal by repeat algorithm several times with randomly change scalarization weights in each iteration. The idea of algorithm based on Kriging/Gaussian process regression model and multiple single objective optimization processes on scalarized objectives guaranteeing that multiple points on the Pareto-optimal front could be in prediction. This algorithm and its modification implemented in mlrMBO\cite{BischlmlrMBO}.
+        \paragraph{ParEGO} scalarization based multi-objective algorithm \cite{Knowles06}. The classical single-objective algorithm $EGO$ of Jones et al.  was extended to a multi-point proposal by repeat algorithm several times with randomly change scalarization weights in each iteration.  The idea of algorithm based on Kriging/Gaussian process regression model and multiple single objective optimization processes on scalarized objectives guaranteeing that multiple points on the Pareto-optimal front could be in prediction. This algorithm and its modification implemented in mlrMBO\cite{BischlmlrMBO}.
 
 
         % ----------------         Distributed Surrogates
@@ -119,7 +120,7 @@
     % --------------------------------------------------------------------------------------------
     \section{Conclusions}
 
-        Fixed optimization components can make general optimization ineffective in changeable problems. Appropriate surrogate construction methodology or combination of multiple solving algorithms could improve the final solution. The significant works analyze improving surrogate architecture as a promising direction. Regardless they operate with a limited amount of models and implementation is inflexible
+        To our knowledge, there exists no research that studies a complex combination of the surrogate model and how it affects on solution quality.  Fixed optimization components can make general optimization ineffective in changeable problems. Appropriate surrogate construction methodology or combination of multiple solving algorithms could improve the final solution. The significant works analyze improving surrogate architecture as a promising direction. Regardless they operate with a limited amount of models and implementation is inflexible. Moreover, almost none of the approaches examined the size of the surrogate sample set. 
         Some of the important conclusions from related work \cite{SoftSurvey}:
         \begin{enumerate}
             \item The optimization result could be improved with a precise selection of surrogate architecture
@@ -135,8 +136,14 @@
             \item[Sampling plan] Independent sampling plan from a problem can lead the search in the wrong directions. This problem may occur because the surrogate model may be under fitted or overfitted, and the result is a waste of samples and resources.
         \end{description}
 
-
-        Our work is similar in constitution to the approaches adopted from the expensive MBMO \cite{SoftSurvey} with a modular framework structure that includes a surrogate portfolio. We extend the idea of model selection and k-fold cross-validation to verify how a surrogate(s) model might operate differently on various problem sceneries. To our knowledge, there exists no research that investigates how to make a composition of several surrogate models and use it in a portfolio. Also, there is an open question how this method scales.
+        As shown before, surrogate or model-based optimization suited for an expensive black-box problem. Nevertheless, this approach also has open questions and limitations:
+        \begin{itemize}
+            \item \emph{Surrogate is domain-specific.} For improving and reach the best prediction, we should know in cross-grain underlying objective surface to apply specific surrogate. Universal surrogates can gain optimal results but not the most reliable possible \cite{abs181207958, LuST19}.
+            \item Multi-objective hypothesis. A \emph{limited amount} of surrogate models can handle multi-dimensional parameter space. Also, scaling is an open research question for existing multi-output surrogate models.
+            \item Quality of prediction depends on \emph{how much samples} do we have for a specific type of surrogate. There is a trade-off between reducing sample size and maximize the quality of prediction. Overfitting, as well as Underfitting, can guide optimization in the wrong direction.
+            \item Multi-objective optimizations with \emph{categorical features} are standard in engineering practices. Parameter tuning with that type of space is not trivial.
+            \item Often Optimization algorithm and surrogate model are very \emph{tightly coupled}. Profoundly connected implementation suitable for a specific type of problem and require prior knowledge about a problem. Reimplementing these algorithms for each usage scenario becomes timeconsuming and error-prone. 
+        \end{itemize}
 
 
 
@@ -169,7 +176,6 @@
 
 
         % exploration, exploitation and diversification during each algorithm iteration.
-
 
 
         % To our knowledge, there exists no research that investigates how deep networks affect the performance of surrogate-assisted multi-objective evolutionary algorithms. If neural networks were used, the approaches usually adopted only one hidden layer. Additionally, we can also see that there exists a multitude of ways a surrogate model can be integrated into an evolutionary algorithm
