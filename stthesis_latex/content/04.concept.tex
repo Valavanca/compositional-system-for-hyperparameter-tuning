@@ -90,8 +90,8 @@
 
     % --------------------------------------------------------------------------------------------
     % ------------------------------------------------     RG2: Sampling plan     
-    \section{Sampling plan \ref{RQ2}}
-        For expensive optimization problems, it would be useful to modulate a problem using quite a small number of most informative examples. Nonetheless, almost sequential model-based approaches use a static sampling plan. Under the sampling plan may also be assumed a design-of-experiment(DOE) plan. If the oracle does not determine the required optimal samples, it can lead to unnecessary waste of valuable evaluation attempts. 
+    \section{Sampling plan [RQ2]}
+        For expensive optimization problems, it would be useful to modulate a problem using quite a small number of most informative examples. Nonetheless, almost sequential model-based approaches use a static sampling plan. Under the sampling plan may also be assumed randomized designs in design-of-experiment(DOE). If the oracle does not determine the required optimal samples, it can lead to unnecessary waste of valuable evaluation attempts. 
         
         The general idea of how to solve this problem lay on relating initial sampling design to validation the surrogate models. An optimization search is guided by sampling design until that moment when valid surrogate model is presented (Figure \ref{fig:concept_sampling}). Validity means that surrogate approximation could be useful for efficient global optimization.
 

@@ -23,33 +23,22 @@
 \end{blockquote}
 % ================================================================================================
 
-This section describes the details and decisions in the implementation of the proposed thesis concept — critical points in answering how to solve research questions.
-
-Requirements:
-\begin{description}
-    \item[Separation of concerns] The implementation of surrogate does not depend on an optimization algorithm. 
-    \item[Inerfaces] sklearn 'duck typing'. This means that estimators are defined by interface, not by inheritance, where the interface is entirely implicit as far as the programming language is concerned.
-    \item[Components] Simple and efficient, reusable in various domains \cite{buitinck2013api} 
-    \item[Non-proliferation of classes.] Datasets are represented as arrays or data frames. Hyper-parameter names and values are represented as standard Python strings or numbers whenever possible. This keeps components easy to use and easy to combine with other libraries \cite{buitinck2013api}.
-    \item[Composition.] Whenever possible, algorithms are implemented and composed from existing building blocks.
-\end{description}
-
-
-\subsection{Dependencies:}
-\begin{description}
-    \item[scikit-learn] implementation of basic machine learning algorithm and there validation. Progect is accessible to non-machine learning experts and reusable in various scientific areas \cite{art-scikit-learn}.
-    \item[pygmo2] is efficient parallelization framework for local and global optimization. Efficient implementations of bio-inspired and evolutionary algorithms \cite{francesco_biscani_2019}.
-\end{description}
-
-
-Variants in the evaluation of sets of solutions for each hypothesis. Each hypothesis has quality metrics. Solution(s) from each hypothesis have also own metrics.
-               
-There are main approaches how produce single solution: 
+This section describes the details and decisions in the implementation of the proposed thesis concept. Implementation should be flexible and usable. Consist of buildings blocks with consistent interfaces. Achieve a wide diversity of solving problems within extension from other algorithms and frameworks. Based on best practice \cite{buitinck2013api}, the implementation accepts the following principles:
 \begin{itemize}
-    \item Solution from best hypothesis. Sorting
-    \item Bagging solution
-    \item Voting solution                
+    \item \textbf{Components.} Simple and efficient, reusable in various domains. Whenever possible, new functionality is implemented and composed from existing building blocks.
+    \item \textbf{Separation of concerns.} Implementations of surrogate models and optimization algorithms are unrelated and interchangeable. 
+    \item \textbf{Non-proliferation of classes.} Samples and Datasets are represented as arrays or data frames. Hyper-parameter names and values are represented as standard Python strings or numbers whenever possible. This keeps components easy to use and easy to combine with other libraries \cite{buitinck2013api}.
 \end{itemize}
+
+
+The next dependencies are chosen to achieve the above mention principles:
+\begin{description}
+    \item \textbf{Scikit-learn} \cite{art-scikit-learn} is one of the most popular machine learning framework that accomplishes with a variety of learning tasks. The critical features are excellent documentation and reusable components in various contexts. Extensibility and consistent interfaces lead that the library has gathered a large community. Scikit-learn integrates well with many other Python libraries. 
+    \item \textbf{pygmo2} \cite{francesco_biscani_2019} is efficient parallelization scientific library for local and global optimization. Key features of their project are efficient implementations of bio-inspired and evolutionary algorithms and unified interface to optimization algorithms and problems. 
+\end{description}
+
+               
+
 
 
 % \paragraph{Reusability in parameter tuning} Parameter tuning can be splitted down into steps that are common for the many/single-objective optimizations. Each step in optimization workflow has variability via implemented interfaces. Single-objective hypotheses can be combined for multi-objective optimization with compositional design. API of metric-learn is compatible with scikit-learn, the leading library for machine learning in Python. This allows to use all the scikit-learn routines (for pipelining, model selection, etc) with metric learning algorithms through a unified interface.
@@ -59,58 +48,59 @@ There are main approaches how produce single solution:
 
 
 
-Workflow stages:
-\begin{enumerate}
-    \item Cross-Validation $\rightarrow$ Validation threshold
-    \item Test-set score $\rightarrow$ Score threshold
-    \item Surrogate models sort
-    \item Optimization algorithm(s)
-    \item MO infill criteria
-\end{enumerate}
-
 % --------------------------------------------------------------------------------------------
 % ---------------------------------------------------       Compositional surrogate      
 % --------------------------------------------------------------------------------------------
 \section{Compositional surrogate}
+    Model-union class (Figure \ref{fig:munion}) is a place where several heterogeneous models could be combined. This class is as meta-model that wraps and aggregate estimations from several sub-models. Model-union could be combined in a tree structure with arbitrary models that support require interface. There are two estimation modes:
+    \begin{itemize}
+        \item \textbf{Stacking.} It is an ensemble learning technique to combine multiple regression models by a meta-regressor. The individual regression models are trained based on the whole training samples. The final label prediction is averaged from all models outputs.
+        \item \textbf{Split y.} A straightforward technique to combine several regression models to multi-label prediction. The individual regression models are also trained based on the whole training samples, but final prediction produces from a model's outputs concatenation. For each model features space is common, but labels are orthogonal. This functionality allows as to produce multicriteria compositional models from combinations of single objective models.
 
-    Model-union class.  Stacking surrogate. Tree composition
+    \end{itemize}
 
-    The realization of composition defines as a meta-estimator with appropriate class functions. As parameter pass instances that will be used for composition. Therefore meta-estimator is also an estimator, so it allows nested usage. By default, class works as bagging estimator but with \emph{y split} parameter it allows appropriate fitting models on each objective separately
+    % ==== Sampling plan
+    \begin{figure}
+        \centering
+        \includegraphics[width=10cm]{content/images/munion_class}
+        \caption[Models-union class]{Class diagram of \textit{ModelsUnion}. Scikit-learn tends to use "duck typing", so building a model which supports require methods suffices for compatibility. Internal classes such as \textit{BaseEstimator} provide boilerplate code and is used for clarity and convenience intent.} 
+        \label{fig:munion} 
+    \end{figure}  
 
-    Intuition of why random forest is a good model: •Good at non-linearity, multi-modality and non-smoothness. A decision tree is a non-parametric supervised machine learning method widely used to formalize decision making processes across a variety of fields. The combination of many weak regressors (binary decisions) allows approximating highly non-linear and multi-modal functions with great accuracy. In addition, random forests naturally deal with categorical and ordinal variables which are important in computer systems optimization.
-
-    Compositional surrogate $\rightarrow$ Portfolio
+    ModelsUnion class puts the compositional model on one line with other surrogate models. It allows us uniformly validate many surrogate models and combine them in a surrogate portfolio.
 
 % --------------------------------------------------------------------------------------------
-% ---------------------------------------------------       Surrogates validation     
+% ---------------------------------------------------       Optimization orchestrator     
 % --------------------------------------------------------------------------------------------
-\section{Surrogates validation}
-The main task of surrogate model is to be able to generalize to unseen data. Surrogate model as learning model should generalize examples to valid hypothesis. Since we cannot immediately check the surrogate performance on new, incoming data, it is necessary to sacrifice a small portion of the examples to check the quality of the model on it. 
+\section{Optimization orchestrator}
+    The \textit{TutorModel} class is the orchestrator of all optimization's processes. It holds a surrogate portfolio, makes validation decisions, combines valid surrogate hypothesis and brings them together with optimization solvers (Figure \ref{fig:tutor_activity}).
 
-In case if surrogate model have enoughs score (pass metrics threshold) we consider it valid and could be processed as subject for inference(prediction).
-
-    % ---------------------------------------------------        Workflow
-    \subsection{Workflow}
-    Surrogate validation realized as adaptation best practice from machine learning with dividing samples into three sets.
-    On a train, dataset surrogate model fitted, then on validation pass model selection and the last, test set - solution validation. 
+    %! [ === Model product line === ]
 
 
-                    [---        Fig.2           ---]
+    % ---------------------------------------------------        Validation
+    \subsection{Surrogates validation}
+        Each surrogate pass validation in several stages (Figure \ref{fig:simsim_activity_validation}): 1) Surrogate selection based on cross-validation results. In this stage define lower bound for overall accuracy. We notice that pass this threshold does not guarantee that surrogate is useful, but we sure that lower values detect models as useless. By default threshold \#1 defines as R2 less than 0.65. 2) Check accuracy in the region of interest. Finalist models chacks on unseen data to validate extrapolation quality and accuracy in optimal points. By default, R2 at this stage is also should be more than 0.65. Accuracy in optimal points is used for sorting champion models and corresponding solutions. Threshold's values selected from practical and theoretical use.
 
-    Exploration and exploitation balance    
+            % ==== activity_validation
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{content/images/simsim_activity_workflow}
+                \caption[General workflow activity]{General optimization workflow for model-based optimization iteration with validation in two stages.}
+                \label{fig:simsim_activity_validation}
+            \end{figure}
 
-    The test set by default is 25\%. On left 75\% used cross-validation in 4 rounds. It means that gained four folds of samples and models training perform in three folds and testing on the fourth fold. It performs results for select or rejects surrogates combinations. After on test set gain information about the quality of possible solutions from surrogate 
-
-
+        The test set by default is 25\%. On left 75\% used cross-validation in 4 rounds. It means that gained four folds of samples and models training perform in three folds and testing on the fourth fold. It performs results for select or rejects surrogates combinations. After on test set gain information about the quality of possible solutions from surrogate 
 
 
     % ---------------------------------------------------        Portfolio        
     \subsection{Hypothesis portfolio}
-    A Surrogate(s) is a simplified hypothesis of the relation between parameters and objectives space build on examples. If there is no hypothesis about the data, then there is no reason to prefer one surrogate over any other.  In some cases, the most suitable surrogate is a Bayesian regression, while for other a linear model is enough. No model is a priori guaranteed to work better (NFL). The straightest method to find out the best surrogate is to apply them all. Because this is not possible, in practice, developers make assumptions based on their knowledge of the problem and select only a few surrogates. 
+    In general, surrogate models can be divided into two groups: a multi-output model for all objectives and compositional model with single-output models. All models pass validation equally, but after cross-validation single-objective models should combine in the complex surrogate hypothesis. 
+    Ultimately, all objectives should be restored from valid surrogates and if some objective dimension has more models than other, last duplicate themselves to fill a gap. After complete restoring, compositional models with multi-output models validate further on the test set.
 
-    The motivation for a surrogate portfolio is a combination of a plethora of surrogate models in a component that can validate and sort a subset of models dynamically. Flexibility is necessary because a) problem is unknown b) model validity depends on samples.
+    % In the case of mixed surrogates models portfolio, validation pass in two groups: multi-objectives and single objective surrogates. In single-objective surrogates group must additionally restore complite hypotheisis for the multi-dimensional objective surface.
 
-    % ==== Figure
+        % ==== Figure
         \begin{figure}
             \centering
             \includegraphics[width=\textwidth]{content/images/portfolio_validation_solv}
@@ -118,22 +108,11 @@ In case if surrogate model have enoughs score (pass metrics threshold) we consid
             \label{fig:tutor_activity}
         \end{figure}
 
-    In the case of mixed surrogates models portfolio, validation pass in two groups: multi-objectives and single objective surrogates. In single-objective surrogates group must additionally restore complite hypotheisis for the multi-dimensional objective surface.
-
-
-    \begin{enumerate}
-        \item You have to try multiple types of surrogate(models) to find the best one for your data.
-        \item A number of NFL theorems were derived that demonstrate the danger of comparing algorithms by their performance on a small sample of problems.
-    \end{enumerate}
-
-    As metamodel-based algorithms are generally developed for black box problems, where characteristics of the problems to be solved are not known a priori, one can measure the efficiency of an algorithm by its ability to provide meaningful solutions in a least number of function evaluations \cite{SoftSurvey}.
-
-    A set of models is defined that can form a partial or complete hypothesis to describe the problem. Also during the increase of the experiments may change the model that best describes the existing problem As a result, there is variability for each problem and configuration step at the same time. A set of hypotheses can solve this problem but it takes longer time for cross validation.
 
 
     % ---------------------------------------------------        Sampling strategy
-    \subsection{Sampling strategy} In many practical problems, only a restricted budget is spendable. Each evaluated point should be informative to reduce cost and improve interpolation by models. The most straightforward method of sampling design is a random witch for small sample sizes, often produce clusters of samples. 
-    Alternatively, implemented Sobol sampling\cite{Sobol1999}, which covers the space more evenly. Out of the box, we provide Sobol sampling and random sampling.
+    \subsection{Sampling strategy} In many practical problems, only a restricted budget is spendable. Each evaluated point should be informative to reduce cost and improve interpolation by models. The most straightforward method of sampling design is a random witch for small sample sizes, that often produce clusters of samples. Conversely, there are also quasi-random distributions that produce informative samples that cover space more evenly. Most popular algoruthms are Sobol\cite{Sobol1999} and Latin hypercube sampling. 
+    Out of the box, we provide Sobol sampling and random sampling.
     
     
     % Oversampling and undersampling in data analysis. Alleviate imbalance in the dataset. 
@@ -150,16 +129,23 @@ In case if surrogate model have enoughs score (pass metrics threshold) we consid
 % --------------------------------------------------------------------------------------------
 % ---------------------------------------------------       Solvers      
 % --------------------------------------------------------------------------------------------
-\section{Solvers}
+\section{Optimization solvers}
 
-    Optimization algorithms. MOEA. A Python platform\cite{francesco_biscani_2019}  to perform parallel computations of optimisation tasks (global and local) via the asynchronous generalized island model.
 
-    decorators for single-objective solver with multi-objective surrogate 
-
-    Solvers role is to apply an optimization algorithm on the surrogate and find a solution(s). Most solvers implemented with Multi-objective evolutionary algorithms such as NSGA2, MOEA/D, Multi-objective Ant Colony Optimizer (MACO) or Nondominated Sorting Particle Swarm Optimizer (NSPSO)\cite{francesco_biscani_2019}. 
-    Specifically added solver with a combination of several multi-objective genetic algorithms with a shared population.
+    Solvers role is to apply an optimization algorithm on the surrogate and find a solution(s). Most solvers implemented with Multi-objective evolutionary algorithms such as NSGA2, MOEA/D, Multi-objective Ant Colony Optimizer (MACO) or Nondominated Sorting Particle Swarm Optimizer (NSPSO). 
+    Specifically added solver with a combination of several multi-objective genetic algorithms with a shared population (MOEA-Ctrl).
 
     Accordingly, on this step, a version of the solver with a scalarization of surrogates values possible witch optimize with any optimal heuristics. In this case, only one optimal point is obtained from the Pareto front, so the process must be repeated as many times as necessary to obtain the required count. 
+
+    Optimization framework requires the definition of custom problems. Optimization algorithm receives the surrogate model as a parameter and builds custom optimization problem on it. In the case of a genetic algorithm, gain the perspective population of parameters, that could be selected as a Pareto front approximation. If several surrogates valid - several Pareto-front approximations obtain. There are two approaches to select the most informative solutions: 1) select Pareto approximation from surrogate with the highest accuracy in non-dominated points. 2) Assume that all approximations are valid and all points could be selected. In this case, intersection predictions from samples have a higher probability of being selected
+
+    For singl-objective problem was adopted Extended Ant Colony Optimization algorithm (gaco). Feature of this algorithm consist in applying Gausian process regresion to generate future generations of ants. 
+
+    All default solver allgorithms are implemanted in pygmo2 \cite{francesco_biscani_2019}.
+    % Optimization algorithms. MOEA. A Python platform\cite{francesco_biscani_2019}  to perform parallel computations of optimisation tasks (global and local) via the asynchronous generalized island model.
+
+    % decorators for single-objective solver with multi-objective surrogate 
+
 
 
 
@@ -184,3 +170,29 @@ In case if surrogate model have enoughs score (pass metrics threshold) we consid
 
 
 % The simplifications are mean to discard the superfluous details that are unlikely to generalize to new instances. However, to decide what data to discard and what data to keep, you must make a hypothesis. For example, a linear model makes the hypothesis that the data is fundamentally linear and that the distance between the instances and the straight line is just noise, which can safely be ignored.
+
+
+
+% sklearn 'duck typing'. This means that estimators are defined by interface, not by inheritance, where the interface is entirely implicit as far as the programming language is concerned.
+
+% Variants in the evaluation of sets of solutions for each hypothesis. Each hypothesis has quality metrics. Solution(s) from each hypothesis have also own metrics.
+
+
+% Intuition of why random forest is a good model: •Good at non-linearity, multi-modality and non-smoothness. A decision tree is a non-parametric supervised machine learning method widely used to formalize decision making processes across a variety of fields. The combination of many weak regressors (binary decisions) allows approximating highly non-linear and multi-modal functions with great accuracy. In addition, random forests naturally deal with categorical and ordinal variables which are important in computer systems optimization.
+
+
+Workflow stages:
+\begin{enumerate}
+    \item Cross-Validation $\rightarrow$ Validation threshold
+    \item Test-set score $\rightarrow$ Score threshold
+    \item Surrogate models sort
+    \item Optimization algorithm(s)
+    \item MO infill criteria
+\end{enumerate}
+
+There are main approaches how produce single solution: 
+\begin{itemize}
+    \item Solution from best hypothesis. Sorting
+    \item Bagging solution
+    \item Voting solution                
+\end{itemize}
