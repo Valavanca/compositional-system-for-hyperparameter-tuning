@@ -264,21 +264,113 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
 % ---------------------       Benchmark 2: Dynamic sampling plan and parameter selection
 % --------------------------------------------------------------------------------------------
 \section{Benchmark 2: Inner parameters}
+    Inner parameter tuning is also a problem that should be explained. Whereas in related work, there is not enough information about how to configure model-based parameter tuning. In benchmark-2, we compare different combinations of hyperparameters to define the correlation and importance of those. Due to limited time, we consider only ZDT4 problem  and with a surrogate portfolio from the previous benchmark, but without the Gaussian regression model. Evaluation budget and experiment repeated stayed the same.
 
-    \subsection{Model-tutor parameters}
+    The following options are highlighted in the developed TutorM class:
     \begin{itemize}
-        \item \texttt{PredictTutor} class
+        \item Initial dataset [0, 100, 500, 750]
+        \item Validation
             \begin{itemize}
-                \item Surrogate portfolio
-                \item Cross-Validation rounds
-                \item Cross-Validation threshold
-                \item Train/test split
-                \item Test threshold
+                \item Train/test split [75/25, 90/10]
+                \item Cross-Validation threshold [0.2, 0.65, 0.9]
+                \item Test threshold [0, 0.6, 0.9]
             \end{itemize}
-        \item Optimization search algorithm
-        \item Pareto front infill-criteria (Non-dominated score/Solutions combination)
-        \item Prediction count
+        \item Optimization search algorithm [NSGA2, MOEA-Ctrl]
+        \item Pareto front infill-criteria. Solution combinations [Non-dominated front score, Stacking]
+        \item Prediction count [10, 100]
     \end{itemize}
+
+    As a result, was done full factorial design with 576 possible configurations and spend almost 2 weeks for 5 repetitions.
+
+    On the Figure shown result for 40 best and worst configurations. Note that the main impact on the quality of the final results gain from solution combination from valid surrogates models. In the case of a $ndf_score$, for final prediction selected optimal points from the surrogate model that has the highest score on non-dominated points from the test set. From another hand, stacking, as an alternative approach, means combining solutions from all models that pass validation, not only from the best one.
+
+    The $ndf_score$  was common to all configurations that gave the worst result, while stacking is preferred choice for best configuration group. Another fascinating conclusion could be done from the initial sample size. Worst parameters involved only empty and 100 initial sets that are reasonable because the lower limit for the worst possible result is higher with more extensive data set. But at the same time, the lack of initial samples yields the best results. If so, the optimization process could begin earlier and achieve the optimum faster. 
+
+    It is also specified to note a tendency to decrease the test threshold, so which is confirmed not to apply general accuracy as the main criteria for surrogate selection.
+
+    % ===  ------------------------------------- ZDT6
+    \begin{figure}
+        \centering
+        \begin{subfigure}{\textwidth}
+            \includegraphics[width=\textwidth]{content/images/conf_zdt6_worst}
+            \caption{40 worst configurations}
+            \label{fig:conf_zdt6_worst}
+        \end{subfigure} 
+        % \hfill
+        
+        \begin{subfigure}{\textwidth}
+            \includegraphics[width=\textwidth]{content/images/conf_zdt6_best}
+            \caption{40 best configurations}
+            \label{fig:conf_zdt6_best}
+        \end{subfigure} 
+
+        \caption[ZDT6: The selection from average result of best and worst configurations.]{ZDT6: The selection from average result of best and worst configurations.}
+        \label{fig:conf_zdt6}    
+    \end{figure}
+
+    % === ZDT 6
+    \begin{figure}
+        \centering
+
+        \begin{subfigure}{\textwidth}
+            \begin{subfigure}{0.5\textwidth}
+                \includegraphics[width=\textwidth]{content/images/conf_zdt6_pred_solver}
+                \caption{Prediction size and solver algorithm}
+                \label{fig:zdt6_pred_solver}
+            \end{subfigure} 
+            \begin{subfigure}{0.5\textwidth}
+                \includegraphics[width=\textwidth]{content/images/conf_zdt6_comb_valid}
+                \caption{Prediction combinations and CV threshold}
+                \label{fig:zdt6_comb_valid}
+            \end{subfigure}
+        \end{subfigure} 
+
+        \caption[ZDT6: General average distribution of all configurations]{ZDT6: General average distribution of all configurations}
+        \label{fig:conf_zdt6}    
+    \end{figure}
+
+
+    % === -------------------------------------- ZDT 4
+    \begin{figure}
+        \centering
+        \begin{subfigure}{\textwidth}
+            \includegraphics[width=\textwidth]{content/images/conf_zdt4_worst}
+            \caption{ZDT4: worst configurations}
+            \label{fig:conf_zdt4_worst}
+        \end{subfigure} 
+        \hfill
+        
+        \begin{subfigure}{\textwidth}
+            \includegraphics[width=\textwidth]{content/images/conf_zdt4_best}
+            \caption{ZDT4: best configurations}
+            \label{fig:zdt6_ndf}
+        \end{subfigure} 
+
+        \caption[ZDT4: The selection from average result of best and worst configurations.]{ZDT4: The selection from average result of best and worst configurations.}
+        \label{fig:conf_zdt4_best}    
+    \end{figure}
+
+    % === ZDT4
+    \begin{figure}
+        \centering
+
+        \begin{subfigure}{\textwidth}
+            \begin{subfigure}{0.5\textwidth}
+                \includegraphics[width=\textwidth]{content/images/conf_zdt4_pred_solver}
+                \caption{Prediction size and solver algorithm}
+                \label{fig:zdt4_pred_solver}
+            \end{subfigure} 
+            \begin{subfigure}{0.5\textwidth}
+                \includegraphics[width=\textwidth]{content/images/conf_zdt4_comb_valid}
+                \caption{Prediction combinations and CV threshold}
+                \label{fig:zdt4_comb_valid}
+            \end{subfigure}
+        \end{subfigure} 
+
+        \caption[ZDT4: general average distribution of all configurations]{ZDT4: general average distribution of all configurations} 
+        \label{fig:conf_zdt6}    
+    \end{figure}
+
 
     %! [ Hypermapper baseline; ModelTutor and change quality (grid plot)] iterations
 
@@ -290,13 +382,20 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
 % ---------------------       Benchmark 3: Many-objective optimization, scaling
 % --------------------------------------------------------------------------------------------
 \section{Benchmark 3: Many-objective optimization. Scaling. RQ1.1}
-    For evaluation scalability property for the compositional model, problem XXX was selected.
 
-    Objectives: 1) detect iterative improvement, a convergence of the primary metric 2) time for evaluation
+    The goal of this experiment is to find out the scalability of surrogate models. Compositional models build faster but could be not accurate enough. The GausionProcess regression properties are opposite - good surface approximation requires much time. 
 
-    Usecases: GausianModel, GausianModel + Gradient, GausianModel + random forest, 
+    For evaluation scalability property for the compositional model, was selected highly multimodal DTLZ1 problem. Problem dimensionality is fixed and scale objectives.
 
-    Scale: objectives - 2,4,8,10; params - 2,4,8,10
+
+
+    % For evaluation scalability property for the compositional model, problem XXX was selected.
+
+    % Objectives: 1) detect iterative improvement, a convergence of the primary metric 2) time for evaluation
+
+    % Usecases: GausianModel, GausianModel + Gradient, GausianModel + random forest, 
+
+    % Scale: objectives - 2,4,8,10; params - 2,4,8,10
 
     % ! [ Hypermapper baseline; X - objectives Y - p-distance/time]
 
@@ -321,28 +420,14 @@ The quality of the results obtained with X was similar to the results obtained w
 
 consume an inordinate amount of time.
 
-% \paragraph{Neuroevolution of augmenting topologies}
-%  *Training Neural Networks (especially deep ones) is hard and has many issues (non-convex cost functions - local minima, vanishing and exploding gradients etc.).
-
-%  Training Neural Networks (NNs) with Genetic Algorithms (GAs) is not only feasible, there are some niche areas where the performance is good enough to be used frequently. A good example of this is Neuroevolution of augmenting topologies or NEAT, which a successful approach to generating controllers in simple environments, such as games.
-
-%  In the more general case though, the approach does not scale well to large, deep networks with many parameters to tune.
-
-%  Genetic algorithms and other global searches for optimal parameters are robust in ways that gradient-based algorithms are not. For instance, you could train a NN with step function activations, or any other non-differentiable activation functions. They have weaknesses elsewhere. One thing relevant in the case of GAs used for NNs, is that weight parameters are interchangeable in some combinations but heavily co-dependent in other combinations. Merging two equally good neural networks with different parameters - which you would do in cross-over in a GA - will usually result in a third network with poor performance. NEAT's success is partially in finding a way to address that issue by "growing" the NN's connections and matching them up between similar neural networks.
-
-%  Gradient-based approaches are much more efficient. In general, and not just in domain of NNs, if you can calculate gradient of a function with respect to parameters, then you can find optimal parameters faster than most other optimising techniques. An accurate gradient guarantees at least a small improvement from a single evaluation, and most other optimisers fall into a generate-and-retry paradigm which cannot make that kind of guarantee. The weakness of tending to find local optima has turned out not be a major hindrance for the loss functions in NNs, and has been tackled with some degree of success using extensions to basic gradient descent such as momentum, RPROP, Adam etc.
-
-%  In practice on a large multi-layer network, gradient methods are likely orders of magnitude faster than GA searches such as NEAT for finding network parameters. You won't find any GA-trained CNNs that solve ImageNet, or even MNIST, where the GA has found the network weights unaided. However, GAs, or at least some variants of them, are not 100'\%' ruled out. For instance this 2017 blog reviews recent papers including Large-Scale Evolution of Image Classifiers which explores using GAs to discover NN hyperparameters which is an important task in machine learning, and not very tractable using gradient-based methods.
-% Test problems  
-% Experimental setup
-% Results
 % Discussion
-
-
 
 % non-separable
 % or have a deceptive fitness landscape
 
+% However, GAs, or at least some variants of them, are not 100'\%' ruled out.
+
+% +’, ’−’ and ’≈’, which indicate that the result is significantly better, significantly worst and statistically similar to the result in the control column, respectively. 
 
 
 % On the left side the learning curve of a naive Bayes classifier is shown for the digits dataset. Note that the training score and the cross-validation score are both not very good at the end. However, the shape of the curve can be found in more complex datasets very often: the training score is very high at the beginning and decreases and the cross-validation score is very low at the beginning and increases. On the right side we see the learning curve of an SVM with RBF kernel. We can see clearly that the training score is still around the maximum and the validation score could be increased with more training samples.

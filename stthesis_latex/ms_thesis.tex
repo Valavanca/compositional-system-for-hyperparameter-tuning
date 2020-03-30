@@ -9,7 +9,9 @@
 \usepackage{cite}
 \usepackage[acronym]{glossaries}
 \usepackage[most]{tcolorbox}
-\usepackage{svg}
+
+\makeglossaries
+\input{content/glossary.tex}
 
 \newcommand{\todor}[1]{\todo[color=green,inline,size=\small]{Reviewer: #1}}
 \newcommand{\todoy}[1]{\todo[color=yellow,size=\small]{Oleksandr: #1}}
@@ -43,34 +45,21 @@
     
     \bibliographystyle{alpha}
     \bibliography{content/bibliography.bib}
+
     % must be invoked for correct page numbering in the appendix and all lists
     \backmatter
     
+
     \appendix
     
     \chapter{Appendix}
     \section{Additional Information}
-        % % ==== Figure
-        % \begin{figure}
-        %     \centering
-        %     \includegraphics[width=\textwidth]{content/images/activity_workflow}
-        %     \caption[Workflow 1]{Dynamic sampling plan with the surrogate model portfolio}
-        %     \label{fig:workflow_1}
-        % \end{figure}
-
-        % % ==== Figure
-        % \begin{figure}
-        %     \centering
-        %     \includegraphics[width=\textwidth]{content/images/simplify_activity_workflow}
-        %     \caption[Workflow 2]{Dynamic sampling plan with the surrogate model portfolio}
-        %     \label{fig:workflow_2}
-        % \end{figure}
-
     \section{More Important Information}
     \lipsum[1] 
     
+    \printglossary[title=Special Terms, toctitle=List of terms]
+    \printglossary[type=\acronymtype,style=long]
+    \printglossaries
 
-    % \printglossary[title=Special Terms, toctitle=List of terms]
-    %\printglossary[type=\acronymtype,style=long]
 
 \end{document}
