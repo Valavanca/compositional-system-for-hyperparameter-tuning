@@ -22,7 +22,7 @@ jobs:
       - name: move pdf
         run: |
           mkdir public
-          mv thesis.pdf public/thesis.pdf
+          mv ./stthesis_latex/ms_thesis.pdf public/thesis.pdf
           ls
           echo "check folder"
           ls public
