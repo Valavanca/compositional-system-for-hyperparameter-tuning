@@ -12,12 +12,13 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@master
         with:
-          root_file: thesis.tex
+          root_file: ./ms_thesis.tex
+          working_directory: stthesis_latex/
       - name: upload
         uses: actions/upload-artifact@v1
         with:
-          name: pdf
-          path: ./thesis.pdf
+          name: ms_thesis
+          path: ./stthesis_latex/ms_thesis.pdf
       - name: move pdf
         run: |
           mkdir public
