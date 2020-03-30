@@ -12,10 +12,35 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@master
         with:
-          root_file: ms_thesis.tex
+          root_file: ./ms_thesis.tex
           working_directory: stthesis_latex/
-      - name: upload compiled pdf
+      - name: upload
         uses: actions/upload-artifact@v1
         with:
-          name: ms_thesis.pdf
+          name: ms_thesis
           path: ./stthesis_latex/ms_thesis.pdf
+      - name: move pdf
+        run: |
+          mkdir public
+          mv thesis.pdf public/thesis.pdf
+          ls
+          echo "check folder"
+          ls public
+          cat > public/index.html <<EOL
+          <!doctype html>
+          <html>
+            <head>
+              <title>GitHub Pages deployed!</title>
+            </head>
+            <body>
+              <p>GitHub Pages with <strong>${{ github.sha }}</strong> commit ID has been deployed through <a href="https://github.com/marketplace/actions/github-pages">GitHub Pages action</a> successfully.</p>
+            </body>
+          </html>
+          EOL
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v1
+        with:
+          target_branch: gh-pages
+          build_dir: public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
