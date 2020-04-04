@@ -13,8 +13,8 @@
             \item[Surrogate type] These criteria describe extrapolation models and composition strategy on how to combine these models. The variability indicates that the surrogate model could be exchangeable and be selected for a specific problem. The extensibility for surrogate means the ability to grows and improve general extrapolations for a particular problem.
             \item[Optimization] The Algorithm applied to finds optimal points in the search space. The architecture of an optimization algorithm and surrogate model could be tightly coupled (\gls{osi}) when a surrogate model is nested into optimization algorithm or perform flat architecture with alternate direct usage \gls{aso} \cite{FigueiraA14}.
             \item[Scalability] Mentioned dimensionality of problems that were applyed to analyze the performance of the algorithm.
-            \item[Mixed search sapce] Parameter tuning with categorical and integer variables
-            \item[Multi-point proposal]  
+            \item[Mixed search space] Parameter tuning with categorical and integer variables
+            \item[Multi-point proposal] Property to yield the required number of multi-objective solutions 
         \end{description}
 
         % ! picture of ASO and OSI
@@ -52,14 +52,17 @@
         \paragraph{BRISE 2.0} \cite{Pukhkaiev19} is a software product line for parameter tuning. The core topic of their approach are extensibility and variability with key features such as 1) A \emph{repeater} that automatically decides on the number of repetitions needed to obtain the required accuracy for each configuration. 2) \emph{Stop condition} which validates a solution received from the model and decides, whether to stop the experiment. 3) Connection of a sampling plan and model prediction validity that provide \emph{flexible sampling plan}. The main advantage of this sampling plan that it is requires less initial knowledge about the optimization problem.
         Extrapolation model for parameter prediction is exchangeable and combines surrogate and optimization strategy in each implementation. Several general models such as polynomial regression surrogate with local search and Bayesian optimization with bandit-based methods strategy(BOHB \cite{FalknerBOHB}) are implemented.  However, the models lack variability and should be designed from scratch for a new domain-problem.
 
-
         % ----------------         SMAC
         \paragraph{SMAC} Sequential Model-based Algorithm Configuration (SMAC)\cite{HutterHL11, smac-2017} it is a framework for parameter tuning with Bayesian Optimization in combination with a simple racing mechanism on the instances to decide which of two configurations performs better.
         SMAC adopted a random forest model and Expected Improvement (EI) to model a conditional probability. It applies a local search with several starting points to picks configurations with a maximal value of EI. These points improve the exploration possibilities of SMAC on search space with higher uncertainty and an optimal value of the objective mean. 
         An interesting feature of SMAC is the support to terminate unfavourable evaluations that are slowing down the optimization process. However, SMAC is limited to single-criteria optimization and uses a predefined sampling plan.
-        
-        
 
+        % ----------------         Hypermapper
+        \paragraph{Hypermapper 2.0} Luigi Nardi et al. \cite{nardi2019practical} presented a multi-objective black-box optimization framework that solves complex parameter tuning problem with mixture search space, expensive evaluation and feasibility constrain.
+        The proposed approach could be classified as direct indicator based algorithms with constraints validation. During this type of optimization, fitted several identical individual models for each objective and then performed single objective optimization on aggregation from all these models. Authors went more forth and extended this idea to predict no feasible configurations with the extra surrogate model.
+        
+        The \emph{Nypermapper 2.0} based their surrogate on the random forest that combines several weak regressors on a subset of samples to yield accurate regression and effective classification models. After scalarizing values from models, apply Bayesian optimization (BO) method to find an optimal value.  Since using only one weight vector would only find one point on the Pareto-optimal front, the weight vector is chosen randomly at each iteration, ensuring that multiple points on the Pareto-optimal front are found. Key features of their approach are the possibility to use prior knowledge, support real variables, feasibility prediction, and excellent final adaptation of implementation to embedded devices. For an explored benchmarks, the authors reported that HyperMapper 2.0 provides better Pareto fronts corresponded to state-of-the-art baselines, with better or competitive quality and with considerable savings evaluation budget.
+        
 
     % ------------------------------------------------          Algorithms
     \section{Model-based multi-objective algorithms}
@@ -86,67 +89,151 @@
 
 
         % ----------------         GALE
-        \paragraph{GALE: Geometric Active Learning for Search-Based Software Engineering} Krall et al.,\cite{KrallMD15} developed an algorithm that uses Principal components analysis (PCA) and active learning techniques to step-by-step approximation and evaluating the most informative solutions. The main feature of GALE is active learning in geometrically analysis perspective regions in search space to select most prospective candidates.
+        \paragraph{GALE: Geometric Active Learning for Search-Based Software Engineering} Krall et al.,\cite{KrallMD15} developed an algorithm that uses principal components analysis (PCA) and active learning techniques to step-by-step approximation and evaluating the most informative solutions. Authors notice that MOEAs not suitable for expensive multi-objective problem because they push a set of solutions towards an outer surface of better candidates that cost many function evaluations. The fundamental idea of the proposed approach is to make solution smaller and more informative with information from PCA. Dividing functional landscape to small regions and evaluate only the most informative samples from the region, as a result, save functions evaluations as only a few points from the region are evaluated. Drawback of this approach lay in static implementation with MOEA/D.     
 
-        % ----------------         Hypermapper
-        \paragraph{Hypermapper} Luigi Nardi et al. \cite{nardi2019practical} presented a multi-objective black-box optimization tool. Some features of their approach are prior knowledge, categorical variables, feasibility, and excellent adaptation to embedded devices. They train separate models, one for each objective and constraints. Then merge it with random scalarization (Tchebyshev/ Linear scalarization). Next, the Bayesian model leads local search algorithm to explore Pareto optimal points. 
 
-        % ?? ----- GP-DEMO
-        % GP-DEMO \cite{MlakarPTF15} authors present algorithm is based on comparing solutions under uncertainty. Using this confidence interval, we define new dominance relations that take into account this uncertainty and propose a new concept for comparing solutions under uncertainty that requires exact evaluations only in cases where more certainty is needed.
-
-        \begin{table}[]
-            \caption{Related work: frameworks and algorithms\label{related_w}}
-            \centering
-            \resizebox{\textwidth}{!}{%
-            \begin{tabular}{@{}llllll@{}}
-                                                & Surrogate                             & Optimization Algorithm      & Sampling plan & Scaling of test problems & Year \\  \hline
-            Distributed Surrogates (EASDS) & Radial Basis Function Networks, clustering & NSGA-II                                            & Static: Rand & 2 obj & 2007 \\
-            Hybrid surrogate-based approach     & Ensemble of Support Vector Machines   & NSGA-II                     & Static: lhs   & 2 obj                    & 2013 \\
-            mlrMBO                              & Regression model(s)                   & Single-/Multi-opt algorithm & Static        & 2 obj                    & 2017 \\
-            BRISE 2.0                           & Polinomial regression, BOHB           & local search, BOHB          & Dinamic       & 1 obj                    & 2018 \\
-            SMAC                                & Random forests + Expected Improvement & Local search                & Static        & 1 obj                    & 2017 \\
-            Parallel Surrogate Search (MOPLS-N) & Radial Basis Function                 & Tabu and local search       & Static        & 2 obj                    & 2019 \\
-            GALE                                & PCA-approximation + linear models     & MOEA/D                      & Static        & 2-8 obj                  & 2015 \\
-            Hypermapper                    & Randomized decision forests                & Scalarizations + Gaussian Processes + Local search & Static       & 2 obj & 2019 \\
-            ParEGO                              & Kriging/Gaussian process regression   & scalarizations + EGO        & Static: lhs   & 2-3 obj                  & 2006 \\
-            Hierarchical surrogates             & Dinamic hierarchical surrogate        & EA                          & static        & 1 obj                    & 2019 \\
-            BOHB                                & tree-structured Parzen estimator      & Bandit learning             & static        & 1 obj                    & 2018
-            \end{tabular}%
-            }
+        % ===== TABLE
+    \begin{table}[]
+        \centering
+        \caption{The comparison of related approaches. The component behaviour: S - static, V - variability, E-extensibility, D - dynamic}
+        \label{tab:my-table}
+        \resizebox{\textwidth}{!}{%
+        \begin{tabular}{@{}|l|c|c|c|c|c|c|c|c|@{}}
+        \toprule
+        \multicolumn{1}{|c|}{\multirow{2}{*}{Approach}} &
+        \multirow{2}{*}{Multi-objective} &
+        \multirow{2}{*}{Sampling plan} &
+        \multicolumn{2}{c|}{Surrogate} &
+        \multirow{2}{*}{Optimization} &
+        \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Mixed \\ search space\end{tabular}} &
+        \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Multi-point \\ proposal\end{tabular}} &
+        \multirow{2}{*}{Scalability} \\ \cmidrule(lr){4-5}
+        \multicolumn{1}{|c|}{} &
+        &
+        &
+        \begin{tabular}[c]{@{}c@{}}Extrapolation \\ models\end{tabular} &
+        \begin{tabular}[c]{@{}c@{}}Composition \\ strategy\end{tabular} &
+        &
+        &
+        &
+        \\ \midrule
+        mlrMBO &
+        \cmark &
+        static &
+        E &
+        \multicolumn{2}{c|}{V} &
+        \cmark &
+        \cmark &
+        \cmark \\ \midrule
+        BRISE 2.0 &
+        \xmark &
+        flexible &
+        \multicolumn{3}{c|}{V} &
+        \xmark &
+        \cmark &
+        \cmark \\ \midrule
+        SMAC &
+        \xmark &
+        static &
+        S &
+        S &
+        S &
+        \cmark &
+        \xmark &
+        \cmark \\ \midrule
+        Hypermapper 2.0 &
+        \cmark &
+        flexible &
+        S &
+        S &
+        S &
+        \cmark &
+        \xmark &
+        \cmark \\ \midrule
+        ParEGO &
+        \cmark &
+        static &
+        S &
+        S &
+        S &
+        \xmark &
+        \xmark &
+        \cmark \\ \midrule
+        \begin{tabular}[c]{@{}l@{}}Distributed Surrogates, \\ EASDS\end{tabular} &
+        \cmark &
+        static &
+        S &
+        E &
+        S &
+        \xmark &
+        possible &
+        \xmark \\ \midrule
+        Hybrid surrogate &
+        \cmark &
+        static &
+        S &
+        E+D &
+        V &
+        \xmark &
+        possible &
+        \cmark \\ \midrule
+        Hierarchical surrogates &
+        \xmark &
+        static &
+        E &
+        V &
+        V &
+        \xmark &
+        possible &
+        \xmark \\ \midrule
+        \begin{tabular}[c]{@{}l@{}}Parallel surrogates, \\ MOPLS\end{tabular} &
+        \cmark &
+        static &
+        S &
+        E &
+        S &
+        \xmark &
+        \cmark &
+        \xmark \\ \midrule
+        GALE &
+        \cmark &
+        static &
+        S &
+        E &
+        S &
+        \cmark &
+        possible &
+        \cmark \\ \bottomrule
+        \end{tabular}%
+        }
         \end{table}
 
     % --------------------------------------------------------------------------------------------
     % ------------------------------------------------          Conclusions
     % --------------------------------------------------------------------------------------------
     \section{Conclusions}
-
-        To our knowledge, there exists no research that studies a complex combination of the surrogate model and how it affects on solution quality.  Fixed optimization components can make general optimization ineffective in changeable problems. Appropriate surrogate construction methodology or combination of multiple solving algorithms could improve the final solution. The significant works analyze improving surrogate architecture as a promising direction. Regardless they operate with a limited amount of models and implementation is inflexible. Moreover, almost none of the approaches examined the size of the surrogate sample set. 
-        Some of the important conclusions from related work \cite{SoftSurvey}:
-        \begin{enumerate}
-            \item The optimization result could be improved with a precise selection of surrogate architecture
-            \item Most of the algorithms were based on dominance-based evolutionary algorithms
-            \item Most of the algorithms solved the problems with no more than three objectives and limited decision variables
-            \item Sampling plan is static
-        \end{enumerate}
+        
 
 
-        After an analysis we can define research gaps such as:
-        \begin{description}
-            \item[Surogate combination] Previous researches have shown that the selection of the surrogate model can profoundly affect the quality of the solution from the optimization algorithm. \cite{LuST19} mentioned that surrogate is domain-specific, and the same technique might perform differently on different problems. Therefore, a technology that allows to combine and scale multiply models flexibly is necessary.
-            \item[Sampling plan] Independent sampling plan from a problem can lead the search in the wrong directions. This problem may occur because the surrogate model may be under fitted or overfitted, and the result is a waste of samples and resources.
-        \end{description}
-
-        As shown before, surrogate or model-based optimization suited for an expensive black-box problem. Nevertheless, this approach also has open questions and limitations:
+        As shown before, surrogate or model-based optimization suited for an expensive black-box problem. A summary of the related work is given in Table \ref{tab:my-table}.  Nevertheless, this approach also has open questions and limitations:
         \begin{itemize}
-            \item \emph{Surrogate is domain-specific.} For improving and reach the best prediction, we should know in cross-grain underlying objective surface to apply specific surrogate. Universal surrogates can gain optimal results but not the most reliable possible \cite{abs181207958, LuST19}.
             \item Multi-objective hypothesis. A \emph{limited amount} of surrogate models can handle multi-dimensional parameter space. Also, scaling is an open research question for existing multi-output surrogate models.
-            \item Quality of prediction depends on \emph{how much samples} do we have for a specific type of surrogate. There is a trade-off between reducing sample size and maximize the quality of prediction. Overfitting, as well as Underfitting, can guide optimization in the wrong direction.
-            \item Multi-objective optimizations with \emph{categorical features} are standard in engineering practices. Parameter tuning with that type of space is not trivial.
-            \item Often Optimization algorithm and surrogate model are very \emph{tightly coupled}. Profoundly connected implementation suitable for a specific type of problem and require prior knowledge about a problem. Reimplementing these algorithms for each usage scenario becomes timeconsuming and error-prone. 
+            \item \emph{Surrogate is domain-specific.} For improving and reach the best prediction, we should know in cross-grain underlying objective surface to apply specific surrogate. Universal surrogates can gain optimal results but not the most reliable possible \cite{abs181207958, LuST19}.
+            \item Quality of prediction depends on \emph{how many samples} do we make for a specific type of surrogate. There is a trade-off between reducing the sample size and maximizing the quality of the prediction. Overfitting, as well as underfitting, can guide optimization in a wrong direction.
+            \item Often Optimization algorithm and surrogate model are very \emph{tightly coupled}. This dependence on one another makes the general approach biased against specific problems. Reimplementing these algorithms for each usage scenario becomes timeconsuming and error-prone. 
         \end{itemize}
 
+        To our knowledge, there are exists no research that studies complex combinations of surrogate model and how they affect a solution quality. After the analysis of relayed work, we can define research gaps such as:
+        \begin{description}
+            \item[Surogate combination] Previous researches have shown that the selection of the surrogate model can profoundly affect the quality of the optimization solution. Also, they mentioned that surrogate is domain-specific, and the same technique might perform differently on different problems \cite{LuST19, HybridSurrRCG}. The overall research gaps of the surrogate model's flexibility might be divided into the following subproblems:
+            \begin{enumerate}
+                \item The dynamic combination of different single-criteria models to solve the multicriteria problem. It must be feasible to substitute the type of nested surrogate model for an arbitrary criterion component. This could provide more variability for the surrogate model to describe arbitrary optimization problems. Therefore, a technology that allows the surrogate compositional model is necessary.
+                \item In the investigated works conclude that the variants in the choice of the model improved the final result. Unfortunately, most authors used only one type of model with various hyperparameters. So there is a necessity for a portfolio with the surrogate models.
+            \end{enumerate}
+            \item[Sampling plan] A static plan requires additional knowledge of the surface of the problem, which is usually not possible. Also, arbitrary decisions of the sample size could be the reason which leads to inaccurate models and further wrong results. This problem may occur because the surrogate model may be overfitting or underfitting, and the result is a waste of samples and resources. 
+        \end{description}
 
-
+        % --------------------------------------- Scope of work
         \subsection{Scope of work}
         In this thesis, we focus on improving the surrogate models for the multi-objective problem. Surrogate-based optimization has proven effective in many aspects of engineering and in applications where data is expensive, or difficult, to evaluate. While other methods also exist, we select \gls{moea} as main solver because it can apply to a wide range of problems and gives a broad understanding of how Pareto-front might look. Problem type is expensive, multi-objective, derivative-free/black-box system without constraints.
 
@@ -166,9 +253,14 @@
             \item Backwards computationally with sing-objective parameter tuning.
         \end{enumerate}
 
-        Also optimization and composition of multi-objective solvers is a rapidly expanding area of research and a full survey of that work is beyond the scope of this thesis.
+        % Also optimization and composition of multi-objective solvers is a rapidly expanding area of research and a full survey of that work is beyond the scope of this thesis.
 
 
+
+        % --------------------------------------------------------------------------
+        % Fixed components can make the optimization of changeable problems ineffective. 
+        % Appropriate surrogate construction methodology or combination of multiple solving algorithms could improve the final solution. The significant works analyze that compositional architecture with several surrogate models is a promising direction to improve the multi-objective solution. 
+        % Moreover, almost none of the approaches examined the size of the surrogate sample set. 
 
         % !There is a clear need for a method to provide and distribute ready-to-use implementations of optimization methods and ready-to-use benchmark and real-world problems. These modules should be freely combinable. Since the above mentioned issues are not constrained to evolutionary optimization a candidate surrogates solution should be applicable to a broader range of search algorithms
 
