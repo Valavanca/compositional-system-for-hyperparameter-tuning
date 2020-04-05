@@ -11,26 +11,54 @@
         \begin{description}
             \item[Sampling plan] Specify the size of samples set to build a surrogate model and sampling strategy that could pick this samples. Sampling plan could be static when decisions about samples done priory or could be dynamic when decisions to take samples from the plan depends on optimization success.
             \item[Surrogate type] These criteria describe extrapolation models and composition strategy on how to combine these models. The variability indicates that the surrogate model could be exchangeable and be selected for a specific problem. The extensibility for surrogate means the ability to grows and improve general extrapolations for a particular problem.
-            \item[Optimization] The Algorithm applied to finds optimal points in the search space. The architecture of an optimization algorithm and surrogate model could be tightly coupled (\gls{osi}) when a surrogate model is nested into optimization algorithm or perform flat architecture with alternate direct usage \gls{aso} \cite{FigueiraA14}.
+            \item[Optimization] The Algorithm applied to finds optimal points in the search space. The architecture of an optimization algorithm and surrogate model could be tightly coupled (\gls{osi}) when a surrogate model is nested into optimization algorithm or perform flat architecture with alternate direct usage \gls{aso} \ref{fig:surr_opt_architecture}.
             \item[Scalability] Mentioned dimensionality of problems that were applyed to analyze the performance of the algorithm.
             \item[Mixed search space] Parameter tuning with categorical and integer variables
             \item[Multi-point proposal] Property to yield the required number of multi-objective solutions 
         \end{description}
 
-        % ! picture of ASO and OSI
+        % -------------------------------------- ASO and OSI architecture
+        \begin{figure}
+            \centering
+            \begin{subfigure}{\textwidth}
+                \centering
+                \begin{subfigure}{0.45\textwidth}
+                    \centering
+                    \includegraphics[height=3cm]{content/images/utility/architecture_aso}
+                    \caption{Optimization with Simulation-based Iterations (OSI)}
+                    \label{fig:surr_opt_architecture_aso}
+                \end{subfigure} 
+                \begin{subfigure}{0.45\textwidth}
+                    \centering
+                    \includegraphics[height=3cm]{content/images/utility/architecture_iso}
+                    \caption{Alternate Simulation-Optimization (ASO)}
+                    \label{fig:surr_opt_architecture_iso}
+                \end{subfigure} 
+            \end{subfigure} 
 
-        % ! picture SMBO
+            \caption[Example of a possible combination the optimization algorithm with the surrogate model.]{Example of a possible combination the optimization algorithm with the surrogate model \cite{FigueiraA14}. }
+            \label{fig:surr_opt_architecture}    
+        \end{figure}
+
 
         Almost all related works of parameter tuning could be categorized as \gls{smbo}\cite{JonesSW98}.
-        The general \gls{smbo} looks as follows:
+        The general \gls{smbo} looks as follows (Figure \ref{fig:sequential_mbo}):
         \begin{enumerate}
             \item The initial samples plan of evaluation points
-            \item Fit a regression model to provide a hypothesis on the relation between parameters and objectives
-            \item Use the build surrogate model as a parameter for optimization strategy. Generate solutions, new promising point
-            \item Evaluate the new point with the black-box function and add it to the samples
+            \item Build a regression model to provide a hypothesis on the relation between parameters and objectives
+            \item Use the build surrogate model as a parameter for optimization strategy. The solutions from the optimization algorithm are a new promising point for evaluation.
+            \item Evaluate the new predicted point and add it to the existing samples.
+            \item If stop criteria are not met, repeat optimization with updated samples set.
         \end{enumerate}
         We will present an overview of available works for model-based multi-objective optimization. Beginning with an overview of the project for model-based optimization (mlrMBO), and continue with related algorithms including various optimization improvements.
 
+        % ==== Sequential MBO
+        \begin{figure}
+            \centering 
+            \includegraphics[width=8cm]{content/images/utility/sequential_mbo}
+            \caption[General Sequential model-based optimization]{General Sequential model-based optimization (\Gls{smbo})} 
+            \label{fig:sequential_mbo} 
+        \end{figure}
 
         % Note that this approach means that
 
@@ -43,7 +71,7 @@
         There are a lot of different projects that can perform multi-objective optimization. Frameworks provide multiple multi-objective algorithms, performance metrics, build in test problems, and extra tools such as plotting and benchmarks. Some frameworks focus on efficient calculations and parallelization\cite{francesco_biscani_2019}, other on implementing modern multi-objective algorithms \cite{benitezhidalgo2019jmetalpy, TianPlatEMO} or supporting plenty model-based optimization algorithms \cite{BischlmlrMBO}.
 
         % ----------------         mlrMBO
-        \paragraph{mlrMBO}\cite{BischlmlrMBO} is a modular framework for model-based optimization of expensive black-box functions. MlrBO extends the \gls{smbo} procedure to a multi-objective problem with mixed and hierarchical parameter spaces. Modular structure and integration with \emph{mlr} library allows using all regression models and apply compositional techniques such as bagging and ensembles. Authors implemented 4 different model-based multi-objective algorithms that distinguish in 3 classes: 1) Scalarization based algorithms that optimize a scalarize version of the black-box functions (\hyperref[alg:ParEGO]{ParEGO}). 2) Pareto based algorithms that build individual models for each objective and complete multi-objective optimization (MSPOT \cite{ZaeffererBNWE13}). 3) Direct indicator based algorithms that also fit individual models, but perform a single objective optimization on an aggregation of all models (SMS-EGO \cite{inproceedings}, $\epsilon$-EGO \cite{WagEGOe}).
+        \paragraph{mlrMBO}\cite{BischlmlrMBO} is a modular framework for model-based optimization of expensive black-box functions. MlrBO extends the \gls{smbo} procedure to a multi-objective problem with mixed and hierarchical parameter spaces. Modular structure and integration with \emph{mlr}\footnote{{mlr}: Machine Learning in R. https://mlr.mlr-org.com/} library allows using all regression models and apply compositional techniques such as bagging and ensembles. Authors implemented 4 different model-based multi-objective algorithms that distinguish in 3 classes: 1) Scalarization based algorithms that optimize a scalarize version of the black-box functions (\hyperref[alg:ParEGO]{ParEGO}). 2) Pareto based algorithms that build individual models for each objective and complete multi-objective optimization (MSPOT \cite{ZaeffererBNWE13}). 3) Direct indicator based algorithms that also fit individual models, but perform a single objective optimization on an aggregation of all models (SMS-EGO \cite{inproceedings}, $\epsilon$-EGO \cite{WagEGOe}).
         Special features of their framework are multi-point proposal prediction on each iteration. However, it does not provide a combination of different surrogate models into one model.
        
         % ?General characteristics are that they have multiple algorithms on each type of optimization and additional features that they provide. Usually, a surrogate model is predefine and injected into some algorithm for decision making.

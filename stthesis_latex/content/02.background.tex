@@ -1,41 +1,41 @@
 \chapter{Background}\label{sec:background}
 
-    \begin{blockquote}
-        \paragraph{Intent:} General background information needed to follow the terms and methods used in this thesis. 
+    % \begin{blockquote}
+    %     \paragraph{Intent:} General background information needed to follow the terms and methods used in this thesis. 
                 
-        Structure:
-        \begin{description}
-            \item[1. Parameter tuning] Parameter tuning of a black-box
-                \begin{enumerate}
-                    \item $f(Parameter) = Objective$ 
-                    \item Goal is optimize $f$
-                    \item Problem: Optimization of multiple objectives
-                \end{enumerate}
-            \item[2. Multi-objective optimization] General definition. Pareto front and None-dominated solution
-                \begin{enumerate}
-                    \item What is a multi-objective solution?
-                    \item How to compare solutions? $\rightarrow$ Types of metrics
-                    \item How to solve? $\rightarrow$ Scalarizing, MOEA, Random
-                    \item Problem: Reduce evaluations $\rightarrow$ Surrogate optimization, MBMO
-                \end{enumerate}
-            \item[3. Surrogate optimization] Approach for reducing evaluation count
-                \begin{enumerate}
-                    \item Intro. Cons and Pons
-                    \item Types of a surrogate model in a MO-problem (Model of scalarization, MO-model, Replicated MO-model, Compositional MO-model). Taxonomy
-                    \item Surrogate assistance for MO parameter tuning $\rightarrow$ Reusable/scalable components for optimization $\rightarrow$ Problem: Scalability of a surrogate model.                  
-                    \item Surrogate model is domain-specific $\rightarrow$ Analyze multiple surrogates $\rightarrow$ Surrogate portfolio [RQ1 \ref{RQ1}]
-                    \item Sampling plan. Build a surrogate model. Quality of prediction depends on the accuracy of a surrogate model  $\rightarrow$ Accuracy depends on a sample size $\rightarrow$ Sample size depends on surface type $\rightarrow$ Problem: Sample size is static. [RQ2 \ref{RQ2}]
-                    \item Surrogates and MOEA are hard scalable 
-                \end{enumerate}
-            \item[4. Scope of work] Starting point of thesis
-                \begin{enumerate}
-                    \item Problem: Expensive black-box with multiple objectives
-                    \item Constraint: Evaluation budget
-                    \item Goal: Set of MO solutions closed to Pareto-front $\rightarrow$ 1.$Max$ Hypervolume, 2.$Min$ Points-Space, 3.$Max$ \% of None-Dominated points 
-                    \item Solution approach: Surrogate model(s) with MOEA
-                \end{enumerate}
-        \end{description}
-    \end{blockquote}
+    %     Structure:
+    %     \begin{description}
+    %         \item[1. Parameter tuning] Parameter tuning of a black-box
+    %             \begin{enumerate}
+    %                 \item $f(Parameter) = Objective$ 
+    %                 \item Goal is optimize $f$
+    %                 \item Problem: Optimization of multiple objectives
+    %             \end{enumerate}
+    %         \item[2. Multi-objective optimization] General definition. Pareto front and None-dominated solution
+    %             \begin{enumerate}
+    %                 \item What is a multi-objective solution?
+    %                 \item How to compare solutions? $\rightarrow$ Types of metrics
+    %                 \item How to solve? $\rightarrow$ Scalarizing, MOEA, Random
+    %                 \item Problem: Reduce evaluations $\rightarrow$ Surrogate optimization, MBMO
+    %             \end{enumerate}
+    %         \item[3. Surrogate optimization] Approach for reducing evaluation count
+    %             \begin{enumerate}
+    %                 \item Intro. Cons and Pons
+    %                 \item Types of a surrogate model in a MO-problem (Model of scalarization, MO-model, Replicated MO-model, Compositional MO-model). Taxonomy
+    %                 \item Surrogate assistance for MO parameter tuning $\rightarrow$ Reusable/scalable components for optimization $\rightarrow$ Problem: Scalability of a surrogate model.                  
+    %                 \item Surrogate model is domain-specific $\rightarrow$ Analyze multiple surrogates $\rightarrow$ Surrogate portfolio [RQ1 \ref{RQ1}]
+    %                 \item Sampling plan. Build a surrogate model. Quality of prediction depends on the accuracy of a surrogate model  $\rightarrow$ Accuracy depends on a sample size $\rightarrow$ Sample size depends on surface type $\rightarrow$ Problem: Sample size is static. [RQ2 \ref{RQ2}]
+    %                 \item Surrogates and MOEA are hard scalable 
+    %             \end{enumerate}
+    %         \item[4. Scope of work] Starting point of thesis
+    %             \begin{enumerate}
+    %                 \item Problem: Expensive black-box with multiple objectives
+    %                 \item Constraint: Evaluation budget
+    %                 \item Goal: Set of MO solutions closed to Pareto-front $\rightarrow$ 1.$Max$ Hypervolume, 2.$Min$ Points-Space, 3.$Max$ \% of None-Dominated points 
+    %                 \item Solution approach: Surrogate model(s) with MOEA
+    %             \end{enumerate}
+    %     \end{description}
+    % \end{blockquote}
 
     This chapter presents general background information needed to follow the terms and methods used in this thesis. 
 
@@ -43,11 +43,17 @@
     % ------------------------------------------------        Parameter tuning
     % --------------------------------------------------------------------------------------------
     \section{Parameter tuning}
-        We start by introducing a parameter tuning problem. We consider a fitness function as a black-box $f : \mathbb{S} \rightarrow \mathbb{R}$ with parameter and objective spaces. All feasible combinations of parameters define a parameter space which is intended to be a function input $\mathbb{S}$, and therefore all possible function outputs are define as an objective space or $f(x), x \in \mathbb{S}$. The minimization of the fitness function could be defined as follows:
+        We start by introducing a parameter tuning problem. We consider a fitness function as a black-box $f : \mathbb{S} \rightarrow \mathbb{R}$ with parameter and objective spaces. All feasible combinations of parameters define a parameter space which is intended to be a function input $\mathbb{S}$, and therefore all possible function outputs are define as an objective space or $f(x), x \in \mathbb{S}$ (Figure \ref{fig:spaces}). The minimization of the fitness function could be defined as follows:
 
                 \[x^* = \underset{x \in \mathbb{S}}{\arg\min} f(x)\]
 
-            % ! figure
+        % ==== spaces
+        \begin{figure}
+            \centering 
+            \includegraphics[width=0.8\textwidth]{content/images/utility/spaces}
+            \caption[Example with a uniformly distributed points in the parameter space (left) with the corresponding values of these parameters in the objective space]{Example with a uniformly distributed points in the parameter space (left) with the corresponding values of these parameters in the objective space (right). As can be noted from the results, the optimization of both objectives ($f1$, $f2$) is contradictive.} 
+            \label{fig:spaces} 
+        \end{figure}
 
         The mapping of all points from the parameter space to the points in the objective space is called a fitness landscape. The task of the parameter tuning as an optimization task is to find optimal points on this surface. Depending on the type of a landscape, the optimization search often yields qualitatively different behaviour.
         The single criterion in the parameter tuning might not be sufficient to characterize the behaviour of the configuration space correctly. Therefore, multiple criteria have to be considered. Typical examples of such objectives are to enhance accuracy and performance or minimize runtime, error rate and energy. The parameter tuning process should improve the objectives of those in which none of the objectives can be improved without affecting another objective. By default, we consider minimization for all objectives. 
@@ -129,13 +135,13 @@
             For multi-objective optimization, an algorithm should produce a set of solutions that provide the optimal trade-off between the considered optimization objectives. Therefore, the performance comparison of \gls{moo} algorithms is based on their Pareto sets. In this study, four well-known metrics are used to quantify the performance of the algorithms.
             \begin{itemize}
                 \item \textbf{Hypervolume (HV).}\cite{Zitzler2000ComparisonOM} \textit{Convergence and distribution indicator.}
-                This metric represents the volume of the objective space which is covered by the individuals of non-dominated solutions which belong to the Pareto front. Two points delimit the volume: one point represents the reference point $r$ ($r \in R^m$) which is defined as the worst solution inside the objective space; another one represents the point which is proposed Pareto approximation $S$, for all $z \in S, z \prec r$. The hypervolume metric is defined as follows:
+                This metric represents the volume of the objective space which is covered by the individuals of non-dominated solutions which belong to the Pareto front (Figure \ref{fig:hypervolume}). Two points delimit the volume: one point represents the reference point $r$ ($r \in R^m$) which is defined as the worst solution inside the objective space; another one represents the point which is proposed Pareto approximation $S$, for all $z \in S, z \prec r$. The hypervolume metric is defined as follows:
 
                     \[HV(S,r) = \lambda_m(\bigcup\limits_{z \in S} [z;r])\]
 
                 where $\lambda_m$ is m-dimensional Lebesgue measure.    
                 Calculating the hypervolume indicator is a computationally expensive task. Furthermore, in case of a small number of dimensions and a low number of points, there are currently no known algorithms which might return the results fast enough for the use in most multi-objective algorithms due to computational complexity which is 
-                $\mathcal{O}(|\mathbb{S}|^{\frac{m}{2}}\log{|\mathbb{S}|}) $ \cite{BeumeFLPV09}.
+                $\mathcal{O}(|S|^{\frac{m}{2}}\log{|S|}) $ \cite{BeumeFLPV09}.
                 \item \textbf{Non-dominated Ratio (NDR).} \textit{Cardinality.} This metric is a ratio between the number of non-dominated points and the total number of the evaluated points.  Higher values are preferred to lower ones.
                 \item \textbf{Spacing \cite{Schott1995FaultTD}.} \textit{Distribution and spread.} Description of the distribution of Pareto points. As a wide range of similar metrics which are based on the distance to the nearest neighbour, spacing does not cover the holes in Pareto frontier and might compute the distribution in solution clusters.
                 \item \textbf{$\Upsilon$-metric (p-distance)}\cite{Martens13} \textit{Convergence} This metric is an average distance of a set of points in relation to the Pareto front. $\Upsilon$-metric is defined by
@@ -145,6 +151,26 @@
                 The lower the $\Upsilon (S)$, the closer the solutions of S are to the solutions of the Pareto-front. 
                 
             \end{itemize}
+
+            % -------------------------------------- Hypervolume
+            \begin{figure}
+                \centering
+                \begin{subfigure}{\textwidth}
+                    \begin{subfigure}{0.45\textwidth}
+                        \includegraphics[width=\textwidth]{content/images/utility/hypervolume}
+                        \caption{Higher hypervolume values may correspond to a better distribution of solutions or closeness to the Pareto frontier.}
+                        \label{fig:hypervolume_basic}
+                    \end{subfigure} 
+                    \begin{subfigure}{0.45\textwidth}
+                        \includegraphics[width=\textwidth]{content/images/utility/hypervolume_impr}
+                        \caption{Example of hypervolume improvement with a new non-dominated point z* in the solution set.}
+                        \label{fig:hypervolume_impr}
+                    \end{subfigure} 
+                \end{subfigure} 
+
+                \caption[Visualization of hypervolume metric for a bi-objective set of non-dominated points]{Visualization of hypervolume metric for a bi-objective set of non-dominated points.}
+                \label{fig:hypervolume}    
+            \end{figure}
  
     % ------------------------------------------------        Solving methods       -------------
         \subsection{Solving methods}
@@ -215,27 +241,10 @@
 
 
     % --------------------------------------------------------------------------------------------
-    % ------------------------------                    Scope of work       
-    \section{Scope of work}
-        In this thesis, we focus on improving the surrogate models for the multi-objective problem. Surrogate-based optimization has proven effective in many aspects of engineering and in applications where data is expensive, or difficult, to evaluate. While other methods also exist, we select \gls{moea} as main solver because it can apply to a wide range of problems and gives a broad understanding of how Pareto-front might look. Problem type is expensive, multi-objective, derivative-free/black-box system without constraints.
-
-        Design gap in optimization/parameter tuning lay in the quality of the surrogate model:
-            \begin{itemize}
-                \item Select proper surrogate model
-                \item Surrogate composition for multi-dimensional space
-                \item Sampling strategy
-                \item Surrogate validation
-            \end{itemize}
-
-        \paragraph{Goal:}
-        \begin{enumerate}
-            \item Find diverse solutions with minimal distance to real Pareto frontier.
-            \item Reduce the evaluation budget.
-            \item Develop modular architecture with extensibility with other frameworks. 
-            \item Backwards computationally with sing-objective parameter tuning.
-        \end{enumerate}
-
-        Also optimization and composition of multi-objective solvers is a rapidly expanding area of research and a full survey of that work is beyond the scope of this thesis.
+    % ------------------------------                    Discussion       
+    \section{Discussion}
+    The most methods for parameter tuning optimization are related to surrogate-based optimization. One of the main advantages of this approach is the speed of evaluation across the entire search space and possibilities to apply a broad range of optimization techniques. However, there are disadvantages, such as extra time to select and build this surrogate model. 
+    It would be desirable to have a way to combine several surrogate models which are samples- and domain-dependent.
 
 
     % General classification \cite{MlakarPTF15}:
