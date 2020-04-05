@@ -1,44 +1,42 @@
 \chapter{Concept}\label{sec:concept}
 
-    \begin{blockquote}
-        \paragraph{Intent:} General reminder and answer of RQ's
+    % \begin{blockquote}
+    %     \paragraph{Intent:} General reminder and answer of RQ's
         
-        Structure:
-        \begin{description}
-            \item[1. Surrogates models combinations] Surrogate model is not universal. Domain-specific $\rightarrow$ Surrogate model portfolio 
-                \begin{enumerate}
-                    \item Surrogate model is not universal. Domain-specific $\rightarrow$ \textbf{Surrogate model portfolio}
-                    \item Objectives have different complexity surface $\rightarrow$ Surrogate model is not universal $\rightarrow$ Describe objectives independently. \textbf{Heterogeneous/Composition surrogate model} 
-                \end{enumerate}
+    %     Structure:
+    %     \begin{description}
+    %         \item[1. Surrogates models combinations] Surrogate model is not universal. Domain-specific $\rightarrow$ Surrogate model portfolio 
+    %             \begin{enumerate}
+    %                 \item Surrogate model is not universal. Domain-specific $\rightarrow$ \textbf{Surrogate model portfolio}
+    %                 \item Objectives have different complexity surface $\rightarrow$ Surrogate model is not universal $\rightarrow$ Describe objectives independently. \textbf{Heterogeneous/Composition surrogate model} 
+    %             \end{enumerate}
                   
-            \item[2. Dynamic sampling plan] Use sampling plan while surrogate is not valid
-                \begin{enumerate}
-                    \item Surrogate Validation. Stages and thresholds
-                    \item Metrics
-                \end{enumerate}
+    %         \item[2. Dynamic sampling plan] Use sampling plan while surrogate is not valid
+    %             \begin{enumerate}
+    %                 \item Surrogate Validation. Stages and thresholds
+    %                 \item Metrics
+    %             \end{enumerate}
 
-            \item[3. Scalability] Compositional surrogates in many-objective space
-                \begin{enumerate}
-                    \item Problem: Random solver on high dimensional space $\rightarrow$ Solution: Light surrogates 
-                    \item Solving problem in subset of dimensions
-                    \item Categorical parameters*
-                \end{enumerate}
+    %         \item[3. Scalability] Compositional surrogates in many-objective space
+    %             \begin{enumerate}
+    %                 \item Problem: Random solver on high dimensional space $\rightarrow$ Solution: Light surrogates 
+    %                 \item Solving problem in subset of dimensions
+    %                 \item Categorical parameters*
+    %             \end{enumerate}
 
-            \item[4. Discussion] General Conclusions. Infill criteria for Pareto-optimal solutions
-        \end{description}
-    \end{blockquote}
+    %         \item[4. Discussion] General Conclusions. Infill criteria for Pareto-optimal solutions
+    %     \end{description}
+    % \end{blockquote}
 
     \epigraph{``All models are wrong but some are useful``}{\textit{– George Box}}
 
-    This section presented a general idea of the improvement in the surrogate-based optimization for black-box function. 
+    This section presented a general idea of a improvement in the surrogate-based optimization for black-box function. 
 
-    The usual problem is a trade-off in producing the best possible multi-objective solution with less effort. Because we consider system expensive to evaluate, an effort first of all means evaluated examples. Each of these evaluations can require much time, energy, or other resources. That is why the main comparison criteria for the approach is solving the multi-objective problem with a limited evaluation budget. %! change quality to count 
+    The usual optimization problem is a trade-off in producing the best possible multi-objective solution with less effort. Because we consider expensive function, an optimization effort, first of all, means evaluation budget. Each of these evaluations can require much time, energy, or other resources. That is why the main multi-objective comparison criteria are convergence to the Pareto frontier with a limited evaluation budget. It also takes into account the ratio of non-dominant solutions to the total number of measured configurations and their distribution on the Pareto frontier. In this thesis, under solving a multi-objective problem, we intend to find a set of none-dominated points that cover a wide range of objectives values and close as possible to the real Pareto front. If evaluations of the problem are expensive, the real count of experiments could be reduced throw applying a multi-objective algorithm on a surrogate model. This technique is the preferred choice for functional optimization when the evaluation cost is high.
 
-    In this work, under solving a multi-objective problem, we intend to find a set of none-dominated points that cover a wide range of objectives values and close as possible to real Pareto front. Multiple algorithms could be applied, but MOEA is the favored choice. The advantage of evolutionary algorithms is that it could be easily modified. It operates on a set of solutions candidates, that are well-fitted to approximate Pareto-front. Finally, evolutionary algorithms can estimate highly complex problems in various use-cases. 
+    While multiple algorithms could be applied, we selected \gls{moea} as default optimization techniques for the surrogate models. The advantage of \gls{ea} is that it could be easily modified and it could operate on a set of solutions candidates, that are well-fitted to approximate the Pareto-front. Finally, evolutionary algorithms can estimate highly complex problems in various use-cases.
 
-    If evaluations of the problem are expensive, the real count of experiments could be reduced throw applying a multi-objective algorithm on a surrogate model. This technique is the preferred choice for functional optimization when the evaluation cost is high.
 
-    
     %? The main objective of this part is to provide a thorough treatment of multi-objective parameter tuning with evolutionary algorithm(s)
 
 
@@ -49,21 +47,21 @@
 
     \section{Surrogates models combinations [RQ1]}
 
-        Base on the statement that the surrogate model is domain-specific, the main idea of the thesis is introduced as the model variability \emph{in} a surrogate model to describe each selected criterion and the final variability \emph{with} surrogate hypotheses.
+        Let us address the main issue we have observed in multi-objective optimization. Base on the statement that the surrogate model is domain-specific, the central idea of the thesis is introduced as the model variability \emph{in} a surrogate model and the extensibility \emph{with} surrogate hypotheses.
 
         % ------------------------------------------------     Compositional model       
         \subsection{Compositional Surrogate Model}
-
-            The concept of the compositional model means a combination of a heterogeneous surrogate model that approximates several objective value. Stacking multiple simple models into one that describes complex objective space is a perspective way to build multi-objective surrogate. Dividing optimization problems to multiple stages improves the reusability of code and makes the approach scalable. 
-            Notwithstanding that those models could be completely different and build in parallel, they still related because fitted on shared features. Indeed, we can switch from single-obj to multi obj and change optimization technic on the fly. So it is possible to extend single-criteria models for multi-criteria tasks and dynamically reconstruct problem representation from mixed parts. Several surrogates block combined to describe the required criterion dimension. 
+            The concept of the compositional surrogate means a combination of the multiple simple models that simulate the several objectives independently at the same time. Dividing optimization problems to several parts improves the variability of surrogates and accordingly, the possibilities to improve the solution.
+            Besides, a significant advantage of the compositional surrogate is a possibility to extend the single-objective parameter tuning to the multi-objective task. This provides the opportunity to reuse single-criteria models for multi-criteria optimization and dynamically reconstruct problem representation from mixed parts.
             
             % Nonetheless, the surrogate model is not universal to describe objectives independently. 
 
-            That approach should be capable, outperform other algorithms with static models on a real black-box problem with the unknown objective surface. On the other hand, the user could inject his domain knowledge as a combination of surrogate models. 
-            In this thesis, the compositional model means a surrogate model that combines various surrogates models for each optimization objective.
+            That approach should be capable, outperform static models in adaptation to a real black-box problem with the unknown objective surface. For example, a user could represent his domain knowledge as preferring to a concrete combination of the surrogate models or calibrate it during optimization. 
+            
+            In this thesis, the \emph{compositional model} means a surrogate model that combines various surrogates models for each optimization objective. The \emph{surrogate hypothesis} refinement is also used to emphasize on the fact that the surrogate model can completely describe all criteria from the objective space.
 
-            % ------------------------------------------------     RG 1.1: Scalability     
-            \subsubsection{Scalability [RQ1.1]}
+            % ------------------------------------------------     Scalability     
+            \subsubsection{Scalability}
                 In practice show that an MOEA is challenging to scale. For many-dimensional problem, more than 10 objectives random solver gain better solution than MOEA. Furthermore, surrogate models also suffer from this. For instance, complexity ob Krigin/Bayesian model increase exponential with growing samples size and dimensionality.
                 % ! \todor{examples how to solve it, related work}
 
@@ -199,3 +197,7 @@
         % With multiple models, their flaws can combine, as well as the time required to build the models. In memetic algorithms, especially if the surrogate model is not very accurate, a local optimum can be found instead of the global optimum. But in terms of parameter tuning, this point should be better than a predefined sampling plan. Evaluation of this prediction improve surrogate model quality in the near-optimal area and improve prediction in the next round.
         % We could describe compositional-based surrogate optimization as compound grey-box system whit a lot of open research areas where surrogate should improve, managing portfolio, compare of predictions Pareto fronts. 
         % As a developer, you can be focused on a specific problem and don't know how to implement other components. This is one of the main advantages of the described approach.
+
+        % less prone to overfitting
+        % To our best knowledge, we are the first to make this simple observation, which can be applied to improve any Bayesian hyperparameter
+        % optimization method.

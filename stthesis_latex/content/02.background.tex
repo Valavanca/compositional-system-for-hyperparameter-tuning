@@ -226,18 +226,18 @@
         % --------------------------------------------------------------------------------------------
         % ------------------------------------------------     Domain-specific Surrogate model      
         \subsection{Domain-specific problem}
-        Intending to find the best solution with less effort, surrogate models are domain-specific. The surrogate model could perform well for extrapolating one class of problem and guide to the optimal solution. At the same, this model could be a reason of significantly degrading result in another type of problem. That is why the authors prefer using several surrogate models and don't select one for all use cases \cite{SoftSurvey}.
+        Surrogate models are domain-specific in case of intention to find the best solution with less effort. On the one hand, the surrogate model could perform well while extrapolation one class of problems and guide to the optimal solution. On the other hand, this model could be a reason for a significantly degrading result in another type of problem. That is why the authors prefer using several surrogate models and don't select one for all use cases \cite{SoftSurvey}.
 
-        It could be an interpreter as a \Gls{nfl} in model-based optimization. If we extend this argument, then the same optimization problem in different parameter tuning iteration could be interpreted as another optimization problem. This means that to reduce an effort and to increase the convergence of an algorithm, we should change the surrogate model depending on how much samples do we have. 
-        This leads us to use a portfolio with surrogate models. On each optimization iteration tries to build and selects several models with the best performance. As a negative consequence, the model fitting introduces an additional overhead into the optimization.
+        It could be an interpreter as a \Gls{nfl} in model-based optimization. If we extend this argument, then the same optimization problem in different parameter tuning iteration could be interpreted as another optimization problem. In order to reduce an effort and to increase the convergence of an algorithm, we should change the surrogate model depending on how much samples we have. 
+        This leads us to the usage of a portfolio with surrogate models. On each optimization iteration, the portfolio tries to build and select several models with the best performance.  As a negative consequence, the model building introduces an additional overhead into the optimization.
 
 
         % --------------------------------------------------------------------------------------------
         % ------------------------------------------------     Build surrogate model     
         \subsection{Initial sampling set}
-        Initial samples should provide maximum information to build a useful model. The overall result depends primarily on how accurate the assumption is. Misleading from invalid optimization model makes all further optimization results irrelevant. To determine this introduces the concept of surrogate validity, that means the quality of the model to be useful to find solutions from optimal regions. 
+        Initial samples should provide maximum information to build a useful model. The overall result depends primarily on how accurate the assumption is. Invalid optimization model makes all further optimization results irrelevant. To determine it, the concept of surrogate validity is introduced, which means that the model may be used in order to find optimal solutions.
 
-        If there are gained no valid models than better select points from the initial design than to be guided by an incorrect model. With increasing sample size, in case of proper fitting, a better surrogate model is obtained, and in optimization, the better results are reached. Moreover, the initial sample size might be too big, and it is a waste of resources. 
+        If no valid models are gained, it is better to use the initial design than to be guided by an incorrect model. With an increasing sample size, in case of proper fitting, a better surrogate model is obtained, and the better results in optimization are reached. Moreover, the initial sample size might be too big, which is a mere waste of resources.  
 
 
     % --------------------------------------------------------------------------------------------
