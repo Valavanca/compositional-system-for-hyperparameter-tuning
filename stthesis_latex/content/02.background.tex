@@ -43,11 +43,13 @@
     % ------------------------------------------------        Parameter tuning
     % --------------------------------------------------------------------------------------------
     \section{Parameter tuning}
-        We start by introducing a parameter tuning problem. We consider a fitness function as a black-box $f : \mathbb{S} \rightarrow \mathbb{R}$ with parameter and objective spaces. All feasible combinations of parameters define a parameter space which is intended to be a function input $\mathbb{S}$, and therefore all possible function outputs are define as an objective space or $f(x), x \in \mathbb{S}$ (Figure \ref{fig:spaces}). The minimization of the fitness function could be defined as follows:
+        We start by introducing a parameter tuning problem. We consider a objective function as a black-box $f : \mathbb{S} \rightarrow \mathbb{R}$ with parameter and objective spaces (Fig. \ref{fig:spaces}). All feasible combinations of parameters define a parameter space which is intended to be a function input $\mathbb{S}$, and therefore all possible function outputs are defined as an objective space or $f(x), x \in \mathbb{S}$. The minimization of the fitness function could be defined as follows:
 
-                \[x^* = \underset{x \in \mathbb{S}}{\arg\min} f(x)\]
+                \begin{equation} \label{eq:arg_min}
+                    x^* = \underset{x \in \mathbb{S}}{\arg\min} f(x)
+                \end{equation}
 
-        % ==== spaces
+        % --- spaces
         \begin{figure}
             \centering 
             \includegraphics[width=0.8\textwidth]{content/images/utility/spaces}
@@ -57,26 +59,26 @@
 
         The mapping of all points from the parameter space to the points in the objective space is called a fitness landscape. The task of the parameter tuning as an optimization task is to find optimal points on this surface. Depending on the type of a landscape, the optimization search often yields qualitatively different behaviour.
         The single criterion in the parameter tuning might not be sufficient to characterize the behaviour of the configuration space correctly. Therefore, multiple criteria have to be considered. Typical examples of such objectives are to enhance accuracy and performance or minimize runtime, error rate and energy. The parameter tuning process should improve the objectives of those in which none of the objectives can be improved without affecting another objective. By default, we consider minimization for all objectives. 
-
-        In this thesis, we are following the next properties of parameter tuning:
+        % !Typical examples - By default
+        In this thesis, we are following the next properties of the parameter tuning:
         \begin{itemize}
             \item Evaluation is expensive
             \item Black-box function and number of evaluated results are unknown
             \item Multi-objectivity with global minimization
         \end{itemize}
 
-        There is a demand on the method that can explore the search space with limiting evaluation budget. 
+        There is a demand on the method which can explore the search space with limited evaluation budget. 
     
 
     % --------------------------------------------------------------------------------------------
     % ------------------------------------------------        Multi-objective       -------------
     % --------------------------------------------------------------------------------------------
     \section{Multi-objective optimization}
-        Common parameter tuning problems require a simultaneous optimization of multiple, usually contradictive objectives $f = (f_1(x), \ldots, f_k(x))$. Multi-objective optimization deals with such conflicting objectives. It provides a mathematical algorithm to arrive at an optimal design state which accommodates the various criteria demanded by the situation. Objectives are being improved simultaneously and gradually.
+        Common parameter tuning problems require a simultaneous optimization of multiple, usually contradictive objectives $f = (f_1(x), \ldots, f_k(x))$. Multi-objective optimization deals with such conflicting objectives. It provides a mathematical algorithm to obtain an optimal design state which accommodates the various criteria demanded by the situation. Objectives are being improved simultaneously and gradually.
 
-        The solution of the multi-objective problem is a group of points that are placed on a Pareto front; i.e. the subset of solutions that are not worse than any other but better on at least one goal \cite{KrallMD15}. The solution called a Pareto optimal if any other solution does not dominate it. For example (Figure \ref{fig:dominated}) a solution $A \in \mathbb{S}$ is said to dominate another solution $B \in \mathbb{S}$ , denoted $A \preceq B$ if $f_i(A)<=f_i(B)$ for all $i=1, \ldots ,k$ and $f_i(A)<f_i(B)$ for at least one $i \in \{1, \ldots k\}$. All points on the Pareto frontier are not-dominated by any other point in objective space \cite{Kaisa0021267}.  
+        The solution of the multi-objective problem is a group of points which are placed on a Pareto front; i.e. the subset of solutions which are not worse than any other but better on at least one goal \cite{KrallMD15}. The solution called a Pareto optimal if any other solution does not dominate it. For example (Fig. \ref{fig:dominated}) a solution $A \in \mathbb{S}$ is said to dominate another solution $B \in \mathbb{S}$ , denoted $A \preceq B$ if $f_i(A)<=f_i(B)$ for all $i=1, \ldots ,k$ and $f_i(A)<f_i(B)$ for at least one $i \in \{1, \ldots k\}$. All points on the Pareto frontier are not-dominated by any other point in the objective space \cite{Kaisa0021267}.  
 
-        Awareness of the Pareto front allows visualizing appropriate decisions and the importance of the criteria. For the multi-objective problem we consider the solution as points from the parameter space that lead to non-dominated results in the objective space. Improving solution means that a set of points corresponds better with the real Pareto-front.
+        Awareness of the Pareto front allows appropriate decisions and the importance of the criteria to be visualized. For the multi-objective problem we consider the solution as points from the parameter space which lead to non-dominated results in the objective space. The improvement of the solution means that a set of points corresponds better with the real Pareto-front.
 
         % ==== dominated
         \begin{figure}
@@ -104,25 +106,25 @@
 
     % ------------------------------------------------        Metrics       -------------
         \subsection{Metrics for multi-objective solution}
-            In a single-objective optimization the quality of a given solution is trivial to quantify. When we consider a solution of a multi-objective problem as the Pareto-optimal approximation the comparison of these solutions is also a multi-objective task.
-            The question of picking metrics for the evaluation is essential for the comparison of approximated solutions and selecting next the appropriate set of configurations.
+            In a single-objective optimization the quality of a given solution is trivial to quantify. When we consider a solution of a multi-objective problem as a Pareto-optimal approximation, the comparison of these solutions is also a multi-objective task.
+            The question of picking metrics for evaluation is essential for comparison of approximated solutions and for selection of the next appropriate set of configurations.
 
             According to \cite{ZitzlerDT00}, a Pareto front approximation should satisfy the following criteria:
             \begin{itemize}
-                \item The distance between the Pareto front and its approximation should be minimized.
-                \item A wide distribution of the non-dominated points is desirable.
+                \item The distance between Pareto front and its approximation should be minimized.
+                \item A wide distribution of non-dominated points is desirable.
                 \item The range of the approximated front should be maximized, i.e., for each objective, a wide range of values should be covered by the non-dominated points.
             \end{itemize}
 
             The metrics for performance indicators were partitioned into four groups according to their properties \cite{Audet2018PerformanceII}: 
             \begin{itemize}
-                \item \textit{Cardinality.} Estimation of the number of non-dominated points.
-                \item \textit{Convergence.} Estimation of the closeness of a set of non-dominated points to the Pareto front in the objective space.
-                \item \textit{Distribution and spread indicators.}  Measurement of the point distributed on the Pareto front approximation or of there spreadness in extreme points of the Pareto front.
+                \item \textit{Cardinality.} Estimation of number of non-dominated points.
+                \item \textit{Convergence.} Estimation of closeness of a set of non-dominated points to the Pareto front in the objective space.
+                \item \textit{Distribution and spread indicators.}  Measurement of the points distributed on the Pareto front approximation or of there spreadness in extreme points of the Pareto front.
                 \item \textit{Convergence and distribution indicators.} Capture of both: the properties of convergence and distribution.
             \end{itemize}
 
-            According to \cite{CustodioMVV11} the spread metrics try to measure the areas achieved in a computed the Pareto front approximation. This type of metrics is not very useful for comparison of the algorithms or evaluation of the optimization convergence because spreading is not related to improving objectives. However, they could be useful for a more detailed analysis of the optimization process or for composing Pareto frontier from several solutions.
+            According to \cite{CustodioMVV11} the spread metrics try to measure the areas achieved in a computed Pareto front approximation. This type of metrics is not very useful for comparison of algorithms or for evaluation of optimization convergence because spreadness is not related to improvement the objectives. However, they could be useful for a more detailed analysis of the optimization process or for composing Pareto frontier from several solutions.
 
             The goal of the multi-objective optimization is to obtain an approximated solution set with the reference to the Pareto front, including the following subgoals:
             \begin{itemize}
@@ -132,15 +134,15 @@
                 \item Evaluate as few solutions as feasible.
             \end{itemize}
 
-            For multi-objective optimization, an algorithm should produce a set of solutions that provide the optimal trade-off between the considered optimization objectives. Therefore, the performance comparison of \gls{moo} algorithms is based on their Pareto sets. In this study, four well-known metrics are used to quantify the performance of the algorithms.
+            For multi-objective optimization, an algorithm should produce a set of solutions which provide the optimal trade-off between the considered optimization objectives. Therefore, the performance comparison of \gls{moo} algorithms is based on their Pareto sets. In this study, four well-known metrics are used to quantify the performance of the algorithms.
             \begin{itemize}
                 \item \textbf{Hypervolume (HV).}\cite{Zitzler2000ComparisonOM} \textit{Convergence and distribution indicator.}
-                This metric represents the volume of the objective space which is covered by the individuals of non-dominated solutions which belong to the Pareto front (Figure \ref{fig:hypervolume}). Two points delimit the volume: one point represents the reference point $r$ ($r \in R^m$) which is defined as the worst solution inside the objective space; another one represents the point which is proposed Pareto approximation $S$, for all $z \in S, z \prec r$. The hypervolume metric is defined as follows:
+                This metric represents the volume of the objective space which is covered by the individuals of non-dominated solutions which belong to the Pareto front (Figure \ref{fig:hypervolume}). Two points delimit the volume: one point represents the reference point $r$ ($r \in R^m$) which is defined as the worst solution inside the objective space; another one represents the point which represents Pareto approximation $S$, for all $z \in S, z \prec r$. The hypervolume metric is defined as follows:
 
                     \[HV(S,r) = \lambda_m(\bigcup\limits_{z \in S} [z;r])\]
 
                 where $\lambda_m$ is m-dimensional Lebesgue measure.    
-                Calculating the hypervolume indicator is a computationally expensive task. Furthermore, in case of a small number of dimensions and a low number of points, there are currently no known algorithms which might return the results fast enough for the use in most multi-objective algorithms due to computational complexity which is 
+                Calculating the hypervolume indicator is a computationally expensive task. Furthermore, in case of a small number of dimensions and a low number of points, there are currently no known algorithms which might return the results fast enough for the use in most algorithms due to computational complexity which is 
                 $\mathcal{O}(|S|^{\frac{m}{2}}\log{|S|}) $ \cite{BeumeFLPV09}.
                 \item \textbf{Non-dominated Ratio (NDR).} \textit{Cardinality.} This metric is a ratio between the number of non-dominated points and the total number of the evaluated points.  Higher values are preferred to lower ones.
                 \item \textbf{Spacing \cite{Schott1995FaultTD}.} \textit{Distribution and spread.} Description of the distribution of Pareto points. As a wide range of similar metrics which are based on the distance to the nearest neighbour, spacing does not cover the holes in Pareto frontier and might compute the distribution in solution clusters.
@@ -174,14 +176,15 @@
  
     % ------------------------------------------------        Solving methods       -------------
         \subsection{Solving methods}
-            Finding the Pareto-optimal set is often impractical and might be computationally expensive. Therefore, many stochastic search strategies have been developed such as: evolutionary algorithms, tabu search, simulated annealing and ant colony optimization. These algorithms usually do not ensure to find ideal trade-offs but try to gain a satisfying approximation.
-            In this thesis, under the Pareto-optimal front, we mean an optimal solution to the problem. All points on the Pareto-frontier are none-dominated, but not all none-dominated points are Pareto-optimal. There are exist several basics approaches how from non-dominated points move forward to Pareto-optimal solution.
-        
+            Finding a Pareto-optimal set is often impractical and might be computationally expensive. Therefore, many stochastic search strategies have been developed such as: evolutionary algorithms, tabu search, simulated annealing and ant colony optimization. These algorithms usually do not ensure to find ideal trade-offs but try to gain a satisfying approximation.
+            In this thesis, under the Pareto-optimal front, we mean an optimal solution to the problem. All points on the Pareto-frontier are none-dominated, but not all none-dominated points are Pareto-optimal. There are several basic approaches which provide information how from non-dominated points move forward to Pareto-optimal solution.
+            %!!! information how from non-dominated
+
             % ----------------      Scalarizing       
             \subsubsection{Scalarization}
-                The Scalarizing approach is a popular technique for creating a single-objective \textit{parameterized} problem with the composite criteria from multiple objectives. The main advantage of the scalarization is the possibility to use a broad range of single-objective technics to this composite function. After optimization one Pareto-optimal solution is obtained, which depends on the initial scalarization parameters. The weighted-sum method is a well-known type of scalarizing technic. This approach concatenates the objectives into a single criterion by using weighted sum factors. There are difficulties in selecting proper weights, especially when there is no correlation in the prior knowledge among objectives \cite{ChughScal2019, DerbelBLV14}. 
+                Scalarizing approach is a popular technique for creating a single-objective \textit{parameterized} problem with the composite criteria from multiple objectives. The main advantage of the scalarization is the possibility to use a broad range of single-objective technics to this composite function. After optimization one Pareto-optimal solution is obtained, which depends on the initial scalarization parameters. The weighted-sum method is a well-known type of scalarizing technic. This approach concatenates the objectives into a single criterion by using weighted sum factors. There are difficulties in selecting proper weights, especially when there is no correlation in the prior knowledge among objectives \cite{ChughScal2019, DerbelBLV14}. 
 
-                Some scalarizing technics try to improve the exploration of the parameter space by assigning more "intelligent" aggregation to the objectives. Such solutions might be fragile. They change dramatically with a modification of algorithm parameters. Moreover, the weighting method can not provide a solution among underparts of the Pareto surface due to the "duality gap" for not convex cases. This means the replacement of non-convex original function to convex closure which missed non-convex parts of the initial landscape. Furthermore, some of the scalarizing algorithms are very sensitive to the number of objectives. Analysis of the fitness landscape with different scalarizing techniques might be helpful in the optimization for solving expensive \gls{mop} \cite{ChughScal2019}.
+                Some scalarizing technics try to improve the exploration of the parameter space by assigning more "intelligent" aggregation to objectives. Such solutions might be fragile. They change dramatically with a modification of algorithm parameters. Moreover, the weighting method can not provide a solution among underparts of the Pareto surface due to the "duality gap" for not convex cases. This means the replacement of non-convex original function to convex closure which missed non-convex parts of the initial landscape. Furthermore, some of the scalarizing algorithms are very sensitive to the number of objectives. Analysis of the fitness landscape with different scalarizing techniques might be helpful in the optimization for solving expensive \gls{mop} \cite{ChughScal2019}.
 
                 % For example, if we want to reach the point in the middle of two other points in Pareto frontier, we hardly get a peek of the Pareto surface, as long as the well-known simplex method is used. This implies that depending on the structure of the problem. The linearly weighted sum can not necessarily provide a solution as DM desires. \cite{Nakayama05}. Moreover, the weighting method can not provide a solution among underparts of the Pareto surface due to the “duality gap” for not convex cases. 
 
@@ -189,8 +192,8 @@
 
             % --------------------      MOEA
             \subsubsection{Multi-Objective Evolutionary Algorithms}
-            The evolutionary algorithm forms a class of heuristic search methods which simulate the process of a natural evolution. An evolutionary algorithm is determined by the two basic principles: selection and variation \cite{TutMOEABrockhoff}. While selection reflects the competition for reproduction and resources among individuals, the other principle, variation, imitates the natural ability to produce new individuals through recombination and mutation. 
-            The evolutionary algorithms are suitable for problems, including multiple conflicting objectives and large and complicated search spaces \cite{Andersson00asurvey, RamirezRV19}. Evolutionary optimizers explore populations of candidate solutions in each generation. The mutator can make changes in the current population. The select operator then picks the best mutants, which are then combined in some way to become the new population in the next iteration. However, \gls{ea} still needs many evaluations of the black box system to solve the common multi-objective problem. This problem is crucial for the reason that most multi-criteria problems are expensive to estimate. This massive evaluation budget makes \gls{ea}s infeasible for costly and multi-objective problems.  
+            An evolutionary algorithm forms a class of heuristic search methods which simulate the process of a natural evolution. The evolutionary algorithm is determined by the two basic principles: selection and variation \cite{TutMOEABrockhoff}. While selection reflects competition for reproduction and resources among individuals, the other principle, variation, imitates the natural ability to produce new individuals through recombination and mutation. 
+            The evolutionary algorithms are suitable for problems, including multiple conflicting objectives and large and complicated search spaces \cite{Andersson00asurvey, RamirezRV19}. Evolutionary optimizers explore populations of candidate solutions in each generation. A mutator can make changes in the current population. A select operator then picks the best mutants, which are then combined in some way to become a new population in the next iteration. However, \gls{ea} still needs many evaluations of the black box system to solve the common multi-objective problem. This problem is crucial for the reason that most multi-criteria problems are expensive to estimate. This massive evaluation budget makes \gls{ea}s infeasible for costly and multi-objective problems.  
 
 
     % --------------------------------------------------------------------------------------------
@@ -198,16 +201,16 @@
     % --------------------------------------------------------------------------------------------
     \section{Surrogate optimization} 
         Many expensive optimization problems have a practical limitation on the number of possible estimations which standard optimization approaches spend very quickly. To get around this drawback, approximation models or surrogate models are often used. This technique is essential to reduce real evaluations by building a regression function based on already evaluated design points.
-        The potential of the appliance of the surrogates is based on the generalization of the all search space and fast navigations there. This advantage should outperform disadvantage in time required to build this approximation. In classical model-based optimization, a single surrogate-model provides a hypothesis on the relation between parameter and objective spaces. The approximation of the solution becomes faster than the real evaluation, so the whole optimization process is accelerated. However, some extra time is needed to build and update the surrogate model during the optimization process. The surrogate model is used to find the probable good candidates or drop the low-quality individuals even before they are exactly evaluated, thus, to reducing the number of exact evaluations.
+        The potential of the appliance of the surrogates is based on the generalization of the all search space and fast navigations there. This advantage should outperform disadvantage in time required to build this approximation. In classical model-based optimization, a single surrogate-model provides a hypothesis on the relation between parameter and objective spaces. The approximation of the solution becomes faster than the real evaluation, so the whole optimization process is accelerated. However, some extra time is needed to build and update the surrogate model during the optimization process. The surrogate model is used to find the probable good candidates or to drop the low-quality individuals even before they are exactly evaluated, thus, us to reduce the number of exact evaluations.
 
-        In the literature, the term surrogate or model-based optimization is used when during the optimization processes some solutions are not evaluated with the original function, but are approximated using a model of this function. Some of the most commonly used methods are represented by the Response Surface Method \cite{ResponseSurface}, Radial Basis Function \cite{Rasmussen2004}, Neural Network \cite{KOURAKOS201313}, Kriging \cite{Woodard00}, and Gaussian Process Modeling \cite{RasmussenN10, RasmussenW06}. Surrogates are also used to rank and filter out the offspring according to Pareto-related indicators like a hypervolume \cite{EmmerichGN06}, or a weighted sum of the objectives \cite{TaboadaBCW07}. If the model is a single-criterion, it could be expanded to a multi-objective surrogate by treating each criterion in isolation and duplicating the model for each of them \cite{Knowles06, nardi2019practical}. The surrogate model is either selected randomly or due to its popularity in the associated domain area \cite{SoftSurvey}. Thus, there are still some open challenges related to the combination of meta-models, such as a definition of a selection criterion or combination techniques. Besides, there are no guidelines for using heterogeneous compositional models for different objective functions \cite{SoftSurvey}.
+        In literature, the term surrogate or model-based optimization is used when during the optimization processes some solutions are not evaluated with the original function, but are approximated using a model of this function. Some of the most commonly used methods are represented by the Response Surface Method \cite{ResponseSurface}, Radial Basis Function \cite{Rasmussen2004}, Neural Network \cite{KOURAKOS201313}, Kriging \cite{Woodard00}, and Gaussian Process Modeling \cite{RasmussenN10, RasmussenW06}. Surrogates are also used to rank and filter out the offspring according to Pareto-related indicators like a hypervolume \cite{EmmerichGN06}, or a weighted sum of the objectives \cite{TaboadaBCW07}. If the model is a single-criterion, it could be expanded to a multi-objective surrogate by treating each criterion in isolation and duplicating the model for each of them \cite{Knowles06, nardi2019practical}. The surrogate model is either selected randomly or due to its popularity in the associated domain area \cite{SoftSurvey}. Thus, there are still some open challenges related to the combination of meta-models, such as a definition of a selection criterion or combination techniques. Besides, there are no guidelines for using heterogeneous compositional models for different objective functions \cite{SoftSurvey}.
 
         
         % -------------------------------------------------------------------------------------------------
         % ------------------------------------------------        MO in Parameter tuning       -------------
         \subsubsection{Multi-objective parameter tuning}
 
-            The categorization of parameter tuning approaches based on the workflow of sequential model-based optimization is presented in Figure.~\ref{fig:mo_param_tuning}. The optimization process begins with the initial sampling plan. At this stage, it is necessary to collect fitness results or to evaluate the first parameters which are used to build surrogate models. For an initial sampling plan, or a \gls{doe} plan, the technics of the \gls{lhs}, the Sobol sampling or the random sampling can be used.
+            The categorization of parameter tuning approaches based on the workflow of sequential model-based optimization is presented in Fig.\ref{fig:mo_param_tuning}. The optimization process begins with the initial sampling plan. At this stage, it is necessary to collect fitness results or to evaluate the first parameters which are used to build surrogate models. For an initial sampling plan, or a \gls{doe} plan, the techniques of the \gls{lhs}, the Sobol sampling or the random sampling can be used.
             
             % ===  Phases and tasks in parameter tuning with surrogates model
             \begin{figure} 
@@ -219,9 +222,9 @@
 
             There are two approaches established to extrapolate the samples: 1) to scalarize objectives and produce a surrogate model of the this scalarization (In this case, the multi-objective problem transforms into a single-objective one); 2) to keep the original dimensionality of the problem and apply one or several models to hold and infer on the problem landscape.
 
-            The next step is represented by the search for the optimal points within the surrogate model. At this step, the solutions which might be Pareto-optimal are found. In the predict configurations phase, sorting and selection are carried out. In the case of multicriteria selection, it is necessary to select the required number of points which are optimal for all objectives. In theory, all non-dominated points are equal regardless of the order they are chosen in. The advantage of the possible prediction of several parameters instead of a single one improves the exploration of the parameter space and parallelizing of the fitness evaluation. The required number of points is allows to estimate and update the sample set. Optimization iterations continue until the stop condition is satisfied.
+            The next step is represented by the search for the optimal points within the surrogate model. At this step, the solutions which might be Pareto-optimal are found. In the predict configurations phase, sorting and selection are carried out. In the case of multicriteria selection, it is necessary to select the required number of points which are optimal for all objectives. In theory, all non-dominated points are equal regardless of the order they are chosen in. The advantage of the possible prediction of several parameters instead of a single one improves the exploration of the parameter space and parallelizing of the fitness evaluation. The required number of points allows the sample set to be estimated as sell as updated. Optimization iterations continue until the stop condition is satisfied.
     
-            The variability and extensibility are essential for configurable parameter tuning, suchlike a software product line. The optimization round is consistent and universal. As shown in Figure \ref{fig:mo_param_tuning}, the potential to reuse components in a workflow is enormous. The same single-objective models can be equally applied to various types of problems in multi-/single-objective optimization. The optimization algorithm weakly depends on the type of a surrogate model. By dynamical duplication of the surrogate model or even by the creation of several surrogate hypotheses, we aim to improve the parameter tuning to multiply criteria on-the-fly.
+            The variability and extensibility are essential for configurable parameter tuning, suchlike a software product line. The optimization round is consistent and universal. As shown in Fig. \ref{fig:mo_param_tuning}, the potential to reuse components in a workflow is enormous. The same single-objective models can be equally applied to various types of problems in multi-/single-objective optimization. An optimization algorithm weakly depends on the type of a surrogate model. By dynamical duplication of the surrogate model or even by the creation of several surrogate hypotheses, we aim to improve the parameter tuning to multiply criteria on-the-fly.
 
         % --------------------------------------------------------------------------------------------
         % ------------------------------------------------     Domain-specific Surrogate model      
