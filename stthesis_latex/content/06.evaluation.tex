@@ -330,20 +330,9 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
     \begin{figure}
         \centering
 
-        \begin{subfigure}{\textwidth}
-            \begin{subfigure}{0.5\textwidth}
-                \includegraphics[width=\textwidth]{content/images/conf_zdt6_pred_solver}
-                \caption{Prediction size and solver algorithm}
-                \label{fig:zdt6_pred_solver}
-            \end{subfigure} 
-            \begin{subfigure}{0.5\textwidth}
-                \includegraphics[width=\textwidth]{content/images/conf_zdt6_comb_valid}
-                \caption{Prediction combinations and CV threshold}
-                \label{fig:zdt6_comb_valid}
-            \end{subfigure}
-        \end{subfigure} 
+        \includegraphics[width=\textwidth]{content/images/conf_zdt6_solver}
 
-        \caption[ZDT6: General average distribution of all configurations]{ZDT6: General average distribution of all configurations}
+        \caption[Correlation between the most influenceable parameters for the ZDT4]{Correlation between the most influenceable parameters for the ZDT6: solution combination strategy and optimization algorithm}
         \label{fig:conf_zdt6}    
     \end{figure}
 
@@ -373,19 +362,17 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
         \centering
 
         \begin{subfigure}{\textwidth}
-            \begin{subfigure}{0.5\textwidth}
-                \includegraphics[width=\textwidth]{content/images/conf_zdt4_pred_solver}
-                \caption{Prediction size and solver algorithm}
-                \label{fig:zdt4_pred_solver}
-            \end{subfigure} 
-            \begin{subfigure}{0.5\textwidth}
-                \includegraphics[width=\textwidth]{content/images/conf_zdt4_comb_valid}
-                \caption{Prediction combinations and CV threshold}
-                \label{fig:zdt4_comb_valid}
-            \end{subfigure}
+            \includegraphics[width=\textwidth]{content/images/conf_zdt4_cv_score}
+            \caption{An impact of the cross-validation's threshold}
+            \label{fig:zdt4_pred_solver}
         \end{subfigure} 
+        \begin{subfigure}{\textwidth}
+            \includegraphics[width=\textwidth]{content/images/conf_zdt4_test_score}
+            \caption{An impact of the test-set-validation's threshold}
+            \label{fig:zdt4_comb_valid}
+        \end{subfigure}
 
-        \caption[ZDT4: general average distribution of all configurations]{ZDT4: general average distribution of all configurations} 
+        \caption[Correlation between the most influenceable parameters for the ZDT4]{Correlation between the most influenceable parameters for the ZDT4} 
         \label{fig:conf_zdt6}    
     \end{figure}
 
@@ -422,9 +409,9 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
 % --------------------------------------------------------------------------------------------
 % ---------------------       Benchmark 4: real world scenario
 % --------------------------------------------------------------------------------------------
-\section{Benchmark 4: Parameter tuning of SVM}
+% \section{Benchmark 4: Parameter tuning of SVM}
 
-    % ! [ Hypermapper baseline; SVM score in iterations]
+%     % ! [ Hypermapper baseline; SVM score in iterations]
 
 
 % --------------------------------------------------------------------------------------------
