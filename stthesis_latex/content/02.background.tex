@@ -136,7 +136,7 @@
 
             For multi-objective optimization, an algorithm should produce a set of solutions which provide the optimal trade-off between the considered optimization objectives. Therefore, the performance comparison of \gls{moo} algorithms is based on their Pareto sets. In this study, four well-known metrics are used to quantify the performance of the algorithms.
             \begin{itemize}
-                \item \textbf{Hypervolume (HV).}\cite{Zitzler2000ComparisonOM} \textit{Convergence and distribution indicator.}
+                \item \textbf{Hypervolume (HV).}\cite{ZitzlerDT00} \textit{Convergence and distribution indicator.}
                 This metric represents the volume of the objective space which is covered by the individuals of non-dominated solutions which belong to the Pareto front (Figure \ref{fig:hypervolume}). Two points delimit the volume: one point represents the reference point $r$ ($r \in R^m$) which is defined as the worst solution inside the objective space; another one represents the point which represents Pareto approximation $S$, for all $z \in S, z \prec r$. The hypervolume metric is defined as follows:
 
                     \[HV(S,r) = \lambda_m(\bigcup\limits_{z \in S} [z;r])\]

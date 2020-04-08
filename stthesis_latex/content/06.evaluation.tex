@@ -113,7 +113,7 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
 
     % ---------------------------------    Portfolio
     \subsection{Surrogate portfolio}
-        For a default surrogate portfolio were selected a most popular and perspective models. All of them have advantages and drawbacks concerning the concrete problem, although some surrogate models are indeed more universal but require much more time and prior information. From multi-objective models, there is Gaussian Process Regressor that commonly used for model-based optimization. For this type of model should be specified by the prior's covariance. It is defined by passing a kernel object, the hyperparameters of which are optimized during extrapolations of the samples. The kernel for this benchmark is selected from a Rasmusen and illustrate an intricate design. The Gaussian Process Regressor with this kernel is used to extrapolate the $CO_2$ concentration as a function of the time $t$. The kernel consists of several components that calibrate to represent a long term, periodic and medium components. Even though this kernel is from another domain, it does give good extrapolation quality for the regression model. Unfortunately, the build time is significant and grows with samples size and dimensionality.
+        For a default surrogate portfolio were selected a most popular and perspective models. All of them have advantages and drawbacks concerning the concrete problem, although some surrogate models are indeed more universal but require much more time and prior information. From multi-objective models, there is \emph{Gaussian Process Regressor} that commonly used for model-based optimization. For this type of model should be specified by the prior's covariance. It is defined by passing a kernel object, the hyperparameters of which are optimized during extrapolations of the samples. The kernel for this benchmark is selected from a Rasmusen and illustrate an intricate design. The Gaussian Process Regressor with this kernel is used to extrapolate the $CO_2$ concentration as a function of the time $t$. The kernel consists of several components that calibrate to represent a long term, periodic and medium components. Even though this kernel is from another domain, it does give good extrapolation quality for the regression model. Unfortunately, the build time is significant and grows with samples size and dimensionality.
 
         From compositional models were selected three single-objective models that give $3^{obj}$ possible surrogate hypothesis combinations. 
         \begin{itemize}
@@ -400,24 +400,35 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
 % --------------------------------------------------------------------------------------------
 % ---------------------       Benchmark 3: Many-objective optimization, scaling
 % --------------------------------------------------------------------------------------------
-\section{Benchmark 3: Many-objective optimization. Scaling. RQ1.1}
+\section{Benchmark 3: Scalability of surrogate models. RQ1.1}
+    Not only the type of the problem landscape but also its dimension is an essential factor for picking the surrogate model. The advantage of a surrogate model might be lost when the number of optimization parameters or criteria are changed. The goal of this experiment is to find out the scalability of surrogate models. 
 
-    The goal of this experiment is to find out the scalability of surrogate models. Compositional models build faster but could be not accurate enough. The Gausion Process regression properties are opposite - good surface approximation requires much time. 
 
-    For evaluation scalability property for the compositional model, was selected highly multimodal DTLZ1 problem. Problem dimensionality is fixed and scale objectives.
+    The following surrogates were selected for verification:
+    \begin{itemize}
+        \item \emph{Gaussian Process Regressor} with kernel design from GPML\cite{RasmussenN10}. Gaussian process models are well known as commonly used in Bayesian optimization for a wide variety of problems. 
+        \item MLPRegressor is a \emph{neural network} implementation from the \textit{sklearn} framework. Neural networks could automatically discover useful representations in high-dimensional data by learning multiple layers \cite{WilsonHSX16}. Because this model simultaneously extrapolates all objectives, we intuitively chose an architecture that consists of 5 layers and 100 neurons per layer.
+        \item The surrogate portfolio is included of Gradient Boosting Regressor and \emph{SVR (RBF kernel)} as in the mentioned benchmark number 2. Also, a neural network with 5 cells and 50 neurons per layer was added. For the sake of the experiment, all models in the portfolio are composite and can be dynamically combined depending on the validation results. The surrogate portfolio is included of the Gradient Boosting Regressor and the SVR (RBF kernel). Also, a neural network with 5 layers and 50 neurons per layer was added. All models in the portfolio are composite and can be dynamically combined depending on the validation results.
+    \end{itemize}
 
+    For evaluation scalability property for the surrogate models, \emph{DTLZ2} problem was selected. It is unimodal problem with multiple global optima and concave geometry of the Pareto front. During the experiment, the number of optimization criteria changes with a constant number of parameters. For all cases, the experiment was repeated 5 times. The figure \ref{fig:scale_dtlz2} shows the three selected surrogate strategies with metrics of the average distance to the Pareto front (top line) and a time spent per complete an optimization iteration (bottom line). Note that the Gaussian model shows significantly better results relative to other approaches but only for the bi-objective problem. Increasing the criteria to 4, converging to a solution is only available for the neural network and portfolio. At the same time, the Gaussian model becomes incorrect and begins to increase the time required to build exponentially.
+    
+    There is also an open question as to which parameters to choose for the surrogate model. The suitability and quality of the surrogate are highly dependent on the parameters (number of layers, type of core). In turn, for the surrogate portfolio, the parameters determine how to build and select surrogate models. The same model but with different parameters, is evaluated in the portfolio as separate entities. It is a great advantage to apply a dynamic and scalable approach that can adapt to a specific problem. This is the answer to RQ\ref{RQ1.1}.
+
+    
+    Hence, the necessary criterion for scaling surrogates is not just the choice of one model for all cases, but the dynamic combination of the strong properties of several models to achieve better results with limited resources.
 
 
     \begin{figure}
         \centering
         \includegraphics[width=\textwidth]{content/images/scale_dtlz2}
-        \caption[Scaling example for the three variants of the surrogate on the DTLZ2.]{Scaling example for the three variants of the surrogate on the DTLZ2. Scaling example for the three variants of the surrogate on the DTLZ2  with the 9-dimensional objective space. For all cases, the experiment was repeated 5 times.}
+        \caption[Scaling example for the three variants of the surrogate on the DTLZ2.]{Scaling example for the three variants of the surrogate on the DTLZ2. Scaling example for the three variants of the surrogate on the DTLZ2  with the 9-dimensional objective space.}
         \label{fig:scale_dtlz2}    
     \end{figure}
 
 
 
-    % For evaluation scalability property for the compositional model, problem XXX was selected.
+    % 
 
     % Objectives: 1) detect iterative improvement, a convergence of the primary metric 2) time for evaluation
 
@@ -428,13 +439,6 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
     % ! [ Hypermapper baseline; X - objectives Y - p-distance/time]
 
 
-
-% --------------------------------------------------------------------------------------------
-% ---------------------       Benchmark 4: real world scenario
-% --------------------------------------------------------------------------------------------
-% \section{Benchmark 4: Parameter tuning of SVM}
-
-%     % ! [ Hypermapper baseline; SVM score in iterations]
 
 
 % --------------------------------------------------------------------------------------------
