@@ -259,23 +259,7 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
         }
         \end{table}
 
-
-
-    % ======= SUMMARY DTLZ
-    \input{content/tables/dtlz_summary.tex}
-
-
-    % ======= SUMMARY ZDT
-    \input{content/tables/zdt_summary.tex}
-
-
-    % ======= SUMMARY WFG
-    \input{content/tables/wfg_summary.tex}
-
-
-    
-
-
+ 
 
 % --------------------------------------------------------------------------------------------
 % ---------------------       Benchmark 2: Dynamic sampling plan and parameter selection
@@ -302,7 +286,7 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
 
     On the Figure shown result for 40 best and worst configurations. Note that the main impact on the quality of the final results gain from solution combination from valid surrogates models. In the case of a $ndf_score$, for final prediction selected optimal points from the surrogate model that has the highest score on non-dominated points from the test set. From another hand, stacking, as an alternative approach, means combining solutions from all models that pass validation, not only from the best one.
 
-    The $ndf_score$  was common to all configurations that gave the worst result, while stacking is preferred choice for best configuration group. Another fascinating conclusion could be done from the initial sample size. Worst parameters involved only empty and 100 initial sets that are reasonable because the lower limit for the worst possible result is higher with more extensive data set. But at the same time, the lack of initial samples yields the best results. If so, the optimization process could begin earlier and achieve the optimum faster. 
+    The \emph{ndf score}  was common to all configurations that gave the worst result, while stacking is preferred choice for best configuration group. Another fascinating conclusion could be done from the initial sample size. Worst parameters involved only empty and 100 initial sets that are reasonable because the lower limit for the worst possible result is higher with more extensive data set. But at the same time, the lack of initial samples yields the best results. If so, the optimization process could begin earlier and achieve the optimum faster. 
 
     It is also specified to note a tendency to decrease the test threshold, so which is confirmed not to apply general accuracy as the main criteria for surrogate selection.
 
@@ -376,10 +360,40 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
         \label{fig:conf_zdt6}    
     \end{figure}
 
+    % ====================================================== Start set for Hypermapper 2.0
+    \begin{figure}
+        \centering
+        \begin{subfigure}{\textwidth}
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\textwidth]{content/images/hypermapper_wfg1_start_set}
+                \caption{WFG1}
+                \label{fig:hmapper_wfg1_start_set}
+            \end{subfigure}
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\textwidth]{content/images/hypermapper_wfg4_start_set}
+                \caption{WFG4}
+                \label{fig:hmapper_wfg4_start_set}
+            \end{subfigure}
+        \end{subfigure} 
+        \hfill
 
-    %! [ Hypermapper baseline; ModelTutor and change quality (grid plot)] iterations
+        
+        \begin{subfigure}{\textwidth}
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\textwidth]{content/images/hypermapper_zdt4_start_set}
+                \caption{ZDT4}
+                \label{fig:hmapper_zdt4_start_set}
+            \end{subfigure}
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\textwidth]{content/images/hypermapper_zdt6_start_set}
+                \caption{ZDT6}
+                \label{fig:hmapper_zdt6_start_set}
+            \end{subfigure}
+        \end{subfigure} 
 
-    %! [ Hypermapper baseline; ModelTutor and change quality (bubble chart) ] Deviations
+        \caption[Influence of the initial sample plan for optimization with Hypermapper 2.0.]{Influence of the initial sample plan for optimization with Hypermapper 2.0.}
+        \label{fig:hmapper_start_set}    
+    \end{figure}
 
 
 
@@ -388,9 +402,18 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
 % --------------------------------------------------------------------------------------------
 \section{Benchmark 3: Many-objective optimization. Scaling. RQ1.1}
 
-    The goal of this experiment is to find out the scalability of surrogate models. Compositional models build faster but could be not accurate enough. The GausionProcess regression properties are opposite - good surface approximation requires much time. 
+    The goal of this experiment is to find out the scalability of surrogate models. Compositional models build faster but could be not accurate enough. The Gausion Process regression properties are opposite - good surface approximation requires much time. 
 
     For evaluation scalability property for the compositional model, was selected highly multimodal DTLZ1 problem. Problem dimensionality is fixed and scale objectives.
+
+
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{content/images/scale_dtlz2}
+        \caption[Scaling example for the three variants of the surrogate on the DTLZ2.]{Scaling example for the three variants of the surrogate on the DTLZ2. Scaling example for the three variants of the surrogate on the DTLZ2  with the 9-dimensional objective space. For all cases, the experiment was repeated 5 times.}
+        \label{fig:scale_dtlz2}    
+    \end{figure}
 
 
 
