@@ -179,20 +179,3 @@ The next dependencies are chosen to achieve the above mention principles:
 
 
 % Intuition of why random forest is a good model: •Good at non-linearity, multi-modality and non-smoothness. A decision tree is a non-parametric supervised machine learning method widely used to formalize decision making processes across a variety of fields. The combination of many weak regressors (binary decisions) allows approximating highly non-linear and multi-modal functions with great accuracy. In addition, random forests naturally deal with categorical and ordinal variables which are important in computer systems optimization.
-
-
-Workflow stages:
-\begin{enumerate}
-    \item Cross-Validation $\rightarrow$ Validation threshold
-    \item Test-set score $\rightarrow$ Score threshold
-    \item Surrogate models sort
-    \item Optimization algorithm(s)
-    \item MO infill criteria
-\end{enumerate}
-
-There are main approaches how produce single solution: 
-\begin{itemize}
-    \item Solution from best hypothesis. Sorting
-    \item Bagging solution
-    \item Voting solution                
-\end{itemize}

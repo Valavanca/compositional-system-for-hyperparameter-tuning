@@ -1,0 +1,59 @@
+    % Please add the following required packages to your document preamble:
+    % \usepackage{booktabs}
+    % \usepackage{multirow}
+    \begin{table}[]
+        \centering
+        \caption{Comparison of final results after 1000 function evaluations}
+        \begin{tabular}{@{}lllllll@{}}
+        \toprule
+                                                                                                & Metric        & ZDT4             & ZDT6             & DTLZ4             & WFG1             & WFG4             \\ \midrule
+        \multirow{4}{*}{\textbf{TutorM}}                                                          & Hypervolume   & \textbf{99,80\%} & \textbf{99,43\%} & \textbf{99,829\%} & \textbf{95,75\%} & \textbf{99,28\%} \\ \cmidrule(l){2-7} 
+                                                                                                & p-distance    & \textbf{0,01}    & \textbf{0,09}    & \textbf{0,001}    & -                & -                \\ \cmidrule(l){2-7} 
+                                                                                                & ndf-size      & \textbf{50,0\%}  & 4,26\%           & 0,2\%             & 3,44\%           & \textbf{38,90\%} \\ \cmidrule(l){2-7} 
+                                                                                                & space-metric  & \textbf{0,78}    & 0,17             & 0,666             & 0,51             & \textbf{1}       \\ \midrule
+        \multirow{4}{*}{\textbf{NSGA2}}                                                           & Hypervolume   & 83,43\%          & 83,84\%          & 87,807\%          & 30,52\%          & 83,95\%          \\ \cmidrule(l){2-7} 
+                                                                                                & p-distance    & 0,04             & 1,29             & 0,002             & -                & -                \\ \cmidrule(l){2-7} 
+                                                                                                & ndf-size      & 8,77\%           & 1,01\%           & 9,600\%           & 3,18\%           & 10\%             \\ \cmidrule(l){2-7} 
+                                                                                                & space-metric  & 0,19             & 0,04             & 0,323             & 0,28             & 0,58             \\ \midrule
+        \multirow{4}{*}{\textbf{Hypermaper}}                                                      & Hypervolume   & 97,32\%          & 82,86\%          & 64,57\%           & 44,12\%          & 84,39\%          \\ \cmidrule(l){2-7} 
+                                                                                                & p-distance    & 0,90             & 1,12             & 0,059             & -                & -                \\ \cmidrule(l){2-7} 
+                                                                                                & ndf-size      & 5,42\%           & \textbf{6,25\%}  & 1,177\%           & \textbf{10,24\%} & 3,26\%           \\ \cmidrule(l){2-7} 
+                                                                                                & space-metrics & 0,11             & 0,08             & 0,029             & 0,31             & 0,06             \\ \midrule
+        \multirow{4}{*}{\textbf{\begin{tabular}[c]{@{}l@{}}NSGA2 50k\\ (Base line)\end{tabular}}} & Hypervolume   & 100\%            & 100\%            & 100\%             & 100\%            & 100\%            \\ \cmidrule(l){2-7} 
+                                                                                                & p-distance    & 2,04e-05         & 0,0003           & 8,81e-06          & -                & -                \\ \cmidrule(l){2-7} 
+                                                                                                & ndf-size      & 0,72\%           & 0,72\%           & 0,360\%           & 0,72\%           & 0,72\%           \\ \cmidrule(l){2-7} 
+                                                                                                & space-metric  & 1                & 1                & 1                 & 1                & 0,60             \\ \bottomrule
+        \end{tabular}
+        \label{tab:magic_five}
+    \end{table}
+
+
+
+
+        % \begin{table}[]
+    %     \centering
+    %     \caption{Comparison of final results after 1000 feature evaluations}
+    %     \resizebox{\textwidth}{!}{%
+    %     \begin{tabular}{@{}ccccccc@{}}
+    %     \toprule
+    %                                          & \textbf{Metric}        & \textbf{ZDT4} & \textbf{ZDT6} & \textbf{DTLZ4} & \textbf{WFG1} & \textbf{WFG4} \\ \midrule
+    %     \multirow{4}{*}{\textbf{TutorM}}     & \textbf{hypervolume}   & 99,45\%       & 99,01\%       & 99,27\%        & 115,60\%      & 95,95\%       \\
+    %                                          & \textbf{p-distance}    & 1,336         & 0,522         & 0,022          & -             & -             \\
+    %                                          & \textbf{ndf-size}      & 183,022       & 31,528        & 119,308        & 24,158        & 183,244       \\
+    %                                          & \textbf{space-metrics} & 0,103         & 0,142         & 0,186          & 0,129         & 0,032         \\ \midrule
+    %     \multirow{4}{*}{\textbf{NSGA2}}      & \textbf{hypervolume}   & 97,57\%       & 87,46\%       & 95,87\%        & 45,01\%       & 91,87\%       \\
+    %                                          & \textbf{p-distance}    & 1,391         & 1,872         & 0,022          & -             & -             \\
+    %                                          & \textbf{ndf-size}      & 44,000        & 11,455        & 39,900         & 20,164        & 82,436        \\
+    %                                          & \textbf{space-metrics} & 0,176         & 0,355         & 0,268          & 0,228         & 0,038         \\ \midrule
+    %     \multirow{4}{*}{\textbf{Hypermaper}} & \textbf{hypervolume}   & 96,82\%       & 66,95\%       & 81,29\%        & 40,66\%       & 74,09\%       \\
+    %                                          & \textbf{p-distance}    & 2,024         & 1,850         & 0,076          & -             & -             \\
+    %                                          & \textbf{ndf-size}      & 28,908        & 52,746        & 10,743         & 81,512        & 30,158        \\
+    %                                          & \textbf{space-metrics} & 0,1386        & 0,11621       & 0,5282         & 0,0870        & 0,1032        \\ \midrule
+    %     \multirow{4}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}NSGA2\\ 10k eval\end{tabular}}} & \textbf{hypervolume}      & 100,00\% & 100,00\% & 100,00\% & 100,00\% & 100,00\% \\
+    %                                          & \textbf{p-distance}    & 0,152         & 0,256         & 0,002          & -             & -             \\
+    %                                          & \textbf{ndf-size}      & 93,901        & 79,776        & 93,990         & 85,196        & 98,087        \\
+    %                                          & \textbf{space-metrics} & 0,033         & 0,074         & 0,039          & 0,051         & 0,016         \\ \bottomrule
+    %     \end{tabular}%
+    %     }
+    % \label{tab:magic_five} 
+    % \end{table}

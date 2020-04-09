@@ -126,89 +126,66 @@ In this chapter, we demonstrate the advantages of the use of the developed appro
 % ---------------------       Benchmark 1: Model-tutor: Portfolio with compositional surrogates 
 % --------------------------------------------------------------------------------------------
 \section{Benchmark 1: Portfolio with compositional surrogates. Dynamic sampling plan. [RQ1, RQ2]}
-
     In this benchmark, a developed methodology(TutorM) was compared with related approaches in solving all three sets of problems (ZDT, DTLZ, WFG) for 2 objectives and 2(3) parameters. The TutorM includes all features such as dynamic compositional models, surrogate portfolio and validation.
 
-    % The first benchmark presented a subset of the problems listed in Table \ref{bench_problems}. They have a wide range of properties which should give a notion of how the optimization strategy works.
-    % % ==== multi-objective test problems
-    % \begin{table}[]
-    %     \centering
-    %     \resizebox{\textwidth}{!}{%
-    %         \begin{tabular}{@{}cccccc@{}}
-    %         \toprule
-    %         \multirow{2}{*}{\textbf{Problem}} &
-    %         \multirow{2}{*}{\textbf{Objective}} &
-    %         \multirow{2}{*}{\textbf{Modality}} &
-    %         \multirow{2}{*}{\textbf{Geometry}} &
-    %         \multicolumn{2}{c}{\textbf{Landscape}} \\ \cmidrule(l){5-6}
-    %                     &                 &                      &               & \textbf{Bias}    & \textbf{\begin{tabular}[c]{@{}c@{}}Many-to-one \\ mappings\end{tabular}} \\ \midrule
-    %         \textbf{ZDT4}  & bi-objective    & unimodal, multimodal & convex        & -                & -                                                                        \\
-    %         \textbf{ZDT6}  & bi-objective    & multimodal           & concave       & +                & +                                                                        \\
-    %         \textbf{DTLZ4} & multi-objective & unimodal             & concave       & +                & +                                                                        \\
-    %         \textbf{WFG1}  & multi-objective & unimodal             & convex, mixed & polynomial, flat & +                                                                        \\
-    %         \textbf{WFG4}  & multi-objective & multimodal           & concave       & -                & +                                                                       \\ \bottomrule
-    %         \end{tabular}%
-    %     }
-    %     \caption{Selected multi-objective test problems}
-    %     \label{bench_problems}
-    % \end{table}
+    The surrogate model can significantly accelerate the ascent to the global optimum. For example, figure \ref{fig:changing_models} demonstrates the stable near-optimal solution with significant economy of resource (300 vs. 1000 function estimates).
+    Initially, it could be notest that TutorM considerably outperforms NSGA2 and Hypermapper right from the start of their optimisation process (Fig \ref{fig:zdt6_dist}). Besides to interpreter results more involved, non-dominated size should be analysed. ZDT6 landscape has flat regions with local Pareto-front. Hypermapper gets stuck in some of them as evidenced by the serrated graph (Fig \ref{fig:zdt6_ndf}). The drop occurs when discovering a new point in the other Pareto-optimal front. NSGA2 stagnate and comparable to random search due to the many-to-one parameter and objectives mapping. Solutions from the population do not have enough sparsity in objective space to detect optimal search direction. TutorM identifies global Pareto front straightway and increases Pareto-optimal solutions slowly that alike to solutions from NSGA2 with 100 generations (10k evaluations) (Fig \ref{fig:zdt6_front}).
+
+    % === ZDT6
+    \begin{figure}
+        \centering
+        \begin{subfigure}{\textwidth}
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\textwidth]{content/images/zdt6_dist}
+                \caption{Average distance of non-dominant solutions to the real Pareto front}
+                \label{fig:zdt6_dist}
+            \end{subfigure} 
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\textwidth]{content/images/zdt6_ndf}
+                \caption{Size of non-dominant solutions across the entire set of the measured solutions}
+                \label{fig:zdt6_ndf}
+            \end{subfigure} 
+        \end{subfigure} 
+
+        \begin{subfigure}{\textwidth}
+            \includegraphics[width=\textwidth]{content/images/zdt6_front}
+            \caption{The final assumption of the Pareto optimal solutions (1000 fevals)}
+            \label{fig:zdt6_front}
+        \end{subfigure} 
+        \caption[Comparison of solutions on ZDT6 problem]{A complex comparison of solutions on ZDT6 problem. Final non-dominated points are used to estimate Pareto-optimal solutions.}
+        \label{fig:changing_models}    
+    \end{figure}
 
 
-
-    Results showed that the sampling plan dynamically collects a different amount of samples based on a current problem (Figure \ref{fig:changing_models}). When samples are enough, several models could periodically swap as best available. Furthermore, models give more stable results, and changes become less frequent with increasing the sample set. In the case of WFG1 problem(\ref{fig:wfg1_models_60}) best accuracy for non-dominated point gave the compositional model with Gradient Boosting Regressor for each objective. In WFG problem, the same compositional model goes ahead other models in the portfolio, but after samples size increased, multi-objective the Gaussian Process Regressor was on the top.
-
+    One of the main advantages of the developed method is the dynamic sampling plan, which depends on the quality of available surrogates. Results show that the number of samples taken from the original plan varies depending on the problem (Figure \ref{fig:changing_models}).
+    When samples are enough, several models could periodically swap as best available. It can also be noted that with increasing the sample set, the models give more stable results, and changes become less frequent. In the case of WFG1 problem(\ref{fig:wfg1_models_60}) best accuracy for non-dominated point gave the compositional model with Gradient Boosting Regressor for each objective. In WFG problem, the same compositional model goes ahead other models in the portfolio, but after samples size increased, multi-objective the Gaussian Process Regressor was on the top.
     % === TutorM: surrogate portfolio in action
     \begin{figure}
         \centering
         \begin{subfigure}{\textwidth}
             \includegraphics[width=\textwidth]{content/images/dtlz4_models}
-            \caption{DTLZ4: Sampling plan bis 210 examples}
+            \caption{DTLZ4: sampling plan to the 210th configuration}
             \label{fig:dtlz4_models_210}
         \end{subfigure}
         % \hfill
         
         \begin{subfigure}{\textwidth}
             \includegraphics[width=\textwidth]{content/images/wfg1_models}
-            \caption{WFG1: Sampling plan bis 60 examples}
+            \caption{WFG1: sampling plan to the 60th configuration}
             \label{fig:wfg1_models_60}
         \end{subfigure} 
 
-        \caption[Optimization process with dynamic sampling plan and surrogate portfolio.]{Optimization process with dynamic sampling plan and surrogate portfolio. Plots are shown in which step sampling plan was used or which model gives the best accuracy on the test set. More hypervolume is better.}
+        \caption[Optimization process with dynamic sampling plan and surrogate portfolio.]{Optimization process with dynamic sampling plan and surrogate portfolio. Plots are shown in which step sampling plan was used or which model gives the best accuracy on the test set.}
         \label{fig:changing_models}    
     \end{figure}
 
 
-    Figure \ref{fig:changing_models} illustrates how improves the solutions for ZDT6 problem. Initially, it could be notest that TutorM considerably outperforms NSGA2 and Hypermapper right from the start of their optimisation process (Fig \ref{fig:zdt6_dist}). TutorM after 300 evaluations, corresponds to the stable near-optimal solution. Besides to interpreter results more involved, non-dominated size should be analysed. ZDT6 landscape has flat regions with local Pareto-front. Hypermapper gets stuck in some of them as evidenced by the serrated graph (Fig \ref{fig:zdt6_ndf}). The drop occurs when discovering a new point in the other Pareto-optimal front. NSGA2 stagnate and comparable to random search due to the many-to-one fitness mapping. Solutions from the population do not have enough sparsity in objective space to detect optimal search direction. TutorM detects global Pareto front straightway and increases Pareto-optimal solutions slowly that alike to solutions from nsga2 with 10k evaluations (Fig \ref{fig:zdt6_front}).
-
-    % === ZDT6
-    \begin{figure}
-        \centering
-        \begin{subfigure}{\textwidth}
-            \includegraphics[width=\textwidth]{content/images/zdt6_dist}
-            \caption{ZDT6: p-distance to real Pareto-front}
-            \label{fig:zdt6_dist}
-        \end{subfigure} 
-        % \hfill
-        
-        \begin{subfigure}{\textwidth}
-            \includegraphics[width=\textwidth]{content/images/zdt6_ndf}
-            \caption{ZDT6: Size of a non-dominated subset of an evaluated examples}
-            \label{fig:zdt6_ndf}
-        \end{subfigure} 
-
-        \begin{subfigure}{\textwidth}
-            \includegraphics[width=\textwidth]{content/images/zdt6_front}
-            \caption{ZDT6: Pareto-front approximation after 1000 function evaluations}
-            \label{fig:zdt6_front}
-        \end{subfigure} 
-
-        \caption[Comparison of solutions on ZDT6 problem]{A complex comparison of solutions on ZDT6 problem. Final non-dominated points are used to estimate Pareto-optimal solutions.}
-        \label{fig:changing_models}    
-    \end{figure}
+    For a satisfactory result, the surrogate model needs to describe the overall landscape and the optimization target area. Figure \ref{fig:wfg_14} shows an example of a case where TutorM produces a better or identical result than an optimal solution. The characteristic of this optimization problem lay in flat landscape regions and relative significance of different parameters that significantly impairs the convergence to the global Pareto-optimal solutions. Hypermapper increase count of non-dominated points, regardless it is local optimum and most samples stack in a small region. NSGA2 after 1000 function evaluations also have high-density regions which could be improved with spending more effort to evaluations. The TutorM found several dozen of Pareto-optimal points, that significantly outperforms Hypermapper and even NSGA2 with 10k evaluations. 
+    From WFG4 use case, all over all approaches gain near-optimal results (Fig.\ref{fig:wfg4_front}), but significant advantage over TutorM as it provides an extensive set of solutions (Fig.\ref{fig:wfg4_ndf}) that are well distributed at the Pareto front. As you can see from the graph that the size of the solution increases linearly, which means that effort is spent on improving distribution of the Pareto Pare optimal solutions.
 
 
-    As shown in Figure \ref{fig:wfg_14}, TutorM could also outperform the MOEA baseline in 10k evaluations(\ref{sub@fig:wfg1_front}). WFG1 has flat landscape regions hence the convergence of genetic algorithms significantly deteriorates. Hypermapper increase count of non-dominated points, regardless it is local optimum and most samples stack in a small region. Nsga2 after 1000 function evaluations also have high-density regions which could be improved with spending more effort to evaluations. The TutorM has several dozen of Pareto-optimal points from all over the budget, that significantly outperforms Hypermapper and nsga2 even with 10k evaluations. 
-    From WFG4 use case, all over all approaches gain near-optimal results(\ref{fig:wfg4_front}), but significant advantage over TutorM as it provides an extensive set of points(\ref{fig:wfg4_ndf}) that are well distributed at the Pareto front.
+    % As shown in Figure \ref{fig:wfg_14}, TutorM could also outperform the MOEA baseline in 10k evaluations(\ref{sub@fig:wfg1_front}). WFG1 has flat landscape regions hence the convergence of genetic algorithms significantly deteriorates. Hypermapper increase count of non-dominated points, regardless it is local optimum and most samples stack in a small region. Nsga2 after 1000 function evaluations also have high-density regions which could be improved with spending more effort to evaluations. The TutorM has several dozen of Pareto-optimal points from all over the budget, that significantly outperforms Hypermapper and nsga2 even with 10k evaluations. 
+    % From WFG4 use case, all over all approaches gain near-optimal results(\ref{fig:wfg4_front}), but significant advantage over TutorM as it provides an extensive set of points(\ref{fig:wfg4_ndf}) that are well distributed at the Pareto front.
 
 
     % === WFG1 and WFG4
@@ -226,11 +203,6 @@ In this chapter, we demonstrate the advantages of the use of the developed appro
                 \label{fig:wfg1_front}
             \end{subfigure} 
         \end{subfigure} 
-
-        
-        % ?\hfill
-
-
         \begin{subfigure}{\textwidth}
             \begin{subfigure}{0.5\textwidth}
                 \includegraphics[width=\textwidth]{content/images/wfg4_ndf}
@@ -243,73 +215,55 @@ In this chapter, we demonstrate the advantages of the use of the developed appro
                 \label{fig:wfg4_front}
             \end{subfigure}
         \end{subfigure} 
-        
- 
-
         \caption[Comparison of solutions on ZDT6 problem]{A complex comparison of solutions on ZDT6 problem. Final non-dominated points are used to estimate Pareto-optimal solutions.}
         \label{fig:wfg_14}    
     \end{figure}
 
 
-
-
-
-    \begin{table}[]
-        \centering
-        \resizebox{\textwidth}{!}{%
-        \begin{tabular}{@{}ccccccc@{}}
-        \toprule
-                                             & \textbf{Metric}        & \textbf{ZDT4} & \textbf{ZDT6} & \textbf{DTLZ4} & \textbf{WFG1} & \textbf{WFG4} \\ \midrule
-        \multirow{4}{*}{\textbf{TutorM}}     & \textbf{hypervolume}   & 99,45\%       & 99,01\%       & 99,27\%        & 115,60\%      & 95,95\%       \\
-                                             & \textbf{p-distance}    & 1,336         & 0,522         & 0,022          & -             & -             \\
-                                             & \textbf{ndf-size}      & 183,022       & 31,528        & 119,308        & 24,158        & 183,244       \\
-                                             & \textbf{space-metrics} & 0,103         & 0,142         & 0,186          & 0,129         & 0,032         \\ \midrule
-        \multirow{4}{*}{\textbf{NSGA2}}      & \textbf{hypervolume}   & 97,57\%       & 87,46\%       & 95,87\%        & 45,01\%       & 91,87\%       \\
-                                             & \textbf{p-distance}    & 1,391         & 1,872         & 0,022          & -             & -             \\
-                                             & \textbf{ndf-size}      & 44,000        & 11,455        & 39,900         & 20,164        & 82,436        \\
-                                             & \textbf{space-metrics} & 0,176         & 0,355         & 0,268          & 0,228         & 0,038         \\ \midrule
-        \multirow{4}{*}{\textbf{Hypermaper}} & \textbf{hypervolume}   & 96,82\%       & 66,95\%       & 81,29\%        & 40,66\%       & 74,09\%       \\
-                                             & \textbf{p-distance}    & 2,024         & 1,850         & 0,076          & -             & -             \\
-                                             & \textbf{ndf-size}      & 28,908        & 52,746        & 10,743         & 81,512        & 30,158        \\
-                                             & \textbf{space-metrics} & 0,1386        & 0,11621       & 0,5282         & 0,0870        & 0,1032        \\ \midrule
-        \multirow{4}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}NSGA2\\ 10k eval\end{tabular}}} & \textbf{hypervolume}      & 100,00\% & 100,00\% & 100,00\% & 100,00\% & 100,00\% \\
-                                             & \textbf{p-distance}    & 0,152         & 0,256         & 0,002          & -             & -             \\
-                                             & \textbf{ndf-size}      & 93,901        & 79,776        & 93,990         & 85,196        & 98,087        \\
-                                             & \textbf{space-metrics} & 0,033         & 0,074         & 0,039          & 0,051         & 0,016         \\ \bottomrule
-        \end{tabular}%
-        }
-        \end{table}
-
+    In this benchmark, we checked all 21 problems from 3 datasets. We considered them as bi-objective with two or three parameters. In all cases, TutorM is ahead of Nypermapper 2.0, and in most cases, TutorM is nearing the baseline solution from NSGA2 with 10k evaluations. The table \ref{tab:magic_five} shows some solutions to the 5 problems. The full list of results is provided in the appendix.
  
+    \input{content/tables/summary_5.tex}
 
 % --------------------------------------------------------------------------------------------
 % ---------------------       Benchmark 2: Dynamic sampling plan and parameter selection
 % --------------------------------------------------------------------------------------------
 \section{Benchmark 2: Inner parameters}
-    Inner parameter tuning is also a problem that should be explained. Whereas in related work, there is not enough information about how to configure model-based parameter tuning. In benchmark-2, we compare different combinations of hyperparameters to define the correlation and importance of those. Due to limited time, we consider only ZDT4 problem  and with a surrogate portfolio from the previous benchmark, but without the Gaussian regression model. Evaluation budget and experiment repeated stayed the same.
+    This benchmark examines the effect of internal parameters on the performance and quality of optimization.It is necessary to determine which parameters for model-based optimization are crucial.
+
+    \subsection{TutorM parameters}
+    In addition to the common model-based parameters, it is necessary to investigate the impact of additional TutorM parameters such as validation thresholds, test set size and prediction size. Unfortunately, there is not enough information about how to configure the model-based parameter optimization  \cite{}. Conducting such analysis will be useful not only for the availability of the TutorM but also for the general tuning of model-based optimization. 
+    Due to limited time, we consider only the ZDT4 and ZDT6 problems with a surrogate portfolio from the previous benchmark, but without the Gaussian regression model. 
 
 
-    The following options are highlighted in the developed TutorM class:
+    The following parameters are highlighted in the developed TutorM class:
     \begin{itemize}
-        \item Initial dataset [0, 100, 500, 750]
-        \item Validation
+        \item \textbf{Initial dataset} [0, 100, 500, 750]. The initial number of measured points from the search space. At the same time, the total budget for measurements remains unchanged and equals 1000.
+        \item Surrogate validation. Criteria and parameters for evaluating the usefulness of the surrogate model.
             \begin{itemize}
-                \item Train/test split [75/25, 90/10]
-                \item Cross-Validation threshold [0.2, 0.65, 0.9]
-                \item Test threshold [0, 0.6, 0.9]
+                \item \textbf{Train/test split} [75/25, 90/10] train and test samples split
+                \item \textbf{Cross-Validation threshold}[0.2, 0.65, 0.9] minimum accuracy threshold for any round in cross-validation.
+                \item \textbf{Test threshold} [0, 0.6, 0.9] minimum accuracy threshold on the test set.
             \end{itemize}
-        \item Optimization search algorithm [NSGA2, MOEA-Ctrl]
-        \item Pareto front infill-criteria. Solution combinations [Non-dominated front score, Stacking]
-        \item Prediction count [10, 100]
+        \item \textbf{Optimization search algorithm} [NSGA2, MOEA-Ctrl] optimization algorithm for multi-objective solutions. 
+        \item \textbf{Solution combinations} [Non-dominated front score, Stacking] approach for choosing a set of solutions from a valid surrogate model. Since several models can be valid and each one provides its own set of decisions, we have to choose which one to pick. \emph{Non-dominated front score (ndf score)} prefers the surrogate model with the highest precision for non-dominant solutions, whereas the \emph{stack} integrates all available surrogate solutions into one set of solutions. 
+        \item \textbf{Prediction count} [10, 100] number of random solutions for a real evaluation that are selected from the set of solutions.
     \end{itemize}
 
-    As a result, was done full factorial design with 576 possible configurations and spend almost 2 weeks for 5 repetitions.
+    As a result of the full factorial design, 576 possible combinations were obtained. Each combination was repeated 5 times and averaged. Conclusions were made on the selected 40 best and worst combinations.
 
-    On the Figure shown result for 40 best and worst configurations. Note that the main impact on the quality of the final results gain from solution combination from valid surrogates models. In the case of a $ndf_score$, for final prediction selected optimal points from the surrogate model that has the highest score on non-dominated points from the test set. From another hand, stacking, as an alternative approach, means combining solutions from all models that pass validation, not only from the best one.
+    % -- ZDT6
+    First, let's consider the ZDT6 problem. Considering the figure \ref{fig:conf_zdt6}, it can be observed that the most significant impact on the result made by the combination of solution. There is a clear advantage in combining solutions into a stack. The second important parameter is the optimization algorithm (Solver). Best configurations prefer to include a combination of Genetic Algorithms (MOEA-Ctrl) as optimization solver.
 
-    The \emph{ndf score}  was common to all configurations that gave the worst result, while stacking is preferred choice for best configuration group. Another fascinating conclusion could be done from the initial sample size. Worst parameters involved only empty and 100 initial sets that are reasonable because the lower limit for the worst possible result is higher with more extensive data set. But at the same time, the lack of initial samples yields the best results. If so, the optimization process could begin earlier and achieve the optimum faster. 
+    Let's look at these options in more detail (Fig. \ref{fig:conf_zdt6_sign}). The impact of changing the optimization solver is highly dependent on the solution combination strategy. Improvement in result for MOEA-Ctrl solver is more significant when their results are combined into a stack.
 
-    It is also specified to note a tendency to decrease the test threshold, so which is confirmed not to apply general accuracy as the main criteria for surrogate selection.
+    This advantage can be explained by the fact that the stack reduces the bias of surrogate models while the combination of genetic algorithms decreases prediction variance.
+
+    % -- ZDT4
+    Now let's look at the ZDT4 problem (Fig. \ref{fig:conf_zdt4}). The results are similar to those obtained with the ZDT6 problem: the solutions stack take part almost in all best configurations. However, in this problem, there is no clear dominance of an optimization solver, but there is an impact on results from the validation thresholds (Fig. \ref{fig:conf_zdt4_sign}). 
+
+    A significant difference is available for the cross-validation threshold in the case of 'ndf' solutions' set (Fig. \ref{fig:conf_zdt4_worst}). For example, a harmful validation threshold could have a division of results into two parts: the upper one was obtained from the sampling plan because the models did not pass validation; the lower one corresponds to the cases when a valid model is finally available and guide an optimization process. It should be noted that the stack of solutions does not have such a separation that is related to the general characteristics of this technique to reduce the solution's bias.
+    
+    Another fascinating conclusion could be done from the initial sample size.The worst and the best configurations are most affected by the low or missing sampling plan. Reason for this is that the small number of samples may lead to a surrogate model fallacy while, at the same time, the small number of samples provide more opportunities for optimization search. So, this is confirmation of the importance of the dynamic sampling plan.
 
     % ===  ------------------------------------- ZDT6
     \begin{figure}
@@ -335,10 +289,10 @@ In this chapter, we demonstrate the advantages of the use of the developed appro
     \begin{figure}
         \centering
 
-        \includegraphics[width=\textwidth]{content/images/conf_zdt6_solver}
+        \includegraphics[width=0.8\textwidth]{content/images/conf_zdt6_solver}
 
-        \caption[Correlation between the most influenceable parameters for the ZDT4]{Correlation between the most influenceable parameters for the ZDT6: solution combination strategy and optimization algorithm}
-        \label{fig:conf_zdt6}    
+        \caption[Correlation between the most influenceable parameters for the ZDT6]{Correlation between the most influenceable parameters for the ZDT6: solution combination strategy and optimization algorithm}
+        \label{fig:conf_zdt6_sign}    
     \end{figure}
 
 
@@ -355,33 +309,41 @@ In this chapter, we demonstrate the advantages of the use of the developed appro
         \begin{subfigure}{\textwidth}
             \includegraphics[width=\textwidth]{content/images/conf_zdt4_best}
             \caption{ZDT4: best configurations}
-            \label{fig:zdt6_ndf}
+            \label{fig:conf_zdt4_best}
         \end{subfigure} 
 
         \caption[ZDT4: The selection from average result of best and worst configurations.]{ZDT4: The selection from average result of best and worst configurations.}
-        \label{fig:conf_zdt4_best}    
+        \label{fig:conf_zdt4}    
     \end{figure}
 
     % === ZDT4
     \begin{figure}
         \centering
-
         \begin{subfigure}{\textwidth}
-            \includegraphics[width=\textwidth]{content/images/conf_zdt4_cv_score}
-            \caption{An impact of the cross-validation's threshold}
-            \label{fig:zdt4_pred_solver}
-        \end{subfigure} 
-        \begin{subfigure}{\textwidth}
-            \includegraphics[width=\textwidth]{content/images/conf_zdt4_test_score}
-            \caption{An impact of the test-set-validation's threshold}
-            \label{fig:zdt4_comb_valid}
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\textwidth]{content/images/conf_zdt4_cv_score}
+                \caption{An impact of the cross-validation's threshold}
+                \label{fig:zdt4_pred_solver}
+            \end{subfigure} 
+            \begin{subfigure}{0.45\textwidth}
+                \includegraphics[width=\textwidth]{content/images/conf_zdt4_test_score}
+                \caption{An impact of the test-set-validation's threshold}
+                \label{fig:zdt4_comb_valid}
+            \end{subfigure}
         \end{subfigure}
 
+
         \caption[Correlation between the most influenceable parameters for the ZDT4]{Correlation between the most influenceable parameters for the ZDT4} 
-        \label{fig:conf_zdt6}    
+        \label{fig:conf_zdt4_sign}    
     \end{figure}
 
     % ====================================================== Start set for Hypermapper 2.0
+    \subsection{Sampling plan size}
+    Purpose of this experiment is to review the dependencies between the optimization result and the sampling plan size. The HyperMapper was selected as a foundation for analysis because it has a static implementation of the optimization algorithm with the surrogate model.
+
+    The results are shown in the following figure \ref{fig:hmapper_start_set}. 
+    For WFG1 and WFG4 problem, the criterion is the hypervolume and for ZDT4 and ZDT6 problem is the p-distance. Of all the results, the initial sampling plan is the least effects to the WFG6. Since this problem is unimodal and is described merely by fewer samples, other problems have a more complicated multimodal landscape that shown by unstable results. It is noticeable that the plan depends on the problem type. The optimization result may deteriorate which caused by increasing or decreasing the number of samples.
+
     \begin{figure}
         \centering
         \begin{subfigure}{\textwidth}
@@ -422,7 +384,7 @@ In this chapter, we demonstrate the advantages of the use of the developed appro
 % ---------------------       Benchmark 3: Many-objective optimization, scaling
 % --------------------------------------------------------------------------------------------
 \section{Benchmark 3: Scalability of surrogate models. RQ1.1}
-    Not only the type of the problem landscape but also its dimension is an essential factor for picking the surrogate model. The advantage of a surrogate model might be lost when the number of optimization parameters or criteria are changed. The goal of this experiment is to find out the scalability of surrogate models. 
+    Not only the type of the problem landscape but also its dimensions is an essential factor for picking the surrogate model. The advantage of a surrogate model might be lost when the number of optimization parameters or criteria are changed. The goal of this experiment is to find out the scalability of surrogate models. 
 
 
     The following surrogates were selected for verification:
@@ -510,3 +472,38 @@ The purpose of this work is to explore the possibility of using single-objective
 % In contrast to PR, ANN, RBF, GP, Ranking SVM is invariant to
 
 % The measurements were performed on an Intel Core i7-8700CPU machine with 64G of memory using Fedora Server 29.
+
+
+
+
+
+
+
+
+
+
+
+
+    % The first benchmark presented a subset of the problems listed in Table \ref{bench_problems}. They have a wide range of properties which should give a notion of how the optimization strategy works.
+    % % ==== multi-objective test problems
+    % \begin{table}[]
+    %     \centering
+    %     \resizebox{\textwidth}{!}{%
+    %         \begin{tabular}{@{}cccccc@{}}
+    %         \toprule
+    %         \multirow{2}{*}{\textbf{Problem}} &
+    %         \multirow{2}{*}{\textbf{Objective}} &
+    %         \multirow{2}{*}{\textbf{Modality}} &
+    %         \multirow{2}{*}{\textbf{Geometry}} &
+    %         \multicolumn{2}{c}{\textbf{Landscape}} \\ \cmidrule(l){5-6}
+    %                     &                 &                      &               & \textbf{Bias}    & \textbf{\begin{tabular}[c]{@{}c@{}}Many-to-one \\ mappings\end{tabular}} \\ \midrule
+    %         \textbf{ZDT4}  & bi-objective    & unimodal, multimodal & convex        & -                & -                                                                        \\
+    %         \textbf{ZDT6}  & bi-objective    & multimodal           & concave       & +                & +                                                                        \\
+    %         \textbf{DTLZ4} & multi-objective & unimodal             & concave       & +                & +                                                                        \\
+    %         \textbf{WFG1}  & multi-objective & unimodal             & convex, mixed & polynomial, flat & +                                                                        \\
+    %         \textbf{WFG4}  & multi-objective & multimodal           & concave       & -                & +                                                                       \\ \bottomrule
+    %         \end{tabular}%
+    %     }
+    %     \caption{Selected multi-objective test problems}
+    %     \label{bench_problems}
+    % \end{table}
