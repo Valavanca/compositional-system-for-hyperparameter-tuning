@@ -1,140 +1,161 @@
 \chapter{Evaluation}\label{sec:evaluation}
 
 
-\begin{blockquote}
-    \paragraph{Intent:} Performance evaluation 
-    Structure:
-    \begin{description}
+% \begin{blockquote}
+%     \paragraph{Intent:} Performance evaluation 
+%     Structure:
+%     \begin{description}
 
-        \item[Experimental setup] Optimization problems types, evaluation assumption and budget, repetition
+%         \item[Experimental setup] Optimization problems types, evaluation assumption and budget, repetition
 
-        \item[Benhmark 1] Default Tutor-model(portfolio, thresholds) on plethora types of multiobjective problems
-        \begin{enumerate}
-            \item default Tutor-model parameters
-            \item surrogate portfolio items
-            \item Baseline: MOEA
-        \end{enumerate}
+%         \item[Benhmark 1] Default Tutor-model(portfolio, thresholds) on plethora types of multiobjective problems
+%         \begin{enumerate}
+%             \item default Tutor-model parameters
+%             \item surrogate portfolio items
+%             \item Baseline: MOEA
+%         \end{enumerate}
 
-        \item[Benhmark 2] Parameter selection of Tutor-model with the dynamic sampling plan
-        \begin{enumerate}
-            \item Parameters: prediction count, train/test split, stacking solutions. thresholds(x2), solver
-            \item Subset of problems
-            \item Baseline: Static vs Dynamic. Parameters tune
-        \end{enumerate} 
+%         \item[Benhmark 2] Parameter selection of Tutor-model with the dynamic sampling plan
+%         \begin{enumerate}
+%             \item Parameters: prediction count, train/test split, stacking solutions. thresholds(x2), solver
+%             \item Subset of problems
+%             \item Baseline: Static vs Dynamic. Parameters tune
+%         \end{enumerate} 
 
-        \item[Benhmark 3] Many-objective optimization. Objectives>10
-        \begin{enumerate}
-            \item Static Heterogeneous compositional surrogate vs. Homogeneous compositional surrogate
-            \item Base line: MOEA or Random
-        \end{enumerate}
+%         \item[Benhmark 3] Many-objective optimization. Objectives>10
+%         \begin{enumerate}
+%             \item Static Heterogeneous compositional surrogate vs. Homogeneous compositional surrogate
+%             \item Base line: MOEA or Random
+%         \end{enumerate}
 
-        \item[Discussion] Results interpretation
-    \end{description}
-\end{blockquote}
+%         \item[Discussion] Results interpretation
+%     \end{description}
+% \end{blockquote}
 
 
-In this section, we present the results obtained for proposed methods on test problems with diverse objective landscape and with a various number of search variables.
+In this chapter, we demonstrate the advantages of the use of the developed approach with the compositional surrogate over the static compound in surrogate-based optimization.
 
 % ? MOEA is called globally convergent if the produced, non-dominated population converges to the true Pareto front while the number of generations goes to infinity.
 
-For this study, we did not do extensive parameter tuning: NSGA-II and surrogates were run using their default settings.
-\cite{kouwe2018benchmarking}
 
 % --------------------------------------------------------------------------------------------
 % ------------------------------------------------     Experimental setup     
 % --------------------------------------------------------------------------------------------
 \section{Experimental setup}
-The measurements were performed on an Intel Core i7-8700CPU machine with 64G of memory using Fedora Server 29.
 
     % ---------------------------------     Optimization problems
     \subsection{Optimization problems}
-    For comparison was selected several widespread synthetic benchmark suites. All of them are scalable in parameters space and some in objective space also. They simulate real life problem and have main related challenges such as multi-modality, different surface type, not uniform search space. All problems assumed global minimization for all objectives.
+    Numerous types of problems need to be considered to reduce the bias of the results. For comparison was selected several comprehensive synthetic benchmark suites. All of them are scalable in parameters space and some are scalable in objective space. The problems are designed so that a meaningful comparison can be obtained for optimization techniques. In all cases, a global minimum is expected.
 
-    The following property \cite{WFGref} could characterize optimization problems:
+    The following property \cite{WFGref} could characterize the optimization problems:
     \begin{itemize}
-        \item Modality is the property of objectives surface. Test problems are either unimodal with one global optimum or multimodal with several local optima. Multimodal problems are more complicated than unimodal problems and more similar to real-world issues.
-        \item The geometry of a Pareto optimal surface can directly influence the performance of the algorithm. Problems could be related to inner metrics of algorithms to estimate the dominance in population.
-        \item The bias of landscape transformations impacts the search process by biasing the fitness landscape. This property means that uniformly distributed parameters mapping to predisposition area in objective space. This type of problem could be mode difficult if bias region is far away from the Pareto-optimal front.
-        \item Many-to-one fitness mapping means that different parameter vector could produce the same objective vector. This property made the search more difficult to optimizers because increase likelihood of that parameters variations do not generate new objective vector.
+        \item \emph{Modality} is the property of the objectives surface. Test problems are either unimodal with one global optimum or multimodal with several local optima. Multimodal problems are more complicated than unimodal problems and more similar to real-world issues.
+        \item The \emph{geometry} of a Pareto optimal surface can directly influence the performance of the algorithm. Problems could be related to inner metrics of algorithms to estimate the dominance in population.
+        \item The \emph{bias} of landscape transformations impacts the search process by biasing the fitness landscape. This property means that uniformly distributed parameters mapping to predisposition area in objective space. This type of problem could be challenging if the bias region is far away from the Pareto-optimal front.
+        \item \emph{Many-to-one} fitness mapping means that different parameter vector could produce the same objective vector. This property made the search more difficult to optimizers because increase likelihood of that parameters variations do not generate new objective vector.
+        \item \emph{Not separability }is a characteristic of the dependence between parameters when the multi-objective problem is not intended to be optimized step-by-step for each objective. Finding optimal points for a separable problem tends to be simpler than for an otherwise similar nonseparable problem.
     \end{itemize}
 
     % ! [===    Many-to-one, bias, Modality, geometry  ===]
         % -----------------------------  ZDT      
-        \paragraph{ZDT} widespread test suite\cite{ZitzlerDT00} was conceived for two-objective problems and takes its name from its authors Zitzler, Deb and Thiele. Each test function involves a particular feature that is known to cause difficulty in the evolutionary optimization process, mainly in converging to the Pareto-optimal front.
-        For benchmarks selected following problems:
+        \paragraph{ZDT} widespread test suite\cite{ZitzlerDT00} was conceived for two-objective problems and took its name from its authors Zitzler, Deb and Thiele. In their paper the authors propose a set of 6 different scalable problems all originating from a well thought combination of functions allowing, by construction, to measure the distance of any point to the Pareto front. Each test function involves a particular feature that is known to cause difficulty in the evolutionary optimization process, mainly in converging to the Pareto-optimal front.
+        For the evaluations selected following problems:
         \begin{itemize}
-            \item ZDT4: function has 21 local Pareto-optimal fronts and therefore is highly multi-modal. Also called multifrontal problems.
-            \item ZDT6: function has a non-uniform search space: the Pareto-optimal solutions are non-uniformly distributed along the global Pareto front, and also the density of the solutions is lowest near the Pareto optimal front and highest away from the front
+            \item ZDT1 has a convex Pareto-optimal front
+            \item ZDT2 has a non-convex Pareto-optimal front
+            \item ZDT3 adds a discreteness feature to the front. Its Pareto-optimal front consists of several noncontiguous convex parts. The introduction of a sine function in this objective function causes discontinuities in the Pareto-optimal front, but not in the parameter space.
+            \item ZDT4 has 21 local Pareto-optimal fronts and therefore is highly multi-modal. Also called \textit{multifrontal} problems.
+            \item ZDT6 has a non-uniform search space: the Pareto-optimal solutions are non-uniformly distributed along the global Pareto front, and also the density of the solutions is lowest near the Pareto optimal front and highest away from the front
         \end{itemize}
 
-        In their paper the authors propose a set of 6 different scalable problems all originating from a well thought combination of functions allowing, by construction, to measure the distance of any point to the Pareto front
 
         % -----------------------------   DTLZ
-        \paragraph{DTLZ} benchmark suite\cite{DebTLZ05} was conceived for multiobjective problems with scalable fitness and objective dimensions and takes its name from its authors Deb, Thiele, Laumanns and Zitzler. All problems in this test suite are box-constrained continuous n-dimensional multi-objective problems, scalable in fitness dimension. Incidentally, there being multiple global optima is why many of the DTLZ problems are Pareto many-to-one. For benchmark evaluation, selected problem number 4 that has a dense area of solutions.
+        \paragraph{DTLZ} is extensive test suite took its name from its authors Deb, Thiele, Laumanns and Zitzler. It was conceived for the multi-objective problems with scalable fitness and objective dimensions.  All problems in this test suite are box-constrained continuous n-dimensional multi-objective problems, scalable in fitness dimension. Incidentally, there being multiple global optima is why many of the DTLZ problems are Pareto many-to-one. 
+        \begin{itemize}
+            \item DTLZ1  is one of the more difficult test problems in this test set. DTLZ1 has flat landscape regions, and the optimal Pareto front lies on a linear hyperplane. 
+            \item DTLZ2 is a unimodal problem with the concave Pareto front.
+            \item DTLZ3 is a multimodal problem with the concave Pareto front. DTLZ3 supposed to be harder to converge towards the optimal Pareto front than DTLZ2.
+            \item DTLZ4 is a unimodal problem with biases to a dense area of solutions.
+            \item DTLZ5 has a bias for solutions close to this Pareto-optimal curve. This problem may be easy for an algorithm to solve. Because of its simplicity, it is recommended to use in a higher number of objectives.
+            \item DTLZ6 is more challenging version of the DTLZ5 problem with the non-linear distance function $g()$ makes it harder to convergence against the Pareto optimal frontier.
+            \item DTLZ7 is a unimodal problem for the first objective and multimodal for the rest of the objectives. This problem has the disconnected Pareto-optimal front, which increases the likelihood that an \gls{ea} could fail to find all optimal regions.
+        \end{itemize}
 
         % ------------------------------    WFG
-        \paragraph{WFG} test suite \cite{WFGref} was designed to outperform the functionalities of previously implemented test suites. Important improvements and important challenges have been achieved in major type of problems. Also, problems with dependencies between position and distance-related parameters are included. The WFG test suite was introduced by Simon Huband, Luigi Barone, Lyndon While, and Phil Hingston. The following problems are selected for benchmarking:
-            \begin{itemize}
-                \item WFG1: This problems skews the relative significance of different parameters by employing different weights in the weighted sum reduction. Also, this problem is unimodal and with a convex and mixed Pareto optimal geometry
-                \item WFG4: This is a multimodal problem with a concave Pareto optimal geometry. The multimodality of this problem has large "hills" that make it more complicated for optimization. 
-            \end{itemize}
-
-
-        % ==== multi-objective test problems
-        \begin{table}[]
-            \caption{Selected multi-objective test problems\label{bench_problems}}
-            \centering
-            \resizebox{\textwidth}{!}{%
-                \begin{tabular}{@{}cccccc@{}}
-                \toprule
-                \multirow{2}{*}{\textbf{Problem}} &
-                \multirow{2}{*}{\textbf{Objective}} &
-                \multirow{2}{*}{\textbf{Modality}} &
-                \multirow{2}{*}{\textbf{Geometry}} &
-                \multicolumn{2}{c}{\textbf{Landscape}} \\ \cmidrule(l){5-6}
-                            &                 &                      &               & \textbf{Bias}    & \textbf{\begin{tabular}[c]{@{}c@{}}Many-to-one \\ mappings\end{tabular}} \\ \midrule
-                \textbf{ZDT4}  & bi-objective    & unimodal, multimodal & convex        & -                & -                                                                        \\
-                \textbf{ZDT6}  & bi-objective    & multimodal           & concave       & +                & +                                                                        \\
-                \textbf{DTLZ4} & multi-objective & unimodal             & concave       & +                & +                                                                        \\
-                \textbf{WFG1}  & multi-objective & unimodal             & convex, mixed & polynomial, flat & +                                                                        \\
-                \textbf{WFG4}  & multi-objective & multimodal           & concave       & -                & +                                                                       \\ \bottomrule
-                \end{tabular}%
-            }
-        \end{table}
-
+        \paragraph{WFG} test suite \cite{WFGref} was designed to outperform the functionalities of previously implemented test suites. Essential improvements have been achieved in a major type of problems. Also, problems with dependencies between position and distance-related parameters are included. The WFG test suite was introduced by Simon Huband, Luigi Barone, Lyndon While, and Phil Hingston. 
+        The test set includes the following problems:
+        \begin{itemize}
+            \item WFG1 is a unimodal problem with a convex and mixed Pareto optimal geometry. WFG1 skews the relative significance of different parameters by employing different weights in the weighted sum reduction.
+            \item WFG2 is a nonseparable and unimodal problem with a convex and disconnected Pareto optimal geometry.
+            \item WFG3 is a non-separable, unimodal problem in all its objective except for the last one, which is multimodal.
+            \item WFG4 is a multimodal problem with a concave Pareto optimal geometry. The multimodality of this problem has large "hills" that make it more complicated for optimization.
+            \item WFG5 is a separable problem with deceptive landscape and a concave Pareto optimal geometry.
+            \item WFG6 is the non-separable and unimodal problem. Its Pareto optimal geometry is concave. The non-separable reduction of this problem makes it more complicated than that of WFG2 and WFG3.
+            \item WFG7 is the separable and unimodal problem with a concave Pareto optimal geometry. WFG7 together with the WFG1 are the only problems that are both separable and unimodal.
+            \item WFG8 is a non-separable and unimodal problem with a concave Pareto optimal geometry.
+            \item WFG9 is a multimodal, deceptive and non-separable problem with a concave Pareto optimal geometry. Similar to WFG6, the non-separable reduction of this problem makes it more complicated than that of WFG2 and WFG3.
+        \end{itemize}
 
 
     % ---------------------------------     Optimization search
     \subsection{Optimization search}
-    In benchmarks, all genetic algorithms operate with population size equal to 100. Other parameters do not change. 
-    Default solvers for surrogates selected as genetic control with MOEA/D and NSGA2. Intuition of why this is a right combination: NSGA2 gave stable results with a proper distribution of points in Pareto-front approximation; MOEA/D have good exploration quality with low generation count.
+    In this thesis, we do not assume the distinct parameter tuning for optimization algorithms. By default, all EAs operate with population size equal to 100 while other parameters do not change. Default solver for the surrogates portfolio is selected the genetic control that combines MOEA/D and NSGA2 algorithms. Intuition of why this is a right combination: NSGA2 gave stable results with a proper distribution of points in Pareto-front approximation while MOEA/D have good exploration quality with low generation count. This combination should gain better trade-off in exploration and exploitation.
 
     %! [ ====   NSGA2 vs MOEA/D  ====]
 
     % ---------------------------------    Portfolio
     \subsection{Surrogate portfolio}
-        For a default surrogate portfolio were selected a most popular and perspective models. All of them have advantages and drawbacks concerning the concrete problem, although some surrogate models are indeed more universal but require much more time and prior information. From multi-objective models, there is \emph{Gaussian Process Regressor} that commonly used for model-based optimization. For this type of model should be specified by the prior's covariance. It is defined by passing a kernel object, the hyperparameters of which are optimized during extrapolations of the samples. The kernel for this benchmark is selected from a Rasmusen and illustrate an intricate design. The Gaussian Process Regressor with this kernel is used to extrapolate the $CO_2$ concentration as a function of the time $t$. The kernel consists of several components that calibrate to represent a long term, periodic and medium components. Even though this kernel is from another domain, it does give good extrapolation quality for the regression model. Unfortunately, the build time is significant and grows with samples size and dimensionality.
+    The most popular and perspective models were selected for a default surrogate portfolio. All of them have benefits and drawbacks that depends on the particular use case. From multi-objective models, there is \emph{Gaussian Process Regressor} that commonly used in the Bayesian optimization. For this type of model should be specified by the prior's covariance. It is defined by passing a kernel object, the hyperparameters of which are optimized during extrapolations of the samples. The kernel for this benchmark is selected from the GPML\cite{RasmussenN10} and illustrate a complex kernel design. The Gaussian Process Regressor with this kernel was used to extrapolate the $CO_2$ concentration as a function of the time $t$. The kernel consists of several components that calibrate to represent a long term, periodic and medium components. Even though this kernel is from another domain, it does give good extrapolation quality for the regression model. Unfortunately, the build time is significant and grows with samples size and dimensionality.
 
-        From compositional models were selected three single-objective models that give $3^{obj}$ possible surrogate hypothesis combinations. 
-        \begin{itemize}
-            \item SVR model with RBF kernel. SVR, in general, uses the same principles as the SVM for classification with the main idea is to minimize error, individualizing the hyperplane which maximizes the margin. With a motivation to extend the SVR to non-linear data, the kernel function transforms the data into a higher dimensional feature space that could be linearly separate.
-            \item Multi-layer Perceptron regressor (MLPRegressor) with three hidel layers. A neural network is a popular and influential approach to the fitness landscape.
-            \item Gradient Boosting Regressor that uses an ensemble decision tree regressors to produce a single model. Building process goes iteratively, at each step, a new tree is trained against the negative gradient of the loss function, that improve results in the previous step. This method accurate and efficient that can be used in a variety of areas
-        \end{itemize}
-        
-        As a result, for bi-objective problems, there are no more than ten possible surrogate hypothesis, including multi-objective Gaussian Process Regressor. All training and validation models perform in parallel. For a benchmark purpose, at each optimization round surrogate portfolio stay the same. 
+    Three models were selected for composite surrogates which give $3^{obj}$ possible surrogate combinations: 
+    \begin{itemize}
+        \item Support Vector Regression (SVR) model with RBF kernel. SVR uses the same principles as the SVM for classification with the main idea is to minimize error and to individualize the hyperplane which maximizes the margin. With a motivation to extend the SVR to non-linear data, the kernel function transforms the data into a higher dimensional feature space that could be linearly separate.
+        \item Multi-layer Perceptron regressor (MLPRegressor) with three hidden layers. A neural network is a popular and influential approach to approximate the functions landscape.
+        \item Gradient Boosting Regressor that uses an ensemble decision tree regressors to produce a single model. Building process goes iteratively, at each step, a new tree is trained against the negative gradient of the loss function, that improve results in the previous step. This method accurate, and it applies to a variety of domain-problem.
+    \end{itemize}
+    
+    As a result, for bi-objective problems, there are no more than ten possible surrogate hypotheses (including multi-objective Gaussian Process Regressor). All models are built and validated in parallel.  For a benchmark purpose, at each optimization round the surrogate portfolio does not change. 
 
     % ---------------------------------    Benchmark baseline
     \subsection{Benchmark baseline}
-    The developed approach in this thesis(class TutorModel) was compared with Hypermapper\cite{nardi2019practical}, that focus on multi-objective parameter tuning with various types of parameters. Hypermapper used several randomized decision forests models, one for each objective, and appply Bayesian optimization to find optimal points. General idea ground in scaling several surrogates to single-objective criteria and optimize it with Bayesian optimization. Hypermapper was succesfuly used in autotuning computer vision aplications. Hypermapper does not specify an initial sampling size. That is why we select it as default population size for MOEA (100 points).
+    The developed approach in this thesis (class TutorModel) was compared with Hypermapper 2.0\cite{nardi2019practical} that discussed in related work. This toolbox is focused on multi-objective parameter tuning with various types of parameters. Hypermapper used several randomized decision forests models, one for each objective. The general idea is scaling several surrogate models to single-objective criteria and optimize it as a single-objective problem. Besides, a Bayesian model is used to assist a search in obtaining a valid configuration. Hypermapper was successfully used in autotuning computer vision applications and database optimization. Since the sample size is not specified, we have selected it as the default population size for the MOEA algorithm (100 points).
 
-    NSGA2 was selected as the baseline for optimization. It is suggested that the algorithms in benchmark should be approximated in quality to the best result(NSGA2 10k evaluations) but at the same time, be better than the basic approach with a limited budget(NSGA2 1k evaluations).
+    NSGA 2 was chosen as the benchmark baseline, as it is one of the most well-known algorithm \cite{RamirezRV19}. It is a suitable reference point to compare other approaches. The results of budget-limited optimization algorithms should be closer to those results obtained from NSGA2 with a much larger budget. Budget means the available number of real function evaluations.
 
 % --------------------------------------------------------------------------------------------
 % ---------------------       Benchmark 1: Model-tutor: Portfolio with compositional surrogates 
 % --------------------------------------------------------------------------------------------
 \section{Benchmark 1: Portfolio with compositional surrogates. Dynamic sampling plan. [RQ1, RQ2]}
-    Results showed that the sampling plan dynamically collects a different amount of samples based on a current problem (Figure \ref{fig:changing_models}). When samples are enough, several models could periodically swap as best available. Furthermore, with growing samples set, models give more stable results, and changes become less frequent. In the case of WFG1 problem(\ref{fig:wfg1_models_60}) best accuracy for non-dominated point gave the compositional model with GPR for each objective. In WFG problem, the same compositional model goes ahead other models in the portfolio, but after samples size increased, multi-objective GP regression was on the top.
+
+    In this benchmark, a developed methodology(TutorM) was compared with related approaches in solving all three sets of problems (ZDT, DTLZ, WFG) for 2 objectives and 2(3) parameters. The TutorM includes all features such as dynamic compositional models, surrogate portfolio and validation.
+
+    % The first benchmark presented a subset of the problems listed in Table \ref{bench_problems}. They have a wide range of properties which should give a notion of how the optimization strategy works.
+    % % ==== multi-objective test problems
+    % \begin{table}[]
+    %     \centering
+    %     \resizebox{\textwidth}{!}{%
+    %         \begin{tabular}{@{}cccccc@{}}
+    %         \toprule
+    %         \multirow{2}{*}{\textbf{Problem}} &
+    %         \multirow{2}{*}{\textbf{Objective}} &
+    %         \multirow{2}{*}{\textbf{Modality}} &
+    %         \multirow{2}{*}{\textbf{Geometry}} &
+    %         \multicolumn{2}{c}{\textbf{Landscape}} \\ \cmidrule(l){5-6}
+    %                     &                 &                      &               & \textbf{Bias}    & \textbf{\begin{tabular}[c]{@{}c@{}}Many-to-one \\ mappings\end{tabular}} \\ \midrule
+    %         \textbf{ZDT4}  & bi-objective    & unimodal, multimodal & convex        & -                & -                                                                        \\
+    %         \textbf{ZDT6}  & bi-objective    & multimodal           & concave       & +                & +                                                                        \\
+    %         \textbf{DTLZ4} & multi-objective & unimodal             & concave       & +                & +                                                                        \\
+    %         \textbf{WFG1}  & multi-objective & unimodal             & convex, mixed & polynomial, flat & +                                                                        \\
+    %         \textbf{WFG4}  & multi-objective & multimodal           & concave       & -                & +                                                                       \\ \bottomrule
+    %         \end{tabular}%
+    %     }
+    %     \caption{Selected multi-objective test problems}
+    %     \label{bench_problems}
+    % \end{table}
+
+
+
+    Results showed that the sampling plan dynamically collects a different amount of samples based on a current problem (Figure \ref{fig:changing_models}). When samples are enough, several models could periodically swap as best available. Furthermore, models give more stable results, and changes become less frequent with increasing the sample set. In the case of WFG1 problem(\ref{fig:wfg1_models_60}) best accuracy for non-dominated point gave the compositional model with Gradient Boosting Regressor for each objective. In WFG problem, the same compositional model goes ahead other models in the portfolio, but after samples size increased, multi-objective the Gaussian Process Regressor was on the top.
 
     % === TutorM: surrogate portfolio in action
     \begin{figure}
@@ -152,7 +173,7 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
             \label{fig:wfg1_models_60}
         \end{subfigure} 
 
-        \caption[The optimization process with dinamic sampling plan and surrogate portfolio.]{The optimization process with dinamic sampling plan and surrogate portfolio. Plots are shown in which step sampling plan was used or which model gives the best accuracy on the test set. More hypervolume is better.}
+        \caption[Optimization process with dynamic sampling plan and surrogate portfolio.]{Optimization process with dynamic sampling plan and surrogate portfolio. Plots are shown in which step sampling plan was used or which model gives the best accuracy on the test set. More hypervolume is better.}
         \label{fig:changing_models}    
     \end{figure}
 
@@ -413,7 +434,7 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
 
     For evaluation scalability property for the surrogate models, \emph{DTLZ2} problem was selected. It is unimodal problem with multiple global optima and concave geometry of the Pareto front. During the experiment, the number of optimization criteria changes with a constant number of parameters. For all cases, the experiment was repeated 5 times. The figure \ref{fig:scale_dtlz2} shows the three selected surrogate strategies with metrics of the average distance to the Pareto front (top line) and a time spent per complete an optimization iteration (bottom line). Note that the Gaussian model shows significantly better results relative to other approaches but only for the bi-objective problem. Increasing the criteria to 4, converging to a solution is only available for the neural network and portfolio. At the same time, the Gaussian model becomes incorrect and begins to increase the time required to build exponentially.
     
-    There is also an open question as to which parameters to choose for the surrogate model. The suitability and quality of the surrogate are highly dependent on the parameters (number of layers, type of core). In turn, for the surrogate portfolio, the parameters determine how to build and select surrogate models. The same model but with different parameters, is evaluated in the portfolio as separate entities. It is a great advantage to apply a dynamic and scalable approach that can adapt to a specific problem. This is the answer to RQ\ref{RQ1.1}.
+    There is also an open question as to which parameters to choose for the surrogate model. The suitability and quality of the surrogate are highly dependent on the parameters (number of layers, type of core). In turn, for the surrogate portfolio, the parameters determine how to build and select surrogate models. The same model but with different parameters, is evaluated in the portfolio as separate entities. It is a great advantage to apply a dynamic and scalable approach that can adapt to a specific problem. This is the answer to \hyperref[RQ1.1]{RQ1.1}.
 
     
     Hence, the necessary criterion for scaling surrogates is not just the choice of one model for all cases, but the dynamic combination of the strong properties of several models to achieve better results with limited resources.
@@ -446,11 +467,13 @@ The measurements were performed on an Intel Core i7-8700CPU machine with 64G of 
 % --------------------------------------------------------------------------------------------
 \section{Discussion}
 
-Up to now, most papers used the
-The quality of the results obtained with X was similar to the results obtained with Y, but with significantly fewer exactly evaluated solutions during the optimization process. 
+Up to now, most papers used the The quality of the results obtained with X was similar to the results obtained with Y, but with significantly fewer exactly evaluated solutions during the optimization process. 
 
 
-consume an inordinate amount of time.
+% consume an inordinate amount of time.
+
+
+The purpose of this work is to explore the possibility of using single-objective models for many-objective optimizations. To accomplish this goal, the composite model has been implemented. It is used to combine models into a portfolio and dynamically select them. Furthermore, the stepwise validation approach has been adapted to evaluate the usability of the surrogate model.
 
 % Discussion
 
@@ -485,3 +508,5 @@ consume an inordinate amount of time.
 
 
 % In contrast to PR, ANN, RBF, GP, Ranking SVM is invariant to
+
+% The measurements were performed on an Intel Core i7-8700CPU machine with 64G of memory using Fedora Server 29.
