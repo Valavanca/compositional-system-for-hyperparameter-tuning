@@ -1,7 +1,7 @@
 \chapter{Concept}\label{sec:concept}
 
     % \begin{blockquote}
-    %     \paragraph{Intent:} General reminder and answer of RQ's
+    %     \paragraph{Intent:} General reminder and answer of RQ's 111111
         
     %     Structure:
     %     \begin{description}
@@ -30,11 +30,9 @@
 
     \epigraph{``All models are wrong but some are useful``}{\textit{– George Box}}
 
-    This section presented a general idea of a improvement in the surrogate-based optimization for black-box function. 
+    This chapter introduces a general idea witch improve the limitations of model-based optimization.  
 
-    The usual optimization problem is a trade-off in producing the best possible multi-objective solution with less effort. Because we consider expensive function, an optimization effort, first of all, means evaluation budget. Each of these evaluations can require much time, energy, or other resources. That is why the main multi-objective comparison criteria are convergence to the Pareto frontier with a limited evaluation budget. It also takes into account the ratio of non-dominant solutions to the total number of measured configurations and their distribution on the Pareto frontier. In this thesis, under solving a multi-objective problem, we intend to find a set of none-dominated points that cover a wide range of objectives values and close as possible to the real Pareto front. If evaluations of the problem are expensive, the real count of experiments could be reduced throw applying a multi-objective algorithm on a surrogate model. This technique is the preferred choice for functional optimization when the evaluation cost is high.
-
-    While multiple algorithms could be applied, we selected \gls{moea} as default optimization techniques for the surrogate models. The advantage of \gls{ea} is that it could be easily modified and it could operate on a set of solutions candidates, that are well-fitted to approximate the Pareto-front. Finally, evolutionary algorithms can estimate highly complex problems in various use-cases.
+    As mentioned previously, fixed components can make the optimization process ineffective. That is why flexibility and variability must be introduced for each optimization step. Our concept focuses on the combination of surrogate models to effectively extrapolation required problems.
 
 
     %? The main objective of this part is to provide a thorough treatment of multi-objective parameter tuning with evolutionary algorithm(s)
@@ -45,26 +43,26 @@
     % ------------------------------------------------     RG1: Models combinations     
     % --------------------------------------------------------------------------------------------
 
-    \section{Surrogates models combinations [RQ1]}
+    \section{Combinations of surrogate models}
 
-        Let us address the main issue we have observed in multi-objective optimization. Base on the statement that the surrogate model is domain-specific, the central idea of the thesis is introduced as the model variability \emph{in} a surrogate model and the extensibility \emph{with} surrogate hypotheses.
+        Let us address the main issue we have observed in multi-objective optimization. It considers that the solution techniques and parametric selections, however, are ordinarily problem-specific. Unfortunately, most surrogate model implementations are static. We tackle it with an improvement of a model variability \emph{in} a surrogate model(Compositional surrogate) and the extensibility \emph{with} surrogate hypotheses (Surrogate portfolio).
 
         % ------------------------------------------------     Compositional model       
-        \subsection{Compositional Surrogate Model}
-            The concept of the compositional surrogate means a combination of the multiple simple models that simulate the several objectives independently at the same time. Dividing optimization problems to several parts improves the variability of surrogates and accordingly, the possibilities to improve the solution.
-            Besides, a significant advantage of the compositional surrogate is a possibility to extend the single-objective parameter tuning to the multi-objective task. This provides the opportunity to reuse single-criteria models for multi-criteria optimization and dynamically reconstruct problem representation from mixed parts.
-            
+        \subsection{Compositional Surrogate Model [RQ1]}
+            The concept of the compositional surrogate means a combination of the multiple simple models that approximate the several objectives independently at the same time. Dividing optimization problems to several parts improves the variability of the surrogate and accordingly, the possibilities to improve the solution.
+
+            Besides, a significant advantage of the compositional surrogate is a possibility to extend the single-objective parameter tuning to the multi-objective optimization. This provides the opportunity to reuse single-criteria models for multi-criteria optimization and dynamically reconstruct problem representation from mixed parts.
+            Should consider that under \emph{compositional model} we mean a surrogate model that combines \emph{various} sub surrogates models for each optimization objective. The \emph{surrogate hypothesis} refinement is also used to emphasize on the fact that the surrogate model can completely describe all criteria from the objective space.
+
             % Nonetheless, the surrogate model is not universal to describe objectives independently. 
 
-            That approach should be capable, outperform static models in adaptation to a real black-box problem with the unknown objective surface. For example, a user could represent his domain knowledge as preferring to a concrete combination of the surrogate models and calibrate it during optimization. 
-            
-            In this thesis, the \emph{compositional model} means a surrogate model that combines various sub surrogates models for each optimization objective. The \emph{surrogate hypothesis} refinement is also used to emphasize on the fact that the surrogate model can completely describe all criteria from the objective space.
+            The compositional surrogate has multiple opportunities for variability that outperform static models in adaptation to a real black-box problem. For example, choosing a specific set of models is a representation of knowledge about the subject area. If expectations during optimization are not met, the compositional model can be partially updated with saving time and effort while the static model needs to be completely replaced. The reasons for such changes might be the newly obtained results or might be the increased dimensionality of optimization space.
 
             % ------------------------------------------------     Scalability     
             \subsubsection{Scalability}
-                The ability to scale the optimization solution could be considered as an adaptation to an unknown problem. Scalability, in this case, means perform the problem with high dimensions of parameters and objectives spaces.
+                The ability to scale the optimization solution could be considered as an adaptation to an unknown problem. Scalability, in this case, means perform the problem with high dimensions in parameters and objectives spaces.
 
-                In practice show that scalability is a problem for surrogate models and optimization algorithms also. For example, a popular surrogate algorithm such as Kriging(Gaussian process regression) struggle with high dimensional samples but provide excellent results in smaller dimensions. Also, the multi-objectives algorithm has drawbacks in many-dimensional problems. Therefore, another advantage of the composite surrogate model is obvious, which could provide variability for the surrogate models that can not deal with search space.
+                Practically showed that scalability is a problem for surrogate models and optimization algorithms also. For example, a popular surrogate models such as Gaussian process regression (Kriging) struggle from high dimensional samples but provide excellent results in smaller dimensions. Also, the multi-objectives algorithm has drawbacks in many-dimensional problems. Therefore, another advantage of the composite surrogate model is obvious, which could provide variability for the surrogate models that can not deal with search space.
                 
                 The compositional model could improve the solution by a precisely select combination of surrogates to describe problem landscape. Each surrogate model could provide a complex hypothesis of how a parameter and objective spaces related.
                 
@@ -147,6 +145,41 @@
         The \hyperref[RG2]{RG2} is answered by determining the relationship between the samples size and the surrogate model. A step-by-step validation technique has also been adapted to screen out invalid surrogate models and to identify a sufficient number of initial samples.
 
         Our work is similar in constitution to the approaches adopted from the expensive MBMO \cite{SoftSurvey} with a modular framework structure that includes a predefined set of models. We extend the idea of model selection and k-fold cross-validation to validation surrogate models on various problem sceneries. To our knowledge, there exists no research that investigates how to make a composition of several different surrogate models and use it in a portfolio. We argue that the proposed concept from this thesis is the preferred choice for black-box optimization when the evaluation cost is large.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    % The usual optimization problem is a trade-off in producing the best possible multi-objective solution with less effort. Because we consider expensive function, an optimization effort, first of all, means evaluation budget. Each of these evaluations can require much time, energy, or other resources. That is why the main multi-objective comparison criteria are convergence to the Pareto frontier with a limited evaluation budget. 
+
+
+    % It also takes into account the ratio of non-dominant solutions to the total number of measured configurations and their distribution on the Pareto frontier. In this thesis, under solving a multi-objective problem, we intend to find a set of none-dominated points that cover a wide range of objectives values and close as possible to the real Pareto front. 
+    
+    % If evaluations of the problem are expensive, the real count of experiments could be reduced throw applying a multi-objective algorithm on a surrogate model. This technique is the preferred choice for functional optimization when the evaluation cost is high.
+
+    % While multiple algorithms could be applied, we selected \gls{moea} as default optimization techniques for the surrogate models. The advantage of \gls{ea} is that it could be easily modified and it could operate on a set of solutions candidates, that are well-fitted to approximate the Pareto-front. Finally, evolutionary algorithms can estimate highly complex problems in various use-cases.
+
+
+
+
 
         % -----------------------------------------------------      Infill criteria       
         % \paragraph{}{Infill criteria}

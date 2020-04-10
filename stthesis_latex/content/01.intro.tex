@@ -1,25 +1,48 @@
 \chapter{Introduction}\label{sec:intro}
 
-\begin{blockquote}
-\paragraph{Intent:} A short version of thesis and a description of done work. Challenges and Problems.
-
-    \begin{description}
-        \item[1. Motivation] Surrogate model for multi-objective expensive black-box problem $\rightarrow$ Research gap: Portfolio/Compositional system/Sampling plan. Definition and motivation of the goal. Goal: MO solution $\rightarrow$ Problem: Expensive black-box $\rightarrow$ Solution: Answer research questions
-        \item[2. Objectives of work] ?
-        \item[3. Research Questions] Question from research gap. The answer to this questions is the purpose of the thesis
-        \item[4. Results overview] A short overview of done work
-    \end{description}
-\end{blockquote}
-
 % --------------------------------------------------------------------------------------------
 % ------------------------------------------------     Motivation      
 % --------------------------------------------------------------------------------------------
 \section{Motivation}
 
-    In traditional manual parameter tuning, engineers put the effort in searching the optimal objectives guided by experience and intuition. Regardless, many of these optimization problems have a huge search space that could be handled only with automatic tools. This kind of software could extrapolate and highlight the most perspective parameters from infinite space, but at the same time, struggle in multi-criteria decisions that are critical for engineering problems. For examples: architecture design, test generating, tuning machine-learning algorithms or experiment plan could be stated as multi-objective problems. To understand the space of possible solution, they are represented on the Pareto frontier; i.e. the subset os solutions that could be not improved in some objectives without degrading in another.
-    Multi-objective algorithms or single-objective with scalarization allows to find out some Pareto optimal points. Still, they require a massive amount of evaluations that are not appropriate for an expensive problem. A common approach to reducing the final cost of the optimization algorithm is to replace some expensive estimations with cheap ones with the help of surrogate models. The conventional algorithms to extrapolate available results are Bayesian Regression model(Kriging), Neural Network, SVR or combinations of Tree regressions(Decision) estimators. Regardless, almost all optimizations use static models or aggregation several instances of one model type. These approaches lack variability and cannot be finely tuned.
+    In traditional manual parameter tuning, engineers put the effort in searching the optimal objectives guided by experience and intuition. Regardless, many of these optimization problems have a huge search space that could be handled only with automatic tools. This kind of software could extrapolate and highlight the most perspective parameters from infinite space, but at the same time, struggle in multi-criteria decisions that are critical for engineering problems. For examples: architecture design, test generation, tuning machine-learning algorithms could be stated as multi-objective problems. To understand the space of possible solution, they are represented on the Pareto frontier; i.e. the subset os solutions that could be not improved in some objectives without degrading in another.
+    Multi-objective algorithms or single-objective with scalarization allows to find out some Pareto optimal points. Still, they require a massive amount of evaluations that are not appropriate for an expensive problem. A common approach to reducing the final cost of the optimization algorithm is to replace some expensive estimations with cheap ones with the help of surrogate models. The conventional algorithms to extrapolate available results are Bayesian Regression model(Kriging), Neural Network, Support Vector Regression (SVR) or Tree regressions (Decision) estimators. Regardless, almost all optimizations use static models or aggregation several instances of one model type. These approaches lack variability and cannot be finely tuned.
 
-    This thesis introduces a modular structure for multi-objective parameter tuning that allows to use of compositional diverse surrogate models and apply various optimization techniques. This goal was accomplished by a surrogate portfolio, stepwise validation and a combination of final decisions. The evaluation on various problems showed excellent results and superiority over analogues methodologies. Composition of surrogate models can be used to improve the applicability of model-based optimization to a verity of problems such as parameter tuning.
+
+
+    Develop strategies that can decompose the surrogate model into several single-objective models, and enhance bast practices in single-objective parameter tuning.
+
+% --------------------------------------------------------------------------------------------
+% ------------------------------------------------     Research Questions      
+\section{Research Questions}
+
+In this thesis we answer the following research questions:
+\begin{description} 
+    \item[RQ1:]\label{RG1} How to dynamically combine different single-objective models to extrapolate multi-objective problems?
+    \item[RQ2:]\label{RG2} How to combine surrogate models in a portfolio?
+    \item[RQ2:]\label{RG3} How to select an appropriate sampling plan?
+\end{description}
+
+The purpose of this study is to provide a mechanism of a fined-grained models composition that allows making a superior multi-objective decision. Prerequisite for such solution is to reduce the number of actual evaluations while keeping the optimal quality of a decision.
+
+% --------------------------------------------------------------------------------------------
+% ------------------------------------------------     Overview
+\section{Results overview}
+    This thesis introduces a modular structure for multi-objective parameter tuning that allows to use of compositional diverse surrogate models and apply various optimization techniques. This goal was accomplished by a compositional model and a surrogate portfolio, stepwise validation and a dynamic sampling plan. The evaluation of various problems showed excellent results and superiority over analogues methodologies. Obtained results can be used to improve the applicability of model-based optimization to a verity of problems such as parameter tuning.
+    
+    % Composition of surrogate models can be used to improve the applicability of model-based optimization to a verity of problems such as parameter tuning.
+
+    % We have obtained that in the most majority of problems, the developed strategy provide significantly better results.
+
+    % The approach we have developed in this study aims to excellent results in wide types of multi-objective problems. This approach
+    % In numerous test problems, the portfolio with compositional-surrogates finds comparable solutions to standard MOEA (NSGA-II, MOEAD, MACO, NSPSO) doing considerably fewer evaluations (500 vs 10000). Dynamic sampling accelerates the start of the optimization process and prevents wasting resources. The surrogate portfolio allows adapting the optimization process to concrete domain problem and the number of available samples. 
+
+% \section{Solution}
+
+% \section{Organization of the Thesis}
+
+
+
 
 
 
@@ -35,31 +58,3 @@
     % Since the solution for multi-objective optimization problems gives the appearance to a set of Pareto-optimal points, evolutionary optimization algorithms are ideal for handling multi-objective optimization problems.
 
     % General optimization methods could be classified into derivative and non-derivative methods. In this thesis focuses on non-derivative methods, as they are more suitable for parameter tuning. Therefore, they are also known as black-box methods and do not require any derivatives of the objective function to calculate the optimum.  Other benefits of these methods are that they are more likely to find a global optimum. 
-
-
-% --------------------------------------------------------------------------------------------
-% ------------------------------------------------     Objectives      
-\section{Objectives}
-        Develop strategies that can decompose the surrogate model into several single-objective models, and enhance bast practices in single-objective parameter tuning.
-
-    % --------------------------------------------------------------------------------------------
-    % ------------------------------------------------     Research Questions      
-    \section{Research Questions}
-    The goal of this thesis is to provide a mechanism of a fined-grained models composition that allows making a multi-objective decision as software product-line for parameter tuning. The criterion for reaching the goal is to reduce the number of objective evaluations while keeping the optimal quality of a decision.
-
-    \begin{description} 
-        \item[RQ1:]\label{RG1} Heterogeneous compositional surrogate models for multiobjective optimization
-        \begin{itemize}
-            \item[RQ1.1:\label{RQ1.1}] Scalable surrogate-based optimization
-        \end{itemize}
-        \item[RQ2:]\label{RG2} Domain independent sampling strategies
-    \end{description}
-
-% --------------------------------------------------------------------------------------------
-% ------------------------------------------------     Overview
-\section{Results overview}
-    In numerous test problems, the portfolio with compositional-surrogates finds comparable solutions to standard MOEA (NSGA-II, MOEAD, MACO, NSPSO) doing considerably fewer evaluations (500 vs 10000). Dynamic sampling accelerates the start of the optimization process and prevents wasting resources. The surrogate portfolio allows adapting the optimization process to concrete domain problem and the number of available samples. 
-
-% \section{Solution}
-
-% \section{Organization of the Thesis}
