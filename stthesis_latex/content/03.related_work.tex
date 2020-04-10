@@ -51,6 +51,7 @@
             \item If stop criteria are not met, repeat optimization with the updated samples set.
         \end{enumerate}
         We will present the overview of available works for model-based multi-objective optimization. We will begin with the overview of the project for model-based optimization (mlrMBO) and continue with related algorithms including various optimization improvements.
+                                                                                                    % ! We begin with
 
         % ==== Sequential MBO
         \begin{figure}
@@ -77,7 +78,7 @@
         % ?General characteristics are that they have multiple algorithms on each type of optimization and additional features that they provide. Usually, a surrogate model is predefine and injected into some algorithm for decision making.
 
         % ----------------         BRISE 2.0
-        \paragraph{BRISE 2.0} \cite{Pukhkaiev19} is a software product line for parameter tuning. The core topics of their approach are extensibility and variability with the key features such as 1) A \emph{repeater} which automatically decides on the number of repetitions needed to obtain the required accuracy for each configuration. 2) \emph{Stop condition} which validates a solution received from the model and decides, whether to stop the experiment. 3) Connection of a sampling plan and a model prediction validity which provides a \emph{flexible sampling plan}. The main advantage of this sampling plan is that it requires less initial knowledge about the optimization problem.
+        \paragraph{BRISE 2.0}\label{alg:BRISE} \cite{Pukhkaiev19} is a software product line for parameter tuning. The core topics of their approach are extensibility and variability with the key features such as 1) A \emph{repeater} which automatically decides on the number of repetitions needed to obtain the required accuracy for each configuration. 2) \emph{Stop condition} which validates a solution received from the model and decides, whether to stop the experiment. 3) Connection of a sampling plan and a model prediction validity which provides a \emph{flexible sampling plan}. The main advantage of this sampling plan is that it requires less initial knowledge about the optimization problem.
         Extrapolation model for parameter prediction is exchangeable and it combines surrogate and optimization strategies in each implementation. Several general models, such as polynomial regression surrogate with local search and Bayesian optimization with bandit-based methods strategy(BOHB \cite{FalknerBOHB}), are implemented.  However, the models lack variability and should be designed from scratch for a new domain-problem.
 
         % ----------------         SMAC

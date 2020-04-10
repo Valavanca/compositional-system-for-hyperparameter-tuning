@@ -1,34 +1,33 @@
-    % Please add the following required packages to your document preamble:
-    % \usepackage{booktabs}
-    % \usepackage{multirow}
-    \begin{table}[]
-        \centering
-        \caption{Comparison of final results after 1000 function evaluations}
-        \begin{tabular}{@{}lllllll@{}}
-        \toprule
-                                                                                                & Metric        & ZDT4             & ZDT6             & DTLZ4             & WFG1             & WFG4             \\ \midrule
-        \multirow{4}{*}{\textbf{TutorM}}                                                          & Hypervolume   & \textbf{99,80\%} & \textbf{99,43\%} & \textbf{99,829\%} & \textbf{95,75\%} & \textbf{99,28\%} \\ \cmidrule(l){2-7} 
-                                                                                                & p-distance    & \textbf{0,01}    & \textbf{0,09}    & \textbf{0,001}    & -                & -                \\ \cmidrule(l){2-7} 
-                                                                                                & ndf-size      & \textbf{50,0\%}  & 4,26\%           & 0,2\%             & 3,44\%           & \textbf{38,90\%} \\ \cmidrule(l){2-7} 
-                                                                                                & space-metric  & \textbf{0,78}    & 0,17             & 0,666             & 0,51             & \textbf{1}       \\ \midrule
-        \multirow{4}{*}{\textbf{NSGA2}}                                                           & Hypervolume   & 83,43\%          & 83,84\%          & 87,807\%          & 30,52\%          & 83,95\%          \\ \cmidrule(l){2-7} 
-                                                                                                & p-distance    & 0,04             & 1,29             & 0,002             & -                & -                \\ \cmidrule(l){2-7} 
-                                                                                                & ndf-size      & 8,77\%           & 1,01\%           & 9,600\%           & 3,18\%           & 10\%             \\ \cmidrule(l){2-7} 
-                                                                                                & space-metric  & 0,19             & 0,04             & 0,323             & 0,28             & 0,58             \\ \midrule
-        \multirow{4}{*}{\textbf{Hypermaper}}                                                      & Hypervolume   & 97,32\%          & 82,86\%          & 64,57\%           & 44,12\%          & 84,39\%          \\ \cmidrule(l){2-7} 
-                                                                                                & p-distance    & 0,90             & 1,12             & 0,059             & -                & -                \\ \cmidrule(l){2-7} 
-                                                                                                & ndf-size      & 5,42\%           & \textbf{6,25\%}  & 1,177\%           & \textbf{10,24\%} & 3,26\%           \\ \cmidrule(l){2-7} 
-                                                                                                & space-metrics & 0,11             & 0,08             & 0,029             & 0,31             & 0,06             \\ \midrule
-        \multirow{4}{*}{\textbf{\begin{tabular}[c]{@{}l@{}}NSGA2 50k\\ (Base line)\end{tabular}}} & Hypervolume   & 100\%            & 100\%            & 100\%             & 100\%            & 100\%            \\ \cmidrule(l){2-7} 
-                                                                                                & p-distance    & 2,04e-05         & 0,0003           & 8,81e-06          & -                & -                \\ \cmidrule(l){2-7} 
-                                                                                                & ndf-size      & 0,72\%           & 0,72\%           & 0,360\%           & 0,72\%           & 0,72\%           \\ \cmidrule(l){2-7} 
-                                                                                                & space-metric  & 1                & 1                & 1                 & 1                & 0,60             \\ \bottomrule
-        \end{tabular}
-        \label{tab:magic_five}
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{multirow}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+    \centering
+    \begin{tabular}{@{}lllllll@{}}
+    \toprule
+                                                                                              & Metric      & ZDT4                                     & ZDT6                                     & DTLZ4                                     & WFG1                                     & WFG4                                     \\ \midrule
+                                                                                              & \textbf{Hypervolume} $\uparrow$  & \cellcolor[HTML]{EFEFEF}\textbf{99,8\%} & \cellcolor[HTML]{EFEFEF}\textbf{99,43\%} & \cellcolor[HTML]{EFEFEF}\textbf{99,83\%} & \cellcolor[HTML]{EFEFEF}\textbf{95,75\%} & \cellcolor[HTML]{EFEFEF}\textbf{99,28\%} \\
+                                                                                              & \textbf{p-distance} $\downarrow$  & \cellcolor[HTML]{EFEFEF}\textbf{0,01}    & \cellcolor[HTML]{EFEFEF}\textbf{0,09}    & \cellcolor[HTML]{EFEFEF}\textbf{0,001}    & -                                        & -                                        \\
+                                                                                              & \textbf{ndf-size} $\uparrow$     & \cellcolor[HTML]{EFEFEF}\textbf{50\%}                          & 4,26\%                                   & 0,2\%                                     & 3,44\%                                   & \cellcolor[HTML]{EFEFEF}\textbf{38,9\%} \\
+    \multirow{-4}{*}{\textbf{TutorM}}                                                         & \textbf{spacing} $\uparrow$      & \cellcolor[HTML]{EFEFEF}\textbf{0,78}    & \cellcolor[HTML]{EFEFEF}\textbf{0,17}    & \cellcolor[HTML]{EFEFEF}\textbf{0,66}    & \cellcolor[HTML]{EFEFEF}\textbf{0,51}    & \cellcolor[HTML]{EFEFEF}\textbf{1}       \\ \midrule
+                                                                                              & \textbf{Hypervolume} $\uparrow$  & 83,43\%                                  & 83,84\%                                  & 87,807\%                                  & 30,52\%                                  & 83,95\%                                  \\ 
+                                                                                              & \textbf{p-distance} $\downarrow$  & 0,04                                     & 1,29                                     & 0,002                                     & -                                        & -                                        \\
+                                                                                              & \textbf{ndf-size} $\uparrow$     & 8,77\%                                   & 1,01\%                                   & \cellcolor[HTML]{EFEFEF}\textbf{9,6\%}    & 3,18\%                                   & 10\%                                     \\
+    \multirow{-4}{*}{\textbf{NSGA2}}                                                          & \textbf{spacing} $\uparrow$      & 0,19                                     & 0,04                                     & 0,323                                     & 0,28                                     & 0,58                                     \\ \midrule
+                                                                                              & \textbf{Hypervolume} $\uparrow$  & 97,32\%                                  & 82,86\%                                  & 64,57\%                                   & 44,12\%                                  & 84,39\%                                  \\ 
+                                                                                              & \textbf{p-distance} $\downarrow$  & 0,90                                     & 1,12                                     & 0,059                                     & -                                        & -                                        \\
+                                                                                              & \textbf{ndf-size} $\uparrow$     & 5,42\%                                   & \cellcolor[HTML]{EFEFEF}\textbf{6,25\%}  & 1,177\%                                   & \cellcolor[HTML]{EFEFEF}\textbf{10,24\%} & 3,26\%                                   \\
+    \multirow{-4}{*}{\textbf{Hypermaper 2.0}}                                                     & \textbf{spacing} $\uparrow$      & 0,11                                     & 0,08                                     & 0,029                                     & 0,31                                     & 0,06                                     \\ \midrule
+                                                                                              & \textbf{Hypervolume} $\uparrow$  & 100\%                                    & 100\%                                    & 100\%                                     & 100\%                                    & 100\%                                    \\  
+                                                                                              & \textbf{p-distance} $\downarrow$  & 2,04e-05                                 & 0,0003                                   & 8,81e-06                                  & -                                        & -                                        \\
+                                                                                              & \textbf{ndf-size} $\uparrow$     & 0,72\%                                   & 0,72\%                                   & 0,36\%                                    & 0,72\%                                   & 0,72\%                                   \\ 
+    \multirow{-4}{*}{\textbf{\begin{tabular}[c]{@{}l@{}}NSGA2 50k\\ (Baseline)\end{tabular}}} & \textbf{spacing} $\uparrow$      & 1                                        & 1                                        & 1                                         & 1                                        & 0,6                                     \\ \bottomrule
+    \end{tabular}
+    \caption{Comparison of results after 1000 feature evaluations}
+    \label{tab:magic_five}
     \end{table}
-
-
-
 
         % \begin{table}[]
     %     \centering

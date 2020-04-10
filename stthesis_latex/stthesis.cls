@@ -53,7 +53,9 @@
 \RequirePackage{graphicx}
 \RequirePackage[left=30mm,right=20mm,top=30mm,bottom=40mm]{geometry}
 % needed for correct print output
-\RequirePackage[cmyk]{xcolor}
+\RequirePackage[cmyk, table]{xcolor}
+
+
 \RequirePackage[
 	pdftoolbar=true,
 	bookmarksopen,

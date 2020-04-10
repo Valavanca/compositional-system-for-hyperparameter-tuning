@@ -266,7 +266,7 @@ In this chapter, we demonstrate the advantages of the use of the developed appro
     Another fascinating conclusion could be done from the initial sample size.The worst and the best configurations are most affected by the low or missing sampling plan. Reason for this is that the small number of samples may lead to a surrogate model fallacy while, at the same time, the small number of samples provide more opportunities for optimization search. So, this is confirmation of the importance of the dynamic sampling plan.
 
     % ===  ------------------------------------- ZDT6
-    \begin{figure}
+    \begin{figure}[!h]
         \centering
         \begin{subfigure}{\textwidth}
             \includegraphics[width=\textwidth]{content/images/conf_zdt6_worst}
@@ -339,12 +339,8 @@ In this chapter, we demonstrate the advantages of the use of the developed appro
 
     % ====================================================== Start set for Hypermapper 2.0
     \subsection{Sampling plan size}
-    Purpose of this experiment is to review the dependencies between the optimization result and the sampling plan size. The HyperMapper was selected as a foundation for analysis because it has a static implementation of the optimization algorithm with the surrogate model.
 
-    The results are shown in the following figure \ref{fig:hmapper_start_set}. 
-    For WFG1 and WFG4 problem, the criterion is the hypervolume and for ZDT4 and ZDT6 problem is the p-distance. Of all the results, the initial sampling plan is the least effects to the WFG6. Since this problem is unimodal and is described merely by fewer samples, other problems have a more complicated multimodal landscape that shown by unstable results. It is noticeable that the plan depends on the problem type. The optimization result may deteriorate which caused by increasing or decreasing the number of samples.
-
-    \begin{figure}
+    \begin{figure}[!h]
         \centering
         \begin{subfigure}{\textwidth}
             \begin{subfigure}{0.45\textwidth}
@@ -377,6 +373,12 @@ In this chapter, we demonstrate the advantages of the use of the developed appro
         \caption[Influence of the initial sample plan for optimization with Hypermapper 2.0.]{Influence of the initial sample plan for optimization with Hypermapper 2.0.}
         \label{fig:hmapper_start_set}    
     \end{figure}
+    Purpose of this experiment is to review the dependencies between the optimization result and the sampling plan size. The Hypermapper was selected as a foundation for analysis because it has a static implementation of the optimization algorithm with the surrogate model.
+
+    The results are shown in the following figure \ref{fig:hmapper_start_set}. 
+    For WFG1 and WFG4 problem, the criterion is the hypervolume and for ZDT4 and ZDT6 problem is the p-distance. Of all the results, the initial sampling plan is the least effects to the WFG6. Since this problem is unimodal and is described merely by fewer samples, other problems have a more complicated multimodal landscape that shown by unstable results. It is noticeable that the plan depends on the problem type. The optimization result may deteriorate which caused by increasing or decreasing the number of samples.
+
+   
 
 
 
@@ -429,13 +431,26 @@ In this chapter, we demonstrate the advantages of the use of the developed appro
 % --------------------------------------------------------------------------------------------
 \section{Discussion}
 
-Up to now, most papers used the The quality of the results obtained with X was similar to the results obtained with Y, but with significantly fewer exactly evaluated solutions during the optimization process. 
+The purpose of this thesis is to investigate the mechanism of a cross-grained model composition for solving multi-objective problems. In the evaluation, we provide an extensive comparative analysis of developed techniques on a wide range of problems. The analysis also includes exhaustive verification of possible parameters and the impact of the sampling plan. The possibility of scaling surrogate models with increasing the number of objectives was also tested.
+
+From the benchmarks we can draw the following conclusions:
+\begin{enumerate}
+    \item The developed method(TutorM) is far ahead of the considered analogues and achieves optimum result with a considerable saving of functional evaluations. In some cases, the results obtained with TutorM are better than the selected baseline.
+    \item Parameter studies for TutorM have shown that a significant result improvement is achieved by combining solutions with multiple surrogates (solution stack).
+    \item The possibilities of scaling up the surrogate portfolio were tested. The results show that the dynamic selecting surrogate model with the variation for specific dimensionality of the problem is essential.
+\end{enumerate}
+
+
 
 
 % consume an inordinate amount of time.
 
 
-The purpose of this work is to explore the possibility of using single-objective models for many-objective optimizations. To accomplish this goal, the composite model has been implemented. It is used to combine models into a portfolio and dynamically select them. Furthermore, the stepwise validation approach has been adapted to evaluate the usability of the surrogate model.
+% The purpose of this work is to explore the possibility of using single-objective models for many-objective optimizations. To accomplish this goal, the composite model has been implemented. It is used to combine models into a portfolio and dynamically select them. Furthermore, the stepwise validation approach has been adapted to evaluate the usability of the surrogate model.
+
+
+% Up to now, most papers used the The quality of the results obtained with X was similar to the results obtained with Y, but with significantly fewer exactly evaluated solutions during the optimization process. 
+
 
 % Discussion
 
