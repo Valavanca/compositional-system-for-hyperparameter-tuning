@@ -24,7 +24,7 @@ mlp_uni = ModelsUnion(models=[mlp_reg], split_y=True)
 
     single best surrogate (ndf-score), 100 initial samples
     ```json
-    {
+    [{
         'problem_name': ['wfg'],
         'prob_id': [1], 
         'prob_dim': [2],
@@ -39,14 +39,14 @@ mlp_uni = ModelsUnion(models=[mlp_reg], split_y=True)
         'solution_comb': ['ndf'],
         'start_set_%': [0.1],
         'seed': [SEED]
-    }
+    }]
     ```
 
 - **Benchmark 2:**
 
     surrogate stack, 100 initial samples
     ```json
-    {
+    [{
         'problem_name': ['wfg'],
         'prob_id': [1], 
         'prob_dim': [2],
@@ -61,14 +61,14 @@ mlp_uni = ModelsUnion(models=[mlp_reg], split_y=True)
         'solution_comb': ['stack'],
         'start_set': [0.1],
         'seed': [SEED]
-    }
+    }]
     ```
 
 - **Benchmark 3.1:**
 
     surrogate stack + validation, 100 initial samples
     ```json
-    {
+    [{
         'problem_name': ['wfg'],
         'prob_id': [1], 
         'prob_dim': [2],
@@ -83,14 +83,14 @@ mlp_uni = ModelsUnion(models=[mlp_reg], split_y=True)
         'solution_comb': ['stack'],`
         'start_set': [0.1],
         'seed': [SEED]
-    }
+    }]
     ```
 
 - **Benchmark 3.2:** [data](../default_tutor/README.md)
 
     surrogate stack + validation, 0 initial samples
     ```json
-    {
+    [{
         'problem_name': ['wfg'],
         'prob_id': [1], 
         'prob_dim': [2],
@@ -105,5 +105,5 @@ mlp_uni = ModelsUnion(models=[mlp_reg], split_y=True)
         'solution_comb': ['stack'],`
         'start_set': [0],
         'seed': [SEED]
-    }
+    }]
     ```
