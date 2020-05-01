@@ -1,3 +1,16 @@
+import warnings
+from hypothesis.custom_gp_kernel import KERNEL_MAUNA, KERNEL_SIMPLE, KERNEL_GPML
+from generator import SamplesGenerator
+from composite import PredictTutor, ModelsUnion
+from joblib import Parallel, delayed
+from sklearn.neural_network import MLPRegressor
+from sklearn.svm import SVR
+from sklearn.dummy import DummyRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import GradientBoostingRegressor
+import sklearn.gaussian_process as gp
+from sklearn.model_selection import ParameterGrid
+from sklearn import clone
 import numpy as np
 import pandas as pd
 import pygmo as pg
@@ -9,28 +22,31 @@ import string
 import json
 import os
 import logging
-logging.basicConfig(filename='./temp_tutor_v2.log', level=logging.INFO)
-
-from sklearn import clone
-from sklearn.model_selection import ParameterGrid
-import sklearn.gaussian_process as gp
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.dummy import DummyRegressor
-from sklearn.svm import SVR
-from sklearn.neural_network import MLPRegressor
-
-from joblib import Parallel, delayed
+logging.basicConfig(filename='./slim_zdt6_tutor.log', level=logging.INFO)
 
 
-from composite import PredictTutor, ModelsUnion
-from generator import SamplesGenerator
-
-from hypothesis.custom_gp_kernel import KERNEL_MAUNA, KERNEL_SIMPLE, KERNEL_GPML
-
-
-import warnings
 warnings.filterwarnings('ignore')
+
+
+def lh_sample(bounds, n=1):
+    """ Latin Hypercube sampling
+
+    Args:
+        bounds (Tuple):  Tuple with lower and higher bound for each feature in objective space.
+        Example: (([0., 0.]), ([2., 4.]))
+        n (int, optional): Sample count. Defaults to 1.
+
+    Returns:
+        List: Point from search space
+    """
+    n_dim = len(bounds[0])
+    h_cube = np.random.uniform(size=[n, n_dim])
+    for i in range(0, n_dim):
+        h_cube[:, i] = (np.argsort(h_cube[:, i])+0.5)/n
+    diff = [r-l for l, r in zip(*bounds)]
+    left = [l for l, _ in zip(*bounds)]
+    return h_cube*diff+left
+
 
 def make_nd_pop(pro, x, y):
     nd_front = pg.fast_non_dominated_sorting(y)[0][0]
@@ -42,36 +58,26 @@ def make_nd_pop(pro, x, y):
     return t_pop
 
 
-def get_static_ref_point(prob, offset=1):
-    SEED = 214
-    rand_pop = pg.population(prob, size=1000, seed=SEED)
-
-    # moead
-    algo = pg.algorithm(pg.moead(gen=300, seed=SEED))
-    moead_pop = algo.evolve(pg.population(prob, size=100, seed=SEED))
-
-    # NSGA 2
-    algo = pg.algorithm(pg.nsga2(gen=300, seed=214))
-    nsga_pop = algo.evolve(pg.population(prob, size=100, seed=SEED))
-
-    # nspso
-    algo = pg.algorithm(pg.nspso(gen=300, seed=214))
-    nspso_pop = algo.evolve(pg.population(prob, size=100, seed=SEED))
-
-    sum_pop_f = np.concatenate(
-        (moead_pop.get_f(),
-         nsga_pop.get_f(),
-         nspso_pop.get_f(),
-         rand_pop.get_f()),
-        axis=0)
-
-    return pg.nadir(sum_pop_f+offset)
-
-
-def tuning_loop(pro, udp, surr_portfolio, eval_budget, n_pred=1):
+def tuning_loop(pro, udp,
+                X_init, y_init,
+                surr_portfolio,
+                eval_budget,
+                n_pred,
+                solver,
+                train_test_sp,
+                cv_threshold,
+                test_threshold,
+                solution_comb):
     gen = SamplesGenerator(pro)
-    # ref_point = get_static_ref_point(pro)
-    tutor = PredictTutor(pro.get_bounds(), portfolio=surr_portfolio)
+    if np.array(X_init).size > 0:
+        gen.update(X_init, y_init)
+
+    tutor = PredictTutor(pro.get_bounds(),
+                         portfolio=surr_portfolio,
+                         solver=solver,
+                         train_test_sp=train_test_sp,
+                         cv_threshold=cv_threshold,
+                         test_threshold=test_threshold)
 
     loop_start = time.time()
     iter_solution = []
@@ -83,20 +89,45 @@ def tuning_loop(pro, udp, surr_portfolio, eval_budget, n_pred=1):
         logging.info("\n--- {}".format(i))
         X, y = gen.return_X_y()
         tutor.fit(X, y, cv=4)
-        propos = tutor.predict(n=n_pred)
+        propos = tutor.predict(n=n_pred, kind=solution_comb)
         logging.info(propos)
 
         pred = json.loads(tutor.predict_proba(
             None).to_json(orient='records'))[0]
-        pred['prediction'] = propos.tolist()
+
         pred['iteration'] = i
         pred['problem'] = pro.get_name()
         pred['objectives'] = pro.get_nobj()
         pred['feature_dim'] = pro.get_nx()
+        pred['eval_budget'] = eval_budget
+        pred['n_pred'] = n_pred
+
+        if np.array(X_init).size > 0:
+            pred['x_init'] = X_init
+            pred['y_init'] = y_init
+            pred['init_dataset_size'] = np.array(X_init).size
+        else:
+            pred['x_init'] = None
+            pred['y_init'] = None
+
+        pred['pred_x'] = propos
+        pred['pred_fitness_y'] = ''
+
+        pred["i_fevals"] = ''
+        pred["pop_ndf_x"] = ''
+        pred["pop_ndf_y"] = ''
+
+        pred['p_distance'] = ''
+        pred['solver'] = solver
+        pred['solution_comb'] = solution_comb
+        pred['train_test_sp'] = train_test_sp
+        pred['cv_threshold'] = cv_threshold
+        pred['test_threshold'] = test_threshold
+        pred["i_time"] = ''
 
         # Update dataset
         pred_y = [pro.fitness(p).tolist() for p in propos]
-        pred['prediction_y'] = pred_y
+        pred['pred_fitness_y'] = pred_y
         gen.update(list(propos), pred_y)
 
         # ----------------------                                                             Hypervolume
@@ -105,15 +136,20 @@ def tuning_loop(pro, udp, surr_portfolio, eval_budget, n_pred=1):
             continue
 
         try:
-            ref_point = pg.nadir(np.array(samples_y))
+            # ref_point = pg.nadir(np.array(samples_y))
+            ref_point = np.amax(np.array(samples_y), axis=0).tolist()
             pred['ref_point'] = ref_point
             nd_pop = make_nd_pop(pro, np.array(samples_x), np.array(samples_y))
             hypervolume = pg.hypervolume(nd_pop.get_f()
                                          ).compute(ref_point)
             pred['hypervolume'] = hypervolume or None
             pred["ndf_size"] = len(nd_pop.get_f())
+            pred["i_fevals"] = pro.get_fevals()
+            pred["pop_ndf_x"] = nd_pop.get_x().tolist()
+            pred["pop_ndf_y"] = nd_pop.get_f().tolist()
 
-            score = udp.p_distance(nd_pop) if hasattr(udp, 'p_distance') else None
+            score = udp.p_distance(nd_pop) if hasattr(
+                udp, 'p_distance') else None
             pred["p_distance"] = score
         except Exception as err:
             pred['error'] = "Hypervolume: {}".format(err)
@@ -141,13 +177,16 @@ def tuning_loop(pro, udp, surr_portfolio, eval_budget, n_pred=1):
 
     # File and path to folder
     loop_prefix = loop.iloc[-1].tutor_id
-    rel_path = '/benchmark_results/{}_{}_tutor_loop.{}v2.csv'.format(
-        pro.get_name(), pro.get_nobj(), loop_prefix)
+    rel_path = '/benchmark_results/{}{}_{}_default_tutor_loop.{}'.format(
+        pro.get_name(), pro.get_nobj(), n_pred, loop_prefix)
     path = os.path.dirname(os.path.abspath(__file__))
 
     # Write results
-    print(" Write meta. Path:{}".format(path + rel_path))
-    loop.to_csv(path + rel_path, mode='a+', index=False)
+    print(" Write loop csv file. Path:{}".format(path + rel_path + '.csv'))
+    loop.to_csv(path + rel_path + '.csv', mode='a+', index=False)
+
+    print(" Write loop pkl file. Path:{}".format(path + rel_path + '.pkl'))
+    loop.to_pickle(path + rel_path + '.pkl')
 
     X, y = gen.return_X_y()
     return np.array(X), np.array(y)
@@ -160,6 +199,13 @@ def experiment(problem_name: str,
                pred_count: int,
                eval_budget: int,
                surr_port,
+
+               solver: str,
+               train_test_sp: float,
+               cv_threshold: str,
+               test_threshold: str,
+               solution_comb: str,
+               start_set: float,
                seed=None):
 
     result = {
@@ -168,10 +214,18 @@ def experiment(problem_name: str,
         "problem_id": prob_id,
         "objectives": obj,
         "feature_dim": prob_dim,
-        "pred_count": pred_count,
+        'surr_portfolio': surr_port,
 
         'eval_budget': eval_budget,
-        'surr_portfolio': surr_port,
+        "pred_count": pred_count,
+        'start_set_%': start_set,
+
+        'solver': solver,
+        'solution_comb': solution_comb,
+
+        'train_test_sp': train_test_sp,
+        'cv_threshold': cv_threshold,
+        'test_threshold': test_threshold,
 
         "pop_ndf_x": '',
         "pop_ndf_f": '',
@@ -188,22 +242,49 @@ def experiment(problem_name: str,
 
     # ----------------------                                                            Initialize problem
     try:
-        if problem_name is 'wfg':
+        if problem_name == 'wfg':
             udp = pg.wfg(prob_id=prob_id, dim_dvs=prob_dim,
                          dim_obj=obj, dim_k=obj-1)
-        elif problem_name is 'zdt':
+        elif problem_name == "zdt":
             udp = pg.zdt(prob_id=prob_id, param=prob_dim)
-        elif problem_name is 'dtlz':
+        elif problem_name == 'dtlz':
             udp = pg.dtlz(prob_id=prob_id, dim=prob_dim, fdim=obj)
         prob = pg.problem(udp)
     except Exception as err:
         result['error'] = "Init problem: {}".format(err)
         return result
 
+    # ----------------------                                                            Initial sample plan
+    try:
+        start_x = []
+        start_f = []
+        if start_set > 0:
+            n = int(eval_budget*start_set)
+            eval_budget = eval_budget - n
+
+            start_x = lh_sample(prob.get_bounds(), n)
+            start_f = [prob.fitness(x).tolist() for x in start_x]
+        else:
+            pass
+
+    except Exception as err:
+        result['error'] = "Init sample plan: {}".format(err)
+        return result
+
     # ----------------------                                                            Tutor model loop
     evolve_start = time.time()
+
     try:
-        x_loop, y_loop = tuning_loop(prob, udp, surr_port, eval_budget, n_pred=pred_count)
+        x_loop, y_loop = tuning_loop(prob, udp,
+                                     start_x, start_f,
+                                     surr_port,
+                                     eval_budget,
+                                     pred_count,
+                                     solver,
+                                     train_test_sp,
+                                     cv_threshold,
+                                     test_threshold,
+                                     solution_comb)
 
         result["fevals"] = prob.get_fevals()
         nd_pop = make_nd_pop(prob, x_loop, y_loop)
@@ -215,7 +296,9 @@ def experiment(problem_name: str,
 
     # ----------------------                                                            Hypervolume
     try:
-        ref_point = pg.nadir(y_loop)
+        # ref_point = pg.nadir(y_loop)
+        ref_point = np.amax(y_loop, axis=0).tolist()
+
         hypervolume = pg.hypervolume(nd_pop.get_f()
                                      ).compute(ref_point)
         result['hypervolume'] = hypervolume or None
@@ -243,10 +326,10 @@ def experiment(problem_name: str,
 
         result["pop_ndf_x"] = nd_pop.get_x().tolist()
         result["pop_ndf_f"] = nd_pop.get_f().tolist()
+        result["ndf_size"] = len(nd_pop.get_f())
         result["evolve_time"] = t_end - evolve_start
         result["date"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
         result["final"] = True
-        result["ndf_size"] = len(nd_pop.get_f())
 
     except Exception as err:
         result['error'] = "Write results: {}".format(err)
@@ -256,9 +339,9 @@ def experiment(problem_name: str,
 
 if __name__ == "__main__":
     logging.info(
-        "----\n Start Tutor Model benchamrk on multy-objective problems\n ---- ")
+        "----\n Start benchamrk on ZDT6 bi-objective problems\n ---- ")
 
-    print("Start")
+    print("Start factoral all")
 
     # 1
     # tea_pot = TpotWrp(generations=2, population_size=10)
@@ -277,77 +360,55 @@ if __name__ == "__main__":
     svr_uni = ModelsUnion(models=[svr_rbf], split_y=True)
 
     # 6
-    mlp_reg = MLPRegressor(hidden_layer_sizes=(20, 60, 20), activation='relu', solver='lbfgs')
+    mlp_reg = MLPRegressor(hidden_layer_sizes=(
+        20, 60, 20), activation='relu', solver='lbfgs')
     mlp_uni = ModelsUnion(models=[mlp_reg], split_y=True)
 
+    custom_lin_gp = ModelsUnion(models=[SVR(kernel='linear', C=100, gamma='auto'), gp.GaussianProcessRegressor(
+        kernel=KERNEL_MAUNA, n_restarts_optimizer=20)], split_y=True)
 
-    test_set = [
-        # { DONE! 6.3.20
-        #     'problem_name': ['zdt'],
-        #     'prob_id': [1, 2, 3, 4, 5, 6],
-        #     'prob_dim': [2],
-        #     'obj': [2],
-        #     'eval_budget': [1000],
-        #     'pred_count': [10, 25, 50],
-        #     'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
-        #     'seed': [42]
-        # }
-        {
-            'problem_name': ['wfg'],
-            'prob_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
-            'prob_dim': [2],
-            'obj': [2],
-            'eval_budget': [1000],
-            'pred_count': [10, 25, 50],
-            'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
-            'seed': [42]
-        },
-        {
-            'problem_name': ['dtlz'],
-            'prob_id': [1, 2, 3, 4, 5, 6, 7],
-            'prob_dim': [3],
-            'obj': [2],
-            'eval_budget': [1000],
-            'pred_count': [10, 25, 50],
-            'surr_port': [[gp_mauna, grad_uni, svr_uni, mlp_uni]],
-            'seed': [42]
-        }
-    ]
+    custom_lin_grad = ModelsUnion(models=[SVR(
+        kernel='linear', C=100, gamma='auto'), GradientBoostingRegressor(n_estimators=500)], split_y=True)
 
-    logging.info(pformat(test_set))
+    SEED = random.randint(1, 1000)
+
+
+
+    # logging.info(pformat(str_ZDT4))
 
     i_total = 0
-    with Parallel(prefer='threads') as parallel:
-        for param_grid in test_set:
-            grid = ParameterGrid(param_grid)
+    conf_path = os.path.dirname(os.path.abspath(__file__))
+    # path_ZDT4 = '/fact_zdt4_conf.143.json'
+    path_ZDT6 = '/fact_zdt6_conf.192.json'
+
+    with open(conf_path+path_ZDT6) as json_file:
+        grid = json.load(json_file)
+        surr_port = [grad_uni, svr_uni, mlp_uni]
+        for p in grid:
+            p['surr_port'] = surr_port
+        with Parallel(prefer='threads') as parallel:
             total_comb = len(grid)
-            logging.info(
+            logging.info("\n Total combinations in round: {}".format(total_comb))
+            print(
                 "\n Total combinations in round: {}".format(total_comb))
 
-            i = 0
-            # res = []
-            # for p in grid:
-            #     i = i+1
-            #     logging.info(
-            #         "\n Evaluation.: {} \n i: {} from {}".format(p, i, total_comb))
-            #     res.append(experiment(**p))
 
-            
             res = parallel(delayed(experiment)(**p) for p in grid)
-
-            i_total = i_total + i
 
             # File and path to folder
             prefix = ''.join(random.choices(
-                string.ascii_lowercase + string.digits, k=10))
-            file_name = '/benchmark_results/mtutor_on_{}_i{}.{}.csv'.format(
-                param_grid['problem_name'][0], i, prefix)
+                string.ascii_lowercase + string.digits, k=5))
+            file_name = '/benchmark_results/factorial_model_tutor_on_{}_{}.{}'.format(
+                'zdt6', total_comb, prefix)
             path = os.path.dirname(os.path.abspath(__file__)) + file_name
 
             # Write results
             # logging.info("\n Total evaluations: {}".format(i_total))
-            logging.info(" Write results. Path:{} \n".format(path))
+            logging.info(" Write tutor sumary. Path:{} \n".format(path+'.csv'))
             res_table = pd.DataFrame(res)
-            res_table.to_csv(path, mode='a+', index=False)
+            res_table.to_csv(path + '.csv', mode='a+', index=False)
 
-    print("Finish")
+            print(" Write tutor sumary. Path:{}".format(path + '.pkl'))
+            res_table.to_pickle(path + '.pkl')
+
+    print("---- Finish ----")
