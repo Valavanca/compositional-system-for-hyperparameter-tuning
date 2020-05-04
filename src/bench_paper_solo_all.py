@@ -1,7 +1,8 @@
 import warnings
 from hypothesis.custom_gp_kernel import KERNEL_MAUNA, KERNEL_SIMPLE, KERNEL_GPML
+from search import MOEActr
 from generator import SamplesGenerator
-from composite import PredictTutor, ModelsUnion
+from composite import ModelsUnion
 from joblib import Parallel, delayed
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
@@ -10,6 +11,8 @@ from sklearn.linear_model import LinearRegression, RANSACRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 import sklearn.gaussian_process as gp
 from sklearn.model_selection import ParameterGrid
+from sklearn.model_selection import train_test_split
+
 from sklearn import clone
 import numpy as np
 import pandas as pd
@@ -22,14 +25,17 @@ import string
 import json
 import os
 import logging
-logging.basicConfig(filename='./paper_tutor_null.log', level=logging.INFO)
+
+import sobol_seq
+
+logging.basicConfig(filename='./paper_surr_solo.log', level=logging.INFO)
 
 
 warnings.filterwarnings('ignore')
 
 
-def lh_sample(bounds, n=1):
-    """ Latin Hypercube sampling
+def sobol_sample(bounds, n=1):
+    """ Sobol sampling
 
     Args:
         bounds (Tuple):  Tuple with lower and higher bound for each feature in objective space.
@@ -40,12 +46,10 @@ def lh_sample(bounds, n=1):
         List: Point from search space
     """
     n_dim = len(bounds[0])
-    h_cube = np.random.uniform(size=[n, n_dim])
-    for i in range(0, n_dim):
-        h_cube[:, i] = (np.argsort(h_cube[:, i])+0.5)/n
+    sb = sobol_seq.i4_sobol_generate(n_dim, n, 1)
     diff = [r-l for l, r in zip(*bounds)]
     left = [l for l, _ in zip(*bounds)]
-    return h_cube*diff+left
+    return sb*diff+left
 
 
 def make_nd_pop(pro, x, y):
@@ -63,43 +67,76 @@ def tuning_loop(pro, udp,
                 surr_portfolio,
                 eval_budget,
                 n_pred,
-                solver,
-                train_test_sp,
-                cv_threshold,
-                test_threshold,
-                solution_comb):
-    gen = SamplesGenerator(pro)
-    if np.array(X_init).size > 0:
-        gen.update(X_init, y_init)
-
-    tutor = PredictTutor(pro.get_bounds(),
-                         portfolio=surr_portfolio,
-                         solver=solver,
-                         train_test_sp=train_test_sp,
-                         cv_threshold=cv_threshold,
-                         test_threshold=test_threshold)
+                ):
 
     loop_start = time.time()
     iter_solution = []
-    i = 0
+    gen = SamplesGenerator(pro)
 
+    # Evaluate initial set
+    if np.array(X_init).size > 0:
+        gen.update(X_init, y_init)
+
+        pred = {}
+        pred['iteration'] = 0
+        pred['problem'] = pro.get_name()
+        pred['objectives'] = pro.get_nobj()
+        pred['feature_dim'] = pro.get_nx()
+        pred['eval_budget'] = eval_budget
+
+        try:
+            # ref_point = pg.nadir(np.array(y_init))
+            ref_point = np.amax(np.array(y_init), axis=0).tolist()
+            pred['ref_point'] = ref_point
+            nd_pop = make_nd_pop(pro, np.array(X_init), np.array(y_init))
+            hypervolume = pg.hypervolume(nd_pop.get_f()
+                                         ).compute(ref_point)
+            pred['hypervolume'] = hypervolume or None
+            pred["ndf_size"] = len(nd_pop.get_f())
+            pred["i_fevals"] = pro.get_fevals()
+            pred["pop_ndf_x"] = nd_pop.get_x().tolist()
+            pred["pop_ndf_y"] = nd_pop.get_f().tolist()
+
+            score = udp.p_distance(nd_pop) if hasattr(
+                udp, 'p_distance') else None
+            pred["p_distance"] = score
+            iter_solution.append(pred)
+        except Exception as err:
+            pred['error'] = "Init stat: {}".format(err)
+            iter_solution.append(pred)
+
+    i = 0
     n_iter = int(eval_budget/n_pred)
     while i < n_iter:
         i = i+1
-        logging.info("\n--- {}".format(i))
+        logging.info(
+            "\n--- {} {}: {}".format(i, pro.get_name(), [type(model).__name__.lower() for model in surr_portfolio]))
         X, y = gen.return_X_y()
-        tutor.fit(X, y, cv=2)
-        propos = tutor.predict(n=n_pred, kind=solution_comb)
+        # equalize the number of samples for your portfolio and static models
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.25)
+
+        estimator = surr_portfolio[0].fit(X_train, y_train)
+        if isinstance(estimator, ModelsUnion):
+            models = estimator.models
+        else:
+            models = [estimator]
+
+        solver = MOEActr(bounds=pro.get_bounds(),
+                            pop_size=100, gen=100).fit(models)
+        appr = solver.predict()
+        propos = appr[np.random.choice(
+            appr.shape[0], n_pred, replace=False), :]
+
         logging.info(propos)
 
-        pred = json.loads(tutor.predict_proba(
-            None).to_json(orient='records'))[0]
-        
+        pred = {}
         pred['iteration'] = i
         pred['problem'] = pro.get_name()
         pred['objectives'] = pro.get_nobj()
         pred['feature_dim'] = pro.get_nx()
         pred['eval_budget'] = eval_budget
+        pred['model name'] = [type(m).__name__.lower() for m in models]
         pred['n_pred'] = n_pred
 
         if np.array(X_init).size > 0:
@@ -110,7 +147,6 @@ def tuning_loop(pro, udp,
             pred['x_init'] = None
             pred['y_init'] = None
 
-
         pred['pred_x'] = propos
         pred['pred_fitness_y'] = ''
 
@@ -119,11 +155,6 @@ def tuning_loop(pro, udp,
         pred["pop_ndf_y"] = ''
 
         pred['p_distance'] = ''
-        pred['solver'] = solver
-        pred['solution_comb'] = solution_comb
-        pred['train_test_sp'] = train_test_sp
-        pred['cv_threshold'] = cv_threshold
-        pred['test_threshold'] = test_threshold
         pred["i_time"] = ''
 
         # Update dataset
@@ -149,7 +180,8 @@ def tuning_loop(pro, udp,
             pred["pop_ndf_x"] = nd_pop.get_x().tolist()
             pred["pop_ndf_y"] = nd_pop.get_f().tolist()
 
-            score = udp.p_distance(nd_pop) if hasattr(udp, 'p_distance') else None
+            score = udp.p_distance(nd_pop) if hasattr(
+                udp, 'p_distance') else None
             pred["p_distance"] = score
         except Exception as err:
             pred['error'] = "Hypervolume: {}".format(err)
@@ -173,11 +205,11 @@ def tuning_loop(pro, udp,
 
     loop = pd.DataFrame(iter_solution)
     loop = loop.drop(['estimator'], axis=1, errors='ignore')
-    loop = loop.assign(tutor_id=id(tutor))
+    loop = loop.assign(solver_id=id(solver))
 
     # File and path to folder
-    loop_prefix = id(tutor)
-    rel_path = '/benchmark_results/{}{}_{}_paper_tutor_loop.{}'.format(
+    loop_prefix = id(solver)
+    rel_path = '/benchmark_results/{}{}_{}_paper_solo_loop.{}'.format(
         pro.get_name(), pro.get_nobj(), n_pred, loop_prefix)
     path = os.path.dirname(os.path.abspath(__file__))
 
@@ -200,11 +232,12 @@ def experiment(problem_name: str,
                eval_budget: int,
                surr_port,
 
-               solver: str,
-               train_test_sp: float,
-               cv_threshold: str,
-               test_threshold: str,
-               solution_comb: str,
+            #    solver: str,
+            #    train_test_sp: float,
+            #    cv_split: int,
+            #    cv_threshold: str,
+            #    test_threshold: str,
+            #    solution_comb: str,
                start_set: float,
                seed=None):
 
@@ -218,14 +251,7 @@ def experiment(problem_name: str,
 
         'eval_budget': eval_budget,
         "pred_count": pred_count,
-        'start_set_%': start_set,
-
-        'solver': solver,
-        'solution_comb': solution_comb,
-
-        'train_test_sp': train_test_sp,
-        'cv_threshold': cv_threshold,
-        'test_threshold': test_threshold,
+        'start_set': start_set,
 
         "pop_ndf_x": '',
         "pop_ndf_f": '',
@@ -259,10 +285,8 @@ def experiment(problem_name: str,
         start_x = []
         start_f = []
         if start_set > 0:
-            n = int(eval_budget*start_set)
-            eval_budget = eval_budget - n
-
-            start_x = lh_sample(prob.get_bounds(), n)
+            eval_budget = eval_budget - start_set
+            start_x = sobol_sample(prob.get_bounds(), start_set)
             start_f = [prob.fitness(x).tolist() for x in start_x]
         else:
             pass
@@ -271,28 +295,23 @@ def experiment(problem_name: str,
         result['error'] = "Init sample plan: {}".format(err)
         return result
 
-
-    # ----------------------                                                            Tutor model loop
+    # ----------------------                                                            Solo model loop
     evolve_start = time.time()
 
     try:
         x_loop, y_loop = tuning_loop(prob, udp,
-                                        start_x, start_f,
-                                        surr_port,
-                                        eval_budget,
-                                        pred_count,
-                                        solver,
-                                        train_test_sp,
-                                        cv_threshold,
-                                        test_threshold,
-                                        solution_comb)
+                                     start_x, start_f,
+                                     surr_port,
+                                     eval_budget,
+                                     pred_count,
+                                     )
 
         result["fevals"] = prob.get_fevals()
         nd_pop = make_nd_pop(prob, x_loop, y_loop)
         score = udp.p_distance(nd_pop) if hasattr(udp, 'p_distance') else None
         result["p_distance"] = score or None
     except Exception as err:
-        result['error'] = "Tutor loop: {}".format(err)
+        result['error'] = "Solo loop: {}".format(err)
         return result
 
     # ----------------------                                                            Hypervolume
@@ -340,9 +359,9 @@ def experiment(problem_name: str,
 
 if __name__ == "__main__":
     logging.info(
-        "----\n Start paper benchamrk Null \n ---- ")
+        "----\n Start paper benchamrk Solo \n ---- ")
 
-    print("Start paper benchamrk Null ")
+    print("Start paper benchamrk Solo ")
 
     # 1
     # tea_pot = TpotWrp(generations=2, population_size=10)
@@ -362,7 +381,7 @@ if __name__ == "__main__":
 
     # 6
     mlp_reg = MLPRegressor(hidden_layer_sizes=(
-        100, 100, 100, 100, 100), activation='relu', solver='lbfgs')
+        20, 60, 20), activation='relu', solver='lbfgs')
     mlp_uni = ModelsUnion(models=[mlp_reg], split_y=True)
 
     custom_lin_gp = ModelsUnion(models=[SVR(kernel='linear', C=100, gamma='auto'), gp.GaussianProcessRegressor(
@@ -374,49 +393,101 @@ if __name__ == "__main__":
     SEED = random.randint(1, 1000)
 
     test_set = [
-        # {
-        #     'problem_name': ['wfg'],
-        #     'prob_id': [1], 
-        #     'prob_dim': [2],
-        #     'obj': [2],
-        #     'eval_budget': [1000],
-        #     'pred_count': [10],
-        #     'surr_port':[
-        #             [RANSACRegressor()], 
-        #             [LinearRegression()], 
-        #             [ModelsUnion(models=[svr_rbf], split_y=True)],
-        #             [ModelsUnion(models=[RANSACRegressor()], split_y=True)],
-        #             [gp_mauna]
-        #         ],
-        #     'solver': ['moea_control'],
-        #     'train_test_sp': [0.25],
-        #     'cv_threshold': ['(test_r2 > -1000)'],
-        #     'test_threshold': ['(ndf_surr_score > -1000)'],
-        #     'solution_comb': ['ndf'],
-        #     'start_set': [0.1],
-        #     'seed': [SEED]
-        # },
+
+        # ============================================================================================= WFG
+        # 4. ndf : 100SamplingSize Sobol: CV threshold -Inf [LINEAR,LINEAR]
+        # 5. ndf: 100SamplingSize Sobol: CV threshold - Inf[GPR, GPR]
         {
             'problem_name': ['wfg'],
-            'prob_id': [1],
+            'prob_id': [2, 3],
+            'prob_dim': [3],
+            'obj': [2],
+            'eval_budget': [1000],
+            'pred_count': [10],
+            'surr_port':[
+                [svr_uni],
+                [LinearRegression()],
+                [ModelsUnion(models=[LinearRegression()],
+                                split_y=True)],
+                [RANSACRegressor()],
+                [ModelsUnion(models=[RANSACRegressor()],
+                                split_y=True)],
+                [ModelsUnion(models=[gp.GaussianProcessRegressor(
+                    kernel=KERNEL_MAUNA, n_restarts_optimizer=20)], split_y=True)],
+                [gp.GaussianProcessRegressor(
+                    kernel=KERNEL_MAUNA, n_restarts_optimizer=20)]
+            ],
+            'start_set': [100],
+            'seed': [SEED]
+        },
+        {
+            'problem_name': ['wfg'],
+            'prob_id': [4, 5, 6, 7, 8, 9],
             'prob_dim': [2],
             'obj': [2],
             'eval_budget': [1000],
             'pred_count': [10],
             'surr_port':[
+                [svr_uni],
+                [LinearRegression()],
                 [ModelsUnion(models=[LinearRegression()], split_y=True)],
-                [ModelsUnion(models=[gp_mauna], split_y=True)],
-                [MLPRegressor(hidden_layer_sizes=(100, 100, 100, 100, 100), activation='relu', solver='lbfgs')],
-                [ModelsUnion(models=[mlp_reg], split_y=True)]
+                [RANSACRegressor()],
+                [ModelsUnion(models=[RANSACRegressor()], split_y=True)],
+                [ModelsUnion(models=[gp.GaussianProcessRegressor(
+                    kernel=KERNEL_MAUNA, n_restarts_optimizer=20)], split_y=True)],
+                [gp.GaussianProcessRegressor(
+                    kernel=KERNEL_MAUNA, n_restarts_optimizer=20)]
             ],
-            'solver': ['moea_control'],
-            'train_test_sp': [0.25],
-            'cv_threshold': ['(test_r2 > -1000)'],
-            'test_threshold': ['(ndf_surr_score > -1000)'],
-            'solution_comb': ['ndf'],
-            'start_set': [0.1],
+            'start_set': [100],
             'seed': [SEED]
-        }
+        },
+        # ============================================================================================= ZDT
+        # 4. ndf : 100SamplingSize Sobol: CV threshold -Inf [LINEAR,LINEAR]
+        # 5. ndf: 100SamplingSize Sobol: CV threshold - Inf[GPR, GPR]
+        {
+            'problem_name': ['zdt'],
+            'prob_id': [1, 2, 3, 4, 6],
+            'prob_dim': [2],
+            'obj': [2],
+            'eval_budget': [1000],
+            'pred_count': [10],
+            'surr_port':[
+                [svr_uni],
+                [LinearRegression()],
+                [ModelsUnion(models=[LinearRegression()], split_y=True)],
+                [RANSACRegressor()],
+                [ModelsUnion(models=[RANSACRegressor()], split_y=True)],
+                [ModelsUnion(models=[gp.GaussianProcessRegressor(
+                    kernel=KERNEL_MAUNA, n_restarts_optimizer=20)], split_y=True)],
+                [gp.GaussianProcessRegressor(
+                    kernel=KERNEL_MAUNA, n_restarts_optimizer=20)]
+            ],
+            'start_set': [100],
+            'seed': [SEED]
+        },
+        # ============================================================================================= DTLZ
+        # 4. ndf : 100SamplingSize Sobol: CV threshold -Inf [LINEAR,LINEAR]
+        # 5. ndf: 100SamplingSize Sobol: CV threshold - Inf[GPR, GPR]
+        {
+            'problem_name': ['dtlz'],
+            'prob_id': [1, 2, 3, 4, 5, 6, 7],
+            'prob_dim': [3],
+            'obj': [2],
+            'eval_budget': [1000],
+            'pred_count': [10],
+            'surr_port':[
+                [svr_uni],
+                [LinearRegression()],
+                [ModelsUnion(models=[LinearRegression()], split_y=True)],
+                [RANSACRegressor()],
+                [ModelsUnion(models=[RANSACRegressor()], split_y=True)],
+                [ModelsUnion(models=[gp_mauna], split_y=True)],
+                [gp_mauna]
+            ],
+            'start_set': [100],
+            'seed': [SEED]
+        },
+
     ]
 
     logging.info(pformat(test_set))
@@ -434,17 +505,17 @@ if __name__ == "__main__":
             # File and path to folder
             prefix = ''.join(random.choices(
                 string.ascii_lowercase + string.digits, k=5))
-            file_name = '/benchmark_results/paper_model_null_on_{}_{}.{}'.format(
+            file_name = '/benchmark_results/paper_solo_on_{}_{}.{}'.format(
                 param_grid['problem_name'][0], SEED, prefix)
             path = os.path.dirname(os.path.abspath(__file__)) + file_name
 
             # Write results
             # logging.info("\n Total evaluations: {}".format(i_total))
-            logging.info(" Write tutor sumary. Path:{} \n".format(path+'.csv'))
+            logging.info(" Write solo sumary. Path:{} \n".format(path+'.csv'))
             res_table = pd.DataFrame(res)
             res_table.to_csv(path + '.csv', mode='a+', index=False)
 
-            print(" Write tutor sumary. Path:{}".format(path + '.pkl'))
+            print(" Write solo sumary. Path:{}".format(path + '.pkl'))
             res_table.to_pickle(path + '.pkl')
 
     print("---- Finish ----")
