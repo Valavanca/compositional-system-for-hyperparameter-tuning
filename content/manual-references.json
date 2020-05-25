@@ -1298,36 +1298,6 @@
     "volume": "11"
   },
   {
-    "author": [
-      {
-        "family": "Zitzler",
-        "given": "Eckart"
-      },
-      {
-        "family": "Deb",
-        "given": "Kalyanmoy"
-      },
-      {
-        "family": "Thiele",
-        "given": "Lothar"
-      }
-    ],
-    "container-title": "Evolutionary Computation",
-    "id": "raw:Zitzler2000ComparisonOM",
-    "issued": {
-      "date-parts": [
-        [
-          2000
-        ]
-      ]
-    },
-    "page": "173-195",
-    "title": "Comparison of multiobjective evolutionary algorithms: Empirical results",
-    "title-short": "Comparison of multiobjective evolutionary algorithms",
-    "type": "article-journal",
-    "volume": "8"
-  },
-  {
     "DOI": "10.1162/106365600568202",
     "URL": "https://doi.org/10.1162/106365600568202",
     "author": [
@@ -1601,6 +1571,36 @@
     "type": "no-type"
   },
   {
+    "DOI": "10.1007/978-3-642-25566-3\\_40",
+    "URL": "https://doi.org/10.1007/978-3-642-25566-3\\_40",
+    "author": [
+      {
+        "family": "Hutter",
+        "given": "Frank"
+      },
+      {
+        "family": "Hoos",
+        "given": "Holger H."
+      },
+      {
+        "family": "Leyton-Brown",
+        "given": "Kevin"
+      }
+    ],
+    "container-title": "Learning and intelligent optimization - 5th international conference, LION 5, rome, italy, january 17-21, 2011. selected papers",
+    "id": "raw:HutterHL11",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "page": "507-523",
+    "title": "Sequential model-based optimization for general algorithm configuration",
+    "type": "paper-conference"
+  },
+  {
     "URL": "http://arxiv.org/abs/1703.03373",
     "author": [
       {
@@ -1697,30 +1697,29 @@
     "volume": "abs/1807.01774"
   },
   {
-    "DOI": "10.1145/3194078.3194082",
-    "URL": "https://doi.org/10.1145/3194078.3194082",
+    "URL": "http://arxiv.org/abs/1909.03814",
     "author": [
       {
         "family": "Pukhkaiev",
         "given": "Dmytro"
       },
       {
-        "family": "Götz",
-        "given": "Sebastian"
+        "family": "Aßmann",
+        "given": "Uwe"
       }
     ],
-    "container-title": "Proceedings of the 6th international workshop on green and sustainable software, greens icse 2018, gothenburg, sweden, may 27, 2018",
-    "id": "raw:PukhkaievG18",
+    "container-title": "CoRR",
+    "id": "raw:Pukhkaiev19",
     "issued": {
       "date-parts": [
         [
-          2018
+          2019
         ]
       ]
     },
-    "page": "23-30",
-    "title": "BRISE: energy-efficient benchmark reduction",
-    "type": "paper-conference"
+    "title": "Parameter tuning for self-optimizing software at scale",
+    "type": "article-journal",
+    "volume": "abs/1909.03814"
   },
   {
     "author": [
@@ -1748,6 +1747,58 @@
     "title": "A pseudo-random number generator for personal computers",
     "type": "article-journal",
     "volume": "37"
+  },
+  {
+    "author": [
+      {
+        "family": "Wagner",
+        "given": "Tobias"
+      }
+    ],
+    "id": "raw:TobiasCV",
+    "issued": {
+      "date-parts": [
+        [
+          2010,
+          1
+        ]
+      ]
+    },
+    "page": "1",
+    "title": "A subjective review of the state of the art in model-based parameter tuning",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.1007/978-0-387-21606-5",
+    "ISBN": "978-1-4899-0519-2",
+    "URL": "https://doi.org/10.1007/978-0-387-21606-5",
+    "author": [
+      {
+        "family": "Hastie",
+        "given": "Trevor"
+      },
+      {
+        "family": "Friedman",
+        "given": "Jerome H."
+      },
+      {
+        "family": "Tibshirani",
+        "given": "Robert"
+      }
+    ],
+    "collection-title": "Springer series in statistics",
+    "id": "raw:HastieFT01",
+    "issued": {
+      "date-parts": [
+        [
+          2001
+        ]
+      ]
+    },
+    "publisher": "Springer",
+    "title": "The elements of statistical learning: Data mining, inference, and prediction",
+    "title-short": "The elements of statistical learning",
+    "type": "book"
   },
   {
     "DOI": "10.1145/2739482.2756574",
@@ -1824,6 +1875,518 @@
     },
     "page": "1173-1180",
     "title": "The asynchronous island model and NSGA-II: study of a new migration operator and its performance",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.1109/4235.585893",
+    "URL": "https://doi.org/10.1109/4235.585893",
+    "author": [
+      {
+        "family": "Wolpert",
+        "given": "David H."
+      },
+      {
+        "family": "Macready",
+        "given": "William G."
+      }
+    ],
+    "container-title": "IEEE Trans. Evolutionary Computation",
+    "id": "raw:NFL:DolpertM97",
+    "issue": "1",
+    "issued": {
+      "date-parts": [
+        [
+          1997
+        ]
+      ]
+    },
+    "page": "67-82",
+    "title": "No free lunch theorems for optimization",
+    "type": "article-journal",
+    "volume": "1"
+  },
+  {
+    "ISBN": "978-0-7923-8278-2",
+    "author": [
+      {
+        "family": "Miettinen",
+        "given": "Kaisa"
+      }
+    ],
+    "collection-title": "International series in operations research and management science",
+    "id": "raw:Kaisa0021267",
+    "issued": {
+      "date-parts": [
+        [
+          1998
+        ]
+      ]
+    },
+    "publisher": "Kluwer",
+    "title": "Nonlinear multiobjective optimization",
+    "type": "book",
+    "volume": "12"
+  },
+  {
+    "DOI": "10.1109/TEVC.2009.2015575",
+    "URL": "https://doi.org/10.1109/TEVC.2009.2015575",
+    "author": [
+      {
+        "family": "Beume",
+        "given": "Nicola"
+      },
+      {
+        "family": "Fonseca",
+        "given": "Carlos M."
+      },
+      {
+        "family": "López-Ibáñez",
+        "given": "Manuel"
+      },
+      {
+        "family": "Paquete",
+        "given": "Luís"
+      },
+      {
+        "family": "Vahrenhold",
+        "given": "Jan"
+      }
+    ],
+    "container-title": "IEEE Trans. Evolutionary Computation",
+    "id": "raw:BeumeFLPV09",
+    "issue": "5",
+    "issued": {
+      "date-parts": [
+        [
+          2009
+        ]
+      ]
+    },
+    "page": "1075-1082",
+    "title": "On the complexity of computing the hypervolume indicator",
+    "type": "article-journal",
+    "volume": "13"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1409.5752",
+    "author": [
+      {
+        "family": "Derbel",
+        "given": "Bilel"
+      },
+      {
+        "family": "Brockhoff",
+        "given": "Dimo"
+      },
+      {
+        "family": "Liefooghe",
+        "given": "Arnaud"
+      },
+      {
+        "family": "Vérel",
+        "given": "Sébastien"
+      }
+    ],
+    "container-title": "CoRR",
+    "id": "raw:DerbelBLV14",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "title": "On the impact of multiobjective scalarizing functions",
+    "type": "article-journal",
+    "volume": "abs/1409.5752"
+  },
+  {
+    "author": [
+      {
+        "family": "Andersson",
+        "given": "Johan"
+      }
+    ],
+    "id": "raw:Andersson00asurvey",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "title": "A survey of multiobjective optimization in engineering design johan",
+    "type": "no-type"
+  },
+  {
+    "author": [
+      {
+        "family": "Wagner",
+        "given": "T."
+      }
+    ],
+    "container-title": "Vulkan Verlag",
+    "id": "raw:WagEGOe",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "title": "Planning and multi-objective optimization of manufacturing processes by means of empirical surrogate models",
+    "type": "article-journal"
+  },
+  {
+    "DOI": "10.1016/j.jss.2018.12.015",
+    "URL": "https://doi.org/10.1016/j.jss.2018.12.015",
+    "author": [
+      {
+        "family": "Ramírez",
+        "given": "Aurora"
+      },
+      {
+        "family": "Romero",
+        "given": "José Raúl"
+      },
+      {
+        "family": "Ventura",
+        "given": "Sebastián"
+      }
+    ],
+    "container-title": "J. Syst. Softw.",
+    "id": "raw:RamirezRV19",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "page": "382-395",
+    "title": "A survey of many-objective optimisation in search-based software engineering",
+    "type": "article-journal",
+    "volume": "149"
+  },
+  {
+    "DOI": "https://doi.org/10.1016/j.jhydrol.2012.10.050",
+    "ISSN": "0022-1694",
+    "URL": "http://www.sciencedirect.com/science/article/pii/S0022169412009511",
+    "abstract": "Summary The demand for fresh water in coastal areas and islands can be very high due to increased local needs and tourism. A multi-objective optimization methodology is developed, involving minimization of economic and environmental costs while satisfying water demand. The methodology considers desalinization of pumped water and injection of treated water into the aquifer. Variable density aquifer models are computationally intractable when integrated in optimization algorithms. In order to alleviate this problem, a multi-objective optimization algorithm is developed combining surrogate models based on Modular Neural Networks \\[MOSA(MNNs)\\]. The surrogate models are trained adaptively during optimization based on a genetic algorithm. In the crossover step, each pair of parents generates a pool of offspring which are evaluated using the fast surrogate model. Then, the most promising offspring are evaluated using the exact numerical model. This procedure eliminates errors in Pareto solution due to imprecise predictions of the surrogate model. The method has important advancements compared to previous methods such as precise evaluation of the Pareto set and alleviation of propagation of errors due to surrogate model approximations. The method is applied to an aquifer in the Greek island of Santorini. The results show that the new MOSA(MNN) algorithm offers significant reduction in computational time compared to previous methods (in the case study it requires only 5",
+    "author": [
+      {
+        "family": "Kourakos",
+        "given": "George"
+      },
+      {
+        "family": "Mantoglou",
+        "given": "Aristotelis"
+      }
+    ],
+    "container-title": "Journal of Hydrology",
+    "id": "raw:KOURAKOS201313",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "keyword": "Salt water intrusion, Aquifer management, Coastal aquifers, Multi-objective optimization, Surrogate models, Pumping management",
+    "page": "13 - 23",
+    "title": "Development of a multi-objective optimization algorithm using surrogate models for coastal aquifer management",
+    "type": "article-journal",
+    "volume": "479"
+  },
+  {
+    "DOI": "10.1016/j.simpat.2014.03.007",
+    "URL": "https://doi.org/10.1016/j.simpat.2014.03.007",
+    "author": [
+      {
+        "family": "Figueira",
+        "given": "Gonçalo"
+      },
+      {
+        "family": "Almada-Lobo",
+        "given": "Bernardo"
+      }
+    ],
+    "container-title": "Simul. Model. Pract. Theory",
+    "id": "raw:FigueiraA14",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "page": "118-134",
+    "title": "Hybrid simulation-optimization methods: A taxonomy and discussion",
+    "title-short": "Hybrid simulation-optimization methods",
+    "type": "article-journal",
+    "volume": "46"
+  },
+  {
+    "DOI": "10.1023/A:1008306431147",
+    "URL": "https://doi.org/10.1023/A:1008306431147",
+    "author": [
+      {
+        "family": "Jones",
+        "given": "Donald R."
+      },
+      {
+        "family": "Schonlau",
+        "given": "Matthias"
+      },
+      {
+        "family": "Welch",
+        "given": "William J."
+      }
+    ],
+    "container-title": "J. Global Optimization",
+    "id": "raw:JonesSW98",
+    "issue": "4",
+    "issued": {
+      "date-parts": [
+        [
+          1998
+        ]
+      ]
+    },
+    "page": "455-492",
+    "title": "Efficient global optimization of expensive black-box functions",
+    "type": "article-journal",
+    "volume": "13"
+  },
+  {
+    "DOI": "10.1007/978-3-642-37140-0\\_56",
+    "URL": "https://doi.org/10.1007/978-3-642-37140-0\\_56",
+    "author": [
+      {
+        "family": "Zaefferer",
+        "given": "Martin"
+      },
+      {
+        "family": "Bartz-Beielstein",
+        "given": "Thomas"
+      },
+      {
+        "family": "Naujoks",
+        "given": "Boris"
+      },
+      {
+        "family": "Wagner",
+        "given": "Tobias"
+      },
+      {
+        "family": "Emmerich",
+        "given": "Michael"
+      }
+    ],
+    "container-title": "Evolutionary multi-criterion optimization - 7th international conference, EMO 2013, sheffield, uk, march 19-22, 2013. proceedings",
+    "id": "raw:ZaeffererBNWE13",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "page": "756-770",
+    "title": "A case study on multi-criteria optimization of an event detection software under limited budgets",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.1007/978-3-540-87700-4_78",
+    "author": [
+      {
+        "family": "Ponweiser",
+        "given": "Wolfgang"
+      },
+      {
+        "family": "Wagner",
+        "given": "Tobias"
+      },
+      {
+        "family": "Biermann",
+        "given": "Dirk"
+      },
+      {
+        "family": "Vincze",
+        "given": "Markus"
+      }
+    ],
+    "id": "raw:inproceedings",
+    "issued": {
+      "date-parts": [
+        [
+          2008,
+          9
+        ]
+      ]
+    },
+    "page": "784-794",
+    "title": "Multiobjective optimization on a limited budget of evaluations using model-assisted $\\mathcal{S}$ -metric selection",
+    "type": "paper-conference"
+  },
+  {
+    "URL": "http://proceedings.mlr.press/v51/wilson16.html",
+    "author": [
+      {
+        "family": "Wilson",
+        "given": "Andrew Gordon"
+      },
+      {
+        "family": "Hu",
+        "given": "Zhiting"
+      },
+      {
+        "family": "Salakhutdinov",
+        "given": "Ruslan"
+      },
+      {
+        "family": "Xing",
+        "given": "Eric P."
+      }
+    ],
+    "container-title": "Proceedings of the 19th international conference on artificial intelligence and statistics, AISTATS 2016, cadiz, spain, may 9-11, 2016",
+    "id": "raw:WilsonHSX16",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "page": "370-378",
+    "title": "Deep kernel learning",
+    "type": "paper-conference"
+  },
+  {
+    "DOI": "10.1162/evco.1999.7.3.205",
+    "URL": "https://doi.org/10.1162/evco.1999.7.3.205",
+    "author": [
+      {
+        "family": "Deb",
+        "given": "Kalyanmoy"
+      }
+    ],
+    "container-title": "Evol. Comput.",
+    "id": "raw:Deb99",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          1999
+        ]
+      ]
+    },
+    "page": "205-230",
+    "title": "Multi-objective genetic algorithms: Problem difficulties and construction of test problems",
+    "title-short": "Multi-objective genetic algorithms",
+    "type": "article-journal",
+    "volume": "7"
+  },
+  {
+    "DOI": "10.1007/3-540-45356-3\\_83",
+    "URL": "https://doi.org/10.1007/3-540-45356-3\\_83",
+    "author": [
+      {
+        "family": "Deb",
+        "given": "Kalyanmoy"
+      },
+      {
+        "family": "Agrawal",
+        "given": "Samir"
+      },
+      {
+        "family": "Pratap",
+        "given": "Amrit"
+      },
+      {
+        "family": "Meyarivan",
+        "given": "T."
+      }
+    ],
+    "container-title": "Parallel problem solving from nature - PPSN vi, 6th international conference, paris, france, september 18-20, 2000, proceedings",
+    "id": "raw:DebAPM00",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "page": "849-858",
+    "title": "A fast elitist non-dominated sorting genetic algorithm for multi-objective optimisation: NSGA-II",
+    "title-short": "A fast elitist non-dominated sorting genetic algorithm for multi-objective optimisation",
+    "type": "paper-conference"
+  },
+  {
+    "ISBN": "0201633612",
+    "author": [
+      {
+        "family": "Gamma",
+        "given": "Erich"
+      },
+      {
+        "family": "Helm",
+        "given": "Richard"
+      },
+      {
+        "family": "Johnson",
+        "given": "Ralph"
+      },
+      {
+        "family": "Vlissides",
+        "given": "John"
+      }
+    ],
+    "id": "raw:bookGOF",
+    "issued": {
+      "date-parts": [
+        [
+          1995
+        ]
+      ]
+    },
+    "publisher": "Addison-Wesley Longman Publishing Co., Inc.",
+    "publisher-place": "USA",
+    "title": "Design patterns: Elements of reusable object-oriented software",
+    "title-short": "Design patterns",
+    "type": "book"
+  },
+  {
+    "URL": "http://papers.nips.cc/paper/6117-bayesian-optimization-with-robust-bayesian-neural-networks",
+    "author": [
+      {
+        "family": "Springenberg",
+        "given": "Jost Tobias"
+      },
+      {
+        "family": "Klein",
+        "given": "Aaron"
+      },
+      {
+        "family": "Falkner",
+        "given": "Stefan"
+      },
+      {
+        "family": "Hutter",
+        "given": "Frank"
+      }
+    ],
+    "container-title": "Advances in neural information processing systems 29: Annual conference on neural information processing systems 2016, december 5-10, 2016, barcelona, spain",
+    "id": "raw:SpringenbergKFH16",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "page": "4134-4142",
+    "title": "Bayesian optimization with robust bayesian neural networks",
     "type": "paper-conference"
   }
 ]
