@@ -1,30 +1,65 @@
 {
   "pandoc": {
-    "title": "Compositional Multi-objective Parameter tuning",
+    "title": "Compositional Multi-objective Parameter Tuning",
     "keywords": [
-      "multi-objective",
-      "surrogate optimization",
-      "software design",
-      "sequential parameter optimization"
+      "multi-objective optimization",
+      "surrogate models",
+      "parameter tuning",
+      "search-based software engineering"
     ],
     "lang": "en-US",
-    "date-meta": "2020-03-15",
+    "date-meta": "2020-05-29",
     "author-meta": [
-      "Oleksandr Husak"
+      "Oleksandr Husak",
+      "M.Sc. Dmytro Pukhkaiev",
+      "Dr.-Ing. Sebastian Götz",
+      "Prof. Dr. rer. nat habil. Uwe Assmann"
     ],
-    "header-includes": "<!--\nManubot generated metadata rendered from header-includes-template.html.\nSuggest improvements at https://github.com/manubot/manubot/blob/master/manubot/process/header-includes-template.html\n-->\n<meta name=\"dc.format\" content=\"text/html\" />\n<meta name=\"dc.title\" content=\"Compositional Multi-objective Parameter tuning\" />\n<meta name=\"citation_title\" content=\"Compositional Multi-objective Parameter tuning\" />\n<meta property=\"og:title\" content=\"Compositional Multi-objective Parameter tuning\" />\n<meta property=\"twitter:title\" content=\"Compositional Multi-objective Parameter tuning\" />\n<meta name=\"dc.date\" content=\"2020-03-15\" />\n<meta name=\"citation_publication_date\" content=\"2020-03-15\" />\n<meta name=\"dc.language\" content=\"en-US\" />\n<meta name=\"citation_language\" content=\"en-US\" />\n<meta name=\"dc.relation.ispartof\" content=\"Manubot\" />\n<meta name=\"dc.publisher\" content=\"Manubot\" />\n<meta name=\"citation_journal_title\" content=\"Manubot\" />\n<meta name=\"citation_technical_report_institution\" content=\"Manubot\" />\n<meta name=\"citation_author\" content=\"Oleksandr Husak\" />\n<meta name=\"citation_author_institution\" content=\"Research Student Assistant in TUD\" />\n<meta name=\"citation_author_orcid\" content=\"XXXX-XXXX-XXXX-XXXX\" />\n<link rel=\"canonical\" href=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta property=\"og:url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta property=\"twitter:url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta name=\"citation_fulltext_html_url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta name=\"citation_pdf_url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf\" />\n<link rel=\"alternate\" type=\"application/pdf\" href=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf\" />\n<link rel=\"alternate\" type=\"text/html\" href=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/e186b01ec3cd7910051dcc9adaccf518a26b0095/\" />\n<meta name=\"manubot_html_url_versioned\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/e186b01ec3cd7910051dcc9adaccf518a26b0095/\" />\n<meta name=\"manubot_pdf_url_versioned\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/e186b01ec3cd7910051dcc9adaccf518a26b0095/manuscript.pdf\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"twitter:card\" content=\"summary_large_image\" />\n<link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"https://manubot.org/favicon-192x192.png\" />\n<link rel=\"mask-icon\" href=\"https://manubot.org/safari-pinned-tab.svg\" color=\"#ad1457\" />\n<meta name=\"theme-color\" content=\"#ad1457\" />\n<!-- end Manubot generated metadata -->"
+    "header-includes": "<!--\nManubot generated metadata rendered from header-includes-template.html.\nSuggest improvements at https://github.com/manubot/manubot/blob/master/manubot/process/header-includes-template.html\n-->\n<meta name=\"dc.format\" content=\"text/html\" />\n<meta name=\"dc.title\" content=\"Compositional Multi-objective Parameter Tuning\" />\n<meta name=\"citation_title\" content=\"Compositional Multi-objective Parameter Tuning\" />\n<meta property=\"og:title\" content=\"Compositional Multi-objective Parameter Tuning\" />\n<meta property=\"twitter:title\" content=\"Compositional Multi-objective Parameter Tuning\" />\n<meta name=\"dc.date\" content=\"2020-05-29\" />\n<meta name=\"citation_publication_date\" content=\"2020-05-29\" />\n<meta name=\"dc.language\" content=\"en-US\" />\n<meta name=\"citation_language\" content=\"en-US\" />\n<meta name=\"dc.relation.ispartof\" content=\"Manubot\" />\n<meta name=\"dc.publisher\" content=\"Manubot\" />\n<meta name=\"citation_journal_title\" content=\"Manubot\" />\n<meta name=\"citation_technical_report_institution\" content=\"Manubot\" />\n<meta name=\"citation_author\" content=\"Oleksandr Husak\" />\n<meta name=\"citation_author_institution\" content=\"Faculty of Computer Science, TU Dresden\" />\n<meta name=\"citation_author_orcid\" content=\"0000-0002-1676-0042\" />\n<meta name=\"citation_author\" content=\"M.Sc. Dmytro Pukhkaiev\" />\n<meta name=\"citation_author_institution\" content=\"Faculty of Computer Science, TU Dresden\" />\n<meta name=\"citation_author\" content=\"Dr.-Ing. Sebastian Götz\" />\n<meta name=\"citation_author_institution\" content=\"Faculty of Computer Science, TU Dresden\" />\n<meta name=\"citation_author\" content=\"Prof. Dr. rer. nat habil. Uwe Assmann\" />\n<meta name=\"citation_author_institution\" content=\"Faculty of Computer Science, TU Dresden\" />\n<link rel=\"canonical\" href=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta property=\"og:url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta property=\"twitter:url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta name=\"citation_fulltext_html_url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/\" />\n<meta name=\"citation_pdf_url\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf\" />\n<link rel=\"alternate\" type=\"application/pdf\" href=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf\" />\n<link rel=\"alternate\" type=\"text/html\" href=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/d10dc7081d7b739c65d803b0a7635461e8b00a04/\" />\n<meta name=\"manubot_html_url_versioned\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/d10dc7081d7b739c65d803b0a7635461e8b00a04/\" />\n<meta name=\"manubot_pdf_url_versioned\" content=\"https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/d10dc7081d7b739c65d803b0a7635461e8b00a04/manuscript.pdf\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"twitter:card\" content=\"summary_large_image\" />\n<link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"https://manubot.org/favicon-192x192.png\" />\n<link rel=\"mask-icon\" href=\"https://manubot.org/safari-pinned-tab.svg\" color=\"#ad1457\" />\n<meta name=\"theme-color\" content=\"#ad1457\" />\n<!-- end Manubot generated metadata -->"
   },
   "manubot": {
-    "date": "March 15, 2020",
+    "date": "May 29, 2020",
     "authors": [
       {
         "github": "Valavanca",
         "name": "Oleksandr Husak",
         "initials": "OH",
-        "orcid": "XXXX-XXXX-XXXX-XXXX",
-        "email": "oleksandr.husak@mailbox.tu-dresden.de",
+        "orcid": "0000-0002-1676-0042",
         "affiliations": [
-          "Research Student Assistant in TUD"
+          "Faculty of Computer Science, TU Dresden"
+        ],
+        "affiliation_numbers": [
+          1
+        ]
+      },
+      {
+        "name": "M.Sc. Dmytro Pukhkaiev",
+        "initials": "DP",
+        "site": "https://tu-dresden.de/ing/informatik/smt/st/die-professur/mitarbeiter?person=412&embedding_id=1e8badf421c649b89f65fb84a05ecbb0&set_language=en",
+        "affiliations": [
+          "Faculty of Computer Science, TU Dresden"
+        ],
+        "affiliation_numbers": [
+          1
+        ]
+      },
+      {
+        "name": "Dr.-Ing. Sebastian Götz",
+        "initials": "SG",
+        "site": "https://tu-dresden.de/ing/informatik/smt/st/die-professur/mitarbeiter?person=143&embedding_id=1e8badf421c649b89f65fb84a05ecbb0",
+        "affiliations": [
+          "Faculty of Computer Science, TU Dresden"
+        ],
+        "affiliation_numbers": [
+          1
+        ]
+      },
+      {
+        "name": "Prof. Dr. rer. nat habil. Uwe Assmann",
+        "initials": "UA",
+        "site": "http://www1.inf.tu-dresden.de/~ua1/",
+        "affiliations": [
+          "Faculty of Computer Science, TU Dresden"
         ],
         "affiliation_numbers": [
           1
@@ -33,7 +68,7 @@
     ],
     "affiliations": [
       {
-        "affiliation": "Research Student Assistant in TUD",
+        "affiliation": "Faculty of Computer Science, TU Dresden",
         "affiliation_number": 1
       }
     ],
@@ -42,23 +77,23 @@
       "repo_slug": "Valavanca/compositional-system-for-hyperparameter-tuning",
       "repo_owner": "Valavanca",
       "repo_name": "compositional-system-for-hyperparameter-tuning",
-      "commit": "e186b01ec3cd7910051dcc9adaccf518a26b0095",
-      "triggering_commit": "e186b01ec3cd7910051dcc9adaccf518a26b0095",
-      "build_url": "https://travis-ci.com/Valavanca/compositional-system-for-hyperparameter-tuning/builds/153417731",
-      "job_url": "https://travis-ci.com/Valavanca/compositional-system-for-hyperparameter-tuning/jobs/298356175"
+      "commit": "d10dc7081d7b739c65d803b0a7635461e8b00a04",
+      "triggering_commit": "d10dc7081d7b739c65d803b0a7635461e8b00a04",
+      "build_url": "https://travis-ci.com/Valavanca/compositional-system-for-hyperparameter-tuning/builds/168766611",
+      "job_url": "https://travis-ci.com/Valavanca/compositional-system-for-hyperparameter-tuning/jobs/341466803"
     },
     "html_url": "https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/",
     "pdf_url": "https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/manuscript.pdf",
-    "html_url_versioned": "https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/e186b01ec3cd7910051dcc9adaccf518a26b0095/",
-    "pdf_url_versioned": "https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/e186b01ec3cd7910051dcc9adaccf518a26b0095/manuscript.pdf",
+    "html_url_versioned": "https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/d10dc7081d7b739c65d803b0a7635461e8b00a04/",
+    "pdf_url_versioned": "https://Valavanca.github.io/compositional-system-for-hyperparameter-tuning/v/d10dc7081d7b739c65d803b0a7635461e8b00a04/manuscript.pdf",
     "manubot_version": "0.3.0",
     "rootstock_commit": null,
     "manuscript_stats": {
       "reference_counts": {
-        "raw": 42,
-        "total": 42
+        "raw": 55,
+        "total": 55
       },
-      "word_count": 10340
+      "word_count": 16162
     }
   }
 }

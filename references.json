@@ -2,6 +2,25 @@
   {
     "author": [
       {
+        "family": "Andersson",
+        "given": "Johan"
+      }
+    ],
+    "id": "5fPW8AT3",
+    "issued": {
+      "date-parts": [
+        [
+          2000
+        ]
+      ]
+    },
+    "title": "A survey of multiobjective optimization in engineering design johan",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Andersson00asurvey",
+    "type": "entry"
+  },
+  {
+    "author": [
+      {
         "family": "Audet",
         "given": "Charles"
       },
@@ -35,41 +54,110 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Audet2018PerformanceII"
   },
   {
-    "DOI": "10.1109/TSMCC.2004.841905",
-    "URL": "https://doi.org/10.1109/TSMCC.2004.841905",
+    "DOI": "10.1109/TEVC.2009.2015575",
+    "URL": "https://doi.org/10.1109/TEVC.2009.2015575",
     "author": [
       {
-        "family": "Chafekar",
-        "given": "Deepti"
+        "family": "Beume",
+        "given": "Nicola"
       },
       {
-        "family": "Shi",
-        "given": "Liang"
+        "family": "Fonseca",
+        "given": "Carlos M."
       },
       {
-        "family": "Rasheed",
-        "given": "Khaled"
+        "family": "López-Ibáñez",
+        "given": "Manuel"
       },
       {
-        "family": "Xuan",
-        "given": "Jiang"
+        "family": "Paquete",
+        "given": "Luís"
+      },
+      {
+        "family": "Vahrenhold",
+        "given": "Jan"
       }
     ],
-    "container-title": "IEEE Trans. Systems, Man, and Cybernetics, Part C",
-    "id": "1C0JI6fEI",
-    "issue": "2",
+    "container-title": "IEEE Trans. Evolutionary Computation",
+    "id": "Hp8tHCir",
+    "issue": "5",
     "issued": {
       "date-parts": [
         [
-          2005
+          2009
         ]
       ]
     },
-    "page": "261-265",
-    "title": "Multiobjective GA optimization using reduced models",
+    "page": "1075-1082",
+    "title": "On the complexity of computing the hypervolume indicator",
     "type": "article-journal",
-    "volume": "35",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:ChafekarSRX05"
+    "volume": "13",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:BeumeFLPV09"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1703.03373",
+    "author": [
+      {
+        "family": "Bischl",
+        "given": "Bernd"
+      },
+      {
+        "family": "Richter",
+        "given": "Jakob"
+      },
+      {
+        "family": "Bossek",
+        "given": "Jakob"
+      },
+      {
+        "family": "Horn",
+        "given": "Daniel"
+      },
+      {
+        "family": "Thomas",
+        "given": "Janek"
+      },
+      {
+        "family": "Lang",
+        "given": "Michel"
+      }
+    ],
+    "id": "11i9KPh5u",
+    "issued": {
+      "date-parts": [
+        [
+          2017,
+          3,
+          9
+        ]
+      ]
+    },
+    "title": "mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions",
+    "title-short": "mlrMBO",
+    "type": "article-journal",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:BischlmlrMBO"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1904.05760",
+    "author": [
+      {
+        "family": "Chugh",
+        "given": "Tinkle"
+      }
+    ],
+    "container-title": "CoRR",
+    "id": "19PHyqZWt",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "title": "Scalarizing functions in bayesian multiobjective optimization",
+    "type": "article-journal",
+    "volume": "abs/1904.05760",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:ChughScal2019"
   },
   {
     "DOI": "10.1137/10079731X",
@@ -109,31 +197,66 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:CustodioMVV11"
   },
   {
-    "DOI": "10.1007/978-3-540-49774-5\\_13",
-    "URL": "https://doi.org/10.1007/978-3-540-49774-5\\_13",
+    "DOI": "10.1162/evco.1999.7.3.205",
+    "URL": "https://doi.org/10.1162/evco.1999.7.3.205",
+    "author": [
+      {
+        "family": "Deb",
+        "given": "Kalyanmoy"
+      }
+    ],
+    "container-title": "Evol. Comput.",
+    "id": "QVZZuqyA",
+    "issue": "3",
+    "issued": {
+      "date-parts": [
+        [
+          1999
+        ]
+      ]
+    },
+    "page": "205-230",
+    "title": "Multi-objective genetic algorithms: Problem difficulties and construction of test problems",
+    "title-short": "Multi-objective genetic algorithms",
+    "type": "article-journal",
+    "volume": "7",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Deb99"
+  },
+  {
+    "DOI": "10.1007/3-540-45356-3\\_83",
+    "URL": "https://doi.org/10.1007/3-540-45356-3\\_83",
     "author": [
       {
         "family": "Deb",
         "given": "Kalyanmoy"
       },
       {
-        "family": "Nain",
-        "given": "Pawan K. S."
+        "family": "Agrawal",
+        "given": "Samir"
+      },
+      {
+        "family": "Pratap",
+        "given": "Amrit"
+      },
+      {
+        "family": "Meyarivan",
+        "given": "T."
       }
     ],
-    "container-title": "Evolutionary computation in dynamic and uncertain environments",
-    "id": "4bMRxtHA",
+    "container-title": "Parallel problem solving from nature - PPSN vi, 6th international conference, paris, france, september 18-20, 2000, proceedings",
+    "id": "BJhPNw0R",
     "issued": {
       "date-parts": [
         [
-          2007
+          2000
         ]
       ]
     },
-    "page": "297-322",
-    "title": "An evolutionary multi-objective adaptive meta-modeling procedure using artificial neural networks",
-    "type": "chapter",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:DebN07"
+    "page": "849-858",
+    "title": "A fast elitist non-dominated sorting genetic algorithm for multi-objective optimisation: NSGA-II",
+    "title-short": "A fast elitist non-dominated sorting genetic algorithm for multi-objective optimisation",
+    "type": "paper-conference",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:DebAPM00"
   },
   {
     "DOI": "10.1007/1-84628-137-7\\_6",
@@ -169,6 +292,40 @@
     "title": "Scalable test problems for evolutionary multiobjective optimization",
     "type": "chapter",
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:DebTLZ05"
+  },
+  {
+    "URL": "http://arxiv.org/abs/1409.5752",
+    "author": [
+      {
+        "family": "Derbel",
+        "given": "Bilel"
+      },
+      {
+        "family": "Brockhoff",
+        "given": "Dimo"
+      },
+      {
+        "family": "Liefooghe",
+        "given": "Arnaud"
+      },
+      {
+        "family": "Vérel",
+        "given": "Sébastien"
+      }
+    ],
+    "container-title": "CoRR",
+    "id": "CE69KuZH",
+    "issued": {
+      "date-parts": [
+        [
+          2014
+        ]
+      ]
+    },
+    "title": "On the impact of multiobjective scalarizing functions",
+    "type": "article-journal",
+    "volume": "abs/1409.5752",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:DerbelBLV14"
   },
   {
     "ISBN": "978-3-540-76931-6",
@@ -218,36 +375,6 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:DistrSurr"
   },
   {
-    "DOI": "10.1007/s11047-018-9685-y",
-    "URL": "https://doi.org/10.1007/s11047-018-9685-y",
-    "author": [
-      {
-        "family": "Emmerich",
-        "given": "Michael T. M."
-      },
-      {
-        "family": "Deutz",
-        "given": "André H."
-      }
-    ],
-    "container-title": "Natural Computing",
-    "id": "1HUtCWxMH",
-    "issue": "3",
-    "issued": {
-      "date-parts": [
-        [
-          2018
-        ]
-      ]
-    },
-    "page": "585-609",
-    "title": "A tutorial on multiobjective optimization: Fundamentals and evolutionary methods",
-    "title-short": "A tutorial on multiobjective optimization",
-    "type": "article-journal",
-    "volume": "17",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:EmmerichD18"
-  },
-  {
     "DOI": "10.1109/TEVC.2005.859463",
     "URL": "https://doi.org/10.1109/TEVC.2005.859463",
     "author": [
@@ -281,68 +408,127 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:EmmerichGN06"
   },
   {
-    "ISBN": "978-0-470-06068-1",
+    "URL": "http://arxiv.org/abs/1807.01774",
     "author": [
       {
-        "family": "Forrester",
-        "given": "Alexander I. J."
+        "family": "Falkner",
+        "given": "Stefan"
       },
       {
-        "family": "Sobester",
-        "given": "Andras"
+        "family": "Klein",
+        "given": "Aaron"
       },
       {
-        "family": "Keane",
-        "given": "Andy J."
+        "family": "Hutter",
+        "given": "Frank"
       }
     ],
-    "id": "yGyc3usi",
+    "container-title": "CoRR",
+    "id": "1FBsMpBkY",
     "issued": {
       "date-parts": [
         [
-          2008
+          2018
         ]
       ]
     },
-    "keyword": "dblp",
-    "page": "I-XVIII, 1-210",
-    "publisher": "Wiley",
-    "title": "Engineering design via surrogate modelling - a practical guide.",
-    "type": "book",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:EngSurMod"
+    "title": "BOHB: robust and efficient hyperparameter optimization at scale",
+    "type": "article-journal",
+    "volume": "abs/1807.01774",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:FalknerBOHB"
   },
   {
-    "DOI": "10.1007/BF01743506",
-    "ISSN": "1615-1488",
-    "URL": "https://doi.org/10.1007/BF01743506",
-    "abstract": "A genetic algorithm is applied for the optimal design of skeletal building structures accounting for discrete sizing, geometrical and topological variables. An approximate designfitness evaluation technique is investigated with the aim to improve the numerical efficiency of the genetic search. Two design examples are presented to illustrate the principles involved.",
+    "DOI": "10.1016/j.simpat.2014.03.007",
+    "URL": "https://doi.org/10.1016/j.simpat.2014.03.007",
     "author": [
       {
-        "family": "Grierson",
-        "given": "D. E."
+        "family": "Figueira",
+        "given": "Gonçalo"
       },
       {
-        "family": "Pak",
-        "given": "W. H."
+        "family": "Almada-Lobo",
+        "given": "Bernardo"
       }
     ],
-    "container-title": "Structural optimization",
-    "id": "1AF8tzsvd",
-    "issue": "3",
+    "container-title": "Simul. Model. Pract. Theory",
+    "id": "nUhAXe3p",
     "issued": {
       "date-parts": [
         [
-          1993,
-          9,
-          1
+          2014
         ]
       ]
     },
-    "page": "151-159",
-    "title": "Optimal sizing, geometrical and topological design using a genetic algorithm",
+    "page": "118-134",
+    "title": "Hybrid simulation-optimization methods: A taxonomy and discussion",
+    "title-short": "Hybrid simulation-optimization methods",
     "type": "article-journal",
-    "volume": "6",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Grierson1993"
+    "volume": "46",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:FigueiraA14"
+  },
+  {
+    "DOI": "10.1007/978-0-387-21606-5",
+    "ISBN": "978-1-4899-0519-2",
+    "URL": "https://doi.org/10.1007/978-0-387-21606-5",
+    "author": [
+      {
+        "family": "Hastie",
+        "given": "Trevor"
+      },
+      {
+        "family": "Friedman",
+        "given": "Jerome H."
+      },
+      {
+        "family": "Tibshirani",
+        "given": "Robert"
+      }
+    ],
+    "collection-title": "Springer series in statistics",
+    "id": "oZVt7BwU",
+    "issued": {
+      "date-parts": [
+        [
+          2001
+        ]
+      ]
+    },
+    "publisher": "Springer",
+    "title": "The elements of statistical learning: Data mining, inference, and prediction",
+    "title-short": "The elements of statistical learning",
+    "type": "book",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:HastieFT01"
+  },
+  {
+    "DOI": "10.1007/978-3-642-25566-3\\_40",
+    "URL": "https://doi.org/10.1007/978-3-642-25566-3\\_40",
+    "author": [
+      {
+        "family": "Hutter",
+        "given": "Frank"
+      },
+      {
+        "family": "Hoos",
+        "given": "Holger H."
+      },
+      {
+        "family": "Leyton-Brown",
+        "given": "Kevin"
+      }
+    ],
+    "container-title": "Learning and intelligent optimization - 5th international conference, LION 5, rome, italy, january 17-21, 2011. selected papers",
+    "id": "e2TT8RyQ",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "page": "507-523",
+    "title": "Sequential model-based optimization for general algorithm configuration",
+    "type": "paper-conference",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:HutterHL11"
   },
   {
     "DOI": "10.1109/CEC.2013.6557876",
@@ -385,29 +571,91 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:HybridSurrRCG"
   },
   {
-    "DOI": "10.1007/s00500-003-0328-5",
-    "URL": "https://doi.org/10.1007/s00500-003-0328-5",
+    "DOI": "10.1023/A:1008306431147",
+    "URL": "https://doi.org/10.1023/A:1008306431147",
     "author": [
       {
-        "family": "Jin",
-        "given": "Yaochu"
+        "family": "Jones",
+        "given": "Donald R."
+      },
+      {
+        "family": "Schonlau",
+        "given": "Matthias"
+      },
+      {
+        "family": "Welch",
+        "given": "William J."
       }
     ],
-    "container-title": "Soft Comput.",
-    "id": "112CjFl6F",
-    "issue": "1",
+    "container-title": "J. Global Optimization",
+    "id": "1Bbk0txPF",
+    "issue": "4",
     "issued": {
       "date-parts": [
         [
-          2005
+          1998
         ]
       ]
     },
-    "page": "3-12",
-    "title": "A comprehensive survey of fitness approximation in evolutionary computation",
+    "page": "455-492",
+    "title": "Efficient global optimization of expensive black-box functions",
     "type": "article-journal",
-    "volume": "9",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Jin05"
+    "volume": "13",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:JonesSW98"
+  },
+  {
+    "DOI": "https://doi.org/10.1016/j.jhydrol.2012.10.050",
+    "ISSN": "0022-1694",
+    "URL": "http://www.sciencedirect.com/science/article/pii/S0022169412009511",
+    "abstract": "Summary The demand for fresh water in coastal areas and islands can be very high due to increased local needs and tourism. A multi-objective optimization methodology is developed, involving minimization of economic and environmental costs while satisfying water demand. The methodology considers desalinization of pumped water and injection of treated water into the aquifer. Variable density aquifer models are computationally intractable when integrated in optimization algorithms. In order to alleviate this problem, a multi-objective optimization algorithm is developed combining surrogate models based on Modular Neural Networks \\[MOSA(MNNs)\\]. The surrogate models are trained adaptively during optimization based on a genetic algorithm. In the crossover step, each pair of parents generates a pool of offspring which are evaluated using the fast surrogate model. Then, the most promising offspring are evaluated using the exact numerical model. This procedure eliminates errors in Pareto solution due to imprecise predictions of the surrogate model. The method has important advancements compared to previous methods such as precise evaluation of the Pareto set and alleviation of propagation of errors due to surrogate model approximations. The method is applied to an aquifer in the Greek island of Santorini. The results show that the new MOSA(MNN) algorithm offers significant reduction in computational time compared to previous methods (in the case study it requires only 5",
+    "author": [
+      {
+        "family": "Kourakos",
+        "given": "George"
+      },
+      {
+        "family": "Mantoglou",
+        "given": "Aristotelis"
+      }
+    ],
+    "container-title": "Journal of Hydrology",
+    "id": "115GeSP44",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "keyword": "Salt water intrusion, Aquifer management, Coastal aquifers, Multi-objective optimization, Surrogate models, Pumping management",
+    "page": "13 - 23",
+    "title": "Development of a multi-objective optimization algorithm using surrogate models for coastal aquifer management",
+    "type": "article-journal",
+    "volume": "479",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:KOURAKOS201313"
+  },
+  {
+    "ISBN": "978-0-7923-8278-2",
+    "author": [
+      {
+        "family": "Miettinen",
+        "given": "Kaisa"
+      }
+    ],
+    "collection-title": "International series in operations research and management science",
+    "id": "czq5Shcc",
+    "issued": {
+      "date-parts": [
+        [
+          1998
+        ]
+      ]
+    },
+    "publisher": "Kluwer",
+    "title": "Nonlinear multiobjective optimization",
+    "type": "book",
+    "volume": "12",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Kaisa0021267"
   },
   {
     "DOI": "10.1109/TEVC.2005.851274",
@@ -469,55 +717,6 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:KrallMD15"
   },
   {
-    "DOI": "10.1007/s00158-008-0251-6",
-    "ISSN": "1615-1488",
-    "URL": "https://doi.org/10.1007/s00158-008-0251-6",
-    "abstract": "Applications of multi-objective genetic algorithms (MOGAs) in engineering optimization problems often require numerous function calls. One way to reduce the number of function calls is to use an approximation in lieu of function calls. An approximation involves two steps: design of experiments (DOE) and metamodeling. This paper presents a new approach where both DOE and metamodeling are integrated with a MOGA. In particular, the DOE method reduces the number of generations in a MOGA, while the metamodeling reduces the number of function calls in each generation. In the present approach, the DOE locates a subset of design points that is estimated to better sample the design space, while the metamodeling assists in estimating the fitness of design points. Several numerical and engineering examples are used to demonstrate the applicability of this new approach. The results from these examples show that the proposed improved approach requires significantly fewer function calls and obtains similar solutions compared to a conventional MOGA and a recently developed metamodeling-assisted MOGA.",
-    "author": [
-      {
-        "family": "Li",
-        "given": "G."
-      },
-      {
-        "family": "Li",
-        "given": "M."
-      },
-      {
-        "family": "Azarm",
-        "given": "S."
-      },
-      {
-        "family": "Al Hashimi",
-        "given": "S."
-      },
-      {
-        "family": "Al Ameri",
-        "given": "T."
-      },
-      {
-        "family": "Al Qasas",
-        "given": "N."
-      }
-    ],
-    "container-title": "Structural and Multidisciplinary Optimization",
-    "id": "16Jfe9RjR",
-    "issue": "5",
-    "issued": {
-      "date-parts": [
-        [
-          2009,
-          2,
-          1
-        ]
-      ]
-    },
-    "page": "447-461",
-    "title": "Improving multi-objective genetic algorithms with adaptive design of experiments and online metamodeling",
-    "type": "article-journal",
-    "volume": "37",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Li2009"
-  },
-  {
     "DOI": "10.1016/j.swevo.2019.03.005",
     "URL": "https://doi.org/10.1016/j.swevo.2019.03.005",
     "author": [
@@ -548,6 +747,33 @@
     "type": "article-journal",
     "volume": "47",
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:LuST19"
+  },
+  {
+    "DOI": "10.1145/2463372.2463516",
+    "URL": "https://doi.org/10.1145/2463372.2463516",
+    "author": [
+      {
+        "family": "Märtens",
+        "given": "Marcus"
+      },
+      {
+        "family": "Izzo",
+        "given": "Dario"
+      }
+    ],
+    "container-title": "Genetic and evolutionary computation conference, GECCO ’13, amsterdam, the netherlands, july 6-10, 2013",
+    "id": "kRD0G3XY",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "page": "1173-1180",
+    "title": "The asynchronous island model and NSGA-II: study of a new migration operator and its performance",
+    "type": "paper-conference",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Martens13"
   },
   {
     "DOI": "10.1016/j.ejor.2014.04.011",
@@ -587,88 +813,62 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:MlakarPTF15"
   },
   {
-    "URL": "http://drops.dagstuhl.de/opus/volltexte/2005/234",
+    "URL": "http://arxiv.org/abs/1909.03814",
     "author": [
       {
-        "family": "Nakayama",
-        "given": "Hirotaka"
+        "family": "Pukhkaiev",
+        "given": "Dmytro"
+      },
+      {
+        "family": "Aßmann",
+        "given": "Uwe"
       }
     ],
-    "container-title": "Practical approaches to multi-objective optimization, 7.-12. november 2004",
-    "id": "15iylVSF0",
+    "container-title": "CoRR",
+    "id": "OYrq2ZLd",
     "issued": {
       "date-parts": [
         [
-          2005
+          2019
         ]
       ]
     },
-    "title": "Multi-objective optimization and its engineering applications",
-    "type": "paper-conference",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Nakayama05"
-  },
-  {
-    "DOI": "10.1109/CEC.2012.6256450",
-    "URL": "https://doi.org/10.1109/CEC.2012.6256450",
-    "author": [
-      {
-        "family": "Pilát",
-        "given": "Martin"
-      },
-      {
-        "family": "Neruda",
-        "given": "Roman"
-      }
-    ],
-    "container-title": "Proceedings of the IEEE congress on evolutionary computation, CEC 2012, brisbane, australia, june 10-15, 2012",
-    "id": "MlTHme7o",
-    "issued": {
-      "date-parts": [
-        [
-          2012
-        ]
-      ]
-    },
-    "page": "1-7",
-    "title": "An evolutionary strategy for surrogate-based multiobjective optimization",
-    "type": "paper-conference",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:PilatN12"
-  },
-  {
-    "author": [
-      {
-        "family": "Tian",
-        "given": "Ye"
-      },
-      {
-        "family": "Cheng",
-        "given": "Ran"
-      },
-      {
-        "family": "Zhang",
-        "given": "Xingyi"
-      },
-      {
-        "family": "Jin",
-        "given": "Yaochu"
-      }
-    ],
-    "container-title": "IEEE Computational Intelligence Magazine",
-    "id": "d1YE9XcQ",
-    "issue": "4",
-    "issued": {
-      "date-parts": [
-        [
-          2017
-        ]
-      ]
-    },
-    "page": "73-87",
-    "title": "raw:PlatEMO: A MATLAB platform for evolutionary multi-objective optimization",
-    "title-short": "raw:PlatEMO",
+    "title": "Parameter tuning for self-optimizing software at scale",
     "type": "article-journal",
-    "volume": "12",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:PlatEMO"
+    "volume": "abs/1909.03814",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Pukhkaiev19"
+  },
+  {
+    "DOI": "10.1016/j.jss.2018.12.015",
+    "URL": "https://doi.org/10.1016/j.jss.2018.12.015",
+    "author": [
+      {
+        "family": "Ramírez",
+        "given": "Aurora"
+      },
+      {
+        "family": "Romero",
+        "given": "José Raúl"
+      },
+      {
+        "family": "Ventura",
+        "given": "Sebastián"
+      }
+    ],
+    "container-title": "J. Syst. Softw.",
+    "id": "10qq3sKmV",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "page": "382-395",
+    "title": "A survey of many-objective optimisation in search-based software engineering",
+    "type": "article-journal",
+    "volume": "149",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:RamirezRV19"
   },
   {
     "DOI": "10.1007/978-3-540-28650-9_4",
@@ -848,6 +1048,40 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:SoftSurvey"
   },
   {
+    "URL": "http://papers.nips.cc/paper/6117-bayesian-optimization-with-robust-bayesian-neural-networks",
+    "author": [
+      {
+        "family": "Springenberg",
+        "given": "Jost Tobias"
+      },
+      {
+        "family": "Klein",
+        "given": "Aaron"
+      },
+      {
+        "family": "Falkner",
+        "given": "Stefan"
+      },
+      {
+        "family": "Hutter",
+        "given": "Frank"
+      }
+    ],
+    "container-title": "Advances in neural information processing systems 29: Annual conference on neural information processing systems 2016, december 5-10, 2016, barcelona, spain",
+    "id": "5eR7xJoM",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "page": "4134-4142",
+    "title": "Bayesian optimization with robust bayesian neural networks",
+    "type": "paper-conference",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:SpringenbergKFH16"
+  },
+  {
     "DOI": "10.1016/j.ress.2006.04.014",
     "URL": "https://doi.org/10.1016/j.ress.2006.04.014",
     "author": [
@@ -884,6 +1118,94 @@
     "type": "article-journal",
     "volume": "92",
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:TaboadaBCW07"
+  },
+  {
+    "author": [
+      {
+        "family": "Tian",
+        "given": "Ye"
+      },
+      {
+        "family": "Cheng",
+        "given": "Ran"
+      },
+      {
+        "family": "Zhang",
+        "given": "Xingyi"
+      },
+      {
+        "family": "Jin",
+        "given": "Yaochu"
+      }
+    ],
+    "container-title": "IEEE Computational Intelligence Magazine",
+    "id": "SrxLVL7k",
+    "issue": "4",
+    "issued": {
+      "date-parts": [
+        [
+          2017
+        ]
+      ]
+    },
+    "page": "73-87",
+    "title": "PlatEMO: A MATLAB platform for evolutionary multi-objective optimization",
+    "title-short": "PlatEMO",
+    "type": "article-journal",
+    "volume": "12",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:TianPlatEMO"
+  },
+  {
+    "author": [
+      {
+        "family": "Wagner",
+        "given": "Tobias"
+      }
+    ],
+    "id": "hXsWZiMi",
+    "issued": {
+      "date-parts": [
+        [
+          2010,
+          1
+        ]
+      ]
+    },
+    "page": "1",
+    "title": "A subjective review of the state of the art in model-based parameter tuning",
+    "type": "paper-conference",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:TobiasCV"
+  },
+  {
+    "DOI": "10.1145/2739482.2756574",
+    "ISBN": "9781450334884",
+    "URL": "https://doi.org/10.1145/2739482.2756574",
+    "author": [
+      {
+        "family": "Brockhoff",
+        "given": "Dimo"
+      },
+      {
+        "family": "Wagner",
+        "given": "Tobias"
+      }
+    ],
+    "collection-title": "GECCO companion ’15",
+    "container-title": "Proceedings of the companion publication of the 2015 annual conference on genetic and evolutionary computation",
+    "id": "ZELkJp0w",
+    "issued": {
+      "date-parts": [
+        [
+          2015
+        ]
+      ]
+    },
+    "page": "37-63",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Tutorial on evolutionary multiobjective optimization",
+    "type": "paper-conference",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:TutMOEABrockhoff"
   },
   {
     "DOI": "10.1109/TEVC.2005.861417",
@@ -925,6 +1247,60 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:WFGref"
   },
   {
+    "author": [
+      {
+        "family": "Wagner",
+        "given": "T."
+      }
+    ],
+    "container-title": "Vulkan Verlag",
+    "id": "XcwIljhD",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "title": "Planning and multi-objective optimization of manufacturing processes by means of empirical surrogate models",
+    "type": "article-journal",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:WagEGOe"
+  },
+  {
+    "URL": "http://proceedings.mlr.press/v51/wilson16.html",
+    "author": [
+      {
+        "family": "Wilson",
+        "given": "Andrew Gordon"
+      },
+      {
+        "family": "Hu",
+        "given": "Zhiting"
+      },
+      {
+        "family": "Salakhutdinov",
+        "given": "Ruslan"
+      },
+      {
+        "family": "Xing",
+        "given": "Eric P."
+      }
+    ],
+    "container-title": "Proceedings of the 19th international conference on artificial intelligence and statistics, AISTATS 2016, cadiz, spain, may 9-11, 2016",
+    "id": "DjMKzd5z",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "page": "370-378",
+    "title": "Deep kernel learning",
+    "type": "paper-conference",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:WilsonHSX16"
+  },
+  {
     "DOI": "10.1080/00401706.2000.10485731",
     "URL": "https://doi.org/10.1080/00401706.2000.10485731",
     "author": [
@@ -949,6 +1325,45 @@
     "type": "article-journal",
     "volume": "42",
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Woodard00"
+  },
+  {
+    "DOI": "10.1007/978-3-642-37140-0\\_56",
+    "URL": "https://doi.org/10.1007/978-3-642-37140-0\\_56",
+    "author": [
+      {
+        "family": "Zaefferer",
+        "given": "Martin"
+      },
+      {
+        "family": "Bartz-Beielstein",
+        "given": "Thomas"
+      },
+      {
+        "family": "Naujoks",
+        "given": "Boris"
+      },
+      {
+        "family": "Wagner",
+        "given": "Tobias"
+      },
+      {
+        "family": "Emmerich",
+        "given": "Michael"
+      }
+    ],
+    "container-title": "Evolutionary multi-criterion optimization - 7th international conference, EMO 2013, sheffield, uk, march 19-22, 2013. proceedings",
+    "id": "8Wbkj1xf",
+    "issued": {
+      "date-parts": [
+        [
+          2013
+        ]
+      ]
+    },
+    "page": "756-770",
+    "title": "A case study on multi-criteria optimization of an event detection software under limited budgets",
+    "type": "paper-conference",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:ZaeffererBNWE13"
   },
   {
     "DOI": "10.1109/TEVC.2007.892759",
@@ -978,37 +1393,6 @@
     "type": "article-journal",
     "volume": "11",
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:ZhangL07"
-  },
-  {
-    "author": [
-      {
-        "family": "Zitzler",
-        "given": "Eckart"
-      },
-      {
-        "family": "Deb",
-        "given": "Kalyanmoy"
-      },
-      {
-        "family": "Thiele",
-        "given": "Lothar"
-      }
-    ],
-    "container-title": "Evolutionary Computation",
-    "id": "17FLBEzc1",
-    "issued": {
-      "date-parts": [
-        [
-          2000
-        ]
-      ]
-    },
-    "page": "173-195",
-    "title": "Comparison of multiobjective evolutionary algorithms: Empirical results",
-    "title-short": "Comparison of multiobjective evolutionary algorithms",
-    "type": "article-journal",
-    "volume": "8",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:Zitzler2000ComparisonOM"
   },
   {
     "DOI": "10.1162/106365600568202",
@@ -1092,31 +1476,109 @@
   {
     "author": [
       {
-        "family": "Bodin",
-        "given": "Erik"
+        "family": "Pedregosa",
+        "given": "F."
       },
       {
-        "family": "Kaiser",
-        "given": "Markus"
+        "family": "Varoquaux",
+        "given": "G."
       },
       {
-        "family": "Kazlauskaite",
-        "given": "Ieva"
+        "family": "Gramfort",
+        "given": "A."
       },
       {
-        "family": "Dai",
-        "given": "Zhenwen"
+        "family": "Michel",
+        "given": "V."
       },
       {
-        "family": "Campbell",
-        "given": "Neill D. F."
+        "family": "Thirion",
+        "given": "B."
       },
       {
-        "family": "Ek",
-        "given": "Carl Henrik"
+        "family": "Grisel",
+        "given": "O."
+      },
+      {
+        "family": "Blondel",
+        "given": "M."
+      },
+      {
+        "family": "Prettenhofer",
+        "given": "P."
+      },
+      {
+        "family": "Weiss",
+        "given": "R."
+      },
+      {
+        "family": "Dubourg",
+        "given": "V."
+      },
+      {
+        "family": "Vanderplas",
+        "given": "J."
+      },
+      {
+        "family": "Passos",
+        "given": "A."
+      },
+      {
+        "family": "Cournapeau",
+        "given": "D."
+      },
+      {
+        "family": "Brucher",
+        "given": "M."
+      },
+      {
+        "family": "Perrot",
+        "given": "M."
+      },
+      {
+        "family": "Duchesnay",
+        "given": "E."
       }
     ],
-    "id": "wTIHyFe9",
+    "container-title": "Journal of Machine Learning Research",
+    "id": "5HeKgs4K",
+    "issued": {
+      "date-parts": [
+        [
+          2011
+        ]
+      ]
+    },
+    "page": "2825-2830",
+    "title": "[Scikit-learn: Machine Learning in Python ]{.nocase}",
+    "type": "article-journal",
+    "volume": "12",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:art-scikit-learn"
+  },
+  {
+    "author": [
+      {
+        "family": "Benitez-Hidalgo",
+        "given": "Antonio"
+      },
+      {
+        "family": "Nebro",
+        "given": "Antonio J."
+      },
+      {
+        "family": "Garcia-Nieto",
+        "given": "Jose"
+      },
+      {
+        "family": "Oregi",
+        "given": "Izaskun"
+      },
+      {
+        "family": "Ser",
+        "given": "Javier Del"
+      }
+    ],
+    "id": "om6wdVM3",
     "issued": {
       "date-parts": [
         [
@@ -1124,9 +1586,45 @@
         ]
       ]
     },
-    "title": "Modulating surrogates for bayesian optimization",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:bodin2019modulating",
+    "title": "JMetalPy: A python framework for multi-objective optimization with metaheuristics",
+    "title-short": "JMetalPy",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:benitezhidalgo2019jmetalpy",
     "type": "entry"
+  },
+  {
+    "ISBN": "0201633612",
+    "author": [
+      {
+        "family": "Gamma",
+        "given": "Erich"
+      },
+      {
+        "family": "Helm",
+        "given": "Richard"
+      },
+      {
+        "family": "Johnson",
+        "given": "Ralph"
+      },
+      {
+        "family": "Vlissides",
+        "given": "John"
+      }
+    ],
+    "id": "LiF8v83X",
+    "issued": {
+      "date-parts": [
+        [
+          1995
+        ]
+      ]
+    },
+    "publisher": "Addison-Wesley Longman Publishing Co., Inc.",
+    "publisher-place": "USA",
+    "title": "Design patterns: Elements of reusable object-oriented software",
+    "title-short": "Design patterns",
+    "type": "book",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:bookGOF"
   },
   {
     "author": [
@@ -1341,84 +1839,38 @@
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:francesco_biscani_2019"
   },
   {
+    "DOI": "10.1007/978-3-540-87700-4_78",
     "author": [
       {
-        "dropping-particle": "van der",
-        "family": "Kouwe",
-        "given": "Erik"
+        "family": "Ponweiser",
+        "given": "Wolfgang"
       },
       {
-        "family": "Andriesse",
-        "given": "Dennis"
+        "family": "Wagner",
+        "given": "Tobias"
       },
       {
-        "family": "Bos",
-        "given": "Herbert"
+        "family": "Biermann",
+        "given": "Dirk"
       },
       {
-        "family": "Giuffrida",
-        "given": "Cristiano"
-      },
-      {
-        "family": "Heiser",
-        "given": "Gernot"
+        "family": "Vincze",
+        "given": "Markus"
       }
     ],
-    "id": "Vb3fs8xv",
+    "id": "gqqWjGkp",
     "issued": {
       "date-parts": [
         [
-          2018
-        ]
-      ]
-    },
-    "title": "Benchmarking crimes: An emerging threat in systems security",
-    "title-short": "Benchmarking crimes",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:kouwe2018benchmarking",
-    "type": "entry"
-  },
-  {
-    "URL": "http://arxiv.org/abs/1703.03373",
-    "author": [
-      {
-        "family": "Bischl",
-        "given": "Bernd"
-      },
-      {
-        "family": "Richter",
-        "given": "Jakob"
-      },
-      {
-        "family": "Bossek",
-        "given": "Jakob"
-      },
-      {
-        "family": "Horn",
-        "given": "Daniel"
-      },
-      {
-        "family": "Thomas",
-        "given": "Janek"
-      },
-      {
-        "family": "Lang",
-        "given": "Michel"
-      }
-    ],
-    "id": "3liBOoCe",
-    "issued": {
-      "date-parts": [
-        [
-          2017,
-          3,
+          2008,
           9
         ]
       ]
     },
-    "title": "raw:mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions",
-    "title-short": "raw:mlrMBO",
-    "type": "article-journal",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:mlrMBO"
+    "page": "784-794",
+    "title": "Multiobjective optimization on a limited budget of evaluations using model-assisted $\\mathcal{S}$ -metric selection",
+    "type": "paper-conference",
+    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:inproceedings"
   },
   {
     "author": [
@@ -1449,30 +1901,6 @@
     "title": "Practical design space exploration",
     "type": "paper-conference",
     "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:nardi2019practical"
-  },
-  {
-    "DOI": "10.9790/3021-031020114",
-    "author": [
-      {
-        "family": "Odu",
-        "given": "Godwin"
-      }
-    ],
-    "container-title": "IOSR Journal of Engineering",
-    "id": "NTeA6uPp",
-    "issued": {
-      "date-parts": [
-        [
-          2013,
-          10
-        ]
-      ]
-    },
-    "page": "01-14",
-    "title": "Review of multi-criteria optimization methods – theory and applications",
-    "type": "article-journal",
-    "volume": "3",
-    "note": "This CSL JSON Item was loaded by Manubot v0.3.0 from a manual reference file.\nmanual_reference_filename: manual-references.json\nstandard_id: raw:odugod2013"
   },
   {
     "author": [
