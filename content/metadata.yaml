@@ -1,0 +1,31 @@
+---
+title: "Compositional Multi-objective Parameter Tuning"
+keywords:
+  - multi-objective optimization
+  - surrogate models
+  - parameter tuning
+  - search-based software engineering
+lang: en-US
+authors:
+  - github: Valavanca
+    name: Oleksandr Husak
+    initials: OH
+    orcid: 0000-0002-1676-0042
+    # email: 
+    affiliations:
+      - Faculty of Computer Science, TU Dresden
+  - name: M.Sc. Dmytro Pukhkaiev
+    initials: DP
+    site: https://tu-dresden.de/ing/informatik/smt/st/die-professur/mitarbeiter?person=412&embedding_id=1e8badf421c649b89f65fb84a05ecbb0&set_language=en
+    affiliations:
+      - Faculty of Computer Science, TU Dresden
+  - name: Dr.-Ing. Sebastian Götz
+    initials: SG
+    site: https://tu-dresden.de/ing/informatik/smt/st/die-professur/mitarbeiter?person=143&embedding_id=1e8badf421c649b89f65fb84a05ecbb0
+    affiliations:
+      - Faculty of Computer Science, TU Dresden
+  - name: Prof. Dr. rer. nat habil. Uwe Assmann
+    initials: UA
+    site: http://www1.inf.tu-dresden.de/~ua1/
+    affiliations:
+      - Faculty of Computer Science, TU Dresden
