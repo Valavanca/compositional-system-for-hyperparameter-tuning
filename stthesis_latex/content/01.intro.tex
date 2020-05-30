@@ -4,23 +4,32 @@
 % ------------------------------------------------     Motivation      
 % --------------------------------------------------------------------------------------------
 \section{Motivation}
+    To find solutions to real-world engineering problems, it is often necessary to find and apply adequate parameters. The search for these parameters is a computationally expensive problem and requires optimization. This search is often achieved with the help of the parameter tuning or in other words, parameter optimization process.
+    Traditionally engineers adhere to the manual parameter tuning; they put the effort in searching the optimal objectives guided by experience and intuition. Nevertheless, many of these optimization problems have vast search spaces that could be handled only with automatic tools. These tools can extrapolate and highlight the most perspective parameters from infinite space. At the same time, they struggles with multi-criteria decisions that are critical for engineering problems. For examples: architecture design, test generation, tuning machine-learning algorithms could be stated as multi-objective problems. To understand the space of possible solutions, they are represented on the Pareto front; i.e., the subset of solutions that could be not improved in some objective without degrading another.
+    Multi-objective algorithms allow to find out some Pareto optimal solutions. Still, we require a massive amount of evaluations to obtain those solutions, and that is inappropriate for expensive problems. A common approach in the reduction of the final cost of the optimization algorithm is to replace some expensive estimations with cheaper ones with the help of surrogate models. The conventional algorithms to extrapolate available results are Bayesian Regression model (Kriging), neural networks, Support Vector Regression (SVR) or Tree regressions (Decision) estimators. However, almost all optimizations approaches use static models or aggregate several instances of one model type. These approaches lack variability and cannot be finely tuned.
 
-    In traditional manual parameter tuning, engineers put the effort in searching the optimal objectives guided by experience and intuition. Regardless, many of these optimization problems have a huge search space that could be handled only with automatic tools. This kind of software could extrapolate and highlight the most perspective parameters from infinite space, but at the same time, struggle in multi-criteria decisions that are critical for engineering problems. For examples: architecture design, test generation, tuning machine-learning algorithms could be stated as multi-objective problems. To understand the space of possible solution, they are represented on the Pareto frontier; i.e. the subset os solutions that could be not improved in some objectives without degrading in another.
-    Multi-objective algorithms or single-objective with scalarization allows to find out some Pareto optimal points. Still, they require a massive amount of evaluations that are not appropriate for an expensive problem. A common approach to reducing the final cost of the optimization algorithm is to replace some expensive estimations with cheap ones with the help of surrogate models. The conventional algorithms to extrapolate available results are Bayesian Regression model(Kriging), Neural Network, Support Vector Regression (SVR) or Tree regressions (Decision) estimators. Regardless, almost all optimizations use static models or aggregation several instances of one model type. These approaches lack variability and cannot be finely tuned.
+    Ability to change the surrogate model strongly influences the optimization result. There is a demand for a strategy that allows us to combine multiple single-objective surrogate models to extrapolate multi-dimensional search spaces. This composition would make the surrogate model more versatile and capable of describing arbitrary optimization problems. Furthermore, it has been noted that the surrogate is domain-specific, and the same technique might perform differently on different problems. That is why extrapolation variability from the range of models improves final optimization results. However, only few researchers have addressed the solution of dynamic surrogate model selection. 
+
+    Also, it is essential to obtain the necessary and sufficient number of samples to build an appropriate model. Unfortunately, to choose the optimum number of samples, it is required to have additional knowledge about a problem that is usually unknown. Moreover, arbitrary decisions on the sample size might be a reason that leads to inaccurate models and further wrong results.
 
 
-
-    Develop strategies that can decompose the surrogate model into several single-objective models, and enhance bast practices in single-objective parameter tuning.
+% --------------------------------------------------------------------------------------------
+% ------------------------------------------------     Objectives      
+\section{Objectives}
+For this thesis, we have chosen two broad objectives that we tried to achieve.
+The first objective is to develop strategies that can dynamically compose the surrogate model from several single-objective models.
+The second objective is to enhance parameter tuning with the best practices from multi-objective optimizations techniques. Successful fulfilment of those objectives means an overall improvement in the area that concerns with optimization of expensive black-box functions. Also, success implies the possibility of application of developed tools to the broader spectre of real-world problems. 
 
 % --------------------------------------------------------------------------------------------
 % ------------------------------------------------     Research Questions      
-\section{Research Questions}
-
-In this thesis we answer the following research questions:
+\section{Research questions}
+\label{rq}
+To achieve our objectives we defined three research questions, which we answer in this thesis.
+Those research questions are:
 \begin{description} 
-    \item[RQ1:]\label{RG1} How to dynamically combine different single-objective models to extrapolate multi-objective problems?
-    \item[RQ2:]\label{RG2} How to combine surrogate models in a portfolio?
-    \item[RQ2:]\label{RG3} How to select an appropriate sampling plan?
+    \item[RQ1:]\label{RQ1} Does the dynamic composition of different single-objective models improve the extrapolation of multi-objective problems?
+    \item[RQ2:]\label{RQ2} Does a portfolio of surrogate models enhance optimization results?
+    \item[RQ3:]\label{RQ3} Does a dynamic sampling plan help accelerate obtaining an optimal solution?
 \end{description}
 
 The purpose of this study is to provide a mechanism of a fined-grained models composition that allows making a superior multi-objective decision. Prerequisite for such solution is to reduce the number of actual evaluations while keeping the optimal quality of a decision.
@@ -28,8 +37,21 @@ The purpose of this study is to provide a mechanism of a fined-grained models co
 % --------------------------------------------------------------------------------------------
 % ------------------------------------------------     Overview
 \section{Results overview}
-    This thesis introduces a modular structure for multi-objective parameter tuning that allows to use of compositional diverse surrogate models and apply various optimization techniques. This goal was accomplished by a compositional model and a surrogate portfolio, stepwise validation and a dynamic sampling plan. The evaluation of various problems showed excellent results and superiority over analogues methodologies. Obtained results can be used to improve the applicability of model-based optimization to a verity of problems such as parameter tuning.
-    
+    In this thesis, we introduce a modular structure for multi-objective parameter tuning that allows us to use various surrogate models and apply various optimization techniques. 
+    The overall results were achieved in several stages: 1) In response to  RQ1, a composite model was implemented to combine several surrogate models. This solution made it possible to treat multi-objective extrapolation as a combination of single-objective models. 2) In response to RQ2 and RQ3, we developed a surrogate portfolio that enhances our strategy with the possibility to select surrogate models dynamically. Model selection is based on surrogate validation, which is also used as a criterion to check the sampling plan.
+    An approach, combining all the aforementioned key features that answer the research questions was implemented under the name TutorM.
+
+    The evaluation results from a wide range of problems showed excellent results and advantage of TutorM strategy over comparable approaches: NSGA2 and Hypermapper 2.0. TutorM also provides a possibility of scalable solutions for problems that demand that.
+
+    The results can be used to improve the applicability of model-based optimization to a variety of expensive multi-objective parameter tuning problems.
+
+
+
+
+
+
+
+
     % Composition of surrogate models can be used to improve the applicability of model-based optimization to a verity of problems such as parameter tuning.
 
     % We have obtained that in the most majority of problems, the developed strategy provide significantly better results.

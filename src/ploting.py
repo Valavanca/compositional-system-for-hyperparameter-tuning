@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 
-def plot_mo(problem, population=None, samples=50):
+def plot_mo(problem, population=None, samples=100):
     """ Plots 2 objectives for 2-D problems.
 
         Final plotly figure includes: 
@@ -50,7 +50,7 @@ def plot_mo(problem, population=None, samples=50):
     # Functions values in Pareto front
     front = go.Scatter(x=pareto_pop.f1.values, y=pareto_pop.f2.values,
                        mode='markers',
-                       line=dict(color='red'),
+                       line=dict(color='#DC3912'),
                        showlegend=False,
                        name=u'Pareto front'
                        )
@@ -60,7 +60,7 @@ def plot_mo(problem, population=None, samples=50):
                              mode='markers',
                              name=u'Pareto vectors',
                              showlegend=False,
-                             line=dict(color='red')
+                             line=dict(color='#DC3912')
                              )
 
     f1 = go.Contour(z=z_f1,
@@ -101,6 +101,7 @@ def plot_mo(problem, population=None, samples=50):
                        y=pareto_pop.y.values,
                        z=pareto_pop.f1.values,
                        name='f1()',
+                       marker=dict(color='#00CC96'),
                        mode='markers',
                        showlegend=False
                        )
@@ -108,6 +109,7 @@ def plot_mo(problem, population=None, samples=50):
                         y=pareto_pop.y.values,
                         z=pareto_pop.f2.values,
                         name='f2()',
+                        marker=dict(color='#FECB52'),
                         mode='markers',
                         showlegend=False
                         )
@@ -132,6 +134,7 @@ def plot_mo(problem, population=None, samples=50):
     population and grid.add_trace(sct2, row=2, col=1)
 
     grid.update_layout(height=1000,
+                       template='plotly_white',
                        title_text="Problem: <b>{0}</b>".format(problem.get_name()))
 
     return grid

@@ -137,7 +137,6 @@ def tuning_loop(pro, udp,
         pred['objectives'] = pro.get_nobj()
         pred['feature_dim'] = pro.get_nx()
         pred['eval_budget'] = eval_budget
-        pred['model name'] = 'initial sampling'
         pred['n_pred'] = n_pred
 
         if np.array(X_init).size > 0:

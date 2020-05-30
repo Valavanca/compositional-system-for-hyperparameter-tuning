@@ -277,7 +277,7 @@ def _predict(estimator, X, y=None, split_y=False, message_clsname='', idx=None, 
 
 
 class PredictTutor(BaseEstimator):
-    """ Agregate and sort best preidctions from multiple models."""
+    """ Agregate and sort best predictions from multiple models."""
 
     """
         1. define categorical columns -> transform pipeline as parameter
@@ -289,7 +289,7 @@ class PredictTutor(BaseEstimator):
 
     """
 
-    def __init__(self, bounds, portfolio: List[BaseEstimator] = None, train_test_sp=0.25, solver='nsga2', cv_threshold='', test_threshold=''):
+    def __init__(self, bounds, portfolio: List[BaseEstimator] = None, train_test_sp=0.25, solver='nsga2', solver_gen=100, solver_pop=100, cv_threshold='', test_threshold=''):
         """        
         Args:
             bounds (Tuple): Tuple with lower and higher bound for each feature in objective space.
@@ -312,6 +312,9 @@ class PredictTutor(BaseEstimator):
         self._is_single: bool = False
 
         self._solver: str = solver
+        self._pop_size: int = solver_pop
+        self._gen: int = solver_gen
+
         self._train_test_sp: float = train_test_sp
         self._cv_threshold: str = cv_threshold
         self._test_threshold: str = test_threshold
@@ -366,7 +369,7 @@ class PredictTutor(BaseEstimator):
             self._is_single = y.shape[1] == 1
 
             logging.info(
-                "Split dataset. Validation set is {}%".format(self._train_test_sp))
+                "Split dataset. Validation set is {}%".format(self._train_test_sp*100))
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=self._train_test_sp)
             self._train = (X_train, y_train)
@@ -569,9 +572,11 @@ class PredictTutor(BaseEstimator):
         if self._is_single is True:
             solver = Gaco(bounds=self.__bounds).fit(models)
         elif self._solver == 'nsga2':
-            solver = Nsga2(bounds=self.__bounds).fit(models)
+            solver = Nsga2(bounds=self.__bounds,
+                           pop_size=self._pop_size, gen=self._gen).fit(models)
         elif self._solver == 'moea_control':
-            solver = MOEActr(bounds=self.__bounds).fit(models)
+            solver = MOEActr(
+                bounds=self.__bounds, pop_size=self._pop_size, gen=self._gen).fit(models)
         elif self._solver == 'random':
             solver = RandS(bounds=self.__bounds, n=1000).fit(models)
         else:

@@ -93,7 +93,10 @@ class MOEActr(Solver):
         self._problem = self.__def_problem(is_mask=True)
         pop = pg.population(self._problem, size=self._pop_size)
         for algo_name in self._moea_list:
-            algo = pg.algorithm(getattr(pg, algo_name)(gen=self._gen))
+            if algo_name == 'moead':
+                algo = pg.algorithm(getattr(pg, algo_name)(gen=self._gen, weight_generation='low discrepancy'))
+            else:
+                algo = pg.algorithm(getattr(pg, algo_name)(gen=self._gen))
             pop = algo.evolve(pop)
             algo = pg.algorithm(pg.nsga2(gen=self._gen))
 

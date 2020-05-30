@@ -1,42 +1,5 @@
 \chapter{Background}\label{sec:background}
 
-    % \begin{blockquote}
-    %     \paragraph{Intent:} General background information needed to follow the terms and methods used in this thesis. 
-                
-    %     Structure:
-    %     \begin{description}
-    %         \item[1. Parameter tuning] Parameter tuning of a black-box
-    %             \begin{enumerate}
-    %                 \item $f(Parameter) = Objective$ 
-    %                 \item Goal is optimize $f$
-    %                 \item Problem: Optimization of multiple objectives
-    %             \end{enumerate}
-    %         \item[2. Multi-objective optimization] General definition. Pareto front and None-dominated solution
-    %             \begin{enumerate}
-    %                 \item What is a multi-objective solution?
-    %                 \item How to compare solutions? $\rightarrow$ Types of metrics
-    %                 \item How to solve? $\rightarrow$ Scalarizing, MOEA, Random
-    %                 \item Problem: Reduce evaluations $\rightarrow$ Surrogate optimization, MBMO
-    %             \end{enumerate}
-    %         \item[3. Surrogate optimization] Approach for reducing evaluation count
-    %             \begin{enumerate}
-    %                 \item Intro. Cons and Pons
-    %                 \item Types of a surrogate model in a MO-problem (Model of scalarization, MO-model, Replicated MO-model, Compositional MO-model). Taxonomy
-    %                 \item Surrogate assistance for MO parameter tuning $\rightarrow$ Reusable/scalable components for optimization $\rightarrow$ Problem: Scalability of a surrogate model.                  
-    %                 \item Surrogate model is domain-specific $\rightarrow$ Analyze multiple surrogates $\rightarrow$ Surrogate portfolio [RQ1 \ref{RQ1}]
-    %                 \item Sampling plan. Build a surrogate model. Quality of prediction depends on the accuracy of a surrogate model  $\rightarrow$ Accuracy depends on a sample size $\rightarrow$ Sample size depends on surface type $\rightarrow$ Problem: Sample size is static. [RQ2 \ref{RQ2}]
-    %                 \item Surrogates and MOEA are hard scalable 
-    %             \end{enumerate}
-    %         \item[4. Scope of work] Starting point of thesis
-    %             \begin{enumerate}
-    %                 \item Problem: Expensive black-box with multiple objectives
-    %                 \item Constraint: Evaluation budget
-    %                 \item Goal: Set of MO solutions closed to Pareto-front $\rightarrow$ 1.$Max$ Hypervolume, 2.$Min$ Points-Space, 3.$Max$ \% of None-Dominated points 
-    %                 \item Solution approach: Surrogate model(s) with MOEA
-    %             \end{enumerate}
-    %     \end{description}
-    % \end{blockquote}
-
     This chapter presents general background information needed to follow the terms and methods used in this thesis. 
 
     % --------------------------------------------------------------------------------------------
@@ -76,7 +39,7 @@
     \section{Multi-objective optimization}
         Common parameter tuning problems require the simultaneous optimization of multiple, usually contradictory, objectives $f = (f_1(x), \ldots, f_k(x))$. Multi-objective optimization deals with such conflicts. It provides a mathematical algorithm with which to obtain an optimal design state that accommodates the various criteria demanded by the situation. Objectives are being improved simultaneously and gradually.
 
-        The solution to the multi-objective problem is a group of points which are placed on a Pareto front; i.e. the subset of solutions which are not worse than any other and better at at least one goal \cite{KrallMD15}. A solution is called a Pareto optimum if no other solution dominates it. For example (Fig. \ref{fig:dominated}) a solution $A \in \mathbb{S}$ is said to dominate another solution $B \in \mathbb{S}$ , denoted $A \preceq B$ if $f_i(A)<=f_i(B)$ for all $i=1, \ldots ,k$ and $f_i(A)<f_i(B)$ for at least one $i \in \{1, \ldots k\}$. All points on the Pareto frontier are not dominated by any other point in the objective space \cite{Kaisa0021267}.  
+        The solution to the multi-objective problem is a group of points which are placed on a Pareto front; i.e. the subset of solutions which are not worse than any other and better at least one goal \cite{KrallMD15}. A solution is called a Pareto optimum if no other solution dominates it. For example (Figure \ref{fig:dominated}) a solution $A \in \mathbb{S}$ is said to dominate another solution $B \in \mathbb{S}$ , denoted $A \preceq B$ if $f_i(A)<=f_i(B)$ for all $i=1, \ldots ,k$ and $f_i(A)<f_i(B)$ for at least one $i \in \{1, \ldots k\}$. All points on the Pareto frontier are not dominated by any other point in the objective space \cite{Kaisa0021267}.  
 
         Awareness of the Pareto front allows appropriate decision-making and the importance of the criteria to be visualized. For the multi-objective problem, we consider the solution as points from the parameter space which lead to non-dominated results in the objective space. Improvement of the solution means finding a set of points that corresponds better with the real Pareto front.
 
@@ -178,7 +141,7 @@
         \subsection{Solving methods}
             Finding a Pareto optimal set is often impractical and computationally expensive. Therefore, many stochastic search strategies have been developed, such as: evolutionary algorithms, tabu search, simulated annealing and ant colony optimization. These algorithms usually do not ensure finding ideal trade-offs, but try to gain a satisfactory approximation.
             In this thesis, we interpret the Pareto optimum as the optimal solution to the problem. As mentioned, all points on the Pareto front are non-dominated, but not all non-dominated points are Pareto optimal. There are several basic approaches which provide information about how non-dominated points move toward a Pareto-optimal solution.
-            Those approaches include: scalarization and Multi-Objective Evolutionary Algorithms (MOEA). We describe them in next the sections.
+            Those approaches include: scalarization and \gls{moea}. We describe them in next the sections.
             %!!! information how from non-dominated
 
             % ----------------      Scalarizing       
@@ -211,7 +174,7 @@
         % ------------------------------------------------        MO in Parameter tuning       -------------
         \subsubsection{Multi-objective parameter tuning}
 
-            The categorization of parameter tuning approaches based on the workflow of sequential model-based optimization is presented in Fig.\ref{fig:mo_param_tuning}. The optimization process begins with an initial sampling plan. At this stage, it is necessary to collect fitness results or to evaluate the first parameters which are used to build surrogate models. For an initial sampling plan, or a \gls{doe} plan, the techniques of \gls{lhs}, Sobol sampling or random sampling can be used.
+            The categorization of parameter tuning approaches based on the workflow of sequential model-based optimization is presented in Figure \ref{fig:mo_param_tuning}. The optimization process begins with an initial sampling plan. At this stage, it is necessary to collect fitness results or to evaluate the first parameters which are used to build surrogate models. For an initial sampling plan, or a \gls{doe} plan, the techniques of \gls{lhs}, Sobol sampling or random sampling can be used.
             
             % ===  Phases and tasks in parameter tuning with surrogates model
             \begin{figure} 
@@ -223,17 +186,17 @@
 
             There are two established approaches to extrapolate the samples: 1) to scalarize objectives and produce a surrogate model of this scalarization (In this case, the multi-objective problem transforms into a single-objective one); 2) to keep the original dimensionality of the problem and apply one or several models to hold and infer on the problem landscape.
 
-            The next step, optimization, is the search for optimal points within the surrogate model. At this step, the solutions which might be Pareto-optimal are found. In the predict configurations phase, sorting and selection are carried out. In the case of multi-criteria selection, it is necessary to select the required number of points which are optimal for all objectives. In theory, all non-dominated points are equal regardless of the order they are chosen in. The possible prediction of several parameters instead of a single one is an advantage that improves the exploration of the parameter space and parallelizing of fitness evaluation. The required number of points allows the sample set to be estimated as well as updated. Optimization iterations continue until a stop condition is satisfied.
+            The next step, optimization, is the search for optimal points within the surrogate model. At this step, the solutions which might be Pareto-optimal are found. In predict configurations phase, sorting and selection are carried out. In the case of multi-criteria selection, it is necessary to select the required number of points which are optimal for all objectives. In theory, all non-dominated points are equal regardless of the order they are chosen in. The possible prediction of several parameters instead of a single one is an advantage that improves the exploration of the parameter space and parallelizing of fitness evaluation. The required number of points allows the sample set to be estimated as well as updated. Optimization iterations continue until a stop condition is satisfied.
     
-            Variability and extensibility are essential for configurable parameter tuning, as in a software product line. To this effect, the optimization round is consistent and universal. As shown in Figure \ref{fig:mo_param_tuning}, the potential to reuse components in a workflow is enormous. The same single-objective models can be equally applied to various types of problems in multi-/single-objective optimization. An optimization algorithm weakly depends on the type of a surrogate model. By dynamic duplication of the surrogate model or even by the creation of several surrogate hypotheses, we aim to improve the parameter tuning to multiply criteria on-the-fly.
+            Variability and extensibility are essential for configurable parameter tuning, as in a software product line. To this effect, the optimization round is consistent and universal. As shown in Figure \ref{fig:mo_param_tuning}, the potential to reuse components in a workflow is enormous. The same single-objective models can be equally applied to various types of problems in multi-/single-objective optimization. An optimization algorithm weakly depends on the type of surrogate model. By dynamic duplication of the surrogate model or even by the creation of several surrogate hypotheses, we aim to improve the parameter tuning to multiply criteria on-the-fly.
 
         % --------------------------------------------------------------------------------------------
         % ------------------------------------------------     Domain-specific Surrogate model      
         \subsection{Domain-specific problem}
-        Surrogate models are domain-specific in case of intention to find the best solution with less effort. On the one hand, the surrogate model could perform well while extrapolation one class of problems and guide to the optimal solution. On the other hand, this model could be a reason for a significantly degrading result in another type of problem. That is why the authors prefer using several surrogate models and don't select one for all use cases \cite{SoftSurvey}.
+        Surrogate models are domain-specific in case of intention to find the best solution with less effort. On the one hand, the surrogate model could perform well while extrapolation one class of problems and guide to the optimal solution. On the other hand, this model could be a reason for a significantly degrading result in another type of problem. That is why the authors prefer using several surrogate models and don't select one for all use cases \cite{SoftSurvey}. 
 
-        It could be an interpreter as a \Gls{nfl} in model-based optimization. If we extend this argument, then the same optimization problem in different parameter tuning iteration could be interpreted as another optimization problem. In order to reduce an effort and to increase the convergence of an algorithm, we should change the surrogate model depending on how much samples we have. 
-        This leads us to the usage of a portfolio with surrogate models. On each optimization iteration, the portfolio tries to build and select several models with the best performance.  As a negative consequence, the model building introduces an additional overhead into the optimization.
+        It could be an interpreted as a \Gls{nfl} in model-based optimization. If we extend this argument, then the same optimization problem in different parameter tuning iteration could be interpreted as another optimization problem. In order to reduce an effort and to increase the convergence of an algorithm, we should change the surrogate model depending on how many samples we have. 
+        This leads us to the usage of a portfolio with surrogate models. On each optimization iteration, the portfolio tries to build and select several models with the best performance.  As a negative consequence, building several models introduces an additional overhead into the optimization time.
 
 
         % --------------------------------------------------------------------------------------------

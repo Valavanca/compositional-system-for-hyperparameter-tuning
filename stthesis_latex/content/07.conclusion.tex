@@ -1,74 +1,28 @@
-\chapter{Future Work}\label{sec:future_work}
-
-The developed strategy in this thesis has a component structure and a unified interface. All major components are easily replaceable and scalable. A strong feature of our solution is the adaptation of optimization to a scaled unknown problem. That is why further integration with the \emph{software product line} is a promising improvement. A right solution for this is to choose \hyperref[alg:BRISE]{BRISE} - software product line for parameter tuning. It has the necessary key features such as stop criterion, noisy experiments and distributed architecture. The integration of this thesis into the BRISE will improve its variability and scalability.
-
-There are other several directions that the project aims to focus on in future improvement. 
-\begin{itemize}
-    \item Promising results have been obtained for the combination of optimization techniques with surrogate modes. Further investigation in extensive parallel combination \emph{surrogate models and optimization algorithms} could significantly improve optimization results.
-    \item It is advisable to change the composition of the portfolio to discard those models that are performing poorly. This \emph{dynamic models collection} for the surrogate portfolio could improve the exploration of new models and reduce additional time costs.
-\end{itemize}
-
-
-
-
-
-
-
-
-
-
-
 \chapter{Conclusion}\label{sec:conclusion}
 
-    In this thesis, we propose a strategy for dynamic composition of surrogate models which allows using the surrogate portfolio for tuning black-box function.
-        Our investigation revealed that the current surrogate-based optimization operates with a single type of models or static combination of several varieties. These approaches lack variability and cannot be adapted for an arbitrary problem. Our research goal was to decompose the model-based multi-objective optimization to reusable and comparable components. 
-    To achieve this goal was made following research contributions:
-    \begin{enumerate}
-        \item At first, we developed the compositional model for an arbitrary type of surrogate model. We established and implemented a component that combined several models into one surrogate hypothesis. Nevertheless, for an arbitrary, unknown problem, dynamic integration of surrogates into a composite model is required.
-        \item Next, we adapted the cross-validation technique to validate and compare surrogate models. A multi-step validation is essential to avoid the model underfeed and overfeed. Validation information enables dynamically decide on picking the right models or use the sampling plan as a default variant.
-        \item Eventually, we implemented a surrogate portfolio that combines functionality from the preceding paragraphs. The portfolio allows select and combines multiple surrogate models dynamically concerning a concrete problem. This property means that a portfolio can offer more than one surrogate hypothesis for optimization.
-        \item In the end, we improved the variability and extensibility not only for surrogate models but also for optimization algorithms. For example, this is the possibility to combine solutions into a stack to reduce overall error.
-    \end{enumerate}
+In this thesis, we propose a strategy for dynamic composition of surrogate models which allows the use of a surrogate portfolio for tuning black-box functions.
+Our investigation revealed that current surrogate-based optimization operates with a single type of model or the static combination of several varieties. This type of approach lacks variability and cannot be adapted for arbitrary problems. Our research goal was to decompose model-based multi-objective optimization into reusable and comparable components. 
+To achieve this goal we make following research contributions:
+
+\begin{enumerate}
+    \item First, we developed a compositional model for an arbitrary type of surrogate model. We established and implemented a component that combined several models into one surrogate hypothesis  [\textbf{\hyperref[RQ1]{RQ1}}]. Nevertheless, for an arbitrary, unknown problem, we still require dynamic integration of surrogates into a composite model.
+    \item Second, we adapted the cross-validation technique to validate and compare surrogate models. A multi-step validation is essential to avoid the model underfeed and overfeed. Validation information enables us to dynamically decide on picking the right models or use the sampling plan as a default variant [\textbf{\hyperref[RQ3]{RQ3}}].
+    \item Third, we implemented a surrogate portfolio that combines the functionality from the preceding paragraphs. The portfolio allows the dynamic selection and combination of multiple surrogate models that are concerned with a concrete problem. This property means that a portfolio can offer more than one surrogate hypothesis for optimization [\textbf{\hyperref[RQ2]{RQ2}}].
+    \item Fourth, we improved the variability and extensibility not only of surrogate models but also of optimization algorithms. This improvement creates the possibility to combine solutions into a stack to reduce overall error.
+\end{enumerate}
 
 
-    Combining all these contributions enabled us to achieve excellent results in a wide range of optimization tasks. For almost all problems, our approach has demonstrated a significant advantage over all solution criteria. The analysis of the parameters showed that the most significant influence is obtained from the solution combination (assumptions about the Pareto front). We have implemented the dynamic sampling plan which is to select additional random points if there is no valid model. This strategy  improved the result as the exploration-exploitation balance is determined for each optimization problem independently.
-    Next crucial issue is the optimization of multidimensional space. We have shown that a surrogate model can be applied to a small number of objectives but not be inappropriate if the objectives are increased. The optimal solution for this may be a flexible combination of better models at each optimization iteration.
+In sum, these contributions enabled us to achieve results comparable to the state-of-the-art NSGA2 optimization algorithm in a wide range of optimization tasks. For almost all problems, our approach has demonstrated a significant advantage over all solution criteria. Analysis of the parameters showed that the most significant influence on results was made by solution combination (assumptions about the Pareto front). We have implemented a dynamic sampling plan that selects additional random points if there is no valid model. This strategy improved exploration-exploitation balance, which is determined for each optimization problem independently, and that led to the overall improvements in the results.
+The next crucial issue that we addressed is the optimization of multidimensional space. We have shown that a surrogate model can be applied to a small number of objectives but can be inappropriate if the objectives are multiplied. The optimal solution for this issue is a flexible combination of better models at each optimization iteration.
 
-    We consider that the results accomplished in this thesis can be useful for improving the parameter tuning and for the overall model-based optimization.
+We consider that the results accomplished in this thesis can be useful for improving parameter tuning and for overall model-based optimization.
 
-    % \section{Future Work}
-    %     \paragraph{Prior knowledge. Transfer learning}
-    %      What is already implemented and how it could be improved.
-    %      \begin{itemize}
-    %          \item Model portfolio selection and combination.
-    %          \item Prior distribution of parameters. Bayesian kernels.
-    %          \item Human in the loop. Reducing the search space.
-    %      \end{itemize}
+\chapter{Future Work}\label{sec:future_work}
 
-    % Further work will consider h(θ) as yet another expensive noisy black-box function, and the use of a CMA-ES in the hyper-parameter space will be studied.
+In this thesis we have developed the strategy that has a component structure and a unified interface. All major components are easily replaceable and scalable. A strong feature of our solution is the adaptation of optimization to a scaled unknown problem. That is why further integration with the \emph{software product line} is a promising improvement. The right solution for this is \hyperref[alg:BRISE]{BRISE} - a software product line for parameter tuning. It has the necessary key features such as stop condition, noisy experiments and distributed architecture. The integration of this thesis into BRISE will improve its variability and scalability.
 
-
-    % \section{General Conclusion}
-        %  \paragraph{BRISE}
-        %  Modelbase line in parameter tuning for software Product Line for Parameter Tuning
-
-
-
-
-        %  In surrogate-assisted evolutionary search, the choice of surrogate modeling technique can highly affect the performance of the search. To address this issue, we proposed a novel strategy in this paper to do surrogate
-
-
-        %  There are several directions that the project aims to focus on in future development. 
-
-
-
-
-
-
-
-
-
-
-
-
-%  We expect that our results would similarly generalize to these.
+There are other several directions that we aim to focus on in the future.
+\begin{itemize}
+    \item Promising results have been obtained for the combination of optimization techniques with surrogate modes. Further investigation in extensive parallel combination of \emph{surrogate models and optimization algorithms} could significantly improve optimization results.
+    \item It is advisable to change the composition of the portfolio to discard those models that are performing poorly. This \emph{dynamic model collection} for the surrogate portfolio could improve the exploration of new models and reduce time costs.
+\end{itemize}

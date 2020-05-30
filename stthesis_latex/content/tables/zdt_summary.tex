@@ -2,35 +2,34 @@
 % \usepackage{booktabs}
 % \usepackage{multirow}
 % \usepackage{graphicx}
-\begin{table}[]
+\begin{table}[h]
     \centering
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{@{}llllll@{}}
     \toprule
     \textbf{Problem}                & \textbf{Approach}        & $\downarrow$ \textbf{p-distance} & $\uparrow$ \textbf{Hypervolume} \%  & $\uparrow$ \textbf{ndf size} \% & $\uparrow$  \textbf{ndf space} \\ \midrule
-    \multirow{4}{*}{ZDT1} & Base line       & 1,08e-05          & 99,78          & 0,16           & 0,22          \\ \cmidrule(l){2-6} 
+    \multirow{4}{*}{ZDT1} & Baseline       & 1,08e-05          & 99,78          & 0,16           & 0,22          \\ \cmidrule(l){2-6} 
                           & TutorM          & \textbf{4,74e-05} & \textbf{100}   & \textbf{90,33} & \textbf{1}    \\ \cmidrule(l){2-6} 
                           & NSGA2 1k        & 0,02              & 89,86          & 9,66           & 0,08          \\ \cmidrule(l){2-6} 
                           & Hypermapper 2.0 & 0,12              & 98,93          & 10,36          & 0,04          \\ \midrule
-    \multirow{4}{*}{ZDT2} & Base line       & 1,04e-14          & 99,79          & 0,16           & 0,29          \\ \cmidrule(l){2-6} 
+    \multirow{4}{*}{ZDT2} & Baseline       & 1,04e-14          & 99,79          & 0,16           & 0,29          \\ \cmidrule(l){2-6} 
                           & TutorM          & \textbf{0,00013}  & \textbf{100}   & \textbf{86,87} & \textbf{1}    \\ \cmidrule(l){2-6} 
                           & NSGA2 1k        & 0,01              & 88,78          & 8,82           & 0,06          \\ \cmidrule(l){2-6} 
                           & Hypermapper 2.0 & 0,18              & 97,31          & 5,12           & 0,04          \\ \midrule
-    \multirow{4}{*}{ZDT3} & Base line       & 1,69e-08          & 100            & 0,16           & 0,39          \\ \cmidrule(l){2-6} 
+    \multirow{4}{*}{ZDT3} & Baseline       & 1,69e-08          & 100            & 0,16           & 0,39          \\ \cmidrule(l){2-6} 
                           & TutorM          & \textbf{0,00012}  & \textbf{99,47} & \textbf{86}    & \textbf{1}    \\ \cmidrule(l){2-6} 
                           & NSGA2 1k        & 0,02              & 89,92          & 9,82           & 0,28          \\ \cmidrule(l){2-6} 
                           & Hypermapper 2.0 & 0,31              & 92,03          & 5,64           & 0,12          \\ \midrule
-    \multirow{4}{*}{ZDT4} & Base line       & 2,04e-05          & 100            & 0,72           & 1             \\ \cmidrule(l){2-6} 
+    \multirow{4}{*}{ZDT4} & Baseline       & 2,04e-05          & 100            & 0,72           & 1             \\ \cmidrule(l){2-6} 
                           & TutorM          & \textbf{0,01}     & \textbf{99,80} & \textbf{50,0}  & \textbf{0,78} \\ \cmidrule(l){2-6} 
                           & NSGA2 1k        & 0,04              & 83,43          & 8,77           & 0,19          \\ \cmidrule(l){2-6} 
                           & Hypermapper 2.0 & 0,90              & 97,32          & 5,42           & 0,11          \\ \midrule
-    \multirow{4}{*}{ZDT6} & Base line       & 0,0003            & 100            & 0,72           & 1             \\ \cmidrule(l){2-6} 
+    \multirow{4}{*}{ZDT6} & Baseline       & 0,0003            & 100            & 0,72           & 1             \\ \cmidrule(l){2-6} 
                           & TutorM          & \textbf{0,09}     & \textbf{99,43} & 4,26           & 0,17          \\ \cmidrule(l){2-6} 
                           & Hypermapper 2.0 & 1,12              & 82,86          & \textbf{6,25}  & 0,08          \\ \cmidrule(l){2-6} 
                           & NSGA2 1k        & 1,29              & 83,84          & 1,01           & 0,04          \\ \bottomrule
     \end{tabular}%
     }
-    \caption{ZDT problem set: Comparison between Hypermapper 2, NSGA2 and TutorM.  All Results were averaged after 5 reps with a 1,000 evaluations budget.
-    The general baseline is the NSGA2 with 50k evaluations (100 population size in 500 generations)}
+    \caption{Results of 5 repetitions for ZDT problem set: Function evaluation budget is 1000. The baseline is the NSGA2 with 50000 evaluations (100 population size in 500 generations)}
     \label{tab:zdt_summary}
     \end{table}

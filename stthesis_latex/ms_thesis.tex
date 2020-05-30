@@ -7,7 +7,8 @@
 \usepackage{booktabs}
 \usepackage{epigraph}
 \usepackage{cite}
-\usepackage[acronym]{glossaries}
+\usepackage{glossaries}
+\setacronymstyle{long-short}
 \usepackage[most]{tcolorbox}
 \usepackage{hyperref}
 
@@ -17,13 +18,15 @@
 \usepackage{amssymb}
 % \usepackage{wasysym}
 
+\usepackage{pdfpages}
+
 \usepackage{xspace}
 \usepackage{pifont}% http://ctan.org/pkg/pifont
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
 
-\makeglossaries
-\input{content/glossary.tex}
+\makenoidxglossaries 
+\loadglsentries{content/glossary.tex}
 
 \newcommand{\todor}[1]{\todo[color=green,inline,size=\small]{Reviewer: #1}}
 \newcommand{\todoy}[1]{\todo[color=yellow,size=\small]{Oleksandr: #1}}
@@ -33,22 +36,24 @@
 
 \title{Compositional multi-objective parameter tuning}
 \author{Oleksandr Husak}
-\date{\today}
+\date{13.04.2020}
 \birthday{16.04.1994}
 \birthplace{Ukraine}
-\supervisor{MSc. Dmytro Pukhkaiev \newline Dr.-Ing. Sebastian Götz}
+\supervisor{M.Sc. Dmytro Pukhkaiev \newline Dr.-Ing. Sebastian Götz}
 
 
 \begin{document}
-    \maketitle % This sets the title page
-  
-    \tableofcontents
+    % \maketitle % This sets the title page 
+    \includepdf[pages=-]{content/title.pdf}
 
-    \printglossaries
-    % \listoffigures
+    \tableofcontents 
+
+    \includepdf[pages=-]{content/aufgabenstellung.pdf}
+
+    % \listoffigures 
     % \listoftables
 
-    \input{content/00.abstract.tex}
+    % \input{content/00.abstract.tex}
     \input{content/01.intro.tex}
     \input{content/02.background.tex}
     \input{content/03.related_work.tex}
@@ -57,28 +62,22 @@
     \input{content/06.evaluation.tex}
     \input{content/07.conclusion.tex}
     
-    \bibliographystyle{alpha}
+    \bibliographystyle{alpha} 
     \bibliography{content/bibliography.bib}
 
     % must be invoked for correct page numbering in the appendix and all lists
     \backmatter
     
-
+    \printnoidxglossary[title=Special Terms, toctitle=List of terms] 
     \appendix
     
     \chapter{Appendix}
-        \section{Additional Information}
-            % ======= SUMMARY DTLZ
-            \input{content/tables/dtlz_summary.tex}
-
+        \section{Benchmark results on ZDT DTLZ, WFG problems} \label{sec:appendix-a}
             % ======= SUMMARY ZDT
             \input{content/tables/zdt_summary.tex}
-
+            % ======= SUMMARY DTLZ
+            \input{content/tables/dtlz_summary.tex}
             % ======= SUMMARY WFG
             \input{content/tables/wfg_summary.tex}
-    
-    % \printglossary[title=Special Terms, toctitle=List of terms]
-    % \printglossary[type=\acronymtype,style=long]
-
 
 \end{document}

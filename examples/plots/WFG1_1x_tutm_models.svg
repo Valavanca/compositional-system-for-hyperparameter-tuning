@@ -23,7 +23,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -41,7 +41,7 @@
      id="namedview34927"
      showgrid="false"
      inkscape:zoom="1.0633333"
-     inkscape:cx="476.72053"
+     inkscape:cx="320.60767"
      inkscape:cy="55.625929"
      inkscape:window-x="0"
      inkscape:window-y="27"
@@ -1576,7 +1576,7 @@
          x="589.59998"
          y="462"
          style="font-weight:normal;font-size:22px;font-family:'Open Sans', verdana, arial, sans-serif;text-anchor:middle;white-space:pre;opacity:1;fill:#2a3f5f"
-         id="text34915">i_fevals</text>
+         id="text34915">Number of function evaluations</text>
     </g>
     <g
        class="g-ytitle"

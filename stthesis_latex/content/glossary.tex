@@ -1,62 +1,46 @@
 % --- MOEA
-\newglossaryentry{moea}{type=\acronymtype, name={MOEA}, description={Multi-objective evolutionary algorithm}, first={Multi-objective evolutionary algorithm (MOEA)}}
+\newacronym{moea}{MOEA}{Multi-objective evolutionary algorithm}
 
 % --- MOO
-\newglossaryentry{moo}{type=\acronymtype, name={MOO}, description={multi-objective optimization}, first={multi-objective optimization (MOO)}}
+\newacronym{moo}{MOO}{multi-objective optimization}
 
 % --- MOP
-\newglossaryentry{mop}{type=\acronymtype, name={MOP}, description={Multi-objective problem}, first={Multi-objective problem (MOP)}}
+\newacronym{mop}{MOP}{Multi-objective problem}
 
 % --- EA
-\newglossaryentry{ea}{type=\acronymtype, name={EA}, description={Evolutionary algorithm}, first={Evolutionary algorithm (EA)}}
+\newacronym{ea}{EA}{Evolutionary algorithm}
 
 % --- DoE
-\newglossaryentry{doe}{type=\acronymtype, name={DoE}, description={Design of experiment}, first={Design of experiment(DoE)}}
+\newacronym{doe}{DoE}{Design of experiment}
 
 % --- LHS
-\newglossaryentry{lhs}{type=\acronymtype, name={LHS}, description={Latin hypercube sampling}, first={Latin hypercube sampling (LHS)}}
+\newacronym{lhs}{LHS}{Latin hypercube sampling}
 
 % --- EGO
-\newglossaryentry{ego}{type=\acronymtype, name={EGO}, description={Efficient global optimization}, first={Efficient global optimization (EGO)}}
+\newacronym{ego}{EGO}{Efficient global optimization}
 
 % --- SMBO
-\newglossaryentry{smbo}{type=\acronymtype, name={SMBO}, description={Sequential model-based optimization}, first={Sequential model-based optimization (SMBO)}}
+\newacronym{smbo}{SMBO}{Sequential model-based optimization}
 
 % --- OSI
-\newglossaryentry{osi}{type=\acronymtype, name={OSI}, description={Optimization with Simulation-based Iterations}, first={Optimization with Simulation-based Iterations (OSI)}}
+\newacronym{osi}{OSI}{Optimization with Simulation-based Iterations}
 
 % --- ASO
-\newglossaryentry{aso}{type=\acronymtype, name={ASO}, description={Alternate Simulation-Optimization}, first={Alternate Simulation-Optimization (ASO)}}
+\newacronym{aso}{ASO}{Alternate Simulation-Optimization}
+
 
 % --- NFL
-\newglossaryentry{nfl}{type=\acronymtype, name={NFL}, description={No-free-lunch theorem}, first={No-free-lunch (NFL) theorem}}
-
+% \newacronym{nfl}{NFL}{No-free-lunch theorem}
 
 
 % sequential simulation optimization \cite{FigueiraA14}
 % sequential model-based optimization \cite{JonesSW98}
 
 
-
-% --- NFL
-% \newglossaryentry{nflg}{name={NFL},
-%     description={No-free-lunch (NFL) theorem\cite{NFL:DolpertM97} demonstrate that if an algorithm performs well on a certain class of problems then it necessarily pays for that with degraded performance on the set of all remaining problems Additionally, the name emphasizes the parallel with similar results in supervised learning. 1. You have to try multiple types of components to find the best one for your data; 2. A number of NFL theorems were derived that demonstrate the danger of comparing algorithms by their performance on a small sample of problems.}}
-% \newglossaryentry{nfl}{type=\acronymtype, name={NFL}, description={No-free-lunch theorem}, first={No-free-lunch (NFL) theorem\glsadd{nflg}}, see=[Glossary:]{nflg}}
-
-
-
-
-
-% \newglossaryentry{apig}{name={API},
-%     description={An Application Programming Interface (API) is a particular set
-% of rules and specifications that a software program can follow to access and
-% make use of the services and resources provided by another particular software
-% program that implements that API}}
-
 %%% define the acronym and use the see= option
-% \newglossaryentry{api}{type=\acronymtype, name={API}, description={Application
-% Programming Interface}, first={Application
-% Programming Interface (API)\glsadd{apig}}, see=[Glossary:]{apig}}
+\newacronym[description={An Application Programming Interface (API) is a particular set
+	of rules and specifications that a software program can follow to access and
+	make use of the services and resources provided by another particular software
+	program that implements that API}]{api}{APIs}{Application Programming Interface}
 
-
-% "No Free Lunch" (NFL) theorems demonstrate that if an algorithm performs well on a certain class of problems then it necessarily pays for that with degraded performance on the set of all remaining problems Additionally, the name emphasizes the parallel with similar results in supervised learning.
+\newacronym[description={No-free-lunch (NFL) theorem\cite{NFL:DolpertM97} demonstrate that if an algorithm performs well on a certain class of problems then it necessarily pays for that with degraded performance on the set of all remaining problems Additionally, the name emphasizes the parallel with similar results in supervised learning. 1. You have to try multiple types of components to find the best one for your data; 2. A number of NFL theorems were derived that demonstrate the danger of comparing algorithms by their performance on a small sample of problems.}]{nfl}{NFL}{No-free-lunch theorem}

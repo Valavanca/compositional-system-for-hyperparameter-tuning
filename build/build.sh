@@ -70,7 +70,7 @@ if [ "${BUILD_PDF:-}" != "false" ] && [ -n "$DOCKER_EXISTS" ]; then
     --delay=${MANUBOT_ATHENAPDF_DELAY:-1100} \
     --pagesize=A4 \
     manuscript.html manuscript.pdf
-  rm -rf output/images
+  # rm -rf output/images
 fi
 
 # Create DOCX output (if BUILD_DOCX environment variable equals "true")

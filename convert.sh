@@ -17,3 +17,13 @@ for f in $(pandoc-citeproc --bib2json stthesis_latex/content/bibliography.bib | 
     sed -i -- 's/'${f}'/raw:'${f}'/g' content/*.md
     sed -i -- 's/'${f}'/raw:'${f}'/g' content/manual-references.json
 done
+
+# 4. Copy folder with images
+# cp -avr stthesis_latex/content/images content
+
+
+
+# for filename in stthesis_latex/content/*.tex; do
+#     echo "Processing ${filename##*/} "
+#     pandoc -s $filename -o content/${filename##*/}.md
+# done
