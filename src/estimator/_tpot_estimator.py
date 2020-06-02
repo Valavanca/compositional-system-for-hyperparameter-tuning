@@ -8,9 +8,17 @@ from sklearn.utils.validation import check_is_fitted, check_X_y
 from src.composite import ModelsUnion
 from tpot import TPOTRegressor, TPOTClassifier
 
-class TpotWrp(BaseEstimator):
+class TpotEstimator(BaseEstimator):
+    """ This class is a wrapper for TPOT estimator that allows estimate multi labels date in isolation and provide sklearn compatible methods.
 
-    def __init__(self, est_type: str = "regressor", **tpot_params):
+    Args:
+        est_type (str, optional): TPOT estimator type. Defaults to "regressor".
+
+    Ref:
+        TPOT: http://epistasislab.github.io/tpot/
+    """
+
+    def __init__(self, est_type: str = "regressor", **tpot_params):     
         self._type = est_type
         self._tpot_params = tpot_params
         self._dev_pipes = None

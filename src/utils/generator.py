@@ -8,8 +8,14 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 class SamplesGenerator():
+    """ Generate initial samples and update existing samples with new results.
 
-    def __init__(self, problem, X=pd.DataFrame(), y=pd.DataFrame()):
+    Args:
+        problem (pagmo.problem): pygmo2 class
+        X (array_like, shape (n_samples, n_features)): Samples features. Defaults to pd.DataFrame().
+        y (array_like, shape (n_samples, )): Samples labels. Defaults to pd.DataFrame().
+    """
+    def __init__(self, problem, X=pd.DataFrame(), y=pd.DataFrame()):    
         self._problem = problem
         self._bounds = [d for d in zip(*problem.get_bounds())]
         self._nobj = problem.get_nobj()
