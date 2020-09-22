@@ -2,40 +2,108 @@ from typing import List, Tuple
 import hashlib
 import logging
 from random import uniform
+from collections import defaultdict
 
 import pygmo as pg
 import pandas as pd
 import sobol_seq
-
 import numpy as np
+
+# -- utilities
 from sklearn import clone
 from sklearn.model_selection import cross_validate
-from sklearn.base import TransformerMixin, BaseEstimator, MetaEstimatorMixin
+from sklearn.base import TransformerMixin, BaseEstimator, MetaEstimatorMixin, RegressorMixin
 from sklearn.utils.validation import check_is_fitted, check_X_y
 from sklearn.model_selection import train_test_split
-
-
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.gaussian_process.kernels import ConstantKernel, RBF, WhiteKernel, RationalQuadratic, ExpSineSquared
-import sklearn.gaussian_process as gp
-
 from joblib import Parallel, delayed
 
+# -- ensemble
+from sklearn.ensemble import VotingRegressor
+from sklearn.ensemble import StackingRegressor
+from sklearn.ensemble._stacking import _BaseStacking
+from sklearn.ensemble import GradientBoostingRegressor
+from src.composite import ModelsUnion
+
+# -- estimators
+from sklearn.linear_model import LinearRegression
+import sklearn.gaussian_process as gp
+from sklearn.gaussian_process.kernels import ConstantKernel, RBF, WhiteKernel, RationalQuadratic, ExpSineSquared
+
+
 # from .search import Gaco, Nsga2
-from search import Gaco, Nsga2, RandS, MOEActr
+# from search import Gaco, Nsga2, RandS, MOEActr
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 # np.random.seed(1)
 
-# TRAIN_TEST_SPLIT = 0.25
+
+class BaseTutor(RegressorMixin, _BaseStacking):
+    """ fit estimators and search perspective points
+
+    1. Fit and Stack estimators. Assume that each estimator could represent a complete search space.
+    2. Apply search algorithm(s)
+    3. Return solution
+    """    
+    def __init__(self, bounds, estimators, final_estimator=None, verbose=False):
+        super().__init__(estimators=_name_estimators(estimators))
+        self.final_estimator = final_estimator
+        self.bounds = bounds
+        self.verbose = verbose
+        self.estimators_stack = None
+
+    def fit(self, X, y):
+        """ fit and stack selected estimators into one estimator
+        """
+        X, y = check_X_y(X, y,
+                         multi_output=True,
+                         accept_sparse=True,
+                         estimator=self,
+                         )
+
+        # --- fit estimators
+        if self.final_estimator and isinstance(self.final_estimator, BaseEstimator):
+            self._validate_final_estimator()
+            reg = StackingRegressor(
+                estimators=self.estimators,
+                final_estimator=self.final_estimator)
+            reg.fit(X, y)
+            self.estimators_ = [reg]
+        elif self.final_estimator == "average":
+            reg = VotingRegressor(self.estimators)
+            reg.fit(X, y)
+            self.estimators_ = [reg]
+        else:
+            reg = VotingRegressor(self.estimators)
+            reg.fit(X, y)
+            self.estimators_ = reg.estimators_
 
 
-class PredictTutor(BaseEstimator):
-    """ Agregate and sort best predictions from multiple models."""
+        # --- finde solutions
 
-    """
+
+        return self
+
+
+    def _opt_search(self, **params):
+        for est in self.estimators_:
+          check_is_fitted(est)
+
+        
+
+
+
+
+class TutorM(RegressorMixin, _BaseStacking):
+    """ This class combines the estimators' hypothesis about parameter and objective space with an optimization technique to find perspective or optimal points in objective space.
+
+        The single parameter combination is interpreted as a point in parameter space. This space is represented by all feasible parameters and their combinations. At the same time, all possible objective values represent an objective space.
+        So, each point from the parameter space map to some point in objective space. The task for the estimator(s) is to provide a hypothesis that describes how this mapping performs.
+
+        The task for the optimization algorithm is to find an optimal or perspective optimal region for all objectives. The optimization algorithm does this search based on a hypothesis from the estimator. In this context estimator(s) works as surrogate model for optimization.
+
+        “In a dark place we find ourselves, and a little more knowledge lights our way” – Yoda
+    
         1. define categorical columns -> transform pipeline as parameter
         2. fit -> generate surrogate(s) models for all parameters
         3. Find best categories with sampling strategies.
@@ -45,16 +113,27 @@ class PredictTutor(BaseEstimator):
 
     """
 
-    def __init__(self, bounds, portfolio: List[BaseEstimator] = None, train_test_sp=0.25, solver='nsga2', solver_gen=100, solver_pop=100, cv_threshold='', test_threshold=''):
+    def __init__(self,
+                 bounds,
+                 estimators,
+                 train_test_sp=0.25,
+                 solver='nsga2',
+                 solver_gen=100,
+                 solver_pop=100, # solver_params = dict(gen=100, pop=100)
+                 cv_threshold='',
+                 test_threshold='',
+                 verbose=False
+                ):
         """        
         Args:
-            bounds (Tuple): Tuple with lower and higher bound for each feature in objective space.
-            portfolio (List[BaseEstimator], optional): a list of surrogates to be verified. Defaults to None.
+            bounds (Tuple): Tuple with lower and higher bound for each feature in parameter space.
+            portfolio : list of (str, estimator) tuples. Surrogates models to be verified. Defaults to None.
         """
-        self.__bounds = bounds
-        self._init_dataset: Tuple[list, list] = None
-        self.__prf_models = portfolio
+        super().__init__(estimators=estimators)
+        self._bounds = bounds
+        self.verbose = verbose
 
+        self._init_dataset: Tuple[list, list] = None
         self._train: Tuple[list, list] = None
         self._test: Tuple[list, list] = None
         self._candidates_uni = None
@@ -63,7 +142,8 @@ class PredictTutor(BaseEstimator):
                        'neg_mean_absolute_error']
 
         self.cv_result = None  # resullts for each train/test folds
-        self.surr_valid = pd.DataFrame()  # surrogates that pass cv validation and aggregation
+        # surrogates that pass cv validation and aggregation
+        self.surr_valid = pd.DataFrame()
         self._solutions = None  # predict solutions from valid surrogates
         self._is_single: bool = False
 
@@ -75,13 +155,16 @@ class PredictTutor(BaseEstimator):
         self._cv_threshold: str = cv_threshold
         self._test_threshold: str = test_threshold
 
+
+        self._DATA_SET_MIN = None
+
         # dimensions mask
         # self._mask_col = mask_col,
         # self._mask_value = mask_val
 
     @property
     def bounds(self):
-        return self.__bounds
+        return self._bounds
 
     @property
     def dataset(self):
@@ -89,29 +172,68 @@ class PredictTutor(BaseEstimator):
 
     @property
     def models(self):
-        return self.__prf_models
+        return self._prf_models
 
     @property
     def solution(self):
         return self._solutions
 
     def get_name(self):
-        names = [type(model).__name__.lower() for model in self.__prf_models]
+        names = [type(model).__name__.lower() for model in self._prf_models]
         return "Prediction Tutor for {}".format(names)
 
-    def fit(self, X, y, **cv_params):
-        """ Fit new dataset to class instance.
-            Split the dataset to train and test if there are enough experiments.
-        """
-        if X is None or y is None:
-            return None
+    def fit(self, X, y, validation: bool = True, **cv_params): 
+        """ Fit the estimators.
 
-        self._init_dataset = (X, y)
+        Args:
+            X (array-like, sparse matrix) of shape (n_samples, n_features)
+                Training vectors, where n_samples is the number of samples and
+                n_features is the number of features.
 
-        cv = cv_params['cv'] if 'cv' in cv_params else 5 # 5 folds default for sklearn
-        MIN_TEST = 2  # min 2 test values for proper score
-        x = MIN_TEST*cv/(1-self._train_test_sp)
-        self._DATA_SET_MIN = x + ((MIN_TEST - x % MIN_TEST) if x % MIN_TEST else 0)
+            y (array-like, sparse matrix): array-like of shape (n_samples, n_outputs)
+                Multi-output targets.
+
+        Returns:
+            self : object
+        """        
+
+        # --- Minimum count of samples for propper validation
+        if self._DATA_SET_MIN is None:
+            cv = cv_params['cv'] if 'cv' in cv_params else 5 # 5 folds default for sklearn
+            MIN_TEST = 2  # min 2 test values for proper evalutio
+            x = MIN_TEST*cv/(1-self._train_test_sp)
+            self._DATA_SET_MIN = x + \
+                ((MIN_TEST - x % MIN_TEST) if x % MIN_TEST else 0)
+
+        X, y = check_X_y(X, y, 
+                         multi_output=True,
+                         accept_sparse=True,
+                         estimator=self,
+                         )
+        self._init_dataset = (X, y) # ! ---------
+
+        if validation:
+            self._cv_fit(X, y, **cv_params)
+        else:
+            self._stack_fit(X, y, self.estimators)
+
+        return self
+
+    def _stack_fit(self, X, y, estimators, final_estimator = None):
+        """ fit and stack selected estimators into one estimator
+        """   
+
+        if final_estimator:
+            reg = StackingRegressor(
+                estimators=estimators,
+                final_estimator=final_estimator)
+        else:
+            reg = VotingRegressor(estimators)
+
+        return reg.fit(X, y)
+
+
+    def _cv_fit(self, X, y, **cv_params):
 
         if len(X) >= self._DATA_SET_MIN:
             # rewrite the previous dataset
@@ -144,7 +266,8 @@ class PredictTutor(BaseEstimator):
         #              Refit valid models on train dataset
         self.surr_valid = self._results_aggregation(self.cv_result)
         if not self.surr_valid.empty:
-            logging.info("Stage-2: {} surrogate(s) valid".format(len(self.surr_valid)))
+            logging.info(
+                "Stage-2: {} surrogate(s) valid".format(len(self.surr_valid)))
             self.surr_valid['estimator'].apply(
                 lambda estimator: estimator.fit(*self._train))
             # --- STAGE 3: Score the aggregated surrogates with a test set.
@@ -153,7 +276,8 @@ class PredictTutor(BaseEstimator):
             if self._test_threshold:
                 self.surr_valid.query(self._test_threshold, inplace=True)
 
-            logging.info("Stage-3: {} surrogate(s) pass surr score".format(len(self.surr_valid)))
+            logging.info(
+                "Stage-3: {} surrogate(s) pass surr score".format(len(self.surr_valid)))
 
             # --- STAGE 4: Generate solution from each valid hypothesis.
             #              Each valid hypothesis produce own solution(s).
@@ -178,6 +302,8 @@ class PredictTutor(BaseEstimator):
                 "prediction": self._sobol(n=1)
             }])
 
+    
+
     def cross_validate(self, X, y, **cv_params) -> dict:
         """ Select models that can describe a valid hypothesis for X, y """
 
@@ -200,12 +326,12 @@ class PredictTutor(BaseEstimator):
         return cv_score
 
     def _check_surr_candidate(self) -> None:
-        if not self.__prf_models:
+        if not self._prf_models:
             raise ValueError(
-                f"{self.__prf_models}: Models portfolio is empty.")
+                f"{self._prf_models}: Models portfolio is empty.")
         if self._candidates_uni is None:
             #!  What if dynamically change surrogates?
-            self._candidates_uni = ModelsUnion(models=self.__prf_models)
+            self._candidates_uni = ModelsUnion(models=self._prf_models)
 
     def _thresholding(self, cv_result: pd.DataFrame) -> pd.DataFrame:
         # Reise Error in case of custom score metrics
@@ -265,7 +391,7 @@ class PredictTutor(BaseEstimator):
         grp = [concat_y_groups[n].applymap(lambda x: [x]) for n in y_names]
         grp = sum(grp[1:], grp[0])
         grp.loc[:, 'estimator'] = grp['estimator'].apply(lambda models: ModelsUnion(models=clone(models),
-                                                                             split_y=True))
+                                                                                    split_y=True))
         grp.loc[:, 'id'] = grp['estimator'].apply(id)
 
         # Combine 'Multi-objective' and compositional 'Multi-objective' surrogates
@@ -326,20 +452,19 @@ class PredictTutor(BaseEstimator):
 
         solver = None
         if self._is_single is True:
-            solver = Gaco(bounds=self.__bounds).fit(models)
+            solver = Gaco(bounds=self._bounds).fit(models)
         elif self._solver == 'nsga2':
-            solver = Nsga2(bounds=self.__bounds,
+            solver = Nsga2(bounds=self._bounds,
                            pop_size=self._pop_size, gen=self._gen).fit(models)
         elif self._solver == 'moea_control':
             solver = MOEActr(
-                bounds=self.__bounds, pop_size=self._pop_size, gen=self._gen).fit(models)
+                bounds=self._bounds, pop_size=self._pop_size, gen=self._gen).fit(models)
         elif self._solver == 'random':
-            solver = RandS(bounds=self.__bounds, n=1000).fit(models)
+            solver = RandS(bounds=self._bounds, n=1000).fit(models)
         else:
             raise ValueError(
                 "There is no exist solver {} ".format(self._solver))
 
-        
         return solver
 
     def predict(self, X=None, y=None, n=1, kind='ndf_score', **predict_params):
@@ -365,7 +490,7 @@ class PredictTutor(BaseEstimator):
                     sol_pool = self._sol_ndf_surr()
                 elif kind == 'stack':
                     sol_pool = self._sol_stack_valid_surr()
-                else: # default
+                else:  # default
                    sol_pool = self._sol_ndf_surr()
 
                 # Return `n` predictions
@@ -413,20 +538,20 @@ class PredictTutor(BaseEstimator):
         """ Pseudorandom sampling from the search space """
         available = 0 if self._init_dataset is None else len(
             self._init_dataset[0])
-        sbl = sobol_sample(self.__bounds, n=available+n)[available:]
+        sbl = sobol_sample(self._bounds, n=available+n)[available:]
         return np.array(sbl)
 
     def _latin(self, n=1):
         """ Pseudorandom sampling from the search space """
         available = 0 if self._init_dataset is None else len(
             self._init_dataset[0])
-        sbl = lh_sample(self.__bounds, n=available+n)[available:]
+        sbl = lh_sample(self._bounds, n=available+n)[available:]
         return sbl
 
     def _random(self, n=1):
         """ Random sampling from the search space """
         v_uniform = np.vectorize(uniform)
-        return [v_uniform(*self.__bounds) for _ in range(n)]
+        return [v_uniform(*self._bounds) for _ in range(n)]
 
 
 def sobol_sample(bounds, n=1):
@@ -465,3 +590,29 @@ def lh_sample(bounds, n=1):
     diff = [r-l for l, r in zip(*bounds)]
     left = [l for l, _ in zip(*bounds)]
     return h_cube*diff+left
+
+
+
+def _name_estimators(estimators):
+    """Generate names for estimators."""
+
+    names = [
+        estimator
+        if isinstance(estimator, str) else type(estimator).__name__.lower()
+        for estimator in estimators
+    ]
+    namecount = defaultdict(int)
+    for est, name in zip(estimators, names):
+        namecount[name] += 1
+
+    for k, v in list(namecount.items()):
+        if v == 1:
+            del namecount[k]
+
+    for i in reversed(range(len(estimators))):
+        name = names[i]
+        if name in namecount:
+            names[i] += "-%d" % namecount[name]
+            namecount[name] -= 1
+
+    return list(zip(names, estimators))

@@ -130,7 +130,7 @@ class ModelsUnion(TransformerMixin, BaseEstimator):
                 raise Exception(
                     "Count of models is not equal to the dimensionality of objective space.\n Models: {}\
                     You can reduce the number of models to one or equalize the number \
-                    of models to the dimensions of objective space. \
+                    of models to the count of objective space dimensions. \
                     [{}] dimension in y-space vs [{}] models length".format(self._models, len(y), len(self._models)))
 
     def _parallel_func(self, X, y, func_params, func):

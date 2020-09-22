@@ -1,5 +1,7 @@
 \chapter{Evaluation}\label{sec:evaluation}
 
+\epigraph{``All models are wrong but some are useful``}{\textit{– George Box}}
+
 In this chapter, we present the results obtained from our approach. Additionally, we compare the developed approach with state-of-the-art strategies: evolutionary algorithms and static compound model-based optimization.
 
 
@@ -112,7 +114,7 @@ In this chapter, we present the results obtained from our approach. Additionally
     In this thesis, we do not perform explicit parameter tuning for optimization algorithms. While various optimization algorithms could have been used, we selected \glspl{moea} as default optimization techniques for surrogate models. The advantage of \gls{ea}s are that they can be easily modified and can operate on a set of solutions candidates that are well-fitted to approximate the Pareto front. Also, \glspl{ea} can estimate highly complex problems in various use-cases. In this thesis, we used two types of \gls{ea}:
 
     \begin{enumerate}
-        \item The popular evolutionary multi-objective algorithm \emph{NSGA2} \cite{DebAPM00}. We chose this algorithm due to its popularity in \gls{moo}. In all cases, default parameters for the algorithm were used (population size = 100, crossover probability=0.95, distribution index for crossover=10.0, mutation probability=0.01, distribution index for mutation=50.0)\cite{francesco_biscani_2019}.
+        \item The popular evolutionary multi-objective algorithm \emph{NSGA2} \cite{DebAPM00}. We chose this algorithm due to its popularity in \gls{moo}. In all cases, default parameters for the algorithm were used (population size=100, crossover probability=0.95, distribution index for crossover=10.0, mutation probability=0.01, distribution index for mutation=50.0)\cite{francesco_biscani_2019}.
         \item As an alternative MOEA algorithm for optimization, we define \emph{MOEA-Ctrl} that combines MOEA/D \cite{ZhangL07} and NSGA2 algorithms. The characteristic of such an optimization process based on a common solutions population for both algorithms. Our intuition behind this choice is the following: NSGA2 gives stable results with well-distributed points on the Pareto front while MOEA/D has great exploration quality with low generation count. The combination of this algorithm should gain a better trade-off in exploration and exploitation in contrast to individual algorithms' application.  
     \end{enumerate}
 
@@ -130,7 +132,7 @@ In this chapter, we present the results obtained from our approach. Additionally
 
     % ---------------------------------    Benchmark baseline
     \subsection{Benchmark baseline}
-    We compare our approach (TutorM) with Hypermapper 2.0\cite{nardi2019practical} that was in Chapter~\ref{sec:related}. Hypermapper focuses on multi-objective parameter tuning with various types of parameters. It uses several randomized forest models, one for each objective. The general idea is to scalarize several surrogate models to single-objective criteria and to optimize them as a single-objective problem. In addition, a Bayesian model is used to assist the search for solutions. Hypermapper has successfully been used in autotuning computer vision applications and database optimization. Since the sample size is not specified, we chose to use the default population size for MOEA (100 points).
+    We compare our approach (TutorM\footnote{{github: Valavanca/ compositional-system-for-hyperparameter-tuning}}) with Hypermapper 2.0\cite{nardi2019practical} that was described in Chapter ref{sec:related}. Hypermapper focuses on multi-objective parameter tuning with various types of parameters. It uses several randomized forest models, one for each objective. The general idea is to scalarize several surrogate models to single-objective criteria and to optimize them as a single-objective problem. In addition, a Bayesian model is used to assist the search for solutions. Hypermapper has successfully been used in autotuning computer vision applications and database optimization. Since the sample size is not specified, we chose to use the default population size for MOEA (100 points).
 
     In addition to Hypermapper, NSGA2 was chosen as it is one of the most well-known evolutionary algorithms \cite{RamirezRV19}. It is therefore a suitable reference point to which to compare other approaches. As benchmarks, we evaluate two versions of the algorithm that are nearly identical but have a different budget for evaluation:
         \begin{itemize}
@@ -145,7 +147,7 @@ In this chapter, we present the results obtained from our approach. Additionally
 \section{Benchmark 1: Portfolio with compositional surrogates. Dynamic sampling plan}
     For this first evaluation step, our approach (TutorM) was compared to related approaches (Hypermapper and NSGA2) while solving all three sets of problems described above (ZDT, DTLZ, WFG) for 2 objectives and 2 or 3 parameters. The TutorM includes all features such as dynamic compositional models, surrogate portfolio and validation. 
 
-    The solution quality was evaluated using the following metrics: hypervolume, p-distance, spacing, and number of available non-dominant solutions (ndf size, Chapter ~\ref{sec:related}). The results we present are the average values obtained after five repetitions. It should also be noted that baseline NSGA2 10k is a static value that is obtained after 10000 function evaluations.
+    The solution quality was evaluated using the following metrics: hypervolume, p-distance, spacing, and number of available non-dominant solutions (ndf size, Chapter \ref{sec:related}). The results we present are the average values obtained after five repetitions. It should also be noted that baseline NSGA2 10k is a static value that is obtained after 10000 function evaluations.
 
     % -------------------------------------------------------- One case
     \subsection*{One case studies: ZDT6}
@@ -184,7 +186,7 @@ In this chapter, we present the results obtained from our approach. Additionally
     % Let us take a look at TutorM and the validation results of the surrogate portfolio. As can be seen in Figure \ref{fig:zdt6_models}, there is an example of a sampling plan and three different compositional surrogate models. 
 
     
-    The final solution consists of non-dominant configurations that give an idea of the Pareto front. In terms of overall Pareto front approximations (Figure \ref{fig:zdt6_front})), only TutorM solutions reach the baseline (NSGA2 10k) while other solutions are close and distributed (Hypermapper) or far away and clustered (NSGA2).
+    The final solution consists of non-dominant configurations that give an idea of the Pareto front. In terms of overall Pareto front approximations (Figure \ref{fig:zdt6_front}), only TutorM solutions reach the baseline (NSGA2 10k) while other solutions are close and distributed (Hypermapper) or far away and clustered (NSGA2).
 
         % ===================== ZDT6: Front
         \begin{figure}[h]
@@ -370,7 +372,7 @@ In this chapter, we present the results obtained from our approach. Additionally
     The results are similar to those obtained with the ZDT6 problem: the solutions stack take part almost in all of the best configurations. However, for this problem, there is no clear dominance of a single algorithm. Yet, the validation thresholds have an impact on results (Figure \ref{fig:conf_zdt4_sign}). 
 
         % === ZDT4
-        \begin{figure}[h!]
+        \begin{figure}[h!] 
             \centering
             % \begin{subfigure}{0.3\textwidth}
             \includegraphics[width=0.90\textwidth]{content/images/conf_zdt4_cv_score}
@@ -451,7 +453,7 @@ In this chapter, we present the results obtained from our approach. Additionally
     \begin{itemize}
         \item \emph{Gaussian Process Regressor} with kernel design from GPML\cite{RasmussenN10}. Gaussian process models are well-known and are commonly used in Bayesian optimization for a wide variety of problems \cite{EmmerichGN06, MlakarPTF15}. 
         \item \emph{MLPRegressor} is a neural network implementation from the \textit{sklearn} framework. Neural networks can automatically discover useful representations in high-dimensional data by learning multiple layers \cite{WilsonHSX16}. Because this model simultaneously extrapolates all objectives, we chose an architecture that consists of 5 layers and 100 neurons per layer.
-        \item The surrogate portfolio includes Gradient Boosting Regressor, MLPRegressor, and \emph{SVR (RBF kernel)}, as mentioned in Section~\ref{sec:bench2}.
+        \item The surrogate portfolio includes Gradient Boosting Regressor, MLPRegressor, and \emph{SVR (RBF kernel)}, as mentioned in Section \ref{sec:bench2}.
     \end{itemize}
 
     The DTLZ2 problem was selected to evaluate the scalability of the surrogate models. It is an unimodal problem with multiple global optima and concave geometry of the Pareto front. 
@@ -477,9 +479,7 @@ In this chapter, we present the results obtained from our approach. Additionally
 % --------------------------------------------------------------------------------------------
 \section{Discussion of results}
 
-The purpose of this thesis is to investigate the use of a cross-grained compositional model for solving multi-objective problems. In this evaluation section, we provided an extensive comparative analysis of the performance of our and other techniques on a wide range of problems. The analysis also included an exhaustive study of the possible parameters and the impact of the sampling plan on results. The possibility of scaling surrogate models by increasing the number of objectives was also tested.
-
-We draw the following conclusions from our evaluation experiments:
+The purpose of this thesis is to investigate the use of a cross-grained compositional model for solving multi-objective problems. In this evaluation section, we provided an extensive comparative analysis of the performance of our and other techniques on a wide range of problems. The analysis also included an exhaustive study of the possible parameters and the impact of the sampling plan on results. The possibility of scaling surrogate models by increasing the number of objectives was also tested. We draw the following conclusions from our evaluation experiments:
 \begin{enumerate}
     \item TutorM is far ahead of its counterparts (Hypermapper 2.0 and NSGA2) and achieves optimal results while sparing function evaluations. 
     %Are my modifications accurate? I removed the second sentence because it seemed redundant, and less assertive than the first sentence.
