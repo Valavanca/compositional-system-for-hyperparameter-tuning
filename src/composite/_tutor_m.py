@@ -33,27 +33,41 @@ from sklearn.gaussian_process.kernels import ConstantKernel, RBF, WhiteKernel, R
 # from .search import Gaco, Nsga2
 # from search import Gaco, Nsga2, RandS, MOEActr
 
+from src.optimization import Pygmo
+
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 # np.random.seed(1)
 
 
 class BaseTutor(RegressorMixin, _BaseStacking):
-    """ fit estimators and search perspective points
+    """ fit estimators and search perspective points with optimization algorithms
 
     1. Fit and Stack estimators. Assume that each estimator could represent a complete search space.
-    2. Apply search algorithm(s)
-    3. Return solution
+    2. Apply optimization algorithm(s)
+    3. Return a found solution
+
+    Reference:
+        - sklearn.ensemble.StackingRegressor: Stacked generalization consists in stacking the output of individual estimator and use a regressor to compute the final prediction.
+        - sklearn.ensemble.VotingRegressor: A voting regressor is an ensemble meta-estimator that fits several base regressors, each on the whole dataset. Then it averages the individual predictions to form a final prediction.
     """    
-    def __init__(self, bounds, estimators, final_estimator=None, verbose=False):
+    def __init__(self, bounds, estimators, final_estimator=None, verbose=0):
+        """
+        Args:
+            bounds (tuple of tuples): parameters bounds. Example: ((0, 0), (5, 5))
+            estimators (list of sklearn.estimators): [description]
+            final_estimator (str or sklearn.estimator, optional): Merger predictionі from estimators. None, "average" or estiamtor. Defaults to None.
+            verbose (int, optional): Verbosity level. Defaults to 0.
+        """        
         super().__init__(estimators=_name_estimators(estimators))
         self.final_estimator = final_estimator
         self.bounds = bounds
         self.verbose = verbose
-        self.estimators_stack = None
+        self.estimators_ = None
+        self.optimizators_ = []
 
     def fit(self, X, y):
-        """ fit and stack selected estimators into one estimator
+        """ fit and stack selected estimators
         """
         X, y = check_X_y(X, y,
                          multi_output=True,
@@ -61,34 +75,41 @@ class BaseTutor(RegressorMixin, _BaseStacking):
                          estimator=self,
                          )
 
-        # --- fit estimators
-        if self.final_estimator and isinstance(self.final_estimator, BaseEstimator):
-            self._validate_final_estimator()
+        # --- Fit estimators
+        if isinstance(self.final_estimator, BaseEstimator):
+            # --- Variant 1: Stack estimators with the final estimator
             reg = StackingRegressor(
                 estimators=self.estimators,
-                final_estimator=self.final_estimator)
+                final_estimator=self.final_estimator,
+                verbose=self.verbose)
             reg.fit(X, y)
             self.estimators_ = [reg]
         elif self.final_estimator == "average":
-            reg = VotingRegressor(self.estimators)
+            # --- Variant 2: Uniformly average all predictions by VotingRegressor
+            reg = VotingRegressor(estimators=self.estimators)
             reg.fit(X, y)
             self.estimators_ = [reg]
         else:
-            reg = VotingRegressor(self.estimators)
+            # --- Variant 3: Drop VotingRegressor and use trained sub-estimators
+            reg = VotingRegressor(estimators=self.estimators)
             reg.fit(X, y)
             self.estimators_ = reg.estimators_
 
-
-        # --- finde solutions
-
-
+        self._opt_search()
         return self
 
-
     def _opt_search(self, **params):
+        """ Apply optimization algorithm(s)
+        """ 
+        self.optimizators_ = []       
         for est in self.estimators_:
           check_is_fitted(est)
+          opt = Pygmo(est, self.bounds, algo='nsga2', gen=100, pop_size=100)
+          self.optimizators_.append(opt)
 
+    
+    def predict(self, X=None, y=None, n=1, **predict_params):
+        return [opt.predict() for opt in self.optimizators_]
         
 
 

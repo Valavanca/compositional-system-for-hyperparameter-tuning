@@ -10,7 +10,7 @@ from .share import Pagmo_problem, make_nd_pop
 # from solid.tools import samples
 
 
-class RandS(Solver):
+class RandS(BaseEstimator):
     """ pygmo2 solver
     """
 
