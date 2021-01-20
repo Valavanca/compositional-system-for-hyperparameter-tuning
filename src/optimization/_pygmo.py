@@ -35,6 +35,8 @@ class Pygmo(BaseEstimator):
         self._mask_col = None
         self._mask_value = None
 
+        self._evolve()
+
     def set_bounds(self, bounds) -> None:
         self._bounds = bounds
 

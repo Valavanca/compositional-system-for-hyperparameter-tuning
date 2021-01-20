@@ -33,11 +33,23 @@ def test_smoke_fit(final_estimator):
     tutor.predict()
 
 def test_stacking():
+    n_features = 10
+    n = 5
+
     reg1 = GradientBoostingRegressor(random_state=1, n_estimators=10)
     reg2 = RandomForestRegressor(random_state=1, n_estimators=10)
     reg3 = LinearRegression()
-    estimators = [reg1, reg2, reg3]
-    bounds = ((0, 0), (5, 5))
+
+    X, y = datasets.make_regression(n_features=n_features, n_targets=2)
+    estimators = [reg1, reg3]
+    bounds = ((-10,)*n_features, (10,)*n_features)
     tutor = BaseTutor(bounds, estimators)
     
-    tutor.fit(X,y)
+    tutor.fit(X, y)
+    predict = tutor.predict(n=n)
+    # 2D array
+    assert predict.ndim == 2
+    # Feature size
+    assert predict.shape[1] == n_features
+    # Prediction count
+    assert predict.shape[0] <= n

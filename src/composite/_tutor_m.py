@@ -13,7 +13,7 @@ import numpy as np
 from sklearn import clone
 from sklearn.model_selection import cross_validate
 from sklearn.base import TransformerMixin, BaseEstimator, MetaEstimatorMixin, RegressorMixin
-from sklearn.utils.validation import check_is_fitted, check_X_y
+from sklearn.utils.validation import check_is_fitted, check_X_y, _check_fit_params
 from sklearn.model_selection import train_test_split
 from joblib import Parallel, delayed
 
@@ -23,6 +23,7 @@ from sklearn.ensemble import StackingRegressor
 from sklearn.ensemble._stacking import _BaseStacking
 from sklearn.ensemble import GradientBoostingRegressor
 from src.composite import ModelsUnion
+from sklearn.multioutput import RegressorChain, MultiOutputRegressor
 
 # -- estimators
 from sklearn.linear_model import LinearRegression
@@ -55,11 +56,11 @@ class BaseTutor(RegressorMixin, _BaseStacking):
         """
         Args:
             bounds (tuple of tuples): parameters bounds. Example: ((0, 0), (5, 5))
-            estimators (list of sklearn.estimators): [description]
-            final_estimator (str or sklearn.estimator, optional): Merger predictionі from estimators. None, "average" or estiamtor. Defaults to None.
+            estimators (list of sklearn.estimators): 
+            final_estimator (str or sklearn.estimator, optional): Merger predictions from estimators. None, "average" or estimator instance. Defaults to None.
             verbose (int, optional): Verbosity level. Defaults to 0.
         """        
-        super().__init__(estimators=_name_estimators(estimators))
+        super().__init__(estimators=estimators)
         self.final_estimator = final_estimator
         self.bounds = bounds
         self.verbose = verbose
@@ -86,17 +87,35 @@ class BaseTutor(RegressorMixin, _BaseStacking):
             self.estimators_ = [reg]
         elif self.final_estimator == "average":
             # --- Variant 2: Uniformly average all predictions by VotingRegressor
-            reg = VotingRegressor(estimators=self.estimators)
+            reg = VotingRegressor(
+                estimators=self.estimators, 
+                n_jobs=-1)
             reg.fit(X, y)
             self.estimators_ = [reg]
         else:
-            # --- Variant 3: Drop VotingRegressor and use trained sub-estimators
-            reg = VotingRegressor(estimators=self.estimators)
-            reg.fit(X, y)
-            self.estimators_ = reg.estimators_
+            # --- Variant 3: Drop StackingRegressor and use trained sub-estimators
+            self.estimators_ = self._parallel_fit(X, y)
 
         self._opt_search()
         return self
+
+    def _sing_to_multi_fit(self, X, y, sample_weight=None):
+        """ Fit a separate model for each output variable.
+        """        
+        fited_estimators = Parallel(n_jobs=self.n_jobs)(
+            delayed(_fit_estimator)(
+                self.estimators[i], X, y[:, i], sample_weight)
+            for i in range(y.shape[1]))
+        return fited_estimators
+
+    def _stack_fit(self, X, y, sample_weight=None):
+        """ Fit a several models on the full dataset.
+        """
+        fited_estimators = Parallel(n_jobs=self.n_jobs)(
+            delayed(_fit_estimator)(
+                self.estimators[i], X, y, sample_weight)
+            for i in range(len(self.estimators)))
+        return fited_estimators
 
     def _opt_search(self, **params):
         """ Apply optimization algorithm(s)
@@ -106,12 +125,24 @@ class BaseTutor(RegressorMixin, _BaseStacking):
           check_is_fitted(est)
           opt = Pygmo(est, self.bounds, algo='nsga2', gen=100, pop_size=100)
           self.optimizators_.append(opt)
-
+        
     
     def predict(self, X=None, y=None, n=1, **predict_params):
-        return [opt.predict() for opt in self.optimizators_]
-        
+        multy_pred = [opt.predict() for opt in self.optimizators_]
+        S = np.vstack(np.array(multy_pred))
+        n = n if S.shape[0] > n else S.shape[0]
+        predict = S[np.random.choice(S.shape[0], n, replace=False), :]
+        return predict
+# -------------------------------------------------------------------
+# --- Parallel utilities
 
+def _fit_estimator(estimator, X, y, sample_weight=None, **fit_params):
+    estimator = clone(estimator)
+    if sample_weight is not None:
+        estimator.fit(X, y, sample_weight=sample_weight, **fit_params)
+    else:
+        estimator.fit(X, y, **fit_params)
+    return estimator
 
 
 
