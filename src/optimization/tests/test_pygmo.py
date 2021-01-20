@@ -67,11 +67,11 @@ def test_pygmo_singleobj():
 
 
 @pytest.mark.parametrize("algo", ['nsga2', 'moead'])
-def test_pygmo_multiobj(n_targets, algo):
+def test_pygmo_multiobj(algo):
     n_features = 10
     n_targets = 2
 
-    X, y = datasets.make_regression(n_features=n_features, n_targets=n_targets,)
+    X, y = datasets.make_regression(n_features=n_features, n_targets=n_targets)
 
     # Instantiate a Gaussian Process model
     kernel = C(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
