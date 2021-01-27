@@ -8,7 +8,7 @@ from sklearn.multioutput import RegressorChain
 
 from joblib import Parallel, delayed
 
-from src.surrogate.surrogate_abs import Surrogate
+from surrogate.surrogate_abs import Surrogate
 
 
 class Union(Surrogate):
@@ -47,7 +47,7 @@ class Union(Surrogate):
 
         if self._union_type == "avarage":  # for single and multi objective
             self._surrogates = self._all_obj_fit(X, y, sample_weight, **fit_params)
-        elif self._union_type == "combination":  # for multi objective
+        elif self._union_type == "separate":  # for multi objective
             self._check_surr_y(y)
             self._surrogates = self._separate_obj_fit(X, y, sample_weight, **fit_params)
         elif self._union_type == "chain":  # for multi objective
@@ -93,7 +93,7 @@ class Union(Surrogate):
         # 2. combine predictions
         if self._union_type == "avarage":
             prediction = prediction.mean(axis=0)
-        elif self._union_type == "combination":
+        elif self._union_type == "separate":
             prediction = prediction.T
         elif self._union_type == "chain":
             prediction = prediction[0]
