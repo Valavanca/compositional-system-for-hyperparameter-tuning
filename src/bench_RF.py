@@ -8,14 +8,11 @@ import logging
 import json
 from typing import List, Mapping
 
-import matplotlib.pyplot as plt
 import openml
 import numpy as np
 import pandas as pd
-import plotly.express as px
 from joblib import Parallel, delayed
 from pprint import pformat
-
 
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import cross_validate
@@ -42,8 +39,8 @@ from surrogate.surrogate_union import Union
 from surrogate.custom_gp_kernel import KERNEL_MAUNA
 
 
-# logging.basicConfig(filename='./bench_category_RF.log', level=logging.INFO)
-logging.getLogger().setLevel(logging.INFO)
+logging.basicConfig(filename='./bench_category_RF.log', level=logging.INFO)
+# logging.getLogger().setLevel(logging.INFO)
 
 warnings.filterwarnings('ignore')
 
@@ -283,23 +280,22 @@ if __name__ == "__main__":
 
     test_set = [
         {
-            'surrogate': [grad, svr_rbf, mlp_reg],
-            'search_space': [search_space],
-            'eval_budget': [30],
-            'union_type': ['separate'],
-            'n_pred': [2]
-        },
-        {
             'surrogate': [gp_mauna],
             'search_space': [search_space],
-            'eval_budget': [30],
+            'eval_budget': [1000],
             'union_type': ['single'],
-            'n_pred': [2]
+            'n_pred': [10]
+        },
+        {
+            'surrogate': [grad, svr_rbf, mlp_reg],
+            'search_space': [search_space],
+            'eval_budget': [1000],
+            'union_type': ['separate'],
+            'n_pred': [10]
         }
     ]
 
     logging.info(pformat(test_set))
-
 
     i_total = 0
     with Parallel(prefer='threads') as parallel:
@@ -307,14 +303,8 @@ if __name__ == "__main__":
             grid = ParameterGrid(param_grid)
             total_comb = len(grid)
             logging.info(
-                "\n Total combinations in round: {}".format(total_comb))
+                "\n\n Total combinations in round: {}".format(total_comb))
 
             parallel(delayed(tuning_loop)(**p) for p in grid)
 
-
-    for param_grid in test_set:
-        grid = ParameterGrid(param_grid)
-        for p in grid:
-            tuning_loop(**p)
-
-    print("Finish")
+    print("\n === Finish === ")
