@@ -8,7 +8,7 @@ from sklearn.multioutput import RegressorChain
 
 from joblib import Parallel, delayed
 
-from surrogate.surrogate_abs import Surrogate
+from src.surrogate.surrogate_abs import Surrogate
 
 
 class Union(Surrogate):

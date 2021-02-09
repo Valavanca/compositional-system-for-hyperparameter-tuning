@@ -84,11 +84,11 @@ class PygmoProblem():
             return meta_name
 
 
-def get_bounds(desc, enc_df, cat_columns):
+def get_bounds(desc, params_enc):
     bounds = []
     kv_desc = {p['name']: p for p in desc}
-    for col in enc_df.columns:
-        if col in cat_columns:
+    for col in params_enc.columns:
+        if 'categories' in kv_desc[col]:
             bounds.append(list(range(1, len(kv_desc[col]['categories'])+1)))
         else:
             bounds.append(kv_desc[col]['bounds'])
@@ -179,7 +179,7 @@ def tuning_loop(surrogate,
         model.fit(params_enc.values, obj.values)
 
         # --- [3] create optimization problem that based on surrogate model
-        bounds = get_bounds(search_space, params_enc, cat_columns)
+        bounds = get_bounds(search_space, params_enc)
         integer_params = (params_enc.dtypes == np.int64).sum()
         prob = pg.problem(PygmoProblem(model, bounds, integer_params))
 

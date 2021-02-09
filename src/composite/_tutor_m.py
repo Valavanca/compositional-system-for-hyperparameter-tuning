@@ -17,103 +17,176 @@ from sklearn.utils.validation import check_is_fitted, check_X_y, _check_fit_para
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from joblib import Parallel, delayed
+import category_encoders as ce
 
-from preprocessing.pipelines import build_preprocessing_pipelines
 from src.surrogate.surrogate_union import Union
 
-# np.random.seed(1)
+def get_bounds(desc, params_enc):
+    bounds = []
+    kv_desc = {p['name']: p for p in desc}
+    for col in params_enc.columns:
+        if 'categories' in kv_desc[col]:
+            bounds.append(list(range(1, len(kv_desc[col]['categories'])+1)))
+        else:
+            bounds.append(kv_desc[col]['bounds'])
 
-import debugpy
+    return list(zip(*bounds))
+
+
+class PygmoProblem():
+
+    def __init__(self,
+                 surrogate,
+                 bounds, 
+                 integer):
+        self._surrogate = surrogate
+        self._bounds = bounds
+        self._int = integer
+
+    def fitness(self, x):
+        x = np.array(x)
+        result = self._surrogate.predict(x.reshape(1, -1))
+        return result.flatten().tolist()
+
+    def get_nobj(self):
+        prediction = self._surrogate.predict([self._bounds[0]])
+        nobj = prediction.flatten().size
+        return nobj
+
+    # Return bounds of decision variables
+    def get_bounds(self):
+        return self._bounds
+
+    # Integer Dimension
+    def get_nix(self):
+        return self._int
+
+    def gradient(self, x):
+        return pg.estimate_gradient_h(lambda x: self.fitness(x), x)
+
+    # Return function name
+    def get_name(self):
+        meta_name = type(self._surrogate).__name__
+        if hasattr(self._surrogate, 'surrogates'):
+            return self._surrogate._union_type + "(" + "+".join([type(t).__name__ for t in self._surrogate.surrogates]) + ")"
+        else:
+            return meta_name
+
+
 
 class BaseTutor():
-
-    def __init__(self, surrogates: List, optimizers: List, union_type=None, **parameters):
+    def __init__(self, 
+                 surrogates: List,
+                 optimizers: List = None,
+                 union_type: str = None,
+                 **parameters):
         self._surrogates = surrogates
         self._optimizers = optimizers
         self._union_type = union_type
-        self.desc = None
-        self.features_prp = None
+        self.f_desc = None
+        self.obj_desc = None
+        self._prob = None
 
-    def build_model(self, X, y, features_description: Mapping, **kargs) -> self:
+        self._encoder = None
+        self._params_enc = None
+        self._obj_select = None
+
+    def build_model(self, params, obj, params_desc, **kargs):
         """ Build surrogate model(s) from available samples
+
+            params, obj - pandas DataFrame
         """
-    
-        # 1. Check samples 
-        MIN_SAMPLES = 5
-        X, y = check_X_y(X, y, multi_output=True,
-                         ensure_min_samples=MIN_SAMPLES)
+        OBJECTIVES = ['test_roc_auc', 'fit_time']
+        OBJECTIVES_DESC = {
+            "fit_time": -1,
+            "score_time": -1,
+            "test_f1": 1,
+            "test_roc_auc": 1
+        }
+
+        self._params_enc = None
+        self._obj_select = None
+        self._prob = None
+
+        # [1] --- Check samples
+        # X, y = check_X_y(X, y,
+        #                 multi_output=True,
+        #                 ensure_min_samples=5)
         # TODO:validate entropy in parameters
 
+        # [2] --- Search-space and objectives description
+        # self.f_desc = features_desc
+        # self.obj_desc = OBJECTIVES_DESC
 
-        # 3. parse search-space description
-        sp_json = kargs['sp_json']
-        desc = OrderedDict()
-        for col in X_temp:
-            desc[col] = json_extract(sp_json, col)[0] # suppose there is only one parameter with this column name
+        # [3] --- Encode categorical black-box parameters
+        cat_columns = params.select_dtypes(include=[object]).columns
+        self._encoder = ce.OrdinalEncoder(cols=cat_columns)
 
-        for col, col_desc in desc.items():
-            try:
-                col_desc['bounds'] = (col_desc['lower'], col_desc['upper'])
-                del col_desc['lower']
-                del col_desc['upper']
-            except KeyError:
-                col_desc['categories'] = [c['category'] for c in col_desc['categories']]
-                col_desc['encoder'] = LabelEncoder().fit(col_desc['categories'])
-                col_desc['bounds'] = (0, len(col_desc['encoder'].classes_)-1)
+        params_enc = self._encoder.fit_transform(params)
+        params_enc.sort_index(axis=1,
+                              ascending=False,
+                              key=lambda c: params_enc[c].dtypes,
+                              inplace=True)
 
-        self.desc = desc
+        self._params_enc = params_enc
 
-        # 4. Preprocessing samples
-        # - Category: encode --> build surrogate --> samples --> selection
+        # [4] --- Select objectives and transform maximization objectives into minimization one
+        obj_sign_vector = []
+        for c in obj.columns:
+            if c in OBJECTIVES_DESC.keys():
+                obj_sign_vector.append(OBJECTIVES_DESC[c])
+            else:
+                obj_sign_vector.append(-1)
+                logging.warning(
+                    f"There is no configuration for objective {c}. Default is minimization"
+                )
+        # inverse. maximization * -1 == minimization
+        self._obj_select = (obj * -1 * obj_sign_vector)[OBJECTIVES]
 
-        for col in X:
-            col_desc = self.desc[col]
-            if 'encoder' in col_desc:
-                X[col] = X[col].apply(lambda x: col_desc['encoder'].transform([x])[0])
+        # [5] --- Fit surrogate model with black-box parameters
+        if self._union_type is None and len(self._surrogates) == 1:
+            model = deepcopy(self._surrogates[0])
+        else:
+            model = Union(surrogates=self._surrogates,
+                          union_type=self._union_type)
 
-        # 5. == Combine surrogates ==
-        union_surr = Union(surrogates=self._surrogates, union_type='chain')
-        union_surr.fit(X, y)
+        model.fit(self._params_enc.values, self._obj_select.values)
 
-        ## 6. Random samples from the surrogate to find good categories values
-        n = 100 
-        data = OrderedDict()
-        for col in X:
-            if self.desc[col]['type'] == "FloatHyperparameter":
-                data[col] = np.random.default_rng().uniform(*self.desc[col]['bounds'], n)
-            elif self.desc[col]['type'] == "IntegerHyperparameter":
-                bounds = self.desc[col]['bounds']
-                data[col] = np.random.randint(bounds[0], bounds[1]+1, n)
-            elif self.desc[col]['type'] == "NominalHyperparameter":
-                bounds = self.desc[col]['bounds']
-                data[col] = np.random.randint(bounds[0], bounds[1]+1, n)
-            
-        random_enc_samples = pd.DataFrame.from_dict(data)
+        # [6] --- Create optimization problem that based on surrogate model
+        bounds = get_bounds(params_desc, self._params_enc)
+        integer_params = (self._params_enc.dtypes == np.int64).sum()
+        self._prob = pg.problem(PygmoProblem(model, bounds, integer_params))
 
-        score = [union_surr.predict([x])[0] for x in random_enc_samples.values]
+        return self
 
-        # 00. Apply optimizers
-        n_features = len(X[0])
-        solutions = []
-        for opt in self._optimizers:
-            bounds = ((-10,)*n_features, (10,)*n_features)
-            pred = opt.minimize(union_surr, bounds)
-            solutions.append(pred)
+    def predict(self, n=None) -> pd.DataFrame:
+        if self._prob is None:
+            raise ValueError(
+                f"Before prediction {self.__class__.__name__} requires first to build surrogate model. \
+                Please check if your surrogate model is built.")
 
-        self.is_built = True
+        # [7] --- Optimization
+        isl = pg.island(algo=pg.nsga2(gen=300),  # NSGA2
+                        size=100,
+                        prob=self._prob,
+                        udi=pg.mp_island(),
+                        )
+        isl.evolve()
+        isl.wait()
+        final_pop = isl.get_population()
 
-        self.solutions = solutions
-        return self.is_built
-
-    def predict(self, n=1) -> pd.DataFrame:
-        pred = np.concatenate(self.solutions, axis=0)
+        idx = pg.fast_non_dominated_sorting(final_pop.get_f())[0][0]
+        pop_df = pd.DataFrame(
+            final_pop.get_x()[idx],
+            columns=self._params_enc.columns)
+        pop_df['n_estimators'] = pop_df['n_estimators'].astype('int32') #! only for RF parameters
+        propos = self._encoder.inverse_transform(pop_df)
 
         if n is None:
-            return pred
+            return propos
         else:
-            n = n if pred.shape[0] > n else pred.shape[0]
-            return pred[np.random.choice(pred.shape[0], n, replace=False), :]
-
+            n = n if propos.shape[0] > n else propos.shape[0]
+        return propos.sample(n=n)
 
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -125,7 +198,8 @@ class BaseTutor_Origin():
 
     #TODO: Should work with categories!
 
-    """    
+    """
+
     def __init__(self, bounds, estimators, final_estimator=None, verbose=0):
         """
         Args:
@@ -133,7 +207,7 @@ class BaseTutor_Origin():
             estimators (list of sklearn.estimators): 
             final_estimator (str or sklearn.estimator, optional): Merger predictions from estimators. None, "average" or estimator instance. Defaults to None.
             verbose (int, optional): Verbosity level. Defaults to 0.
-        """        
+        """
         super().__init__(estimators=estimators)
         self.final_estimator = final_estimator
         self.bounds = bounds
@@ -164,7 +238,7 @@ class BaseTutor_Origin():
         elif self.final_estimator == "average":
             # --- Variant 2: Uniformly average all predictions by VotingRegressor
             reg = VotingRegressor(
-                estimators=self.estimators, 
+                estimators=self.estimators,
                 n_jobs=-1)
             reg.fit(X, y)
             self.estimators_ = [reg]
@@ -177,7 +251,7 @@ class BaseTutor_Origin():
 
     def _sing_to_multi_fit(self, X, y, sample_weight=None):
         """ Fit a separate model for each output variable.
-        """        
+        """
         fited_estimators = Parallel(n_jobs=self.n_jobs)(
             delayed(_fit_estimator)(
                 self.estimators[i], X, y[:, i], sample_weight)
@@ -195,14 +269,13 @@ class BaseTutor_Origin():
 
     def _opt_search(self, **params):
         """ Apply optimization algorithm(s)
-        """ 
-        self.optimizators_ = []       
+        """
+        self.optimizators_ = []
         for est in self.estimators_:
           check_is_fitted(est)
           opt = Pygmo(est, self.bounds, algo='nsga2', gen=100, pop_size=100)
           self.optimizators_.append(opt)
-        
-    
+
     def predict(self, X=None, y=None, n=1, **predict_params):
         multy_pred = [opt.predict() for opt in self.optimizators_]
         S = np.vstack(np.array(multy_pred))
@@ -212,6 +285,7 @@ class BaseTutor_Origin():
 # -------------------------------------------------------------------
 # --- Parallel utilities
 
+
 def _fit_estimator(estimator, X, y, sample_weight=None, **fit_params):
     estimator = clone(estimator)
     if sample_weight is not None:
@@ -219,7 +293,6 @@ def _fit_estimator(estimator, X, y, sample_weight=None, **fit_params):
     else:
         estimator.fit(X, y, **fit_params)
     return estimator
-
 
 
 class TutorM():
@@ -247,11 +320,11 @@ class TutorM():
                  train_test_sp=0.25,
                  solver='nsga2',
                  solver_gen=100,
-                 solver_pop=100, # solver_params = dict(gen=100, pop=100)
+                 solver_pop=100,  # solver_params = dict(gen=100, pop=100)
                  cv_threshold='',
                  test_threshold='',
                  verbose=False
-                ):
+                 ):
         """        
         Args:
             bounds (Tuple): Tuple with lower and higher bound for each feature in parameter space.
@@ -283,7 +356,6 @@ class TutorM():
         self._cv_threshold: str = cv_threshold
         self._test_threshold: str = test_threshold
 
-
         self._DATA_SET_MIN = None
 
         # dimensions mask
@@ -310,7 +382,7 @@ class TutorM():
         names = [type(model).__name__.lower() for model in self._prf_models]
         return "Prediction Tutor for {}".format(names)
 
-    def fit(self, X, y, validation: bool = True, **cv_params): 
+    def fit(self, X, y, validation: bool = True, **cv_params):
         """ Fit the estimators.
 
         Args:
@@ -323,22 +395,23 @@ class TutorM():
 
         Returns:
             self : object
-        """        
+        """
 
         # --- Minimum count of samples for propper validation
         if self._DATA_SET_MIN is None:
-            cv = cv_params['cv'] if 'cv' in cv_params else 5 # 5 folds default for sklearn
+            # 5 folds default for sklearn
+            cv = cv_params['cv'] if 'cv' in cv_params else 5
             MIN_TEST = 2  # min 2 test values for proper evalutio
             x = MIN_TEST*cv/(1-self._train_test_sp)
             self._DATA_SET_MIN = x + \
                 ((MIN_TEST - x % MIN_TEST) if x % MIN_TEST else 0)
 
-        X, y = check_X_y(X, y, 
+        X, y = check_X_y(X, y,
                          multi_output=True,
                          accept_sparse=True,
                          estimator=self,
                          )
-        self._init_dataset = (X, y) # ! ---------
+        self._init_dataset = (X, y)  # ! ---------
 
         if validation:
             self._cv_fit(X, y, **cv_params)
@@ -347,9 +420,9 @@ class TutorM():
 
         return self
 
-    def _stack_fit(self, X, y, estimators, final_estimator = None):
+    def _stack_fit(self, X, y, estimators, final_estimator=None):
         """ fit and stack selected estimators into one estimator
-        """   
+        """
 
         if final_estimator:
             reg = StackingRegressor(
@@ -359,7 +432,6 @@ class TutorM():
             reg = VotingRegressor(estimators)
 
         return reg.fit(X, y)
-
 
     def _cv_fit(self, X, y, **cv_params):
 
@@ -429,8 +501,6 @@ class TutorM():
                 "model name": "sampling plan",
                 "prediction": self._sobol(n=1)
             }])
-
-    
 
     def cross_validate(self, X, y, **cv_params) -> dict:
         """ Select models that can describe a valid hypothesis for X, y """
@@ -718,7 +788,6 @@ def lh_sample(bounds, n=1):
     diff = [r-l for l, r in zip(*bounds)]
     left = [l for l, _ in zip(*bounds)]
     return h_cube*diff+left
-
 
 
 def _name_estimators(estimators):
