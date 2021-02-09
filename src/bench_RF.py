@@ -198,11 +198,11 @@ def tuning_loop(surrogate,
         pop_df['n_estimators'] = pop_df['n_estimators'].astype('int32')
         propos = encoder.inverse_transform(pop_df)
 
-        # select the required amount of predictions
+        # random select the required amount of predictions
         n = n_pred if len(propos) > n_pred else len(propos)
         logging.info(
             " Select {} from {} proposed configurations".format(n, len(propos)))
-        propos = propos.sample(n=n_pred)
+        propos = propos.sample(n=n)
 
         pred = dict()
         pred['iteration'] = i
