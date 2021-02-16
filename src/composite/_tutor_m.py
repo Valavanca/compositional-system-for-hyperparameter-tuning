@@ -1,6 +1,7 @@
 from typing import Mapping, MutableMapping, List, Tuple
 import hashlib
 import logging
+from copy import deepcopy
 from random import uniform
 from collections import OrderedDict, defaultdict
 
@@ -16,6 +17,9 @@ from sklearn.base import TransformerMixin, BaseEstimator, MetaEstimatorMixin, Re
 from sklearn.utils.validation import check_is_fitted, check_X_y, _check_fit_params
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import r2_score
+from sklearn.model_selection import KFold
+
 from joblib import Parallel, delayed
 import category_encoders as ce
 
@@ -96,8 +100,8 @@ class BaseTutor():
 
             params, obj - pandas DataFrame
         """
-        OBJECTIVES = ['test_roc_auc', 'fit_time']
-        OBJECTIVES_DESC = {
+        self.OBJECTIVES = ['test_roc_auc', 'fit_time']
+        self.OBJECTIVES_DESC = {
             "fit_time": -1,
             "score_time": -1,
             "test_f1": 1,
@@ -133,15 +137,15 @@ class BaseTutor():
         # [4] --- Select objectives and transform maximization objectives into minimization one
         obj_sign_vector = []
         for c in obj.columns:
-            if c in OBJECTIVES_DESC.keys():
-                obj_sign_vector.append(OBJECTIVES_DESC[c])
+            if c in self.OBJECTIVES_DESC.keys():
+                obj_sign_vector.append(self.OBJECTIVES_DESC[c])
             else:
                 obj_sign_vector.append(-1)
                 logging.warning(
                     f"There is no configuration for objective {c}. Default is minimization"
                 )
         # inverse. maximization * -1 == minimization
-        self._obj_select = (obj * -1 * obj_sign_vector)[OBJECTIVES]
+        self._obj_select = (obj * -1 * obj_sign_vector)[self.OBJECTIVES]
 
         # [5] --- Fit surrogate model with black-box parameters
         if self._union_type is None and len(self._surrogates) == 1:
@@ -159,7 +163,7 @@ class BaseTutor():
 
         return self
 
-    def predict(self, n=None) -> pd.DataFrame:
+    def predict(self, n=None):
         if self._prob is None:
             raise ValueError(
                 f"Before prediction {self.__class__.__name__} requires first to build surrogate model. \
@@ -188,237 +192,82 @@ class BaseTutor():
             n = n if propos.shape[0] > n else propos.shape[0]
         return propos.sample(n=n)
 
+    def score(self, param_test, score_true, callback_func):
+        if self._prob is None:
+            raise ValueError(
+                f"Before score {self.__class__.__name__} requires first to build surrogate model. \
+                Please check if your surrogate model is built.")
 
-# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-class BaseTutor_Origin():
-    """ fit estimators and search perspective points with optimization algorithms
-
-    #TODO: Should work with categories!
-
-    """
-
-    def __init__(self, bounds, estimators, final_estimator=None, verbose=0):
-        """
-        Args:
-            bounds (tuple of tuples): parameters bounds. Example: ((0, 0), (5, 5))
-            estimators (list of sklearn.estimators): 
-            final_estimator (str or sklearn.estimator, optional): Merger predictions from estimators. None, "average" or estimator instance. Defaults to None.
-            verbose (int, optional): Verbosity level. Defaults to 0.
-        """
-        super().__init__(estimators=estimators)
-        self.final_estimator = final_estimator
-        self.bounds = bounds
-        self.verbose = verbose
-        self.estimators_ = None
-        self.optimizators_ = []
-
-    def build_model(
-        self, features: pd.DataFrame, labels: pd.DataFrame, features_description: Mapping, is_minimization: bool
-    ) -> bool:
-        """ fit and stack selected estimators
-        """
-        X, y = check_X_y(X, y,
-                         multi_output=True,
-                         accept_sparse=True,
-                         estimator=self,
-                         )
-
-        # --- Fit estimators
-        if isinstance(self.final_estimator, BaseEstimator):
-            # --- Variant 1: Stack estimators with the final estimator
-            reg = StackingRegressor(
-                estimators=self.estimators,
-                final_estimator=self.final_estimator,
-                verbose=self.verbose)
-            reg.fit(X, y)
-            self.estimators_ = [reg]
-        elif self.final_estimator == "average":
-            # --- Variant 2: Uniformly average all predictions by VotingRegressor
-            reg = VotingRegressor(
-                estimators=self.estimators,
-                n_jobs=-1)
-            reg.fit(X, y)
-            self.estimators_ = [reg]
-        else:
-            # --- Variant 3: Drop StackingRegressor and use trained sub-estimators
-            self.estimators_ = self._parallel_fit(X, y)
-
-        self._opt_search()
-        return self
-
-    def _sing_to_multi_fit(self, X, y, sample_weight=None):
-        """ Fit a separate model for each output variable.
-        """
-        fited_estimators = Parallel(n_jobs=self.n_jobs)(
-            delayed(_fit_estimator)(
-                self.estimators[i], X, y[:, i], sample_weight)
-            for i in range(y.shape[1]))
-        return fited_estimators
-
-    def _stack_fit(self, X, y, sample_weight=None):
-        """ Fit a several models on the full dataset.
-        """
-        fited_estimators = Parallel(n_jobs=self.n_jobs)(
-            delayed(_fit_estimator)(
-                self.estimators[i], X, y, sample_weight)
-            for i in range(len(self.estimators)))
-        return fited_estimators
-
-    def _opt_search(self, **params):
-        """ Apply optimization algorithm(s)
-        """
-        self.optimizators_ = []
-        for est in self.estimators_:
-          check_is_fitted(est)
-          opt = Pygmo(est, self.bounds, algo='nsga2', gen=100, pop_size=100)
-          self.optimizators_.append(opt)
-
-    def predict(self, X=None, y=None, n=1, **predict_params):
-        multy_pred = [opt.predict() for opt in self.optimizators_]
-        S = np.vstack(np.array(multy_pred))
-        n = n if S.shape[0] > n else S.shape[0]
-        predict = S[np.random.choice(S.shape[0], n, replace=False), :]
-        return predict
-# -------------------------------------------------------------------
-# --- Parallel utilities
-
-
-def _fit_estimator(estimator, X, y, sample_weight=None, **fit_params):
-    estimator = clone(estimator)
-    if sample_weight is not None:
-        estimator.fit(X, y, sample_weight=sample_weight, **fit_params)
-    else:
-        estimator.fit(X, y, **fit_params)
-    return estimator
-
+        param_test = self._encoder.fit_transform(param_test) #! encode parameters
+        score_pred = pd.DataFrame(
+            [self._prob.fitness(p) for p in param_test.values],
+            columns=self.OBJECTIVES)
+        
+        return [callback_func(*obj) for obj in zip(score_true[self.OBJECTIVES].T.values, score_pred.T.values)]
 
 class TutorM():
-    """ This class combines the estimators' hypothesis about parameter and objective space with an optimization technique to find perspective or optimal points in objective space.
-
-        The single parameter combination is interpreted as a point in parameter space. This space is represented by all feasible parameters and their combinations. At the same time, all possible objective values represent an objective space.
-        So, each point from the parameter space map to some point in objective space. The task for the estimator(s) is to provide a hypothesis that describes how this mapping performs.
-
-        The task for the optimization algorithm is to find an optimal or perspective optimal region for all objectives. The optimization algorithm does this search based on a hypothesis from the estimator. In this context estimator(s) works as surrogate model for optimization.
-
-        “In a dark place we find ourselves, and a little more knowledge lights our way” – Yoda
-    
-        1. define categorical columns -> transform pipeline as parameter
-        2. fit -> generate surrogate(s) models for all parameters
-        3. Find best categories with sampling strategies.
-           Exampl: Generate 100 full-dim points -> Evaluate -> Take only categories from best samples. Fix it.
-        4. Fix categories as mask for optimization algorithm. Categories become ortogonal for optimization problem
-        5. For final predictions combine categories and population
-
-    """
-
     def __init__(self,
-                 bounds,
-                 estimators,
+                 portfolio: List,
                  train_test_sp=0.25,
-                 solver='nsga2',
-                 solver_gen=100,
-                 solver_pop=100,  # solver_params = dict(gen=100, pop=100)
-                 cv_threshold='',
-                 test_threshold='',
-                 verbose=False
+                 cv_threshold=0,
+                 test_threshold=0,
                  ):
-        """        
-        Args:
-            bounds (Tuple): Tuple with lower and higher bound for each feature in parameter space.
-            portfolio : list of (str, estimator) tuples. Surrogates models to be verified. Defaults to None.
-        """
-        super().__init__(estimators=estimators)
-        self._bounds = bounds
-        self.verbose = verbose
 
+        self.portfolio = portfolio
         self._init_dataset: Tuple[list, list] = None
         self._train: Tuple[list, list] = None
         self._test: Tuple[list, list] = None
-        self._candidates_uni = None
-        self._score = ['r2', 'explained_variance',
-                       'neg_mean_squared_error',
-                       'neg_mean_absolute_error']
 
-        self.cv_result = None  # resullts for each train/test folds
-        # surrogates that pass cv validation and aggregation
-        self.surr_valid = pd.DataFrame()
+        self._cv_result = None  # resullts for each train/test folds
+        self._test_result = None  # surrogates that pass cv validation and aggregation
         self._solutions = None  # predict solutions from valid surrogates
-        self._is_single: bool = False
-
-        self._solver: str = solver
-        self._pop_size: int = solver_pop
-        self._gen: int = solver_gen
 
         self._train_test_sp: float = train_test_sp
-        self._cv_threshold: str = cv_threshold
-        self._test_threshold: str = test_threshold
+        self._cv_threshold: float = cv_threshold
+        self._test_threshold: float = test_threshold
 
-        self._DATA_SET_MIN = None
+    def build_model(self, params, obj, params_desc, **kargs):
 
-        # dimensions mask
-        # self._mask_col = mask_col,
-        # self._mask_value = mask_val
+        self.OBJECTIVES = ['test_roc_auc', 'fit_time']
+        X_cv, X_test, y_cv, y_test = train_test_split(
+            params, obj[self.OBJECTIVES], test_size=self._train_test_sp)
 
-    @property
-    def bounds(self):
-        return self._bounds
+        # --- STAGE 1: surrogate combinations
+        surr_comb = [BaseTutor(comb, union_type='separate')
+                        for comb in zip(*[self.portfolio]*2)]
 
-    @property
-    def dataset(self):
-        return self._init_dataset
+        with Parallel(prefer='threads') as parallel:
+            # --- STAGE 2: cross-validate combinations
+            cv_score = []
+            for train_idx, valid_idx in KFold(n_splits=3).split(X_cv):
+                comb_copy = deepcopy(surr_comb)
+                tutors = parallel(delayed(tutor.build_model)(X_cv.iloc[train_idx], y_cv.iloc[train_idx], params_desc)
+                                for tutor in comb_copy)
 
-    @property
-    def models(self):
-        return self._prf_models
+                score = parallel(delayed(tutor.score)(X_cv.iloc[valid_idx], y_cv.iloc[valid_idx], r2_score)
+                                for tutor in comb_copy)
 
-    @property
-    def solution(self):
-        return self._solutions
+                cv_score.append(score)
 
-    def get_name(self):
-        names = [type(model).__name__.lower() for model in self._prf_models]
-        return "Prediction Tutor for {}".format(names)
+            cv_score_mean = np.array(cv_score).mean(axis=0)
 
-    def fit(self, X, y, validation: bool = True, **cv_params):
-        """ Fit the estimators.
+            # --- STAGE 3: retrain and test valid combinations from cross-validation
+            surr_test = deepcopy(surr_comb)
+            tutors = parallel(delayed(tutor.build_model)(X_cv, y_cv, params_desc)
+                              for tutor in surr_test)
+            score = parallel(delayed(tutor.score)(X_test, y_test, r2_score)
+                             for tutor in surr_test)
 
-        Args:
-            X (array-like, sparse matrix) of shape (n_samples, n_features)
-                Training vectors, where n_samples is the number of samples and
-                n_features is the number of features.
+            sur_names = [t._prob.get_name() for t in combinations]
 
-            y (array-like, sparse matrix): array-like of shape (n_samples, n_outputs)
-                Multi-output targets.
 
-        Returns:
-            self : object
-        """
+        # --- STAGE 4: retrain valid combinations from test
 
-        # --- Minimum count of samples for propper validation
-        if self._DATA_SET_MIN is None:
-            # 5 folds default for sklearn
-            cv = cv_params['cv'] if 'cv' in cv_params else 5
-            MIN_TEST = 2  # min 2 test values for proper evalutio
-            x = MIN_TEST*cv/(1-self._train_test_sp)
-            self._DATA_SET_MIN = x + \
-                ((MIN_TEST - x % MIN_TEST) if x % MIN_TEST else 0)
 
-        X, y = check_X_y(X, y,
-                         multi_output=True,
-                         accept_sparse=True,
-                         estimator=self,
-                         )
-        self._init_dataset = (X, y)  # ! ---------
+    def predict(self, n=None):
+        pass
+        # --- STAGE 5: select predictions
 
-        if validation:
-            self._cv_fit(X, y, **cv_params)
-        else:
-            self._stack_fit(X, y, self.estimators)
-
-        return self
 
     def _stack_fit(self, X, y, estimators, final_estimator=None):
         """ fit and stack selected estimators into one estimator
@@ -813,24 +662,3 @@ def _name_estimators(estimators):
             namecount[name] -= 1
 
     return list(zip(names, estimators))
-
-
-def json_extract(obj, key):
-    """Recursively fetch values from nested JSON."""
-    arr = []
-
-    def extract(obj, arr, key):
-        """Recursively search for values of key in JSON tree."""
-        if isinstance(obj, dict):
-            for k, v in obj.items():
-                if isinstance(v, (dict, list)):
-                    extract(v, arr, key)
-                elif (k == 'name') and (v == key):
-                    arr.append(obj)
-        elif isinstance(obj, list):
-            for item in obj:
-                extract(item, arr, key)
-        return arr
-
-    values = extract(obj, arr, key)
-    return values
