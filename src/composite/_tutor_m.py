@@ -1,3 +1,4 @@
+from itertools import cycle
 from typing import Mapping, MutableMapping, List, Tuple
 import hashlib
 import logging
@@ -226,7 +227,21 @@ class TutorM():
         self._cv_threshold: float = cv_threshold
         self._test_threshold: float = test_threshold
 
+        self._status = {
+            'cv': None,
+            'test': None,
+            'solutions': None
+            'predict': None 
+        }
+
     def build_model(self, params, obj, params_desc, **kargs):
+
+        self._status = {
+            'cv': None,
+            'test': None,
+            'solutions': None
+            'predict': None
+        }
 
         self.OBJECTIVES = ['test_roc_auc', 'fit_time']
         X_cv, X_test, y_cv, y_test = train_test_split(
@@ -237,7 +252,7 @@ class TutorM():
                         for comb in zip(*[self.portfolio]*2)]
 
         with Parallel(prefer='threads') as parallel:
-            # --- STAGE 2: cross-validate combinations
+            # --- STAGE 2: cross-validate (cv) combinations
             cv_score = []
             for train_idx, valid_idx in KFold(n_splits=3).split(X_cv):
                 comb_copy = deepcopy(surr_comb)
@@ -248,17 +263,63 @@ class TutorM():
                                 for tutor in comb_copy)
 
                 cv_score.append(score)
-
+            # score from cv
             cv_score_mean = np.array(cv_score).mean(axis=0)
+            surr_cv_names = np.array([[tutor._prob.get_name()] for tutor in comb_copy])
+            cv_surr = pd.DataFrame(np.concatenate(
+                [surr_cv_names, cv_score_mean], 
+                axis=1, 
+                dtype=np.object),
+                columns=['surrogate']+self.OBJECTIVES)
+            self._status['cv'] = cv_surr
+            cv_pass = (cv_surr[self.OBJECTIVES] > self._cv_threshold).assign(
+                                      surr=deepcopy(self.portfolio)
+                                      )
+            
+            if (cv_pass[self.OBJECTIVES].sum() > 0).all() # check that at least for each objective there is one valid surrogate
+                cv_valid_surr = []
+                for obj in self.OBJECTIVES:
+                    surr_for_obj = cv_pass.query(f"{obj}==True").values
+                    cv_valid_surr.append(surr_for_obj)
+
+                surr_ext = []
+                max_count = max([len(surr) for surr in cv_valid_surr])
+                for surr_for_obj in cv_valid_surr:
+                    if len(surr_for_obj) == max_count:
+                        surr_ext.append(surr_for_obj)
+                    else:
+                        surr_ext.append(cycle(surr_for_obj))         
+                surr_comb_cv = [BaseTutor(comb, union_type='separate') for comb in list(
+                    zip(surr_ext))]  # surrogates combinations that pass cv
+            else:
+                return self  # surrogates can't be used
+
 
             # --- STAGE 3: retrain and test valid combinations from cross-validation
-            surr_test = deepcopy(surr_comb)
+            surr_test = deepcopy(surr_comb_cv)
             tutors = parallel(delayed(tutor.build_model)(X_cv, y_cv, params_desc)
                               for tutor in surr_test)
-            score = parallel(delayed(tutor.score)(X_test, y_test, r2_score)
+            test_score = parallel(delayed(tutor.score)(X_test, y_test, r2_score)
                              for tutor in surr_test)
 
-            sur_names = [t._prob.get_name() for t in combinations]
+            test_surr_names = [tutor._prob.get_name() for tutor in surr_test]
+
+            test_surr = pd.DataFrame(np.concatenate(
+                [test_surr_names, test_score],
+                axis=1,
+                dtype=np.object),
+                columns=['surrogate']+self.OBJECTIVES)
+
+            self._status['test'] = test_surr
+            test_pass = (test_surr[self.OBJECTIVES] > self._test_threshold).assign(
+                surr=deepcopy(surr_comb_cv)
+            )
+
+                        # check that at least for each objective there is one valid surrogate
+            if (test_pass[self.OBJECTIVES].sum() > 0).all()
+                # surr_comb_test = # TODO: select test samples
+            else:
+                return self  # surrogates can't be used
 
 
         # --- STAGE 4: retrain valid combinations from test
