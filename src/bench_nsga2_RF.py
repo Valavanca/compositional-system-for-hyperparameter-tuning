@@ -5,6 +5,7 @@ import random
 import string
 import os
 import logging
+from pathlib import Path
 import json
 from typing import List, Mapping
 
@@ -96,7 +97,7 @@ class RFProblem():
         for k, v in scores.items():
             scores[k] = np.mean(v)
 
-        return [scores[obj] for obj in ['test_roc_auc', 'fit_time']]
+        return [-1*scores['test_roc_auc'], scores['fit_time']]
 
     def get_nobj(self):
         return 2
@@ -123,16 +124,18 @@ def tuning_loop(data_set, generation):
     loop_start = time.time()
     iter_solution = []
     prob = pg.problem(RFProblem(DATA_SET))
-    pop = pg.population(prob=prob, size=20)
+    pop = pg.population(prob=prob, size=100)
 
 
     for i in range(generation):
         logging.info("\n generation --- {}".format(i))
         # --- save population
-        temp_f = pd.DataFrame(pop.get_f()).add_prefix('f_')
-        temp_x = pd.DataFrame(pop.get_x()).add_prefix('x_')
-        temp = pd.concat([temp_x, temp_f], axis=1)
+        temp = dict()
+        temp['objectives'] = ['test_roc_auc', 'fit_time']
+        temp['pop_f'] = pop.get_f().tolist()
+        temp['pop_size'] = len(pop.get_f())
         temp['i_gen'] = i+1
+        temp['time'] = time.time()
         temp['i_fevals'] = pop.problem.get_fevals()
 
         # --- rewrite population
@@ -140,24 +143,25 @@ def tuning_loop(data_set, generation):
 
         nd_pop = make_nd_pop(prob, pop.get_x(), pop.get_f())
         temp["ndf_size"] = len(nd_pop.get_f())
-        # temp["pop_ndf_f"] = nd_pop.get_f().tolist()
-        # temp["pop_ndf_x"] = nd_pop.get_x().tolist()
+        temp["ndf_f"] = nd_pop.get_f().tolist()
+        temp["ndf_x"] = nd_pop.get_x().tolist()
 
         iter_solution.append(temp)
 
-
-    loop = pd.concat(iter_solution)
+    loop = pd.DataFrame.from_dict(iter_solution)
     loop = loop.assign(prob_id=id(prob))
 
     # File and path to folder
     loop_prefix = ''.join(random.choices(
         string.ascii_lowercase + string.digits, k=6))
-    rel_path = '/bench/{}_{}_NSGA-2.{}.pkl'.format(
+
+    rel_path = '/bench/{}_{}obj.{}.pkl'.format(
         prob.get_name(), prob.get_nobj(), loop_prefix)
     path = os.path.dirname(os.path.abspath(__file__))
 
     # Write results
     print(" Write meta. Path:{}".format(path + rel_path))
+    logging.info(" Write meta. Path:{}".format(path + rel_path))
     # loop.to_csv(path + rel_path, mode='a+', index=False)
     loop.to_pickle(path + rel_path)
 
@@ -169,12 +173,12 @@ def tuning_loop(data_set, generation):
 
 
 if __name__ == "__main__":
-    print(" <...> ")
+    print(" === Start === ")
 
     test_set = [
         {
             'data_set': [1049],
-            'generation': [5]
+            'generation': [500]
         }
     ]
 
