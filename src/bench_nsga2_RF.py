@@ -42,9 +42,6 @@ logging.basicConfig(filename='./bench_nsga2_RF.log', level=logging.INFO)
 
 warnings.filterwarnings('ignore')
 
-DATA_SET = 1049
-
-
 def make_nd_pop(pro, x, y):
     nd_front = pg.fast_non_dominated_sorting(y)[0][0]
     nd_x = x[nd_front]
@@ -123,7 +120,7 @@ def tuning_loop(data_set, generation):
     logging.info(" --- Start loop \n\n")
     loop_start = time.time()
     iter_solution = []
-    prob = pg.problem(RFProblem(DATA_SET))
+    prob = pg.problem(RFProblem(data_set))
     pop = pg.population(prob=prob, size=100)
 
 
@@ -178,7 +175,7 @@ if __name__ == "__main__":
     test_set = [
         {
             'data_set': [1049],
-            'generation': [500]
+            'generation': [3]
         }
     ]
 
