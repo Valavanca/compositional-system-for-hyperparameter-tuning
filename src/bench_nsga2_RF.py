@@ -175,7 +175,7 @@ if __name__ == "__main__":
     test_set = [
         {
             'data_set': [1049],
-            'generation': [3]
+            'generation': [500]
         }
     ]
 
