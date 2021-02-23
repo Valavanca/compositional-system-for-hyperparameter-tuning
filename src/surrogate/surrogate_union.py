@@ -116,7 +116,7 @@ class Union(Surrogate):
                 if not hasattr(surr, self.method):
                     raise ValueError(
                         f"This {surr.__class__.__name__} surrogate "
-                        f"doesn't the required method ({self.method})."
+                        f"doesn't have the required method ({self.method})."
                     )
 
     def _check_surr_y(self, y):

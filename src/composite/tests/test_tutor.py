@@ -36,8 +36,8 @@ logging.getLogger(__name__)
 
 @pytest.fixture(scope="session")
 def init_samples():
-    logging.info(" Start initialoze samples \n\n")
-    N_INIT = 8
+    logging.info(" start initialize samples \n\n")
+    N_INIT = 12
 
     # --- Parameters describtion
     with open('src/randomforest-search-space.json', 'r') as File:
@@ -132,4 +132,4 @@ def test_tutor_m_build(init_samples):
                      activation='relu', solver='lbfgs')
     ]
 
-    TutorM(portfolio).build_model(params, obj, params_desc)
+    TutorM(portfolio).build_model(params, obj, params_desc).predict()
