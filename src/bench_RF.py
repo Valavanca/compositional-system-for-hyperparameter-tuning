@@ -97,6 +97,7 @@ def get_bounds(desc, params_enc):
 
 
 def tuning_loop(surrogate, 
+                data_set, 
                 search_space: List[Mapping], 
                 eval_budget: int, 
                 union_type='single', 
@@ -106,7 +107,7 @@ def tuning_loop(surrogate,
 
     # --- Data for random forest
     logging.info("\n Open evaluation dataset for random forest")
-    dataset = openml.datasets.get_dataset(1049)
+    dataset = openml.datasets.get_dataset(data_set)
     X, y, cat, atr = dataset.get_data(
         dataset_format="array", target=dataset.default_target_attribute)
 
@@ -282,6 +283,7 @@ if __name__ == "__main__":
     test_set = [
         {
             'surrogate': [gp_mauna],
+            'data_set': [1049],
             'search_space': [search_space],
             'eval_budget': [1000],
             'union_type': ['single'],
@@ -289,6 +291,7 @@ if __name__ == "__main__":
         },
         {
             'surrogate': [grad, svr_rbf, mlp_reg],
+            'data_set': [1049],
             'search_space': [search_space],
             'eval_budget': [1000],
             'union_type': ['separate'],
