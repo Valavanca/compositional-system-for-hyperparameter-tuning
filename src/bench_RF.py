@@ -222,7 +222,8 @@ def tuning_loop(surrogate,
         #  hypervolume is complicated to calculate when reference point is not stable
         # ref_point = pg.nadir(obj.to_numpy())
         # pred['ref_point'] = ref_point
-        nd_front = pg.fast_non_dominated_sorting(score.values)[0][0]
+        nd_front = pg.fast_non_dominated_sorting(
+            (score[['test_roc_auc', 'fit_time']]*[-1, 1]).values)[0][0]
         nd_x = params.iloc[nd_front].values
         nd_f = score.iloc[nd_front][OBJECTIVES].values
 

@@ -18,7 +18,7 @@ from sklearn.model_selection import KFold
 
 from joblib import Parallel, delayed
 
-from src.surrogate.surrogate_union import Union
+from surrogate.surrogate_union import Union
 
 
 def get_bounds(desc, params_enc):
@@ -208,8 +208,8 @@ class TutorM():
     def __init__(self,
                  portfolio: List,
                  train_test_sp=0.25,
-                 cv_threshold=-15,
-                 test_threshold=-15,
+                 cv_threshold=0,
+                 test_threshold=0,
                  ):
 
         self.portfolio = portfolio
@@ -297,7 +297,7 @@ class TutorM():
 
                 logging.info(f"[2] There are {max_count} valid surrogate combinations. ")
             else:
-                logging.info(f"[2] There is no complete set of valid surrogates for each objective after cross-validation. ")
+                logging.info(f"[2] There is no complete set of valid surrogates after cross-validation. ")
                 return self  # surrogates can't be used
 
 
@@ -336,7 +336,6 @@ class TutorM():
             final_surr = parallel(delayed(tutor.build_model)(params, obj[self.OBJECTIVES], params_desc)
                                   for tutor in test_valid_surr)
             self._status['final_surr'] = final_surr
-            logging.info(f"[4] There are {len(final_surr)} valid surrogate combinations. ")
 
             return self
             
@@ -344,7 +343,7 @@ class TutorM():
     def predict(self, n=10, kind='stack'):
         # --- STAGE 5: select predictions
         if self._status['final_surr'] is None:
-            logging.info(f"[5] There is no valida surrogates. Prediction from the pseudo-random sampler. ")
+            logging.info(f"[5] Prediction from the pseudo-random sampler. ")
             
             # how many samples were used in the build phase
             s = self._samples_count if self._samples_count else 0
