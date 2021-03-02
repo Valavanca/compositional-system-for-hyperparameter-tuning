@@ -15,6 +15,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import r2_score
 from sklearn.model_selection import KFold
+from sklearn.preprocessing import MinMaxScaler
 
 from joblib import Parallel, delayed
 
@@ -107,6 +108,7 @@ class BaseTutor():
         self._params_enc = None
         self._obj_select = None
         self._prob = None
+        self.min_max_scaler = None
 
         # [1] --- Check samples
         # X, y = check_X_y(X, y,
@@ -130,6 +132,10 @@ class BaseTutor():
 
         self._params_enc = params_enc
 
+        self.min_max_scaler = MinMaxScaler() # scale objectives
+        obj[self.OBJECTIVES] = self.min_max_scaler.fit_transform(
+            obj[self.OBJECTIVES])
+
         # [4] --- Select objectives and transform maximization objectives into minimization one
         self.obj_sign_vector = []
         for c in obj.columns:
@@ -141,7 +147,7 @@ class BaseTutor():
                     f"There is no configuration for objective {c}. Default is minimization"
                 )
         # inverse. maximization * -1 == minimization
-        self._obj_select = (obj * -1 * self.obj_sign_vector)[self.OBJECTIVES]
+        self._obj_select = (obj * [-1, 1])[self.OBJECTIVES]
 
         # [5] --- Fit surrogate model with black-box parameters
         if self._union_type is None and len(self._surrogates) == 1:
@@ -188,21 +194,23 @@ class BaseTutor():
             n = n if propos.shape[0] > n else propos.shape[0]
         return propos.sample(n=n)
 
-    def score(self, param_test, score_true, callback_func):
+    def score(self, param_test, obj_true, callback_func):
         if self._prob is None:
             raise ValueError(
                 f"Before score {self.__class__.__name__} requires first to build surrogate model. \
                 Please check if your surrogate model is built.")
 
         param_test = self._encoder.fit_transform(param_test) #! encode parameters
-        score = np.array([self._prob.fitness(
-            p) for p in param_test.values]) * -1 * self.obj_sign_vector #! change sign of an objective
+        obj_surr = np.array([self._prob.fitness(
+            p) for p in param_test.values]) * [-1, 1] #! change sign of an objective
 
-        # score_pred = pd.DataFrame(
-        #     score,
-        #     columns=self.OBJECTIVES)
-        
-        return [callback_func(*obj) for obj in zip(score_true[self.OBJECTIVES].T.values, score.transpose())]
+        obj_pred = self.min_max_scaler.inverse_transform(obj_surr) #! inverse scale
+
+        score = [callback_func(*obj) for obj in zip(obj_true[self.OBJECTIVES].T.values, obj_pred.transpose())]
+        # logging.info(f"\n obj_surr: {obj_surr}, \n obj_tru: {obj_true}")
+        # logging.info(f"\n obj_inv: {obj_pred}")
+        logging.info(f"score: {score}")
+        return [callback_func(*obj) for obj in zip(obj_true[self.OBJECTIVES].T.values, obj_pred.transpose())]
 
 class TutorM():
     def __init__(self,
@@ -266,7 +274,7 @@ class TutorM():
 
                 cv_score.append(score)
             # score from cv
-            cv_score_mean = np.array(cv_score).mean(axis=0)
+            cv_score_mean = np.array(cv_score).max(axis=0)
             surr_cv_names = np.array([[tutor._prob.get_name()] for tutor in comb_copy])
             cv_surr = pd.DataFrame(np.concatenate(
                 [surr_cv_names, cv_score_mean], 
