@@ -32,6 +32,8 @@ from sklearn.neural_network import MLPRegressor
 
 import category_encoders as ce
 import pygmo as pg
+import sobol_seq
+
 
 # Random forest as a black-box function
 from black_box import RF_experiment, random_sample, psd_sample
@@ -45,11 +47,42 @@ warnings.filterwarnings('ignore')
 
 from composite._tutor_m_PYGMO import TutorM
 
+
+def psd_sample(bounds,  n=1, kind='sobol'):
+    """ Pseudo-random configuration sampling
+
+    Args:
+        n (int, optional): number of configurations to generate. Defaults to 1.
+        kind (str, optional): identifying the general kind of pseudo-random samples generator. Sobol('sobol') or Latin Hypercube sampling('lh'). Defaults to 'sobol'.
+
+    Raises:
+        ValueError: wrong value for pseudo-samples generation
+
+    Returns:
+        pandas.DataFrame: configurations samples
+    """
+
+    dim = len(bounds[0])  # bounds in pygmo format
+
+    if kind == 'sobol':
+        squere = sobol_seq.i4_sobol_generate(dim, n)
+    elif kind == 'lh':
+        squere = np.random.uniform(size=[n, dim])
+        for i in range(0, dim):
+            squere[:, i] = (np.argsort(squere[:, i])+0.5)/n
+    else:
+        raise ValueError(
+            "`kind` property could be `sobol` or `lh`. Received: ", kind)
+
+    conf = (bounds[1]-bounds[0])*squere + bounds[0]
+    return pd.DataFrame(conf).add_prefix('x_')
+
 def tuning_loop(portfolio, 
                 problem_id: int,
                 objectives: int,
                 feature_dim: int,
                 eval_budget: int, 
+                n_init: int,
                 train_test_sp: float,
                 cv_threshold: float,
                 test_threshold: float,
@@ -63,20 +96,52 @@ def tuning_loop(portfolio,
     prob = pg.problem(udp)
 
     # --- Initial parameters for random forest 
-    df_params = pd.DataFrame()
-    df_obj = pd.DataFrame()
+    bounds = prob.get_bounds()
+    df_params = psd_sample(bounds, n_init, kind='sobol')
+    df_obj = df_params.apply(prob.fitness, axis=1,
+                             result_type='expand').add_prefix('f_')
 
     logging.info(" Start loop \n\n")
     loop_start = time.time()
     iter_solution = []
     i = 0
 
+    # --- Stats from initial samples
+    pred = dict()
+    pred['final_surr'] = 'sobol'
+    pred['bench'] = 'portfolio'
+    pred['problem'] = 'WFG'
+    pred['dim'] = feature_dim
+    pred['obj'] = objectives
+    pred['init'] = n_init
+    pred['iteration'] = i
+
+    nd_front = pg.fast_non_dominated_sorting(df_obj.values)[0][0]
+    nd_x = df_params.iloc[nd_front].values
+    nd_f = df_obj.iloc[nd_front].values
+
+    pred["ndf_size"] = len(nd_front)
+    pred["ndf_f"] = nd_f.tolist()
+    pred["ndf_x"] = nd_x.tolist()
+
+    pred["solution_pool"] = 0
+    pred["i_time"] = time.time() - loop_start
+    pred["surr_id"] = None
+    pred["samples_count"] = len(df_params)
+
+    iter_solution.append(pred)
+
     n_iter = int(eval_budget/n_pred)
     while i < n_iter:
         pred = dict()
         i = i+1
+        pred['problem'] = 'WFG'
+        pred['dim'] = feature_dim
+        pred['obj'] = objectives
+        pred['init'] = n_init
         pred['iteration'] = i
         pred['n_pred'] = n_pred
+        pred['bench'] = 'portfolio'
         logging.info(f"\n\n iteration --- {i}")
 
         # --- [1] Build TutorM model and predict perspective solutions
@@ -168,7 +233,8 @@ if __name__ == "__main__":
             'problem_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
             'objectives': [2],
             'feature_dim': [3],
-            'eval_budget': [1000],
+            'eval_budget': [900],
+            'n_init': [100],
             'train_test_sp': [0.25],
             'cv_threshold': [-10000],
             'test_threshold': [-10000],
