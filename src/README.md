@@ -1,8 +1,8 @@
-# Source code for multi objective optimization with components
+# Source code
 
-## Structure:
+## To start the benchmark run:
+1. `docker build -t bench_img .`
+2. `docker run -dit --name bench_1 bench_img`
+3. `docker exec -it bench_1 bash`
+4. `python bench_paper_solo_all.py`
 
-- `.composite\` - folder with basic class, wrappers for providing advanced compositional architecture.
-- `.plot\` - tools for plotting and evaluation models and results.
-- `.optimization\` - algorithms for searching global/local minimum on the model of search space.
-- `.surrogate\` - models that can extrapolate evaluated results to all search space.

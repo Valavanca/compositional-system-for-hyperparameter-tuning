@@ -3,6 +3,3 @@ numpy
 pandas
 scikit-learn[alldeps]
 sobol_seq
-ply
-openml
-category-encoders

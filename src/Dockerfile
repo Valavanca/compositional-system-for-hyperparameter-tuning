@@ -18,6 +18,8 @@ RUN conda config --add channels conda-forge && \
     conda install pygmo && \
     pip install --no-cache-dir -r requirements.txt
 
+
+
 COPY . .
 
 # RUN [ "python", "./benchmark.py" ]
